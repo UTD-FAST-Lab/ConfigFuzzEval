@@ -24,12 +24,12 @@ from fuzzers import utils
 def prepare_build_environment():
     """Set environment variables used to build targets for AFL-based
     fuzzers."""
-    cflags = ['-fsanitize-coverage=trace-pc-guard']
+    cflags = []
     utils.append_flags('CFLAGS', cflags)
     utils.append_flags('CXXFLAGS', cflags)
 
-    os.environ['CC'] = 'clang'
-    os.environ['CXX'] = 'clang++'
+    os.environ['CC'] = '/src/aflplusplus/afl-clang-fast'
+    os.environ['CXX'] = '/src/aflplusplus/afl-clang-fast++'
     os.environ['FUZZER_LIB'] = '/libAFL.a'
 
 
@@ -127,7 +127,7 @@ def run_afl_fuzz(input_corpus,
         target_binary,
         # Pass INT_MAX to afl the maximize the number of persistent loops it
         # performs.
-        '2147483647'
+        '@@'
     ]
     print('[run_afl_fuzz] Running command: ' + ' '.join(command))
     output_stream = subprocess.DEVNULL if hide_output else None

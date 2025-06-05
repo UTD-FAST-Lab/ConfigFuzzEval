@@ -49,3 +49,6 @@ docker/generated.mk
 
 # Diff files from matplotlib
 *-failed-diff.png
+
+# cts benchmarks
+benchmarks/cts*

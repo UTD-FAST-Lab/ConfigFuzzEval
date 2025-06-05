@@ -33,12 +33,14 @@ from common import experiment_utils
 from common import filestore_utils
 from common import filesystem
 from common import fuzzer_utils
+from common import compiletime_stategy_utils
 from common import gcloud
 from common import gsutil
 from common import logs
 from common import new_process
 from common import utils
 from common import yaml_utils
+
 
 BENCHMARKS_DIR = os.path.join(utils.ROOT_DIR, 'benchmarks')
 FUZZERS_DIR = os.path.join(utils.ROOT_DIR, 'fuzzers')
@@ -719,8 +721,18 @@ def run_experiment_main(args=None):
         required=False,
         default=False,
         action='store_true')
+    all_cts = compiletime_stategy_utils.get_cts_names()
+    parser.add_argument('-cts',
+                        '--compiletime-strategy',
+                        help='Compile-Time strategies to use.',
+                        required = False,
+                        default = 'False',
+                        nargs='+',
+                        choices= all_cts
+                        )    
     args = parser.parse_args(args)
     fuzzers = args.fuzzers or all_fuzzers
+    ct_strats = args.compiletime_strategy or all_cts
 
     concurrent_builds = args.concurrent_builds
     if concurrent_builds is not None and concurrent_builds <= 0:
@@ -763,6 +775,22 @@ def run_experiment_main(args=None):
             'Selected benchmarks are a mix between coverage '
             'and bug benchmarks. This is currently not supported.'
             f'Selected benchmarks: {benchmark_types}')
+        
+    # Compile Time Strategy Checks
+    if ct_strats != "False":
+        for strat in ct_strats:
+            if strat != "random" or strat != "minimal":
+                # check for grammar in all benchmarks
+                compiletime_stategy_utils.check_benchmark_ct_grammars()
+                break
+    else:
+        print("No compile-time strategies provided.")
+    
+    # Compile time benchmark generation
+    new_benchmarks = compiletime_stategy_utils.generate_cts_benchmarks(ct_strats, args.benchmarks)
+    
+    # Update benchmarks with compile-time strategies
+    args.benchmarks = new_benchmarks
 
     start_experiment(args.experiment_name,
                      args.experiment_config,

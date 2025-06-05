@@ -60,6 +60,10 @@ def generate_cts_benchmark(ct_strat, benchmark):
     # Generate configuration
     configurations = generate_ct_configs(ct_strat_dir, ct_grammar)
     
+    for each in configurations:
+        print(f"Generated configuration: {each}")
+    exit(0)
+    
     # Generate benchmark with compile-time strategy
     new_benchmark_names = []
     for idx, ct_config in enumerate(configurations):

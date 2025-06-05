@@ -6,11 +6,9 @@ apt-get update && apt-get install -y \
   libxslt1-dev xsltproc doxygen
 
 ./autogen.sh
-./configure {{CT_CONFIGURATION}} --disable-docs
+./configure {{CT_CONFIGURATION}} 
 
 make -j$(nproc)
-
-ls -a -l
 
 # Copy the binary to the destination directory
 cp xmllint $OUT/xmllint

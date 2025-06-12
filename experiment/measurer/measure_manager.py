@@ -472,6 +472,17 @@ class SnapshotMeasurer(coverage_utils.TrialCoverage):  # pylint: disable=too-man
             self.logger.warning('Corpus not found: %s.', corpus_archive_path)
             return False
 
+        # Print all files in the corpus archive.
+        with tarfile.open(corpus_archive_path, 'r:gz') as tar:
+            for member in tar.getmembers():
+                if not member.isfile():
+                    # We don't care about directory structure.
+                    # So skip if not a file.
+                    continue
+                self.logger.debug('Corpus archive contains: %s', member.name)
+        
+        exit(1)
+
         extract_corpus(corpus_archive_path, self.corpus_dir)
         return True
 

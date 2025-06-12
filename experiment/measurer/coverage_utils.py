@@ -118,7 +118,7 @@ class CoverageReporter:  # pylint: disable=too-many-instance-attributes
         self.source_files_dir = os.path.join(coverage_binaries_dir, benchmark)
         self.binary_file = get_coverage_binary(benchmark)
 
-    def merge_profdata_files(self):
+    def merge_profdata_files(self): # mta change
         """Merge profdata files from |src_files| to |dst_files|."""
         logger.info('Merging profdata for fuzzer: %s, benchmark: %s.',
                     self.fuzzer, self.benchmark)

@@ -481,7 +481,6 @@ class SnapshotMeasurer(coverage_utils.TrialCoverage):  # pylint: disable=too-man
                     continue
                 self.logger.debug('Corpus archive contains: %s', member.name)
         
-        exit(1)
 
         extract_corpus(corpus_archive_path, self.corpus_dir)
         return True

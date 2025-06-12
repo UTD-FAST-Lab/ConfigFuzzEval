@@ -78,7 +78,6 @@ def execute(  # pylint: disable=too-many-locals,too-many-branches
         output_file: Optional[int] = None,
         # Not True by default because we can't always set group on processes.
         kill_children: bool = False,
-        debug: bool = False,
         **kwargs) -> ProcessResult:
     """Execute |command| and return the returncode and the output"""
     if write_to_stdout:
@@ -93,9 +92,6 @@ def execute(  # pylint: disable=too-many-locals,too-many-branches
     if kill_children:
         kwargs['preexec_fn'] = os.setsid
 
-    if debug:
-        logs.debug('Executing Measurer Command: %s', ' '.join(command),
-                   extras={'command': command})
     # pylint: disable=consider-using-with
     process = subprocess.Popen(command, *args, **kwargs)
     process_group_id = os.getpgid(process.pid)

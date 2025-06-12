@@ -43,6 +43,12 @@ def do_coverage_run(  # pylint: disable=too-many-locals
         profraw_file_pattern: str, crashes_dir: str):
     """Does a coverage run of |coverage_binary| on |new_units_dir|. Writes
     the result to |profraw_file_pattern|."""
+    
+    # print corpus directory
+    for each in os.listdir(new_units_dir[0]):
+        print(each)
+    print('Corpus directory:', new_units_dir[0])
+    
     with tempfile.TemporaryDirectory() as merge_dir:
         command = [
             coverage_binary, '-merge=1', '-dump_coverage=1',

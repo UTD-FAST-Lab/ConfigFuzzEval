@@ -1,0 +1,983 @@
+Unable to find image 'gcr.io/fuzzbench/dispatcher-image:latest' locally
+latest: Pulling from fuzzbench/dispatcher-image
+ca1778b69356: Pulling fs layer
+c74c0df6eb1c: Pulling fs layer
+e7bbd865a12a: Pulling fs layer
+4cb1d2db876e: Pulling fs layer
+4c6dc3617974: Pulling fs layer
+a85543be2d87: Pulling fs layer
+533ba417cd91: Pulling fs layer
+532ec68759de: Pulling fs layer
+81a8f5d75838: Pulling fs layer
+2fd99da4d124: Pulling fs layer
+4cb1d2db876e: Waiting
+5cd39d2d90eb: Pulling fs layer
+a85543be2d87: Waiting
+a93d47baa174: Pulling fs layer
+533ba417cd91: Waiting
+4c6dc3617974: Waiting
+64c5283a975c: Pulling fs layer
+2fd99da4d124: Waiting
+a93d47baa174: Waiting
+5cd39d2d90eb: Waiting
+81a8f5d75838: Waiting
+8b0913ecefe1: Pulling fs layer
+c8dcc4e98f73: Pulling fs layer
+64c5283a975c: Waiting
+8b0913ecefe1: Waiting
+e1e8e3b0ac45: Pulling fs layer
+c8dcc4e98f73: Waiting
+e7bbd865a12a: Verifying Checksum
+e7bbd865a12a: Download complete
+ca1778b69356: Download complete
+4cb1d2db876e: Verifying Checksum
+4cb1d2db876e: Download complete
+a85543be2d87: Verifying Checksum
+a85543be2d87: Download complete
+ca1778b69356: Pull complete
+c74c0df6eb1c: Verifying Checksum
+c74c0df6eb1c: Download complete
+532ec68759de: Verifying Checksum
+532ec68759de: Download complete
+c74c0df6eb1c: Pull complete
+81a8f5d75838: Verifying Checksum
+81a8f5d75838: Download complete
+2fd99da4d124: Verifying Checksum
+2fd99da4d124: Download complete
+5cd39d2d90eb: Verifying Checksum
+5cd39d2d90eb: Download complete
+e7bbd865a12a: Pull complete
+4cb1d2db876e: Pull complete
+a93d47baa174: Verifying Checksum
+a93d47baa174: Download complete
+533ba417cd91: Verifying Checksum
+533ba417cd91: Download complete
+64c5283a975c: Verifying Checksum
+64c5283a975c: Download complete
+8b0913ecefe1: Verifying Checksum
+8b0913ecefe1: Download complete
+c8dcc4e98f73: Verifying Checksum
+c8dcc4e98f73: Download complete
+e1e8e3b0ac45: Verifying Checksum
+e1e8e3b0ac45: Download complete
+4c6dc3617974: Download complete
+4c6dc3617974: Pull complete
+a85543be2d87: Pull complete
+533ba417cd91: Pull complete
+532ec68759de: Pull complete
+81a8f5d75838: Pull complete
+2fd99da4d124: Pull complete
+5cd39d2d90eb: Pull complete
+a93d47baa174: Pull complete
+64c5283a975c: Pull complete
+8b0913ecefe1: Pull complete
+c8dcc4e98f73: Pull complete
+e1e8e3b0ac45: Pull complete
+Digest: sha256:5b083b6288a86376af7e728bf12b07907c1b6a0e11d7e0bb2e4d3fa9fbdf6034
+Status: Downloaded newer image for gcr.io/fuzzbench/dispatcher-image:latest
+tar: Removing leading `/' from member names
+/
+.allstar/
+.allstar/binary_artifacts.yaml
+.dockerignore
+.gcloudignore
+.git/
+.github/
+.github/workflows/
+.github/workflows/benchmarks.yml
+.github/workflows/build_and_test_run_fuzzer_benchmarks.py
+.github/workflows/presubmit.yml
+.gitignore
+.gitmodules
+.pylintrc
+.pytest_cache/
+.pytype/
+.style.yapf
+.venv/
+CONTRIBUTING.md
+FuzzBenchPlusPlus/
+FuzzBenchPlusPlus/jobs.py
+FuzzBenchPlusPlus/local-experiment-config.yaml
+FuzzBenchPlusPlus/run_experiment.py
+FuzzBenchPlusPlus/test_e2e/
+FuzzBenchPlusPlus/test_e2e/__pycache__/
+FuzzBenchPlusPlus/test_e2e/end-to-end-test-config.yaml
+FuzzBenchPlusPlus/test_e2e/test_e2e_run.py
+FuzzBenchPlusPlus/worker.py
+LICENSE
+Makefile
+README.md
+__pycache__/
+alembic.ini
+analysis/
+analysis/README.md
+analysis/__pycache__/
+analysis/benchmark_results.py
+analysis/coverage_data_utils.py
+analysis/data_utils.py
+analysis/experiment_results.py
+analysis/generate_report.py
+analysis/notebooks/
+analysis/notebooks/README.md
+analysis/notebooks/example.ipynb
+analysis/notebooks/ranking.ipynb
+analysis/plotting.py
+analysis/queries.py
+analysis/rendering.py
+analysis/report_templates/
+analysis/report_templates/default.html
+analysis/report_templates/experimental.html
+analysis/stat_tests.py
+analysis/test_coverage_data_utils.py
+analysis/test_data/
+analysis/test_data_utils.py
+analysis/test_experiment_results.py
+analysis/test_plotting.py
+analysis/test_queries.py
+analysis/test_stat_tests.py
+benchmarks/
+benchmarks/.oss_fuzz_benchmark_integration.py
+benchmarks/cts_libxml2_xmllint_default_0/
+benchmarks/cts_libxml2_xmllint_default_0/Dockerfile
+benchmarks/cts_libxml2_xmllint_default_0/benchmark.yaml
+benchmarks/cts_libxml2_xmllint_default_0/build.sh
+benchmarks/cts_libxml2_xmllint_default_0/ct_grammar.json
+benchmarks/cts_libxml2_xmllint_manual_0/
+benchmarks/cts_libxml2_xmllint_manual_0/Dockerfile
+benchmarks/cts_libxml2_xmllint_manual_0/benchmark.yaml
+benchmarks/cts_libxml2_xmllint_manual_0/build.sh
+benchmarks/cts_libxml2_xmllint_manual_0/ct_grammar.json
+benchmarks/cts_libxml2_xmllint_manual_1/
+benchmarks/cts_libxml2_xmllint_manual_1/Dockerfile
+benchmarks/cts_libxml2_xmllint_manual_1/benchmark.yaml
+benchmarks/cts_libxml2_xmllint_manual_1/build.sh
+benchmarks/cts_libxml2_xmllint_manual_1/ct_grammar.json
+benchmarks/cts_libxml2_xmllint_maximum_0/
+benchmarks/cts_libxml2_xmllint_maximum_0/Dockerfile
+benchmarks/cts_libxml2_xmllint_maximum_0/benchmark.yaml
+benchmarks/cts_libxml2_xmllint_maximum_0/build.sh
+benchmarks/cts_libxml2_xmllint_maximum_0/ct_grammar.json
+benchmarks/libxml2_xmllint/
+benchmarks/libxml2_xmllint/Dockerfile
+benchmarks/libxml2_xmllint/benchmark.yaml
+benchmarks/libxml2_xmllint/build.sh
+benchmarks/libxml2_xmllint/ct_grammar.json
+common/
+common/__pycache__/
+common/benchmark_config.py
+common/benchmark_utils.py
+common/compiletime_stategy_utils.py
+common/config_utils.py
+common/conftest.py
+common/environment.py
+common/experiment_path.py
+common/experiment_utils.py
+common/filestore_utils.py
+common/filesystem.py
+common/fuzzer_config.py
+common/fuzzer_stats.py
+common/fuzzer_utils.py
+common/gce.py
+common/gcloud.py
+common/gsutil.py
+common/local_filestore.py
+common/logs.py
+common/new_process.py
+common/queue_utils.py
+common/random_corpus_fuzzing_utils.py
+common/retry.py
+common/sanitizer.py
+common/test_benchmark_config.py
+common/test_benchmark_utils.py
+common/test_common_utils.py
+common/test_data/
+common/test_experiment_utils.py
+common/test_filestore_utils.py
+common/test_filesystem.py
+common/test_fuzzer_stats.py
+common/test_fuzzer_utils.py
+common/test_gce.py
+common/test_gcloud.py
+common/test_gsutil.py
+common/test_local_filestore.py
+common/test_new_process.py
+common/utils.py
+common/yaml_utils.py
+compiletime/
+compiletime/default/
+compiletime/default/__pycache__/
+compiletime/default/strategy.py
+compiletime/manual/
+compiletime/manual/__pycache__/
+compiletime/manual/strategy.py
+compiletime/maximum/
+compiletime/maximum/__pycache__/
+compiletime/maximum/strategy.py
+compiletime/minimum/
+compiletime/minimum/__pycache__/
+compiletime/minimum/strategy.py
+compiletime/randomnaive/
+compiletime/randomnaive/__pycache__/
+compiletime/randomnaive/strategy.py
+compiletime/randomsmart/
+compiletime/randomsmart/__pycache__/
+compiletime/randomsmart/strategy.py
+compose/
+compose/e2e-test.yaml
+compose/fuzzbench.yaml
+config/
+config/experiment.yaml
+configuration.yaml
+conftest.py
+database/
+database/__pycache__/
+database/alembic/
+database/alembic/README
+database/alembic/env.py
+database/alembic/script.py.mako
+database/alembic/versions/
+database/alembic/versions/26dcc0e12872_add_experiment_description.py
+database/alembic/versions/43dc3aacd80e_git_hash.py
+database/alembic/versions/541d041d662a_support_private.py
+database/alembic/versions/5c5f07c6f2fa_initial.py
+database/alembic/versions/72f7db0e7dfe_support_preemptibles.py
+database/alembic/versions/77022369cea4_time_ended.py
+database/alembic/versions/8c237d2acbc4_add_crash_table.py
+database/alembic/versions/a7089f396110_scheduler.py
+database/alembic/versions/c83ac04855b4_add_filestore_name.py
+database/alembic/versions/eec6e5667b87_add_fuzzer_stats.py
+database/models.py
+database/utils.py
+docker/
+docker/__pycache__/
+docker/base-image/
+docker/base-image/Dockerfile
+docker/benchmark-builder/
+docker/benchmark-builder/Dockerfile
+docker/benchmark-builder/checkout_commit.py
+docker/benchmark-builder/fuzzer_build
+docker/benchmark-runner/
+docker/benchmark-runner/Dockerfile
+docker/benchmark-runner/startup-runner.sh
+docker/dispatcher-image/
+docker/dispatcher-image/Dockerfile
+docker/dispatcher-image/startup-dispatcher.sh
+docker/fuzzbench/
+docker/fuzzbench/Dockerfile
+docker/gcb/
+docker/gcb/base-images.yaml
+docker/generate_makefile.py
+docker/image_types.yaml
+docker/test_generate_makefile.py
+docker/worker/
+docker/worker/Dockerfile
+docker/worker/startup-worker.sh
+docs/
+experiment/
+experiment/__pycache__/
+experiment/build/
+experiment/build/__pycache__/
+experiment/build/build_utils.py
+experiment/build/builder.py
+experiment/build/docker_images.py
+experiment/build/gcb_build.py
+experiment/build/generate_cloudbuild.py
+experiment/build/local_build.py
+experiment/build/test_builder.py
+experiment/build/test_docker_images.py
+experiment/build/test_gcb_build.py
+experiment/build/test_generate_cloudbuild.py
+experiment/cloud/
+experiment/cloud/secret_manager.py
+experiment/cloud/service_account_key.py
+experiment/conftest.py
+experiment/dispatcher.py
+experiment/measurer/
+experiment/measurer/__pycache__/
+experiment/measurer/coverage_utils.py
+experiment/measurer/datatypes.py
+experiment/measurer/measure_manager.py
+experiment/measurer/measure_worker.py
+experiment/measurer/run_coverage.py
+experiment/measurer/run_crashes.py
+experiment/measurer/standalone.py
+experiment/measurer/test_coverage_utils.py
+experiment/measurer/test_data/
+experiment/measurer/test_measure_manager.py
+experiment/measurer/test_measure_worker.py
+experiment/measurer/test_run_coverage.py
+experiment/measurer/test_run_crashes.py
+experiment/reporter.py
+experiment/reproduce_experiment.py
+experiment/resources/
+experiment/resources/dispatcher-startup-script-template.sh
+experiment/resources/runner-startup-script-template.sh
+experiment/run_experiment.py
+experiment/runner.py
+experiment/schedule_measure_workers.py
+experiment/scheduler.py
+experiment/stop_experiment.py
+experiment/test_data/
+experiment/test_dispatcher.py
+experiment/test_reporter.py
+experiment/test_run_experiment.py
+experiment/test_runner.py
+experiment/test_scheduler.py
+fbpp.log
+fuzzers/
+fuzzers/__pycache__/
+fuzzers/afl/
+fuzzers/afl/__pycache__/
+fuzzers/afl/builder.Dockerfile
+fuzzers/afl/fuzzer.py
+fuzzers/afl/runner.Dockerfile
+fuzzers/afl_2_52_b/
+fuzzers/afl_2_52_b/__pycache__/
+fuzzers/afl_2_52_b/builder.Dockerfile
+fuzzers/afl_2_52_b/fuzzer.py
+fuzzers/afl_2_52_b/runner.Dockerfile
+fuzzers/afl_qemu/
+fuzzers/afl_qemu/__pycache__/
+fuzzers/afl_qemu/builder.Dockerfile
+fuzzers/afl_qemu/fuzzer.py
+fuzzers/afl_qemu/runner.Dockerfile
+fuzzers/afl_random_favored/
+fuzzers/afl_random_favored/__pycache__/
+fuzzers/afl_random_favored/builder.Dockerfile
+fuzzers/afl_random_favored/fuzzer.py
+fuzzers/afl_random_favored/runner.Dockerfile
+fuzzers/afl_virginmap/
+fuzzers/afl_virginmap/__pycache__/
+fuzzers/afl_virginmap/builder.Dockerfile
+fuzzers/afl_virginmap/fuzzer.py
+fuzzers/afl_virginmap/runner.Dockerfile
+fuzzers/aflcc/
+fuzzers/aflcc/__pycache__/
+fuzzers/aflcc/aflcc_mock.c
+fuzzers/aflcc/builder.Dockerfile
+fuzzers/aflcc/fuzzer.py
+fuzzers/aflcc/runner.Dockerfile
+fuzzers/aflfast/
+fuzzers/aflfast/__pycache__/
+fuzzers/aflfast/builder.Dockerfile
+fuzzers/aflfast/fuzzer.py
+fuzzers/aflfast/runner.Dockerfile
+fuzzers/aflplusplus/
+fuzzers/aflplusplus/__pycache__/
+fuzzers/aflplusplus/builder.Dockerfile
+fuzzers/aflplusplus/description.md
+fuzzers/aflplusplus/fuzzer.py
+fuzzers/aflplusplus/runner.Dockerfile
+fuzzers/aflplusplus_frida/
+fuzzers/aflplusplus_frida/__pycache__/
+fuzzers/aflplusplus_frida/builder.Dockerfile
+fuzzers/aflplusplus_frida/description.md
+fuzzers/aflplusplus_frida/fuzzer.py
+fuzzers/aflplusplus_frida/get_frida_entry.sh
+fuzzers/aflplusplus_frida/runner.Dockerfile
+fuzzers/aflplusplus_qemu/
+fuzzers/aflplusplus_qemu/__pycache__/
+fuzzers/aflplusplus_qemu/builder.Dockerfile
+fuzzers/aflplusplus_qemu/description.md
+fuzzers/aflplusplus_qemu/fuzzer.py
+fuzzers/aflplusplus_qemu/runner.Dockerfile
+fuzzers/aflplusplus_um_parallel/
+fuzzers/aflplusplus_um_parallel/__pycache__/
+fuzzers/aflplusplus_um_parallel/builder.Dockerfile
+fuzzers/aflplusplus_um_parallel/description.md
+fuzzers/aflplusplus_um_parallel/fuzzer.py
+fuzzers/aflplusplus_um_parallel/runner.Dockerfile
+fuzzers/aflplusplus_um_prioritize/
+fuzzers/aflplusplus_um_prioritize/__pycache__/
+fuzzers/aflplusplus_um_prioritize/builder.Dockerfile
+fuzzers/aflplusplus_um_prioritize/description.md
+fuzzers/aflplusplus_um_prioritize/fuzzer.py
+fuzzers/aflplusplus_um_prioritize/runner.Dockerfile
+fuzzers/aflplusplus_um_prioritize_75/
+fuzzers/aflplusplus_um_prioritize_75/__pycache__/
+fuzzers/aflplusplus_um_prioritize_75/builder.Dockerfile
+fuzzers/aflplusplus_um_prioritize_75/description.md
+fuzzers/aflplusplus_um_prioritize_75/fuzzer.py
+fuzzers/aflplusplus_um_prioritize_75/runner.Dockerfile
+fuzzers/aflplusplus_um_random/
+fuzzers/aflplusplus_um_random/__pycache__/
+fuzzers/aflplusplus_um_random/builder.Dockerfile
+fuzzers/aflplusplus_um_random/description.md
+fuzzers/aflplusplus_um_random/fuzzer.py
+fuzzers/aflplusplus_um_random/runner.Dockerfile
+fuzzers/aflplusplus_um_random_75/
+fuzzers/aflplusplus_um_random_75/__pycache__/
+fuzzers/aflplusplus_um_random_75/builder.Dockerfile
+fuzzers/aflplusplus_um_random_75/description.md
+fuzzers/aflplusplus_um_random_75/fuzzer.py
+fuzzers/aflplusplus_um_random_75/runner.Dockerfile
+fuzzers/aflpp_random_default/
+fuzzers/aflpp_random_default/__pycache__/
+fuzzers/aflpp_random_default/builder.Dockerfile
+fuzzers/aflpp_random_default/fuzzer.py
+fuzzers/aflpp_random_default/runner.Dockerfile
+fuzzers/aflpp_random_no_favs/
+fuzzers/aflpp_random_no_favs/__pycache__/
+fuzzers/aflpp_random_no_favs/builder.Dockerfile
+fuzzers/aflpp_random_no_favs/fuzzer.py
+fuzzers/aflpp_random_no_favs/runner.Dockerfile
+fuzzers/aflpp_random_wrs/
+fuzzers/aflpp_random_wrs/__pycache__/
+fuzzers/aflpp_random_wrs/builder.Dockerfile
+fuzzers/aflpp_random_wrs/fuzzer.py
+fuzzers/aflpp_random_wrs/runner.Dockerfile
+fuzzers/aflpp_random_wrs_rf/
+fuzzers/aflpp_random_wrs_rf/__pycache__/
+fuzzers/aflpp_random_wrs_rf/builder.Dockerfile
+fuzzers/aflpp_random_wrs_rf/fuzzer.py
+fuzzers/aflpp_random_wrs_rf/runner.Dockerfile
+fuzzers/aflpp_random_wrs_rf_rp/
+fuzzers/aflpp_random_wrs_rf_rp/__pycache__/
+fuzzers/aflpp_random_wrs_rf_rp/builder.Dockerfile
+fuzzers/aflpp_random_wrs_rf_rp/fuzzer.py
+fuzzers/aflpp_random_wrs_rf_rp/runner.Dockerfile
+fuzzers/aflpp_random_wrs_rp/
+fuzzers/aflpp_random_wrs_rp/__pycache__/
+fuzzers/aflpp_random_wrs_rp/builder.Dockerfile
+fuzzers/aflpp_random_wrs_rp/fuzzer.py
+fuzzers/aflpp_random_wrs_rp/runner.Dockerfile
+fuzzers/aflsmart/
+fuzzers/aflsmart/README.md
+fuzzers/aflsmart/__pycache__/
+fuzzers/aflsmart/builder.Dockerfile
+fuzzers/aflsmart/fuzzer.py
+fuzzers/aflsmart/runner.Dockerfile
+fuzzers/aflsmart_plusplus/
+fuzzers/aflsmart_plusplus/README.md
+fuzzers/aflsmart_plusplus/__pycache__/
+fuzzers/aflsmart_plusplus/builder.Dockerfile
+fuzzers/aflsmart_plusplus/fuzzer.py
+fuzzers/aflsmart_plusplus/runner.Dockerfile
+fuzzers/centipede/
+fuzzers/centipede/__pycache__/
+fuzzers/centipede/builder.Dockerfile
+fuzzers/centipede/fuzzer.py
+fuzzers/centipede/runner.Dockerfile
+fuzzers/centipede_function_filter/
+fuzzers/centipede_function_filter/__pycache__/
+fuzzers/centipede_function_filter/builder.Dockerfile
+fuzzers/centipede_function_filter/fuzzer.py
+fuzzers/centipede_function_filter/runner.Dockerfile
+fuzzers/coverage/
+fuzzers/coverage/builder.Dockerfile
+fuzzers/coverage/fuzzer.py
+fuzzers/darwin/
+fuzzers/darwin/__pycache__/
+fuzzers/darwin/builder.Dockerfile
+fuzzers/darwin/fuzzer.py
+fuzzers/darwin/runner.Dockerfile
+fuzzers/eclipser/
+fuzzers/eclipser/__pycache__/
+fuzzers/eclipser/builder.Dockerfile
+fuzzers/eclipser/fuzzer.py
+fuzzers/eclipser/runner.Dockerfile
+fuzzers/eclipser_aflplusplus/
+fuzzers/eclipser_aflplusplus/__pycache__/
+fuzzers/eclipser_aflplusplus/builder.Dockerfile
+fuzzers/eclipser_aflplusplus/description.md
+fuzzers/eclipser_aflplusplus/fuzzer.py
+fuzzers/eclipser_aflplusplus/runner.Dockerfile
+fuzzers/eclipser_new/
+fuzzers/eclipser_new/__pycache__/
+fuzzers/eclipser_new/builder.Dockerfile
+fuzzers/eclipser_new/fuzzer.py
+fuzzers/eclipser_new/runner.Dockerfile
+fuzzers/ecofuzz/
+fuzzers/ecofuzz/__pycache__/
+fuzzers/ecofuzz/builder.Dockerfile
+fuzzers/ecofuzz/fuzzer.py
+fuzzers/ecofuzz/runner.Dockerfile
+fuzzers/fafuzz/
+fuzzers/fafuzz/__pycache__/
+fuzzers/fafuzz/builder.Dockerfile
+fuzzers/fafuzz/fuzzer.py
+fuzzers/fafuzz/runner.Dockerfile
+fuzzers/fairfuzz/
+fuzzers/fairfuzz/__pycache__/
+fuzzers/fairfuzz/builder.Dockerfile
+fuzzers/fairfuzz/fuzzer.py
+fuzzers/fairfuzz/runner.Dockerfile
+fuzzers/fuzzolic_aflplusplus_fuzzy/
+fuzzers/fuzzolic_aflplusplus_fuzzy/__pycache__/
+fuzzers/fuzzolic_aflplusplus_fuzzy/builder.Dockerfile
+fuzzers/fuzzolic_aflplusplus_fuzzy/description.md
+fuzzers/fuzzolic_aflplusplus_fuzzy/fuzzer.py
+fuzzers/fuzzolic_aflplusplus_fuzzy/runner.Dockerfile
+fuzzers/fuzzolic_aflplusplus_z3/
+fuzzers/fuzzolic_aflplusplus_z3/__pycache__/
+fuzzers/fuzzolic_aflplusplus_z3/builder.Dockerfile
+fuzzers/fuzzolic_aflplusplus_z3/description.md
+fuzzers/fuzzolic_aflplusplus_z3/fuzzer.py
+fuzzers/fuzzolic_aflplusplus_z3/runner.Dockerfile
+fuzzers/glibfuzzer/
+fuzzers/glibfuzzer/__pycache__/
+fuzzers/glibfuzzer/builder.Dockerfile
+fuzzers/glibfuzzer/fuzzer.py
+fuzzers/glibfuzzer/runner.Dockerfile
+fuzzers/gramatron/
+fuzzers/gramatron/__pycache__/
+fuzzers/gramatron/builder.Dockerfile
+fuzzers/gramatron/fuzzer.py
+fuzzers/gramatron/fuzzer.yaml
+fuzzers/gramatron/runner.Dockerfile
+fuzzers/grimoire/
+fuzzers/grimoire/__pycache__/
+fuzzers/grimoire/builder.Dockerfile
+fuzzers/grimoire/fuzzer.py
+fuzzers/grimoire/fuzzer.yaml
+fuzzers/grimoire/runner.Dockerfile
+fuzzers/hastefuzz/
+fuzzers/hastefuzz/__pycache__/
+fuzzers/hastefuzz/builder.Dockerfile
+fuzzers/hastefuzz/description.md
+fuzzers/hastefuzz/fuzzer.py
+fuzzers/hastefuzz/runner.Dockerfile
+fuzzers/honggfuzz/
+fuzzers/honggfuzz/__pycache__/
+fuzzers/honggfuzz/builder.Dockerfile
+fuzzers/honggfuzz/fuzzer.py
+fuzzers/honggfuzz/runner.Dockerfile
+fuzzers/honggfuzz_qemu/
+fuzzers/honggfuzz_qemu/__pycache__/
+fuzzers/honggfuzz_qemu/builder.Dockerfile
+fuzzers/honggfuzz_qemu/fuzzer.py
+fuzzers/honggfuzz_qemu/runner.Dockerfile
+fuzzers/honggfuzz_um_parallel/
+fuzzers/honggfuzz_um_parallel/__pycache__/
+fuzzers/honggfuzz_um_parallel/builder.Dockerfile
+fuzzers/honggfuzz_um_parallel/description.md
+fuzzers/honggfuzz_um_parallel/fuzzer.py
+fuzzers/honggfuzz_um_parallel/runner.Dockerfile
+fuzzers/honggfuzz_um_prioritize/
+fuzzers/honggfuzz_um_prioritize/__pycache__/
+fuzzers/honggfuzz_um_prioritize/builder.Dockerfile
+fuzzers/honggfuzz_um_prioritize/description.md
+fuzzers/honggfuzz_um_prioritize/fuzzer.py
+fuzzers/honggfuzz_um_prioritize/runner.Dockerfile
+fuzzers/honggfuzz_um_prioritize_75/
+fuzzers/honggfuzz_um_prioritize_75/__pycache__/
+fuzzers/honggfuzz_um_prioritize_75/builder.Dockerfile
+fuzzers/honggfuzz_um_prioritize_75/description.md
+fuzzers/honggfuzz_um_prioritize_75/fuzzer.py
+fuzzers/honggfuzz_um_prioritize_75/runner.Dockerfile
+fuzzers/honggfuzz_um_random/
+fuzzers/honggfuzz_um_random/__pycache__/
+fuzzers/honggfuzz_um_random/builder.Dockerfile
+fuzzers/honggfuzz_um_random/description.md
+fuzzers/honggfuzz_um_random/fuzzer.py
+fuzzers/honggfuzz_um_random/runner.Dockerfile
+fuzzers/honggfuzz_um_random_75/
+fuzzers/honggfuzz_um_random_75/__pycache__/
+fuzzers/honggfuzz_um_random_75/builder.Dockerfile
+fuzzers/honggfuzz_um_random_75/description.md
+fuzzers/honggfuzz_um_random_75/fuzzer.py
+fuzzers/honggfuzz_um_random_75/runner.Dockerfile
+fuzzers/klee/
+fuzzers/klee/__pycache__/
+fuzzers/klee/builder.Dockerfile
+fuzzers/klee/fuzzer.py
+fuzzers/klee/klee_driver.cpp
+fuzzers/klee/klee_mock.c
+fuzzers/klee/runner.Dockerfile
+fuzzers/lafintel/
+fuzzers/lafintel/__pycache__/
+fuzzers/lafintel/builder.Dockerfile
+fuzzers/lafintel/fuzzer.py
+fuzzers/lafintel/runner.Dockerfile
+fuzzers/learnperffuzz/
+fuzzers/learnperffuzz/__pycache__/
+fuzzers/learnperffuzz/builder.Dockerfile
+fuzzers/learnperffuzz/fuzzer.py
+fuzzers/learnperffuzz/runner.Dockerfile
+fuzzers/libafl/
+fuzzers/libafl/__pycache__/
+fuzzers/libafl/builder.Dockerfile
+fuzzers/libafl/description.md
+fuzzers/libafl/fuzzer.py
+fuzzers/libafl/runner.Dockerfile
+fuzzers/libafl_libfuzzer/
+fuzzers/libafl_libfuzzer/__pycache__/
+fuzzers/libafl_libfuzzer/builder.Dockerfile
+fuzzers/libafl_libfuzzer/description.md
+fuzzers/libafl_libfuzzer/fuzzer.py
+fuzzers/libafl_libfuzzer/runner.Dockerfile
+fuzzers/libfuzzer/
+fuzzers/libfuzzer/__pycache__/
+fuzzers/libfuzzer/builder.Dockerfile
+fuzzers/libfuzzer/fuzzer.py
+fuzzers/libfuzzer/patch.diff
+fuzzers/libfuzzer/runner.Dockerfile
+fuzzers/manul/
+fuzzers/manul/__pycache__/
+fuzzers/manul/builder.Dockerfile
+fuzzers/manul/fuzzer.py
+fuzzers/manul/runner.Dockerfile
+fuzzers/mopt/
+fuzzers/mopt/__pycache__/
+fuzzers/mopt/builder.Dockerfile
+fuzzers/mopt/fuzzer.py
+fuzzers/mopt/runner.Dockerfile
+fuzzers/nautilus/
+fuzzers/nautilus/__pycache__/
+fuzzers/nautilus/builder.Dockerfile
+fuzzers/nautilus/fuzzer.py
+fuzzers/nautilus/fuzzer.yaml
+fuzzers/nautilus/runner.Dockerfile
+fuzzers/neuzz/
+fuzzers/neuzz/__pycache__/
+fuzzers/neuzz/builder.Dockerfile
+fuzzers/neuzz/fuzzer.py
+fuzzers/neuzz/runner.Dockerfile
+fuzzers/pastis/
+fuzzers/pastis/__pycache__/
+fuzzers/pastis/builder.Dockerfile
+fuzzers/pastis/fuzzer.py
+fuzzers/pastis/patches/
+fuzzers/pastis/patches/honggfuzz-3a8f2ae-pastis.patch
+fuzzers/pastis/runner.Dockerfile
+fuzzers/pythia_bb/
+fuzzers/pythia_bb/__pycache__/
+fuzzers/pythia_bb/builder.Dockerfile
+fuzzers/pythia_bb/fuzzer.py
+fuzzers/pythia_bb/runner.Dockerfile
+fuzzers/pythia_effect_bb/
+fuzzers/pythia_effect_bb/__pycache__/
+fuzzers/pythia_effect_bb/builder.Dockerfile
+fuzzers/pythia_effect_bb/fuzzer.py
+fuzzers/pythia_effect_bb/runner.Dockerfile
+fuzzers/symcc_afl/
+fuzzers/symcc_afl/__pycache__/
+fuzzers/symcc_afl/builder.Dockerfile
+fuzzers/symcc_afl/fuzzer.py
+fuzzers/symcc_afl/runner.Dockerfile
+fuzzers/symcc_afl_single/
+fuzzers/symcc_afl_single/__pycache__/
+fuzzers/symcc_afl_single/builder.Dockerfile
+fuzzers/symcc_afl_single/fuzzer.py
+fuzzers/symcc_afl_single/runner.Dockerfile
+fuzzers/symcc_aflplusplus/
+fuzzers/symcc_aflplusplus/__pycache__/
+fuzzers/symcc_aflplusplus/builder.Dockerfile
+fuzzers/symcc_aflplusplus/fuzzer.py
+fuzzers/symcc_aflplusplus/runner.Dockerfile
+fuzzers/symcc_aflplusplus_single/
+fuzzers/symcc_aflplusplus_single/__pycache__/
+fuzzers/symcc_aflplusplus_single/builder.Dockerfile
+fuzzers/symcc_aflplusplus_single/fuzzer.py
+fuzzers/symcc_aflplusplus_single/runner.Dockerfile
+fuzzers/symqemu_aflplusplus/
+fuzzers/symqemu_aflplusplus/__pycache__/
+fuzzers/symqemu_aflplusplus/builder.Dockerfile
+fuzzers/symqemu_aflplusplus/fuzzer.py
+fuzzers/symqemu_aflplusplus/runner.Dockerfile
+fuzzers/symsan/
+fuzzers/symsan/CMakeLists_bloaty.txt
+fuzzers/symsan/__pycache__/
+fuzzers/symsan/build_freetype2.sh
+fuzzers/symsan/build_proj.sh
+fuzzers/symsan/builder.Dockerfile
+fuzzers/symsan/bz2.abilist
+fuzzers/symsan/cares.abilist
+fuzzers/symsan/fres.sh
+fuzzers/symsan/fuz.sh
+fuzzers/symsan/fuzzer.py
+fuzzers/symsan/gcry.abilist
+fuzzers/symsan/glib.abilist
+fuzzers/symsan/libfuzz-harness-proxy.c
+fuzzers/symsan/pcre.abilist
+fuzzers/symsan/runner.Dockerfile
+fuzzers/symsan/xml.abilist
+fuzzers/test_fuzzers.py
+fuzzers/test_utils.py
+fuzzers/token_level/
+fuzzers/token_level/__pycache__/
+fuzzers/token_level/builder.Dockerfile
+fuzzers/token_level/fuzzer.py
+fuzzers/token_level/fuzzer.yaml
+fuzzers/token_level/runner.Dockerfile
+fuzzers/tortoisefuzz/
+fuzzers/tortoisefuzz/__pycache__/
+fuzzers/tortoisefuzz/builder.Dockerfile
+fuzzers/tortoisefuzz/fuzzer.py
+fuzzers/tortoisefuzz/runner.Dockerfile
+fuzzers/utils.py
+fuzzers/weizz_qemu/
+fuzzers/weizz_qemu/__pycache__/
+fuzzers/weizz_qemu/builder.Dockerfile
+fuzzers/weizz_qemu/fuzzer.py
+fuzzers/weizz_qemu/runner.Dockerfile
+fuzzers/wingfuzz/
+fuzzers/wingfuzz/__pycache__/
+fuzzers/wingfuzz/builder.Dockerfile
+fuzzers/wingfuzz/fuzzer.py
+fuzzers/wingfuzz/runner.Dockerfile
+presubmit.py
+pytest.ini
+requirements.txt
+service/
+service/Dockerfile
+service/core-fuzzers.yaml
+service/experiment-config.yaml
+service/experiment-requests.yaml
+service/gcbrun_experiment.py
+service/gsutil_bucket_index/
+service/gsutil_bucket_index/third_party/
+service/gsutil_bucket_index/third_party/index.html
+service/run.bash
+service/run_experiment_cloudbuild.yaml
+service/setup.bash
+src_analysis/
+src_analysis/__pycache__/
+src_analysis/benchmark_dependencies.py
+src_analysis/change_utils.py
+src_analysis/diff_utils.py
+src_analysis/experiment_changes.py
+src_analysis/fuzzer_dependencies.py
+src_analysis/test_benchmark_dependencies.py
+src_analysis/test_change_utils.py
+src_analysis/test_experiment_changes.py
+src_analysis/test_fuzzer_dependencies.py
+test_libs/
+test_libs/__pycache__/
+test_libs/test_data/
+test_libs/utils.py
+third_party/
+third_party/sancov.py
+INFO:root:Starting experiment.
+INFO:root:Building measurers.
+INFO:root:Concurrent builds: 30.
+INFO:root:Building using (build_measurer): [('cts_libxml2_xmllint_maximum_0',)]
+INFO:root:Building measurer for benchmark: cts_libxml2_xmllint_maximum_0.
+INFO:root:Done building measurer for benchmark: cts_libxml2_xmllint_maximum_0.
+INFO:root:Build successes: [('cts_libxml2_xmllint_maximum_0',)]
+INFO:root:Done building measurers.
+INFO:root:Building all fuzzer benchmarks.
+INFO:root:Concurrent builds: 30.
+INFO:root:Building using (build_fuzzer_benchmark): [('afl', 'cts_libxml2_xmllint_maximum_0')]
+INFO:root:Building benchmark: cts_libxml2_xmllint_maximum_0, fuzzer: afl.
+INFO:root:Done building benchmark: cts_libxml2_xmllint_maximum_0, fuzzer: afl.
+INFO:root:Build successes: [('afl', 'cts_libxml2_xmllint_maximum_0')]
+INFO:root:Done building fuzzer benchmarks.
+INFO:root:Starting scheduler.
+INFO:root:Finding trials to schedule.
+INFO:root:Starting trials.
+INFO:root:Start trial 10.
+INFO:root:Started 1 trials.
+INFO:root:Start measuring.
+INFO:root:Starting measure manager loop.
+INFO:root:Number of measurer CPUs not passed as argument. using 20
+INFO:root:Setting up coverage binaries
+INFO:root:Starting measure worker loop for 20 workers
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+INFO:root:Measurer worker: Got request afl cts_libxml2_xmllint_maximum_0 10 0 from request queue
+INFO:root:Measuring cycle: 0. Extras: {'fuzzer': 'afl', 'benchmark': 'cts_libxml2_xmllint_maximum_0', 'trial_id': '10', 'cycle': '0'}
+INFO:root:Starting one measure worker loop
+INFO:root:Starting one measure worker loop
+WARNING:root:Starting coverage run for binary: ['/work/coverage-binaries/cts_libxml2_xmllint_maximum_0/xmllint', '-merge=1', '-dump_coverage=1', '-artifact_prefix=/work/measurement-folders/cts_libxml2_xmllint_maximum_0-afl/trial-10/crashes/', '-timeout=10', '-rss_limit_mb=2048', '-max_total_time=885', '/tmp/tmp4h15c579', '/work/measurement-folders/cts_libxml2_xmllint_maximum_0-afl/trial-10/corpus']
+ERROR:root:Coverage run failed. Extras: {'coverage_binary': '/work/coverage-binaries/cts_libxml2_xmllint_maximum_0/xmllint', 'output': "Unknown option -merge=1\nUsage : /work/coverage-binaries/cts_libxml2_xmllint_maximum_0/xmllint [options] XMLfiles ...\n\tParse the XML files and output the result of the parsing\n\t--version : display the version of the XML library used\n\t--shell : run a navigating shell\n\t--debug : show additional debug information\n\t--copy : used to test the internal copy implementation\n\t--recover : output what was parsable on broken XML documents\n\t--huge : remove any internal arbitrary parser limits\n\t--noent : substitute entity references by their value\n\t--noenc : ignore any encoding specified inside the document\n\t--noout : don't output the result tree\n\t--path 'paths': provide a set of paths for resources\n\t--load-trace : print trace of all external entities loaded\n\t--nonet : refuse to fetch DTDs or entities over network\n\t--nocompact : do not generate compact text nodes\n\t--valid : validate the document in addition to std well-formed check\n\t--postvalid : do a posteriori validation, i.e after parsing\n\t--dtdvalid URL : do a posteriori validation against a given DTD\n\t--dtdvalidfpi FPI : same but name the DTD with a Public Identifier\n\t--insert : ad-hoc test for valid insertions\n\t--quiet : be quiet when succeeded\n\t--timing : print some timings\n\t--repeat : repeat 100 times, for timing or profiling\n\t--dropdtd : remove the DOCTYPE of the input docs\n\t--html : use the HTML parser\n\t--nodefdtd : do not default HTML doctype\n\t--xmlout : force to use the XML serializer when using --html\n\t--push : use the push mode of the parser\n\t--memory : parse from memory\n\t--maxmem nbbytes : limits memory allocation to nbbytes bytes\n\t--nowarning : do not emit warnings from parser/validator\n\t--noblanks : drop (ignorable?) blanks spaces\n\t--nocdata : replace cdata section with text nodes\n\t--nodict : create document without dictionary\n\t--pedantic : enable additional warnings\n\t--output file or -o file: save to a given file\n\t--format : reformat/reindent the output\n\t--encode encoding : output in the given encoding\n\t--pretty STYLE : pretty-print in a particular style\n\t                 0 Do not pretty print\n\t                 1 Format the XML content, as --format\n\t                 2 Add whitespace inside tags, preserving content\n\t--compress : turn on gzip compression of output\n\t--c14n : save in W3C canonical format v1.0 (with comments)\n\t--c14n11 : save in W3C canonical format v1.1 (with comments)\n\t--exc-c14n : save in W3C exclusive canonical format (with comments)\n\t--nsclean : remove redundant namespace declarations\n\t--catalogs : use SGML catalogs from $SGML_CATALOG_FILES\n\t             otherwise XML Catalogs starting from \n\t         file:///usr/local/etc/xml/catalog are activated by default\n\t--nocatalogs: deactivate all catalogs\n\t--auto : generate a small doc on the fly\n\t--xinclude : do XInclude processing\n\t--noxincludenode : same but do not generate XInclude nodes\n\t--nofixup-base-uris : do not fixup xml:base uris\n\t--loaddtd : fetch external DTD\n\t--dtdattr : loaddtd + populate the tree with inherited attributes \n\t--stream : use the streaming interface to process very large files\n\t--walker : create a reader and walk though the resulting doc\n\t--pattern pattern_value : test the pattern support\n\t--relaxng schema : do RelaxNG validation against the schema\n\t--schema schema : do validation against the WXS schema\n\t--schematron schema : do validation against a schematron\n\t--sax1: use the old SAX1 interfaces for processing\n\t--sax: do not build a tree but work just at the SAX level\n\t--oldxml10: use XML-1.0 parsing rules before the 5th edition\n\t--xpath expr: evaluate the XPath expression, imply --noout\n\t--max-ampl value: set maximum amplification factor\n\nLibxml project home page: https://gitlab.gnome.org/GNOME/libxml2\n"}
+ERROR:root:Coverage profdata generation failed for cycle: 0. Extras: {'fuzzer': 'afl', 'benchmark': 'cts_libxml2_xmllint_maximum_0', 'trial_id': '10', 'cycle': '0'}
+ERROR:root:No profdata file found for cycle: 0. Extras: {'fuzzer': 'afl', 'benchmark': 'cts_libxml2_xmllint_maximum_0', 'trial_id': '10', 'cycle': '0'}
+INFO:root:Starting one measure worker loop
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:In progress: True.
+INFO:root:Is merging with nonprivate: False.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:In progress: True.
+INFO:root:Is merging with nonprivate: False.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Retrieved 1 unmeasured snapshots from measure manager
+INFO:root:Retrieved 0 measured snapshots from response queue
+INFO:root:Finding trials to schedule.
+INFO:root:Starting trials.
+INFO:root:Started 0 trials.
+INFO:root:All trials ended. Ending measure manager loop
+INFO:root:Start generating coverage reports.
+INFO:root:Generating coverage report for benchmark: cts_libxml2_xmllint_maximum_0 fuzzer: afl.
+INFO:root:Merging profdata for fuzzer: afl, benchmark: cts_libxml2_xmllint_maximum_0.
+ERROR:root:Profdata files merging failed.
+ERROR:root:Merged coverage summary json file generation failed for fuzzer: afl,benchmark: cts_libxml2_xmllint_maximum_0.
+ERROR:root:Coverage summary json file defective or missing. Extras: {'traceback': 'Traceback (most recent call last):\n  File "/work/src/experiment/measurer/coverage_utils.py", line 293, in extract_covered_branches_from_summary_json\n    coverage_info = get_coverage_infomation(summary_json_file)\n  File "/work/src/experiment/measurer/coverage_utils.py", line 238, in get_coverage_infomation\n    return json.loads(summary.readlines()[-1])\n  File "/usr/local/lib/python3.10/json/__init__.py", line 346, in loads\n    return _default_decoder.decode(s)\n  File "/usr/local/lib/python3.10/json/decoder.py", line 337, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n  File "/usr/local/lib/python3.10/json/decoder.py", line 355, in raw_decode\n    raise JSONDecodeError("Expecting value", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n'}
+ERROR:root:Coverage report generation failed for fuzzer: afl,benchmark: cts_libxml2_xmllint_maximum_0.
+INFO:root:Finished generating coverage report.
+INFO:root:Finished generating coverage reports.
+INFO:root:Finished measuring.
+INFO:root:In progress: True.
+INFO:root:Is merging with nonprivate: False.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:In progress: True.
+INFO:root:Is merging with nonprivate: False.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Finished scheduling.
+INFO:root:In progress: False.
+INFO:root:Is merging with nonprivate: False.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Experiment ended.
+Checking manual...
+Checking minimum...
+Checking randomsmart...
+Checking randomnaive...
+Checking default...
+Checking maximum...
+Checking compile-time grammars for benchmarks...
+Checking cts_libxml2_xmllint_maximum_0...
+Checking cts_libxml2_xmllint_manual_1...
+Checking cts_libxml2_xmllint_default_0...
+Checking libxml2_xmllint...
+Checking cts_libxml2_xmllint_manual_0...
+All benchmarks have compile-time grammars.
+Generating benchmark libxml2_xmllint with compile-time strategy maximum...
+Validating compile-time strategy directory: /home/tahmeed/PhD/Projects/FuzzBenchPlusPlus/compiletime/maximum
+Generated configuration: --enable-static --disable-shared --enable-fast-install --enable-silent-rules --enable-maintainer-mode --enable-dependency-tracking --enable-libtool-lock --with-pic --with-aix-soname=aix --with-gnu-ld --with-sysroot=/usr --with-c14n --with-catalog --with-debug --with-history --with-readline --with-html --with-http --without-iconv --with-icu --with-iso8859x --with-lzma --with-modules --with-output --with-pattern --with-push --with-reader --with-regexps --with-relaxng --with-sax1 --with-schemas --with-schematron --with-threads --with-thread-alloc --with-valid --with-writer --with-xinclude --with-xpath --with-xptr --with-zlib --without-minimum --with-legacy --with-tls
+Creating benchmark [libxml2_xmllint] with compile-time strategy [maximum] (index 0)...
+Benchmark directory /home/tahmeed/PhD/Projects/FuzzBenchPlusPlus/benchmarks/cts_libxml2_xmllint_maximum_0 already exists. Deleting.
+Copied benchmark directory to /home/tahmeed/PhD/Projects/FuzzBenchPlusPlus/benchmarks/cts_libxml2_xmllint_maximum_0
+Injected compile-time configuration into /home/tahmeed/PhD/Projects/FuzzBenchPlusPlus/benchmarks/cts_libxml2_xmllint_maximum_0/build.sh.
+Generated benchmark libxml2_xmllint with compile-time strategy maximum.

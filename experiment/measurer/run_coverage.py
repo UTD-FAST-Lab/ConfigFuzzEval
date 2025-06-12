@@ -55,13 +55,15 @@ def do_coverage_run(  # pylint: disable=too-many-locals
         env = os.environ.copy()
         env['LLVM_PROFILE_FILE'] = profraw_file_pattern
         sanitizer.set_sanitizer_options(env)
+        
+        logger.warning('Starting coverage run for binary: %s', coverage_binary)
+
         result = new_process.execute(command,
                                      env=env,
                                      cwd=coverage_binary_dir,
                                      expect_zero=False,
                                      kill_children=True,
-                                     timeout=MAX_TOTAL_TIME,
-                                     debug=True)
+                                     timeout=MAX_TOTAL_TIME)
 
     if result.retcode != 0:
         logger.error('Coverage run failed.',

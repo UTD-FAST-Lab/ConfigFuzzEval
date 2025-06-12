@@ -75,9 +75,9 @@ def copy_coverage_binaries(benchmark):
     command = (
         '(cd /out; '
         f'tar -czvf {coverage_build_archive_shared_dir_path} * /src /work)')
-return new_process.execute([
-    'docker', 'run', '-v', mount_arg, builder_image_url, '/bin/bash', '-c',
-    'your-command && tail -f /dev/null' # mta
+    return new_process.execute([
+        'docker', 'run', '-v', mount_arg, builder_image_url, '/bin/bash', '-c',
+        'your-command && tail -f /dev/null' # mta
 ])
 
 

@@ -345,6 +345,14 @@ def extract_corpus(corpus_archive: str, output_directory: str):
                 continue
 
             filesystem.write(file_path, member_contents, 'wb')
+        
+        # print the contents of the output directory
+        logger.info('Extracted corpus to %s.', output_directory)
+        for item in os.listdir(output_directory):
+            logger.info('Extracted file: %s', item)
+        
+
+        logger.info('Corpus extraction completed successfully.')
 
 
 class SnapshotMeasurer(coverage_utils.TrialCoverage):  # pylint: disable=too-many-instance-attributes
@@ -468,21 +476,14 @@ class SnapshotMeasurer(coverage_utils.TrialCoverage):  # pylint: disable=too-man
 
     def extract_corpus(self, corpus_archive_path) -> bool:
         """Extract the corpus archive for this cycle if it exists."""
+        print('Extracting corpus from %s.' % corpus_archive_path)
+        
         if not os.path.exists(corpus_archive_path):
             self.logger.warning('Corpus not found: %s.', corpus_archive_path)
             return False
 
-        # Print all files in the corpus archive.
-        with tarfile.open(corpus_archive_path, 'r:gz') as tar:
-            for member in tar.getmembers():
-                if not member.isfile():
-                    # We don't care about directory structure.
-                    # So skip if not a file.
-                    continue
-                self.logger.debug('Corpus archive contains: %s', member.name)
-        
-
         extract_corpus(corpus_archive_path, self.corpus_dir)
+        print('Corpus extracted successfully to %s.' % self.corpus_dir)
         return True
 
     def save_crash_files(self, cycle):

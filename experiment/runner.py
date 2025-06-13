@@ -386,7 +386,11 @@ class TrialRunner:  # pylint: disable=too-many-instance-attributes
 
         with tarfile.open(archive, 'w:gz') as tar:
             new_archive_time = self.last_archive_time
+            print(f'Archiving corpus to {archive}')
+            logs.info('Archiving corpus to %s.', archive)
             for file_path in get_corpus_elements(self.output_corpus):
+                print(f'Archiving {file_path}')
+                logs.debug('Archiving %s.', file_path)
                 try:
                     stat_info = os.stat(file_path)
                     last_modified_time = stat_info.st_mtime
@@ -403,6 +407,9 @@ class TrialRunner:  # pylint: disable=too-many-instance-attributes
                     pass
                 except Exception:  # pylint: disable=broad-except
                     logs.error('Unexpected exception occurred when archiving.')
+            
+            print(f'Finished archiving corpus to {archive}')
+            logs.info('Finished archiving corpus to %s.', archive)
         self.last_archive_time = new_archive_time
         return archive
 
@@ -459,6 +466,8 @@ def get_corpus_elements(corpus_dir):
         for filename in files:
             file_path = os.path.join(root, filename)
             corpus_elements.append(file_path)
+    
+    print(f'Corpus elements in {corpus_dir}: {corpus_elements}')
     return corpus_elements
 
 

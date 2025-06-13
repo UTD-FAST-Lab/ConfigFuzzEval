@@ -67,6 +67,12 @@ def copy_coverage_binaries(benchmark):
     """Copy coverage binaries in a local experiment."""
     shared_coverage_binaries_dir = get_shared_coverage_binaries_dir()
     mount_arg = f'{shared_coverage_binaries_dir}:{shared_coverage_binaries_dir}'
+    print(f'Mounting {shared_coverage_binaries_dir} to {mount_arg}')
+    # Print everything in the shared coverage binaries directory.
+    print('Contents of shared coverage binaries directory:')
+    for item in os.listdir(shared_coverage_binaries_dir):
+        print(item)
+    input()
     builder_image_url = benchmark_utils.get_builder_image_url(
         benchmark, 'coverage', environment.get('DOCKER_REGISTRY'))
     coverage_build_archive = f'coverage-build-{benchmark}.tar.gz'
@@ -77,7 +83,7 @@ def copy_coverage_binaries(benchmark):
         f'tar -czvf {coverage_build_archive_shared_dir_path} * /src /work)')
     return new_process.execute([
         'docker', 'run', '-v', mount_arg, builder_image_url, '/bin/bash', '-c',
-        command, '&& tail -f /dev/null'
+        command
     ])
 
 

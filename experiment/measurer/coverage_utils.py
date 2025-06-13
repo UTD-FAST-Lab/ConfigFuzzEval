@@ -125,6 +125,7 @@ class CoverageReporter:  # pylint: disable=too-many-instance-attributes
 
         files_to_merge = []
         for trial_id in self.trial_ids:
+            # MTA: at this point, profdata is already generated
             profdata_file = TrialCoverage(self.fuzzer, self.benchmark,
                                           trial_id).profdata_file
             if not os.path.exists(profdata_file):

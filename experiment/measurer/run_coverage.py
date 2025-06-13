@@ -39,16 +39,10 @@ MAX_TOTAL_TIME = experiment_utils.get_snapshot_seconds()
 
 
 def do_coverage_run(  # pylint: disable=too-many-locals
-        coverage_binary: str, new_units_dir: List[str], # [dir_corpus] <<<<<
+        coverage_binary: str, new_units_dir: List[str],
         profraw_file_pattern: str, crashes_dir: str):
     """Does a coverage run of |coverage_binary| on |new_units_dir|. Writes
     the result to |profraw_file_pattern|."""
-    
-    # print corpus directory
-    for each in os.listdir(new_units_dir[0]):
-        print(each)
-    print('Corpus directory:', new_units_dir[0])
-    
     with tempfile.TemporaryDirectory() as merge_dir:
         command = [
             coverage_binary, '-merge=1', '-dump_coverage=1',
@@ -61,9 +55,6 @@ def do_coverage_run(  # pylint: disable=too-many-locals
         env = os.environ.copy()
         env['LLVM_PROFILE_FILE'] = profraw_file_pattern
         sanitizer.set_sanitizer_options(env)
-        
-        logger.warning('Starting coverage run for binary: %s', command)
-
         result = new_process.execute(command,
                                      env=env,
                                      cwd=coverage_binary_dir,

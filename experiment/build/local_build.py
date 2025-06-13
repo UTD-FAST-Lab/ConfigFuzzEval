@@ -68,6 +68,7 @@ def copy_coverage_binaries(benchmark):
     shared_coverage_binaries_dir = get_shared_coverage_binaries_dir()
     mount_arg = f'{shared_coverage_binaries_dir}:{shared_coverage_binaries_dir}'
     print(f'Mounting {shared_coverage_binaries_dir} to {mount_arg}')
+    # /tmp/experiment-data/measurerfix11/coverage-binaries
     # Print everything in the shared coverage binaries directory.
     print('Contents of shared coverage binaries directory:')
     for item in os.listdir(shared_coverage_binaries_dir):

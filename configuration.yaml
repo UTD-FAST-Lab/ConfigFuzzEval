@@ -19,4 +19,3 @@ report_filestore: /tmp/report-data
 
 # Flag that indicates this is a local experiment.
 local_experiment: true
-

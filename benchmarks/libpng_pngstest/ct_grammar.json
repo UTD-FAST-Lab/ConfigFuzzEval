@@ -1,0 +1,10 @@
+{
+    "options": [
+{
+  "name": "shared",
+  "type": "bool",
+  "default": true,
+  "cli": "--disable-shared"
+}
+    ]
+  }

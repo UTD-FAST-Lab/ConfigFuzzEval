@@ -211,7 +211,12 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
     
     cli_args = []
     for opt in grammar["options"]:
-        arg = option_to_cli(opt)
+        if "override" in opt:
+            print(f"Manual Override applied to option:{opt['name']} with {opt['override']}")
+            print()
+            arg = opt["override"]
+        else:
+            arg = option_to_cli(opt)
         if arg:
             cli_args.append(arg)
     
@@ -242,7 +247,7 @@ def request_configurations(grammar_file):
 
 def main():
 
-    grammar_file = "benchmarks/libxml2_xmllint/ct_grammar.json"
+    grammar_file = "benchmarks/pcre2_pcre2test/ct_grammar.json"
     print(request_configurations(grammar_file))
 
 if __name__ == "__main__":

@@ -6,7 +6,8 @@ apt-get update && apt-get install -y \
   libxslt1-dev xsltproc doxygen
 
 ./autogen.sh
-./configure {{CT_CONFIGURATION}} 
+# ./configure {{CT_CONFIGURATION}} 
+./configure --disable-shared
 
 make -j$(nproc)
 

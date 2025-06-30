@@ -1,5 +1,5 @@
 #!/bin/bash
-./configure --disable-shared
+./configure --disable-shared 
 make check
 make install
 

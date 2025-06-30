@@ -1,0 +1,11 @@
+{
+  "name": "libtiff",
+  "options": [
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-shared"
+    }
+  ]
+}

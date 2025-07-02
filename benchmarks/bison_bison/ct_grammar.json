@@ -1,10 +1,77 @@
 {
-    "options": [
-{
-  "name": "shared",
-  "type": "bool",
-  "default": true,
-  "cli": "--disable-shared"
+  "name": "bison",
+  "options": [
+    {
+      "name": "largefile",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-largefile"
+    },
+    {
+      "name": "year2038",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-year2038"
+    },
+    {
+      "name": "threads",
+      "type": "enum",
+      "default": null,
+      "values" : [
+        "isoc",
+        "posix",
+        "isoc+posix",
+        "windows"],
+      "cli": "--enable-threads"
+    },
+    {
+      "name": "threads",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-threads"
+    },
+    {
+      "name": "rpath",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-rpath"
+    },
+    {
+      "name": "gcc-warnings",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-gcc-warnings"
+    },
+    {
+      "name": "yacc",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-yacc"
+    },
+    {
+      "name": "cross-guesses",
+      "type": "enum",
+      "default": null,
+      "values" : ["conservative","risky"],
+      "cli": "--enable-cross-guesses"
+    },
+    {
+      "name": "assert",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-assert"
+    },
+    {
+      "name": "relocatable",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-relocatable"
+    },
+    {
+      "name": "nls",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-nls"
+    }
+  ]
 }
-    ]
-  }

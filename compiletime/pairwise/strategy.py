@@ -12,6 +12,9 @@ from allpairspy import AllPairs
 import inspect
 
 
+def implies(A,B):
+    return (not A) or B
+
 def get_all_attributes(obj):
     return {
         name: value
@@ -60,7 +63,31 @@ def option_to_cli(config_sample: Any,grammar: Dict[str,Any]) -> str:
     
     return args
 
+def generate_filter_functions(config,grammar):
+    options = list(config.keys())
+    indices = [i for i in range(len(options))]
 
+    def filter_function(row):
+        idx_mapping = dict(zip(options,indices))
+        grammar_inner = dict(grammar)
+
+        for key,value in grammar_inner.items():
+            if "pairwise_constraints" not in value:
+                continue
+
+            for const_val,const_opts in value["pairwise_constraints"]:
+                for opt,opt_val in const_opts:
+                    o1 = key
+                    o2 = opt
+                    o1_val = row[idx_mapping[o1]]
+                    o2_val = row[idx_mapping[o2]]
+
+                    if not implies(o1_val==const_val, o2_val==opt_val):
+                        return False 
+
+        return True
+    
+    return filter_function
 
     
     
@@ -117,6 +144,16 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
     config_vals = list(config_dict.values())
     samples = AllPairs(config_vals)
     samples = [OrderedDict(zip(config_dict.keys(),sample)) for sample in samples]
+
+    filter_function = generate_filter_functions(config_dict,grammar_dict)
+    for i,row in enumerate(samples):
+        print(f"------------------Sample {i+1}------------------")
+        print(json.dumps(row,indent=4))
+        print()
+        print("Truth Value:",filter_function(list(row.values())))
+        print(f"------------------------------------------------")
+        print()
+        print()
     
     cli_args = [option_to_cli(sample,grammar_dict) for sample in samples]
     return cli_args

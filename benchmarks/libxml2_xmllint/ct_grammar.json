@@ -6,14 +6,24 @@
         "type": "bool",
         "default": false,
         "cli": "--enable-static",
-        "conflicts": ["shared"]
+        "conflicts": ["shared"],
+        "pairwise_constraints" : [
+          [true,[
+            ["shared",false]
+          ]]
+        ]
       },
       {
         "name": "shared",
         "type": "bool",
         "default": true,
         "cli": "--enable-shared",
-        "conflicts": ["static"]
+        "conflicts": ["static"],
+        "pairwise_constraints" : [
+          [true,[
+            ["static",false]
+          ]]
+        ]
       },
       {
         "name": "fast-install",
@@ -115,7 +125,7 @@
       },
       {
         "name": "iconv",
-        "type": "depends",
+        "type": "bool",
         "default": true,
         "cli": "--with-iconv",
         "desc": "Path or bool"
@@ -131,7 +141,12 @@
         "type": "bool",
         "default": true,
         "cli": "--with-iso8859x",
-        "implies": ["iconv=false"]
+        "implies": ["iconv=false"],
+        "pairwise_constraints" : [
+          [true,[
+            ["iconv",true]
+          ]]
+        ]
       },
       {
         "name": "lzma",

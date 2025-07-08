@@ -13,14 +13,17 @@ import inspect
 
 
 def implies(A,B):
-    return (not A) or B
+    """
+    Perform logical implication A ⇒ B.
 
-def get_all_attributes(obj):
-    return {
-        name: value
-        for name, value in inspect.getmembers(obj)
-        if not name.startswith('__') and not inspect.isroutine(value)
-    }
+    Args:
+        A: Antecedent of the implication
+        B: Consequent of the implication
+
+    Returns:
+        Result of the implication (True if (not A) or B)
+    """
+    return (not A) or B
 
 
 
@@ -64,6 +67,17 @@ def option_to_cli(config_sample: Any,grammar: Dict[str,Any]) -> str:
     return args
 
 def generate_filter_functions(config,grammar):
+    """
+    Generate a filter function to enforce pairwise constraints from grammar.
+
+    Args:
+        config: Dictionary mapping option names to their possible values
+        grammar: Dictionary containing option metadata and pairwise constraints
+
+    Returns:
+        A function that takes a row (list of option values) and returns True if it satisfies all constraints,
+        otherwise False
+    """
     options = list(config.keys())
     indices = [i for i in range(len(options))]
 
@@ -113,6 +127,18 @@ def filter_discrete_options(grammar):
     return new_grammar
 
 def get_config_dict(grammar: Dict[str, Any]):
+    """
+    Convert grammar options into a configuration dictionary.
+
+    Args:
+        grammar: Grammar definition containing a list of options with types and CLI formats
+
+    Returns:
+        Ordered dictionary mapping each option name to its list of possible values
+
+    Raises:
+        ValueError: If an option type is not 'enum' or 'bool'
+    """
     
     config = OrderedDict()
     for opt in grammar["options"]:

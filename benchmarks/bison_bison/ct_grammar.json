@@ -21,7 +21,8 @@
         "isoc",
         "posix",
         "isoc+posix",
-        "windows"],
+        "windows",
+        "no"],
       "cli": "--enable-threads"
     },
     {

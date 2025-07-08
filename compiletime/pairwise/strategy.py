@@ -206,7 +206,7 @@ def request_configurations(grammar_file):
 
 def main():
 
-    grammar_file = "benchmarks/libxml2_xmllint/ct_grammar.json"
+    grammar_file = "benchmarks/pcre2_pcre2test/ct_grammar.json"
     cli_strings = request_configurations(grammar_file)
     for s in cli_strings:
         print(s)

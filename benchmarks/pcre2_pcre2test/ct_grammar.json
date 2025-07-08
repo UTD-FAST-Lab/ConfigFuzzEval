@@ -5,20 +5,37 @@
       "name": "pcre2-8",
       "type": "bool",
       "default": true,
-      "cli": "--enable-pcre2-8",
-      "override": "--enable-pcre2-8"
+        "cli": "--enable-pcre2-8",
+        "pairwise_constraints" : [
+            [true,[
+              ["pcre2-16",false],
+              ["pcre2-32",false]
+            ]]
+          ]
     },
     {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-16"
+      "cli": "--enable-pcre2-16",
+      "pairwise_constraints" : [
+          [true,[
+            ["pcre2-8",false],
+            ["pcre2-32",false]
+          ]]
+        ]
     },
     {
       "name": "pcre2-32",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-32"
+      "cli": "--enable-pcre2-32",
+      "pairwise_constraints" : [
+          [true,[
+            ["pcre2-8",false],
+            ["pcre2-16",false]
+          ]]
+        ]
     },
     {
       "name": "debug",
@@ -120,19 +137,34 @@
       "name": "ebcdic",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic"
+      "cli": "--enable-ebcdic",
+      "pairwise_constraints" : [
+          [true,[
+            ["unicode",false]
+          ]]
+        ]
     },
     {
       "name": "ebcdic-nl25",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic-nl25"
+      "cli": "--enable-ebcdic-nl25",
+      "pairwise_constraints" : [
+          [true,[
+            ["ebcdic",true]
+          ]]
+        ]
     },
     {
       "name": "ebcdic-ignoring-compiler",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic-ignoring-compiler"
+      "cli": "--enable-ebcdic-ignoring-compiler",
+      "pairwise_constraints" : [
+          [true,[
+            ["ebcdic",true]
+          ]]
+        ]
     },
     {
       "name": "pcre2grep-libz",
@@ -214,7 +246,8 @@
     },
     {
       "name": "link-size",
-      "type": "value",
+      "type": "enum",
+      "values": [2,3,4],
       "default": 2,
       "cli": "--with-link-size"
     },

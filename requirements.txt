@@ -29,3 +29,7 @@ protobuf==3.20.3
 pylint==2.15.4
 pytype==2022.10.13
 yapf==0.32.0
+
+
+# for pairwise strategy
+allpairspy == 2.5.1

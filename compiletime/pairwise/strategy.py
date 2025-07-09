@@ -109,7 +109,7 @@ def generate_filter_functions(config,grammar):
 
     
     
-def filter_discrete_options(grammar):
+def filter_discrete_options(grammar, return_override=False):
     """
     Filters the given grammar to include only options with discrete types ('enum' or 'bool').
 
@@ -122,9 +122,13 @@ def filter_discrete_options(grammar):
         dict: A new grammar dictionary containing only the filtered 'enum' and 'bool' options.
     """
     new_grammar = dict(grammar)
-    filtered_opts = [opt for opt in new_grammar["options"] if opt["type"] in ["enum","bool"]]
+    filtered_opts = [opt for opt in new_grammar["options"] if (opt["type"] in ["enum","bool"]) and ("override" not in opt)]
+    override_opts = [opt["override"] for opt in new_grammar["options"] if "override" in opt]
     new_grammar["options"] = filtered_opts
-    return new_grammar
+    if return_override:
+        return new_grammar, override_opts
+    else:
+        return new_grammar
 
 def get_config_dict(grammar: Dict[str, Any]):
     """
@@ -170,7 +174,7 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
         List of CLI argument strings
     """
 
-    grammar_filtered = filter_discrete_options(grammar)
+    grammar_filtered,grammar_override = filter_discrete_options(grammar,return_override=True)
     grammar_dict = dict(zip(list(map(lambda x: x["name"],grammar_filtered["options"])),grammar_filtered["options"]))
     
     config_dict = get_config_dict(grammar_filtered)
@@ -180,6 +184,7 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
     samples = [OrderedDict(zip(config_dict.keys(),sample)) for sample in samples]
     
     cli_args = [option_to_cli(sample,grammar_dict) for sample in samples]
+    cli_args = [sample + grammar_override for sample in cli_args]
     return cli_args
 
 
@@ -206,7 +211,7 @@ def request_configurations(grammar_file):
 
 def main():
 
-    grammar_file = "benchmarks/pcre2_pcre2test/ct_grammar.json"
+    grammar_file = "benchmarks/libxml2_xmllint/ct_grammar.json"
     cli_strings = request_configurations(grammar_file)
     for s in cli_strings:
         print(s)

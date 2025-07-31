@@ -100,7 +100,14 @@ def run_afl_fuzz(input_corpus,
                  hide_output=False):
     """Run afl-fuzz."""
     # Spawn the afl fuzzing process.
-    print('[run_afl_fuzz] Running target with afl-fuzz')
+
+    runtime_config_path = os.path.join(os.environ["OUT"],"run-time-config")
+    if os.path.exists(runtime_config_path):
+        with open(runtime_config_path,"r") as f:
+            runtime_configs = f.read()
+    else:
+        runtime_configs = ""
+
     command = [
         './afl-fuzz',
         '-i',
@@ -125,6 +132,7 @@ def run_afl_fuzz(input_corpus,
     command += [
         '--',
         target_binary,
+        runtime_configs,
         # Pass INT_MAX to afl the maximize the number of persistent loops it
         # performs.
         '@@'

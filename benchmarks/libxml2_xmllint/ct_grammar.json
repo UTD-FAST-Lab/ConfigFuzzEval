@@ -6,41 +6,53 @@
         "type": "bool",
         "default": false,
         "cli": "--enable-static",
-        "conflicts": ["shared"]
+        "conflicts": ["shared"],
+        "override": "",
+        "pairwise_constraints" : [
+          [true,[
+            ["shared",false]
+          ]]
+        ]
       },
       {
         "name": "shared",
         "type": "bool",
         "default": true,
         "cli": "--enable-shared",
-        "conflicts": ["static"]
+        "conflicts": ["static"],
+        "override": "--disable-shared",
+        "pairwise_constraints" : [
+          [true,[
+            ["static",false]
+          ]]
+        ]
       },
       {
-        "name": "fast_install",
+        "name": "fast-install",
         "type": "bool",
         "default": true,
         "cli": "--enable-fast-install"
       },
       {
-        "name": "silent_rules",
+        "name": "silent-rules",
         "type": "bool",
         "default": false,
         "cli": "--enable-silent-rules"
       },
       {
-        "name": "maintainer_mode",
+        "name": "maintainer-mode",
         "type": "bool",
         "default": false,
         "cli": "--enable-maintainer-mode"
       },
       {
-        "name": "dependency_tracking",
+        "name": "dependency-tracking",
         "type": "bool",
         "default": false,
         "cli": "--enable-dependency-tracking"
       },
       {
-        "name": "libtool_lock",
+        "name": "libtool-lock",
         "type": "bool",
         "default": true,
         "cli": "--enable-libtool-lock"
@@ -52,14 +64,14 @@
         "cli": "--with-pic"
       },
       {
-        "name": "aix_soname",
+        "name": "aix-soname",
         "type": "enum",
         "values": ["aix", "svr4", "both"],
         "default": "aix",
         "cli": "--with-aix-soname"
       },
       {
-        "name": "gnu_ld",
+        "name": "gnu-ld",
         "type": "bool",
         "default": false,
         "cli": "--with-gnu-ld"
@@ -115,7 +127,7 @@
       },
       {
         "name": "iconv",
-        "type": "depends",
+        "type": "bool",
         "default": true,
         "cli": "--with-iconv",
         "desc": "Path or bool"
@@ -131,7 +143,12 @@
         "type": "bool",
         "default": true,
         "cli": "--with-iso8859x",
-        "implies": ["iconv=false"]
+        "implies": ["iconv=false"],
+        "pairwise_constraints" : [
+          [true,[
+            ["iconv",true]
+          ]]
+        ]
       },
       {
         "name": "lzma",
@@ -208,7 +225,7 @@
         "implies": ["thread_alloc"]
       },
       {
-        "name": "thread_alloc",
+        "name": "thread-alloc",
         "type": "bool",
         "default": false,
         "cli": "--with-thread-alloc",

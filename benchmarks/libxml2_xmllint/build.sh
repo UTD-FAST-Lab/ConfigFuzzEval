@@ -5,10 +5,10 @@ apt-get update && apt-get install -y \
   liblzma-dev python3-dev zlib1g-dev \
   libxslt1-dev xsltproc doxygen
 
-./autogen.sh
+./autogen.sh --disable-shared
 ./configure {{CT_CONFIGURATION}} 
 
-make -j$(nproc)
+make -j$(nproc) CC=$FUZZER_COMP
 
 # Copy the binary to the destination directory
 cp xmllint $OUT/xmllint

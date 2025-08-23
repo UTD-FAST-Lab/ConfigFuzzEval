@@ -8,7 +8,5 @@ apt-get update && apt-get install -y \
 ./autogen.sh --disable-shared
 ./configure {{CT_CONFIGURATION}} 
 
-make -j$(nproc) CC=$FUZZER_COMP
+make -j$(nproc) CC=$CC CXX=$CXX
 
-# Copy the binary to the destination directory
-cp xmllint $OUT/xmllint

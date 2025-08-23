@@ -15,9 +15,14 @@
 ################################################################################
 
 ARG parent_image
-
-
 FROM $parent_image
+
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+
+# GENERAL
+# CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
+# If this needs to be changed, update the Dockerfile accordingly.
 
 RUN apt-get install -y --no-install-recommends \
         make autoconf libtool pkg-config \
@@ -32,4 +37,6 @@ COPY build.sh .
 
 RUN bash build.sh
 
-# CMD ["bash", "-c", "cp -r /libxml2 /fuzzer_output/"]
+# GENERAL
+# Copy the binary to fuzz
+CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/"]

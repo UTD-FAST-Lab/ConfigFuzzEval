@@ -5,6 +5,24 @@ import argparse
 from docker_image_builder import build_base_image, build_fuzzer, build_benchmark
 import logging
 
+COLOR_CODES = {
+    "DEBUG": "\033[36m",    # Cyan
+    "INFO": "\033[32m",     # Green
+    "WARNING": "\033[33m",  # Yellow
+    "ERROR": "\033[31m",    # Red
+    "CRITICAL": "\033[41m", # Red background
+}
+RESET_CODE = "\033[0m"
+
+
+class ColorFormatter(logging.Formatter):
+    def format(self, record):
+        levelname = record.levelname
+        if levelname in COLOR_CODES:
+            record.levelname = f"{COLOR_CODES[levelname]}[{levelname}]{RESET_CODE}"
+        else:
+            record.levelname = f"[{levelname}]"
+        return super().format(record)
 
 def validate_configuration(config):
     if not config:
@@ -50,11 +68,14 @@ def validate_benchmarks(benchmarks_selected, project_root):
 
 if __name__ == "__main__":
     # Set up logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(levelname)s - %(message)s"
-    )
-    logging.info("Starting experiment runner...")
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(ColorFormatter("%(levelname)s - %(message)s"))
+
+    logger = logging.getLogger()  # root logger
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+    
+    logger.info("Starting experiment runner...")
     
     # Process arguments
     parser = argparse.ArgumentParser(description="Run experiments.")
@@ -134,21 +155,56 @@ if __name__ == "__main__":
     validate_fuzzers(experiment_state["fuzzers"], project_root)
     logging.info("Fuzzers validated successfully.")
     logging.info("Building selected fuzzers...")
+    built_fuzzers = []
+    fuzzer_failures = []
     for fuzzer in experiment_state["fuzzers"]:
-        build_fuzzer(fuzzer, experiment_path, project_root)
-    logging.info("Fuzzers built successfully.")
-    
+        if build_fuzzer(fuzzer, experiment_path, project_root):
+            built_fuzzers.append(fuzzer)
+        else:
+            fuzzer_failures.append(fuzzer)
+
+    if fuzzer_failures:
+        logging.warning(f"Fuzzer build failures: {fuzzer_failures}")    
+    logging.info(f"Fuzzers built successfully: {built_fuzzers}")
+
     # validate and build selected benchmarks
     logging.info("Validating benchmarks...")
     validate_benchmarks(experiment_state["benchmarks"], project_root)
     logging.info("Benchmarks validated successfully.")
     logging.info("Building selected benchmarks...")
-    for benchmark in experiment_state["benchmarks"]:
-        build_benchmark(benchmark, experiment_path, project_root)
+    built_benchmarks = {}
+    benchmark_failures = {}
+    for fuzzer in built_fuzzers:
+        for benchmark in experiment_state["benchmarks"]:
+            logging.info(f"Building target: {benchmark} for fuzzer: {fuzzer}")
+            if (build_benchmark(fuzzer, benchmark, experiment_path, project_root)):
+                logging.info(f"Successfully built benchmark: {benchmark} for fuzzer: {fuzzer}")
+                built_benchmarks[benchmark] = [fuzzer] if benchmark not in built_benchmarks \
+                    else built_benchmarks[benchmark].append(fuzzer)
+            else:
+                logging.error(f"Failed to build benchmark: {benchmark} for fuzzer: {fuzzer}")
+                benchmark_failures[benchmark] = [fuzzer] if benchmark not in benchmark_failures \
+                    else benchmark_failures[benchmark].append(fuzzer)
+    logging.info(f"Benchmark(s) built successfully:")
+    for benchmark, fuzzers in built_benchmarks.items():
+        logging.info(f"Benchmark: {benchmark}, Fuzzers: {fuzzers}")
     
-    logging.info("Benchmarks built successfully.")
-    
-    # Figure out fuzzer and benchmark pairs
+    if benchmark_failures:
+        logging.warning(f"The following benchmarks failed to build:")
+        for benchmark, fuzzers in benchmark_failures.items():
+            logging.warning(f"Benchmark: {benchmark}, Fuzzers: {fuzzers}")
+
+
+    # Building coverage binaries
+    logging.info("Building coverage binaries...")
+    for benchmark in built_benchmarks:
+        if(build_benchmark("coverage", benchmark, experiment_path, project_root)):
+            logging.info(f"Successfully built coverage binary for benchmark: {benchmark}")
+        else:
+            logging.error(f"Failed to build coverage binary for benchmark: {benchmark}")
+            logging.error("Coverage binaries are essential for result collection. Exiting.")
+            sys.exit(1)
+
     # Run experiments
     # Collect results
     # Print summary

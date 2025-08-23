@@ -33,7 +33,7 @@ RUN cd /aflplusplus && \
     export CC=clang AFL_NO_X86=1 && \
     PYTHON_INCLUDE=/ make
 
-# Required for all fuzzers
+# GENERAL
 ENV FUZZER_COMP=/aflplusplus/afl-clang-fast
 ENV FUZZER_COMPXX=/aflplusplus/afl-clang-fast++
 

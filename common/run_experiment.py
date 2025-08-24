@@ -5,48 +5,8 @@ import argparse
 from docker_image_builder import build_base_image, build_fuzzer, build_benchmark
 from color_logger import get_logger
 from resource_allocation import allocate_resources
-
-def validate_configuration(config):
-    if not config:
-        logging.error("Configuration file is empty")
-        sys.exit(1)
-    if not config["trials"]:
-        logging.error("Trials is not set in the configuration file")
-        sys.exit(1)
-    if not config["max_total_time"]:
-        logging.error("Max total time is not set in the configuration file")
-        sys.exit(1)
-    if not config["base_image_path"]:
-        logging.error("Base image path is not set in the configuration file")
-        sys.exit(1)
-    if not config["experiment_filestore"]:
-        logging.error("Experiment filestore is not set in the configuration file")
-        sys.exit(1)
-    if not config["report_filestore"]:
-        logging.error("Report filestore is not set in the configuration file")
-        sys.exit(1)
-    return True
-
-
-def validate_fuzzers(fuzzers_selected, project_root):
-    fuzzers_dir = os.path.join(project_root, "fuzzers")
-    avaibale_fuzzers = [fuzzer.name for fuzzer in os.scandir(fuzzers_dir) if fuzzer.is_dir()]
-    
-    for potential_fuzzer in fuzzers_selected:
-        if potential_fuzzer not in avaibale_fuzzers:
-            logging.error(f"Fuzzer {potential_fuzzer} is not available in the project.")
-            sys.exit(1)
-
-
-def validate_benchmarks(benchmarks_selected, project_root):
-    benchmarks_dir = os.path.join(project_root, "benchmarks")
-    available_benchmarks = [benchmark.name for benchmark in os.scandir(benchmarks_dir) if benchmark.is_dir()]
-    
-    for potential_benchmark in benchmarks_selected:
-        if potential_benchmark not in available_benchmarks:
-            logging.error(f"Benchmark {potential_benchmark} is not available in the project.")
-            sys.exit(1)
-
+from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies
+from ct_strategy_applicator import apply_ct_strategy
 
 if __name__ == "__main__":
     # Set up logging
@@ -150,16 +110,39 @@ if __name__ == "__main__":
     experiment_state["built_fuzzers"] = built_fuzzers
     experiment_state["fuzzer_failures"] = fuzzer_failures
 
-    # validate and build selected benchmarks
+    # validate selected benchmarks
     logging.info("Validating benchmarks...")
     validate_benchmarks(experiment_state["benchmarks"], project_root)
     logging.info("Benchmarks validated successfully.")
+    
+    # Validate and build compile-time strategies
+    logging.info("Validating compile-time strategies...")
+    validate_ct_strategies(experiment_state["compiletime"], project_root)
+    logging.info("Compile-time strategies validated successfully.")
+    logging.info("Applying selected compile-time strategies...")
+
+    benchmark_mappings = {}
+
+    for strategy in experiment_state["compiletime"]:
+        new_benchmark_mapping = apply_ct_strategy(strategy,
+                                project_root,
+                                experiment_state["benchmarks"])
+        benchmark_mappings.update(new_benchmark_mapping)
+    
+    experiment_state["benchmark_mappings"] = benchmark_mappings
+    
+    # Build benchmarks
     logging.info("Building selected benchmarks...")
     built_benchmarks = {}
     benchmark_failures = {}
     fuzzer_benchmark_pairs = []
+    
+    benchmarks_to_build = []
+    for pair in benchmark_mappings:
+        benchmarks_to_build.extend(benchmark_mappings[pair])
+
     for fuzzer in built_fuzzers:
-        for benchmark in experiment_state["benchmarks"]:
+        for benchmark in benchmarks_to_build:
             logging.info(f"Building target: {benchmark} for fuzzer: {fuzzer}")
             if (build_benchmark(fuzzer, benchmark, experiment_path, project_root)):
                 logging.info(f"Successfully built benchmark: {benchmark} for fuzzer: {fuzzer}")
@@ -186,24 +169,30 @@ if __name__ == "__main__":
     # Building coverage binaries
     logging.info("Building coverage binaries...")
     coverage_binaries = []
+    failed_coverage_binaries = []
     for benchmark in built_benchmarks:
         if(build_benchmark("coverage", benchmark, experiment_path, project_root)):
             logging.success(f"Successfully built coverage binary for benchmark: {benchmark}")
             coverage_binaries.append(benchmark)
         else:
             logging.error(f"Failed to build coverage binary for benchmark: {benchmark}")
-            logging.error("Coverage binaries are essential for result collection. Exiting.")
-            sys.exit(1)
+            failed_coverage_binaries.append(benchmark)
+
+    logging.info(f"Coverage binaries built:")
+    for binary in coverage_binaries:
+        logging.info(f" - {binary}")
+    logging.info(f"Failed coverage binaries:")
+    for binary in failed_coverage_binaries:
+        logging.info(f" - {binary}")
 
     experiment_state["coverage_binaries"] = coverage_binaries
-
+    experiment_state["failed_coverage_binaries"] = failed_coverage_binaries
 
     # Resource allocation
     logging.info("Allocating resources for the experiment...")
     experiment_state = allocate_resources(experiment_state)
-    
-    # Debug
-    logging.info(f"Experiment state after resource allocation: {experiment_state}")
+    logging.success("Resources allocated successfully.")
+    logging.debug(f"Experiment state after resource allocation: {experiment_state}")
 
     # Run experiments
     

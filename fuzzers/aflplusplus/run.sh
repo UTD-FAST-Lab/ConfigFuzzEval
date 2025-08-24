@@ -1,0 +1,1 @@
+/aflplusplus/aflfuzz -i /seed -o $OUT -v $RUN_TIME $RUN_TARGET 

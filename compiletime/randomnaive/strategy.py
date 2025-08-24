@@ -61,7 +61,7 @@ def generate_cli_args(grammar: Dict[str, Any], config: Dict[str, Any]) -> List[s
     return cli_args
 
 
-def request_configurations(grammar_file: str, n: int = 10) -> List[str]:
+def request_configurations(grammar_file: str, n: int = 3) -> List[str]:
     grammar = load_grammar(grammar_file)
     configs = generate_n_random_configs(grammar, n)
     return [" ".join(generate_cli_args(grammar, config)) for config in configs]

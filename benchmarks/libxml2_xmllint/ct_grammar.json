@@ -5,15 +5,7 @@
         "name": "static",
         "type": "bool",
         "default": false,
-        "cli": "--enable-static",
-        "conflicts": ["shared"]
-      },
-      {
-        "name": "shared",
-        "type": "bool",
-        "default": true,
-        "cli": "--enable-shared",
-        "conflicts": ["static"]
+        "cli": "--enable-static"
       },
       {
         "name": "fast_install",

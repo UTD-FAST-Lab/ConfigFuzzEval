@@ -1,6 +1,10 @@
 import os
 import subprocess
 import sys
+from shutil import copytree
+from color_logger import get_logger
+
+logging = get_logger(__name__)
 
 
 def build_base_image(base_image_path, project_root):
@@ -92,6 +96,15 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
         sys.exit(1)
 
     os.makedirs(benchmark_pair_path, exist_ok=True)
+    
+    # Copy seed corpus
+    seed_corpus_src = os.path.join(benchmark_dir, "seed")
+    seed_corpus_dst = os.path.join(benchmark_pair_path, "initial_seed")
+    
+    if not os.path.exists(seed_corpus_src):
+        logging.error(f"No seed found for {benchmark_name}.")
+
+    copytree(seed_corpus_src, seed_corpus_dst)
 
     print(f"[INFO] Building benchmark: {benchmark_pair_name}")
     
@@ -111,6 +124,8 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                 f"CC=clang",
                 "--build-arg",
                 f"CXX=clang++",
+                "--build-arg",
+                f"CFLAGS=-fprofile-instr-generate -fcoverage-mapping",
                 "--no-cache"
             ], check=True)
         

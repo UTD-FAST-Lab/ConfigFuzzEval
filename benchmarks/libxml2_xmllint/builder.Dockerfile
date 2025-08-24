@@ -19,6 +19,7 @@ FROM $parent_image
 
 ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
+ARG CFLAGS=""
 
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries

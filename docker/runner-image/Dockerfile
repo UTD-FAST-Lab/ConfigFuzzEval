@@ -3,4 +3,5 @@ FROM fbpp/base
 ARG RUNTIME
 ENV RUNTIME=${RUNTIME}
 ENV OUT=/fuzzer_output
-CMD ["bash", "-c", "bash benchmark/run_target.sh && bash fuzzer/run.sh"]
+
+CMD ["bash", "-c", "RUN_TARGET=$(cat /benchmark/run_target.sh) && export RUN_TARGET && exec bash fuzzer/run.sh"]

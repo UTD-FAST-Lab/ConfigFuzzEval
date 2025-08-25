@@ -26,8 +26,23 @@ def build_runner_image(runner_image_path, project_root, runtime):
         runner_image_path,
         "--no-cache"
     ], check=True)
+    
+    # Build coverage runner image
+    subprocess.run([
+        "docker",
+        "build",
+        "-t",
+        f"{runner_image_name}-coverage",
+        "--build-arg",
+        f"RUNTIME={runtime}",
+        "--build-arg",
+        f"COVERAGE=true",
+        runner_image_path,
+        "--no-cache"
+    ], check=True)
 
     return 0
+
 
 
 def build_base_image(base_image_path, project_root):
@@ -56,10 +71,6 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
     # Find the fuzzer directory in the project
     fuzzer_dir = os.path.join(project_root, "fuzzers", fuzzer_name)
     fuzzer_dockerfile = os.path.join(fuzzer_dir, "builder.Dockerfile")
-    
-    # Copy runner
-    runner_src = os.path.join(fuzzer_dir, "run.sh")
-    runner_dest = os.path.join(fuzzer_path, fuzzer_name, "run.sh")
 
     if not os.path.exists(fuzzer_dockerfile):
         print(f"[ERROR] Fuzzer Dockerfile {fuzzer_dockerfile} does not exist.")
@@ -192,13 +203,15 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
 
-    # TODO: This MUST be changed to run in parallel
+    # TODO: This MUST be changed to run in parallel, also should be logged to a text file. Maybe the whole function should run in parallel since we have core_id
+    
     try:
         # Run the benchmark
         subprocess.run([
             "docker",
             "run",
             "--rm",
+            f"--cpuset-cpus={core_id}-{core_id+1}",
             "-v",
             f"{benchmark_location}:/benchmark",
             "-v",
@@ -207,6 +220,31 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             f"{individual_data_storage}:/fuzzer_output",
             f"fbpp/runner"
         ], check=True)
+        
+        # Time to calculate coverage
+        # Need:
+        # 1. coverage binary
+        coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
+        # 2. fuzzer output directory (individual_data_storage), here we can find the corpus
+        # 3. Instructions to get coverage (fuzzer specific)
+        # This should be in every fuzzer's coverage.sh file
+        # 4. data_storage to store the coverage profraw files
+        subprocess.run([
+            "docker",
+            "run",
+            "--rm",
+            f"--cpuset-cpus={core_id}-{core_id+1}",
+            "-v",
+            f"{coverage_binary_location}:/benchmark",
+            "-v",
+            f"{fuzzer_location}:/fuzzer",
+            "-v",
+            f"{individual_data_storage}:/fuzzer_output",
+            f"fbpp/runner-coverage"
+        ], check=True)
+        
+        
+        
     except subprocess.CalledProcessError as e:
         print(f"[ERROR] Failed while running {fuzzer} on {benchmark}.")
         print(f"[ERROR] Command: {e.cmd}")

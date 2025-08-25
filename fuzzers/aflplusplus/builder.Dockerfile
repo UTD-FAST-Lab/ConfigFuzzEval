@@ -37,5 +37,6 @@ RUN cd /aflplusplus && \
 ENV FUZZER_COMP=/aflplusplus/afl-clang-fast
 ENV FUZZER_COMPXX=/aflplusplus/afl-clang-fast++
 COPY run.sh /aflplusplus
+COPY coverage.py /aflplusplus
 
-CMD ["bash", "-c", "cp -r /aflplusplus /fuzzer_output/", "&&", "cp /aflplusplus/run.sh /fuzzer_output/"]
+CMD ["bash", "-c", "cp -r /aflplusplus /fuzzer_output/", "&&", "cp /aflplusplus/run.sh /fuzzer_output/ ", "&&", "cp /aflplusplus/coverage.py /fuzzer_output/"]

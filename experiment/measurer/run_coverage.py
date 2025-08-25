@@ -56,7 +56,7 @@ def do_coverage_run(  # pylint: disable=too-many-locals
         env['LLVM_PROFILE_FILE'] = profraw_file_pattern
         sanitizer.set_sanitizer_options(env)
         
-        logger.warning('Starting coverage run for binary: %s', coverage_binary)
+        logger.warning('Starting coverage run for binary: %s', command)
 
         result = new_process.execute(command,
                                      env=env,

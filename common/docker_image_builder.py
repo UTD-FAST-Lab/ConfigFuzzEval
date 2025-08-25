@@ -192,6 +192,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
 
+    # TODO: This MUST be changed to run in parallel
     try:
         # Run the benchmark
         subprocess.run([

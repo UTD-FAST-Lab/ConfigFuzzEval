@@ -27,7 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 && \
     update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100 && \
     update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld-18 100 && \
-    update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-18 100
+    update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-18 100 && \
+    update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-18 100 && \
+    update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-18 100
 
 # Install AFL++ common Python deps
 RUN pip3 install --no-cache-dir \

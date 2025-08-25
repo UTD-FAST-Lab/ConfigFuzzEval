@@ -42,7 +42,13 @@ def run_experiments(experiment_state):
         for each_built_bench in built_benchmarks:
             for each_fuzzer in built_benchmarks[each_built_bench]:
                 for trial_id in range(experiment_state["trials"]):
-                    logging.info(f"Running experiment for benchmark: {each_built_bench}, fuzzer: {each_fuzzer} trial: {trial_id}")
+                    logging.info("Running experiment for benchmark:")
+                    # {each_built_bench}, fuzzer: {each_fuzzer} trial: {trial_id}")
+
+                    logging.info(f"- benchmark: {each_built_bench}")
+                    logging.info(f"- fuzzer: {each_fuzzer}")
+                    logging.info(f"- trial: {trial_id}")
+                    logging.info(f"- core: {core_start}")
                     run_benchmark(each_fuzzer, 
                                 each_built_bench, 
                                 coverage_binaries[each_built_bench],

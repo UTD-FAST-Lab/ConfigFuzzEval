@@ -9,6 +9,25 @@ from validation import validate_configuration, validate_fuzzers, validate_benchm
 from ct_strategy_applicator import apply_ct_strategy
 
 
+def delete_cts_benchmarks(experiment_state, project_root):
+    benchmark_dir = os.path.join(project_root, "benchmarks")
+    
+    all_cts_benchmarks = set(experiment_state["built_benchmarks"]) | set(experiment_state["benchmark_failures"])
+    
+    for benchmark in all_cts_benchmarks:
+        benchmark_path = os.path.join(benchmark_dir, benchmark)
+        if os.path.exists(benchmark_path):
+            try:
+                # Remove the benchmark directory
+                import shutil
+                shutil.rmtree(benchmark_path)
+                logging.info(f"Removed benchmark directory: {benchmark_path}")
+            except Exception as e:
+                logging.error(f"Error removing benchmark directory {benchmark_path}: {e}")
+        else:
+            logging.warning(f"Benchmark directory does not exist, cannot remove: {benchmark_path}")    
+
+
 def run_experiments(experiment_state):
     built_benchmarks = experiment_state["built_benchmarks"]
     coverage_binaries = experiment_state["coverage_binaries"]
@@ -242,11 +261,12 @@ if __name__ == "__main__":
 
     # Run experiments
     logging.info("Ready to begin experiments!")
-    run_experiments(experiment_state)
+    # run_experiments(experiment_state)
     
 
     
     # Collect results
     # Print summary
-
-
+    
+    # Cleanup
+    delete_cts_benchmarks(experiment_state, project_root)

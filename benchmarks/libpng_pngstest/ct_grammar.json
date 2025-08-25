@@ -1,0 +1,133 @@
+{
+  "name": "libpng_project",
+  "options": [
+    {
+      "name": "fast-install",
+      "type": "value",
+      "default": "yes",
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "aix-soname",
+      "type": "enum",
+      "values": ["aix","svr4","both"],
+      "default": "aix",
+      "cli": "--enable-aix-soname"
+    },
+    {
+      "name": "libtool-lock",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libtool-lock"
+    },
+    {
+      "name": "tests",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-tests",
+      "override": "--enable-tests"
+    },
+    {
+      "name": "tools",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-tools"
+    },
+    {
+      "name": "werror",
+      "type": "value",
+      "default": null,
+      "cli": "--enable-werror"
+    },
+    {
+      "name": "unversioned-links",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-unversioned-links"
+    },
+    {
+      "name": "unversioned-libpng-pc",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-unversioned-libpng-pc"
+    },
+    {
+      "name": "unversioned-libpng-config",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-unversioned-libpng-config"
+    },
+    {
+      "name": "hardware-optimizations",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-hardware-optimizations"
+    },
+    {
+      "name": "arm-neon",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-arm-neon"
+    },
+    {
+      "name": "mips-msa",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-mips-msa"
+    },
+    {
+      "name": "mips-mmi",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-mips-mmi"
+    },
+    {
+      "name": "intel-sse",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-intel-sse"
+    },
+    {
+      "name": "powerpc-vsx",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-powerpc-vsx"
+    },
+    {
+      "name": "loongarch-lsx",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-loongarch-lsx"
+    },
+    {
+      "name": "riscv-rvv",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-riscv-rvv"
+    },
+    {
+      "name": "zlib-prefix",
+      "type": "bool",
+      "default": null,
+      "cli": "--with-zlib-prefix"
+    },
+    {
+      "name": "pkgconfigdir",
+      "type": "bool",
+      "default": "libdir/pkgconfig",
+      "cli": "--with-pkgconfigdir"
+    },
+    {
+      "name": "binconfigs",
+      "type": "bool",
+      "default": "yes",
+      "cli": "--with-binconfigs"
+    },
+    {
+      "name": "libpng-prefix",
+      "type": "bool",
+      "default": null,
+      "cli": "--with-libpng-prefix"
+    }
+  ]
+}

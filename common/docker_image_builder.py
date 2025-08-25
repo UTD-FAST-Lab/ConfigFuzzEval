@@ -192,16 +192,21 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
 
-    # Run the benchmark
-    subprocess.run([
-        "docker",
-        "run",
-        "--rm",
-        "-v",
-        f"{benchmark_location}:/benchmark",
-        "-v",
-        f"{fuzzer_location}:/fuzzer",
-        "-v",
-        f"{individual_data_storage}:/fuzzer_output",
-        f"fbpp/runner"
-    ], check=True)
+    try:
+        # Run the benchmark
+        subprocess.run([
+            "docker",
+            "run",
+            "--rm",
+            "-v",
+            f"{benchmark_location}:/benchmark",
+            "-v",
+            f"{fuzzer_location}:/fuzzer",
+            "-v",
+            f"{individual_data_storage}:/fuzzer_output",
+            f"fbpp/runner"
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"[ERROR] Failed while running {fuzzer} on {benchmark}.")
+        print(f"[ERROR] Command: {e.cmd}")
+        print(f"[ERROR] Return code: {e.returncode}")

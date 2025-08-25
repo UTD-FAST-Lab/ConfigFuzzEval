@@ -261,7 +261,7 @@ if __name__ == "__main__":
 
     # Run experiments
     logging.info("Ready to begin experiments!")
-    # run_experiments(experiment_state)
+    run_experiments(experiment_state)
     
 
     

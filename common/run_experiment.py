@@ -2,17 +2,50 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer, build_benchmark
+from docker_image_builder import build_base_image, build_fuzzer, build_benchmark, run_benchmark, build_runner_image
 from color_logger import get_logger
 from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies
 from ct_strategy_applicator import apply_ct_strategy
 
+
+def run_experiments(experiment_state):
+    built_benchmarks = experiment_state["built_benchmarks"]
+    coverage_binaries = experiment_state["coverage_binaries"]
+    experiment_path = experiment_state["experiment_path"]
+    data_storage = os.path.join(experiment_path, "data")
+    os.makedirs(data_storage, exist_ok=True)
+
+    # No need to handle serial executions
+    if experiment_state["serial_executions"] == 0:
+        core_start = experiment_state["cores_range"][0]
+        
+        for each_built_bench in built_benchmarks:
+            for each_fuzzer in built_benchmarks[each_built_bench]:
+                for trial_id in range(experiment_state["trials"]):
+                    logging.info(f"Running experiment for benchmark: {each_built_bench}, fuzzer: {each_fuzzer} trial: {trial_id}")
+                    run_benchmark(each_fuzzer, 
+                                each_built_bench, 
+                                coverage_binaries[each_built_bench],
+                                experiment_state["report_path"],
+                                experiment_state["max_total_time"],
+                                experiment_state["trials"],
+                                trial_id,
+                                experiment_state["experiment_path"],
+                                core_start,
+                                data_storage
+                            )
+                    core_start += 1
+    else:
+        # handle serial executions
+        pass
+
+
 if __name__ == "__main__":
     # Set up logging
     logging = get_logger(__name__)
     
-    logging.info("Starting experiment runner...")
+    logging.info("Starting experiment setup...")
 
     # Process arguments
     parser = argparse.ArgumentParser(description="Run experiments.")
@@ -46,6 +79,7 @@ if __name__ == "__main__":
         "trials": config["trials"],
         "max_total_time": config["max_total_time"],
         "base_image_path": config["base_image_path"],
+        "runner_image_path": config["runner_image_path"],
         "experiment_filestore": config["experiment_filestore"],
         "report_filestore": config["report_filestore"],
         "project_root": os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -90,6 +124,16 @@ if __name__ == "__main__":
     
     logging.success("Base image built successfully.")
     
+    # Build runner image
+    logging.info("Building runner image...")
+    runner_img_path = experiment_state["runner_image_path"]
+    runner_image = f"{runner_img_path}"
+    runtime = experiment_state["max_total_time"]
+    if build_runner_image(runner_image, project_root, runtime):
+        logging.error("Failed to build runner image.")
+        sys.exit(1)
+        
+
     # Validate and build selected fuzzers
     logging.info("Validating fuzzers...")
     validate_fuzzers(experiment_state["fuzzers"], project_root)
@@ -168,22 +212,24 @@ if __name__ == "__main__":
 
     # Building coverage binaries
     logging.info("Building coverage binaries...")
-    coverage_binaries = []
+    coverage_binaries = {}
     failed_coverage_binaries = []
     for benchmark in built_benchmarks:
         if(build_benchmark("coverage", benchmark, experiment_path, project_root)):
             logging.success(f"Successfully built coverage binary for benchmark: {benchmark}")
-            coverage_binaries.append(benchmark)
+            coverage_binaries[benchmark] = f"coverage_{benchmark}"
         else:
             logging.error(f"Failed to build coverage binary for benchmark: {benchmark}")
             failed_coverage_binaries.append(benchmark)
 
-    logging.info(f"Coverage binaries built:")
+    logging.success(f"Coverage binaries built:")
     for binary in coverage_binaries:
-        logging.info(f" - {binary}")
-    logging.info(f"Failed coverage binaries:")
-    for binary in failed_coverage_binaries:
-        logging.info(f" - {binary}")
+        logging.success(f"{binary}")
+
+    if failed_coverage_binaries:
+        logging.error(f"Failed coverage binaries:")
+        for binary in failed_coverage_binaries:
+            logging.error(f"{binary}")
 
     experiment_state["coverage_binaries"] = coverage_binaries
     experiment_state["failed_coverage_binaries"] = failed_coverage_binaries
@@ -195,8 +241,10 @@ if __name__ == "__main__":
     logging.debug(f"Experiment state after resource allocation: {experiment_state}")
 
     # Run experiments
+    logging.info("Ready to begin experiments!")
+    run_experiments(experiment_state)
     
-    
+
     
     # Collect results
     # Print summary

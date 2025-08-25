@@ -1,10 +1,33 @@
 import os
 import subprocess
 import sys
-from shutil import copytree
+from shutil import copytree, copyfile
 from color_logger import get_logger
 
 logging = get_logger(__name__)
+
+
+def build_runner_image(runner_image_path, project_root, runtime):
+    runner_image_path = os.path.join(project_root, runner_image_path)
+    runner_image_name = "fbpp/runner"
+
+    # Validate runner image path
+    if not os.path.exists(runner_image_path):
+        return 1
+
+    # Build runner image
+    subprocess.run([
+        "docker",
+        "build",
+        "-t",
+        runner_image_name,
+        "--build-arg",
+        f"RUNTIME={runtime}",
+        runner_image_path,
+        "--no-cache"
+    ], check=True)
+
+    return 0
 
 
 def build_base_image(base_image_path, project_root):
@@ -33,6 +56,10 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
     # Find the fuzzer directory in the project
     fuzzer_dir = os.path.join(project_root, "fuzzers", fuzzer_name)
     fuzzer_dockerfile = os.path.join(fuzzer_dir, "builder.Dockerfile")
+    
+    # Copy runner
+    runner_src = os.path.join(fuzzer_dir, "run.sh")
+    runner_dest = os.path.join(fuzzer_path, fuzzer_name, "run.sh")
 
     if not os.path.exists(fuzzer_dockerfile):
         print(f"[ERROR] Fuzzer Dockerfile {fuzzer_dockerfile} does not exist.")
@@ -68,6 +95,7 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
         print(f"[ERROR] Return code: {e.returncode}")
         return False
 
+    # copyfile(runner_src, runner_dest)
     print(f"[SUCCESS] Built and ran fuzzer: {fuzzer_name}")
     return True
 
@@ -99,7 +127,7 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
     
     # Copy seed corpus
     seed_corpus_src = os.path.join(benchmark_dir, "seed")
-    seed_corpus_dst = os.path.join(benchmark_pair_path, "initial_seed")
+    seed_corpus_dst = os.path.join(benchmark_pair_path, "seed")
     
     if not os.path.exists(seed_corpus_src):
         logging.error(f"No seed found for {benchmark_name}.")
@@ -160,3 +188,28 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
     print(f"[SUCCESS] Built benchmark: {benchmark_name}")
     return True
+
+
+def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
+                    runtime, trials, trial_id, experiment_path, core_id, 
+                    data_storage):
+    # setup
+    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial{trial_id}")
+    os.makedirs(individual_data_storage, exist_ok=True)
+    
+    benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
+    fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
+
+    # Run the benchmark
+    subprocess.run([
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        f"{benchmark_location}:/benchmark",
+        "-v",
+        f"{fuzzer_location}:/fuzzer",
+        "-v",
+        f"{individual_data_storage}:/fuzzer_output",
+        f"fbpp/runner"
+    ], check=True)

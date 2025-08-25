@@ -1,1 +1,1 @@
-/aflplusplus/aflfuzz -i /seed -o $OUT -v $RUN_TIME $RUN_TARGET 
+/fuzzer/aflfuzz -i /benchmark/seed -o $OUT -v $RUNTIME $RUN_TARGET 

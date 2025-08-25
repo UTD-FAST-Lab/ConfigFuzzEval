@@ -17,6 +17,7 @@
 ARG parent_image
 FROM $parent_image
 
+# GENERAL
 ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
 ARG CFLAGS=""

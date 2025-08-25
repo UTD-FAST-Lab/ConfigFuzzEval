@@ -1,1 +1,1 @@
-export RUN_TARGET="xmllint @@"
+export RUN_TARGET="/benchmark/xmllint @@"

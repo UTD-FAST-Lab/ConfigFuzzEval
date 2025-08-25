@@ -2,11 +2,7 @@ trials: 1
 
 # The amount of time in seconds that each trial is run for.
 # 1 day = 24 * 60 * 60 = 86400
-<<<<<<< HEAD
 max_total_time: 120
-=======
-max_total_time: 100
->>>>>>> 31f3a4ec (wip measurer fix)
 
 # The location of the docker registry.
 # FIXME: Support custom docker registry.

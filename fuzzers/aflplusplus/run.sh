@@ -1,0 +1,1 @@
+/fuzzer/aflfuzz -i /benchmark/seed -o $OUT -v $RUNTIME $RUN_TARGET 

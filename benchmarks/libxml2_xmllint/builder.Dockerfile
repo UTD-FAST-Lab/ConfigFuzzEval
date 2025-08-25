@@ -40,5 +40,10 @@ COPY build.sh .
 RUN bash build.sh
 
 # GENERAL
+# Copy supporting files to the docker image
+COPY run_target.sh /
+COPY seed /seed
+
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+

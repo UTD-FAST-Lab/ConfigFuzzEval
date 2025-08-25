@@ -125,14 +125,6 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
     os.makedirs(benchmark_pair_path, exist_ok=True)
     
-    # Copy seed corpus
-    seed_corpus_src = os.path.join(benchmark_dir, "seed")
-    seed_corpus_dst = os.path.join(benchmark_pair_path, "seed")
-    
-    if not os.path.exists(seed_corpus_src):
-        logging.error(f"No seed found for {benchmark_name}.")
-
-    copytree(seed_corpus_src, seed_corpus_dst)
 
     print(f"[INFO] Building benchmark: {benchmark_pair_name}")
     

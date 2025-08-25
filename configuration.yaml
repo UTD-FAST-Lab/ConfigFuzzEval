@@ -2,7 +2,11 @@ trials: 1
 
 # The amount of time in seconds that each trial is run for.
 # 1 day = 24 * 60 * 60 = 86400
+<<<<<<< HEAD
+max_total_time: 120
+=======
 max_total_time: 60
+>>>>>>> tahmeed/from_scratch
 
 # The location of the docker registry.
 # FIXME: Support custom docker registry.
@@ -16,6 +20,10 @@ experiment_filestore: /tmp/experiment-data
 # Please use an absolute path.
 report_filestore: /tmp/report-data
 
+<<<<<<< HEAD
+# Flag that indicates this is a local experiment.
+local_experiment: true
+=======
 # base image
 base_image_path: docker/base-image
 
@@ -29,3 +37,4 @@ allow_serial_execution: False
 
 # Memory per experiment in mb (3 GB by default)
 experiment_memory: 3072
+>>>>>>> tahmeed/from_scratch

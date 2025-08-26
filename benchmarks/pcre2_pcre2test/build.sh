@@ -2,6 +2,6 @@
 ./autogen.sh
 ./configure --disable-shared
 make
-make install
+make install CC=$CC CXX=$CXX
 
-cp pcre2test $OUT/pcre2test
+# cp pcre2test $OUT/pcre2test

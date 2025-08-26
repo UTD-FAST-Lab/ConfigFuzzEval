@@ -1,5 +1,5 @@
 {
-  "name": "bison",
+  "name": "bison_bison",
   "options": [
     {
       "name": "largefile",
@@ -36,12 +36,6 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-rpath"
-    },
-    {
-      "name": "gcc-warnings",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-gcc-warnings"
     },
     {
       "name": "yacc",

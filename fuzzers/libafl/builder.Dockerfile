@@ -34,10 +34,11 @@ WORKDIR /libafl/fuzzers/forkserver/libafl-fuzz/test
 RUN ./test.sh || true
 WORKDIR /
 
-
 # GENERAL
 ENV FUZZER_COMP=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast
 ENV FUZZER_COMPXX=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast++
 COPY run.sh /libafl
+COPY coverage.py /libafl
+RUN chmod +x /libafl/run.sh
 
-CMD ["bash", "-c", "cp -r /libafl /fuzzer_output/", "&&", "cp /libafl/run.sh /fuzzer_output/"]
+CMD ["bash", "-c", "cp -r /libafl /fuzzer_output/", "&&", "cp /libafl/run.sh /fuzzer_output/", "&&", "cp /libafl/coverage.py /fuzzer_output/"]

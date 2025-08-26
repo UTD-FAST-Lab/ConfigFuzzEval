@@ -86,33 +86,49 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
         logging.info(msg.strip())
 
         try:
-            subprocess.run([
-                "docker", "build",
-                "-t", f"fbpp/fuzzer:{fuzzer_name}",
-                "-f", fuzzer_dockerfile,
-                fuzzer_dir,
-                "--build-arg", "parent_image=fbpp/base",
-                "--no-cache"
-            ], check=True, stdout=lf, stderr=lf)
+            # Check if build already exists
+            
+            
+            existing_image = f"fbpp/fuzzer:{fuzzer_name}"
+            result = subprocess.run(["docker", "images", "-q", existing_image], check=True, stdout=subprocess.PIPE)
+            if result.stdout:
+                msg = f"[WARNING] Fuzzer image {existing_image} already exists. Skipping build.\n"
+                lf.write(msg)
+                logging.warning(f"Fuzzer image {existing_image} already exists. Skipping build.")
+                subprocess.run([
+                    "docker", "run",
+                    "--rm",
+                    "-v", f"{fuzzer_path}:/fuzzer_output",
+                    f"fbpp/fuzzer:{fuzzer_name}"
+                ], check=True, stdout=lf, stderr=lf)
+            else:
+                subprocess.run([
+                    "docker", "build",
+                    "-t", f"fbpp/fuzzer:{fuzzer_name}",
+                    "-f", fuzzer_dockerfile,
+                    fuzzer_dir,
+                    "--build-arg", "parent_image=fbpp/base",
+                    "--no-cache"
+                ], check=True, stdout=lf, stderr=lf)
 
-            subprocess.run([
-                "docker", "run",
-                "--rm",
-                "-v", f"{fuzzer_path}:/fuzzer_output",
-                f"fbpp/fuzzer:{fuzzer_name}"
-            ], check=True, stdout=lf, stderr=lf)
+                subprocess.run([
+                    "docker", "run",
+                    "--rm",
+                    "-v", f"{fuzzer_path}:/fuzzer_output",
+                    f"fbpp/fuzzer:{fuzzer_name}"
+                ], check=True, stdout=lf, stderr=lf)
 
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while building or running {fuzzer_name}.\n")
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
 
-            logging.error(f"[ERROR] Failed while building {fuzzer_name}. See {log_file} for details.")
+            logging.error(f"Failed while building {fuzzer_name}. See {log_file} for details.")
             return False
 
         lf.write(f"[SUCCESS] Built and ran fuzzer: {fuzzer_name}\n")
 
-    logging.success(f"[SUCCESS] Built and ran fuzzer: {fuzzer_name} (logs: {log_file})")
+    logging.success(f"Built and ran fuzzer: {fuzzer_name} (logs: {log_file})")
     return True
 
 
@@ -184,12 +200,11 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
 
-            logging.error(f"[ERROR] Failed while building {benchmark_pair_name}. See {log_file} for details.")
             return False
 
         lf.write(f"[SUCCESS] Built benchmark: {benchmark_name}\n")
 
-    logging.success(f"[SUCCESS] Built benchmark: {benchmark_pair_name} (logs: {log_file})")
+    # logging.success(f"Built benchmark: {benchmark_pair_name} (logs: {log_file})")
     return True
 
 
@@ -229,8 +244,8 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             subprocess.run([
                 "docker", "run", "--rm",
                 f"--cpuset-cpus={core_id}-{core_id+1}",
-                "-m", f"{memory_limit}g",
-                f"--memory-swap={memory_limit}g",
+                # "-m", f"{memory_limit}g",
+                # f"--memory-swap={memory_limit}g",
                 "-v", f"{coverage_binary_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",

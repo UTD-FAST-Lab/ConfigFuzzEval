@@ -38,12 +38,6 @@
       "cli": "--enable-rpath"
     },
     {
-      "name": "gcc-warnings",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-gcc-warnings"
-    },
-    {
       "name": "yacc",
       "type": "bool",
       "default": true,

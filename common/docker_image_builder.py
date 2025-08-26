@@ -222,13 +222,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
         ], check=True)
         
         # Time to calculate coverage
-        # Need:
-        # 1. coverage binary
         coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
-        # 2. fuzzer output directory (individual_data_storage), here we can find the corpus
-        # 3. Instructions to get coverage (fuzzer specific)
-        # This should be in every fuzzer's coverage.sh file
-        # 4. data_storage to store the coverage profraw files
         subprocess.run([
             "docker",
             "run",

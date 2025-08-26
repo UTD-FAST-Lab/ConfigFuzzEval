@@ -95,35 +95,40 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
                 msg = f"[WARNING] Fuzzer image {existing_image} already exists. Skipping build.\n"
                 lf.write(msg)
                 logging.warning(f"Fuzzer image {existing_image} already exists. Skipping build.")
-                return True
-            
-            subprocess.run([
-                "docker", "build",
-                "-t", f"fbpp/fuzzer:{fuzzer_name}",
-                "-f", fuzzer_dockerfile,
-                fuzzer_dir,
-                "--build-arg", "parent_image=fbpp/base",
-                "--no-cache"
-            ], check=True, stdout=lf, stderr=lf)
+                subprocess.run([
+                    "docker", "run",
+                    "--rm",
+                    "-v", f"{fuzzer_path}:/fuzzer_output",
+                    f"fbpp/fuzzer:{fuzzer_name}"
+                ], check=True, stdout=lf, stderr=lf)
+            else:
+                subprocess.run([
+                    "docker", "build",
+                    "-t", f"fbpp/fuzzer:{fuzzer_name}",
+                    "-f", fuzzer_dockerfile,
+                    fuzzer_dir,
+                    "--build-arg", "parent_image=fbpp/base",
+                    "--no-cache"
+                ], check=True, stdout=lf, stderr=lf)
 
-            subprocess.run([
-                "docker", "run",
-                "--rm",
-                "-v", f"{fuzzer_path}:/fuzzer_output",
-                f"fbpp/fuzzer:{fuzzer_name}"
-            ], check=True, stdout=lf, stderr=lf)
+                subprocess.run([
+                    "docker", "run",
+                    "--rm",
+                    "-v", f"{fuzzer_path}:/fuzzer_output",
+                    f"fbpp/fuzzer:{fuzzer_name}"
+                ], check=True, stdout=lf, stderr=lf)
 
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while building or running {fuzzer_name}.\n")
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
 
-            logging.error(f"[ERROR] Failed while building {fuzzer_name}. See {log_file} for details.")
+            logging.error(f"Failed while building {fuzzer_name}. See {log_file} for details.")
             return False
 
         lf.write(f"[SUCCESS] Built and ran fuzzer: {fuzzer_name}\n")
 
-    logging.success(f"[SUCCESS] Built and ran fuzzer: {fuzzer_name} (logs: {log_file})")
+    logging.success(f"Built and ran fuzzer: {fuzzer_name} (logs: {log_file})")
     return True
 
 
@@ -199,7 +204,7 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
         lf.write(f"[SUCCESS] Built benchmark: {benchmark_name}\n")
 
-    logging.success(f"[SUCCESS] Built benchmark: {benchmark_pair_name} (logs: {log_file})")
+    # logging.success(f"Built benchmark: {benchmark_pair_name} (logs: {log_file})")
     return True
 
 

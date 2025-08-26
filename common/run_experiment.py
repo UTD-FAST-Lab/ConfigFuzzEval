@@ -226,14 +226,23 @@ if __name__ == "__main__":
     logging.info("Applying selected compile-time strategies...")
 
     benchmark_mappings = {}
+    failed_strategies = []
 
     for strategy in experiment_state["compiletime"]:
-        new_benchmark_mapping = apply_ct_strategy(strategy,
-                                project_root,
-                                experiment_state["benchmarks"])
-        benchmark_mappings.update(new_benchmark_mapping)
+        try:
+            new_benchmark_mapping = apply_ct_strategy(strategy,
+                                    project_root,
+                                    experiment_state["benchmarks"])
+            if new_benchmark_mapping:
+                benchmark_mappings.update(new_benchmark_mapping)
+            else:
+                failed_strategies.append(strategy)
+        except Exception as e:
+            logging.error(f"Error applying compile-time strategy {strategy}: {e}")
+            failed_strategies.append(strategy)
     
     experiment_state["benchmark_mappings"] = benchmark_mappings
+    experiment_state["failed_strategies"] = failed_strategies
     
     # Build benchmarks
     logging.info("Building selected benchmarks...")

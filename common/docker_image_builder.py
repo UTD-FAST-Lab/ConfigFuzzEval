@@ -86,6 +86,17 @@ def build_fuzzer(fuzzer_name, experiment_path, project_root):
         logging.info(msg.strip())
 
         try:
+            # Check if build already exists
+            
+            
+            existing_image = f"fbpp/fuzzer:{fuzzer_name}"
+            result = subprocess.run(["docker", "images", "-q", existing_image], check=True, stdout=subprocess.PIPE)
+            if result.stdout:
+                msg = f"[WARNING] Fuzzer image {existing_image} already exists. Skipping build.\n"
+                lf.write(msg)
+                logging.warning(f"Fuzzer image {existing_image} already exists. Skipping build.")
+                return True
+            
             subprocess.run([
                 "docker", "build",
                 "-t", f"fbpp/fuzzer:{fuzzer_name}",
@@ -184,7 +195,6 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
 
-            logging.error(f"[ERROR] Failed while building {benchmark_pair_name}. See {log_file} for details.")
             return False
 
         lf.write(f"[SUCCESS] Built benchmark: {benchmark_name}\n")

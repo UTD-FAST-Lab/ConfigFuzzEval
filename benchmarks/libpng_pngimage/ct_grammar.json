@@ -1,133 +1,148 @@
 {
-  "name": "libpng_project",
+  "name": "libpng_pngimage",
   "options": [
     {
       "name": "fast-install",
       "type": "value",
       "default": "yes",
-      "cli": "--enable-fast-install"
+      "cli": "--enable-fast-install",
+      "conflicts": []
     },
     {
       "name": "aix-soname",
       "type": "enum",
       "values": ["aix","svr4","both"],
       "default": "aix",
-      "cli": "--enable-aix-soname"
+      "cli": "--enable-aix-soname",
+      "conflicts": []
     },
     {
       "name": "libtool-lock",
       "type": "bool",
       "default": true,
-      "cli": "--enable-libtool-lock"
-    },
-    {
-      "name": "tests",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-tests",
-      "override": "--enable-tests"
+      "cli": "--enable-libtool-lock",
+      "conflicts": []
     },
     {
       "name": "tools",
       "type": "bool",
       "default": true,
-      "cli": "--enable-tools"
+      "cli": "--enable-tools",
+      "conflicts": []
     },
     {
       "name": "werror",
       "type": "value",
       "default": null,
-      "cli": "--enable-werror"
+      "cli": "--enable-werror",
+      "conflicts": []
     },
     {
       "name": "unversioned-links",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-links"
+      "cli": "--enable-unversioned-links",
+      "conflicts": []
     },
     {
       "name": "unversioned-libpng-pc",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-libpng-pc"
+      "cli": "--enable-unversioned-libpng-pc",
+      "conflicts": []
     },
     {
       "name": "unversioned-libpng-config",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-libpng-config"
+      "cli": "--enable-unversioned-libpng-config",
+      "conflicts": []
     },
     {
       "name": "hardware-optimizations",
       "type": "bool",
       "default": false,
-      "cli": "--enable-hardware-optimizations"
-    },
-    {
-      "name": "arm-neon",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-arm-neon"
-    },
-    {
-      "name": "mips-msa",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-mips-msa"
-    },
-    {
-      "name": "mips-mmi",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-mips-mmi"
+      "cli": "--enable-hardware-optimizations",
+      "conflicts": []
     },
     {
       "name": "intel-sse",
       "type": "bool",
       "default": false,
-      "cli": "--enable-intel-sse"
+      "cli": "--enable-intel-sse",
+      "conflicts": []
+    },
+    {
+      "name": "zlib-prefix",
+      "type": "value",
+      "default": null,
+      "cli": "--with-zlib-prefix",
+      "conflicts": []
+    },
+    {
+      "name": "pkgconfigdir",
+      "type": "value",
+      "default": "libdir/pkgconfig",
+      "cli": "--with-pkgconfigdir",
+      "conflicts": []
+    },
+    {
+      "name": "binconfigs",
+      "type": "value",
+      "default": "yes",
+      "cli": "--with-binconfigs",
+      "conflicts": []
+    },
+    {
+      "name": "libpng-prefix",
+      "type": "value",
+      "default": null,
+      "cli": "--with-libpng-prefix",
+      "conflicts": []
+    }
+  ],
+  "removed_options": [
+    {
+      "name": "arm-neon",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-arm-neon",
+      "conflicts": ["mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
+    },
+    {
+      "name": "mips-msa",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-mips-msa",
+      "conflicts": ["arm-neon", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
+    },
+    {
+      "name": "mips-mmi",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-mips-mmi",
+      "conflicts": ["arm-neon", "mips-msa", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
     },
     {
       "name": "powerpc-vsx",
       "type": "bool",
       "default": false,
-      "cli": "--enable-powerpc-vsx"
+      "cli": "--enable-powerpc-vsx",
+      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "loongarch-lsx", "riscv-rvv"]
     },
     {
       "name": "loongarch-lsx",
       "type": "bool",
       "default": false,
-      "cli": "--enable-loongarch-lsx"
+      "cli": "--enable-loongarch-lsx",
+      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "riscv-rvv"]
     },
     {
       "name": "riscv-rvv",
       "type": "bool",
       "default": false,
-      "cli": "--enable-riscv-rvv"
-    },
-    {
-      "name": "zlib-prefix",
-      "type": "bool",
-      "default": null,
-      "cli": "--with-zlib-prefix"
-    },
-    {
-      "name": "pkgconfigdir",
-      "type": "bool",
-      "default": "libdir/pkgconfig",
-      "cli": "--with-pkgconfigdir"
-    },
-    {
-      "name": "binconfigs",
-      "type": "bool",
-      "default": "yes",
-      "cli": "--with-binconfigs"
-    },
-    {
-      "name": "libpng-prefix",
-      "type": "bool",
-      "default": null,
-      "cli": "--with-libpng-prefix"
+      "cli": "--enable-riscv-rvv",
+      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx"]
     }
   ]
 }

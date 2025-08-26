@@ -1,8 +1,8 @@
-trials: 3
+trials: 1
 
 # The amount of time in seconds that each trial is run for.
 # 1 day = 24 * 60 * 60 = 86400
-max_total_time: 10
+max_total_time: 10800
 
 # The location of the docker registry.
 # FIXME: Support custom docker registry.
@@ -25,7 +25,7 @@ runner_image_path: docker/runner-image
 # Cores/threads to use
 cores_to_use: 10
 
-allow_serial_execution: False
+allow_serial_execution: True
 
 # Memory per experiment in mb (3 GB by default)
 experiment_memory: 3072

@@ -226,14 +226,23 @@ if __name__ == "__main__":
     logging.info("Applying selected compile-time strategies...")
 
     benchmark_mappings = {}
+    failed_strategies = []
 
     for strategy in experiment_state["compiletime"]:
-        new_benchmark_mapping = apply_ct_strategy(strategy,
-                                project_root,
-                                experiment_state["benchmarks"])
-        benchmark_mappings.update(new_benchmark_mapping)
+        try:
+            new_benchmark_mapping = apply_ct_strategy(strategy,
+                                    project_root,
+                                    experiment_state["benchmarks"])
+            if new_benchmark_mapping:
+                benchmark_mappings.update(new_benchmark_mapping)
+            else:
+                failed_strategies.append(strategy)
+        except Exception as e:
+            logging.error(f"Error applying compile-time strategy {strategy}: {e}")
+            failed_strategies.append(strategy)
     
     experiment_state["benchmark_mappings"] = benchmark_mappings
+    experiment_state["failed_strategies"] = failed_strategies
     
     # Build benchmarks
     logging.info("Building selected benchmarks...")
@@ -259,7 +268,7 @@ if __name__ == "__main__":
             try:
                 success = future.result()
                 if success:
-                    logging.info(f"Successfully built benchmark: {benchmark} for fuzzer: {fuzzer}")
+                    logging.info(f"Successfully built benchmark: {fuzzer}_{benchmark}")
                     fuzzer_benchmark_pairs.append(f"{fuzzer}_{benchmark}")
 
                     if benchmark not in built_benchmarks:
@@ -268,14 +277,14 @@ if __name__ == "__main__":
                         built_benchmarks[benchmark].append(fuzzer)
 
                 else:
-                    logging.error(f"Failed to build benchmark: {benchmark} for fuzzer: {fuzzer}")
+                    logging.error(f"Failed to build benchmark: {fuzzer}_{benchmark}")
                     if benchmark not in benchmark_failures:
                         benchmark_failures[benchmark] = [fuzzer]
                     else:
                         benchmark_failures[benchmark].append(fuzzer)
 
             except Exception as e:
-                logging.error(f"Exception while building {benchmark} for {fuzzer}: {e}")
+                logging.error(f"Exception while building {fuzzer}_{benchmark}: {e}")
                 if benchmark not in benchmark_failures:
                     benchmark_failures[benchmark] = [fuzzer]
                 else:

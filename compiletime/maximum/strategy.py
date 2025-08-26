@@ -1,8 +1,8 @@
 """
 Grammar Configuration Module
 
-This module provides functionality to load grammar configurations from JSON files
-and generate CLI arguments based on option relationships and constraints.
+This module provides functionality to load grammar configurations from JSON
+files and generate CLI arguments based on option relationships and constraints.
 """
 
 import json
@@ -73,7 +73,8 @@ def apply_implies(config: Dict[str, Any], opt: Dict[str, Any]) -> None:
         set_option(config, iname.strip(), ival)
 
 
-def check_conflicts(config: Dict[str, Any], opt: Dict[str, Any], value: Any) -> bool:
+def check_conflicts(config: Dict[str, Any], opt: Dict[str, Any],
+                   value: Any) -> bool:
     """
     Check if enabling an option would conflict with existing configuration.
     
@@ -94,7 +95,8 @@ def check_conflicts(config: Dict[str, Any], opt: Dict[str, Any], value: Any) -> 
     return False
 
 
-def check_requires(config: Dict[str, Any], opt: Dict[str, Any], value: Any) -> bool:
+def check_requires(config: Dict[str, Any], opt: Dict[str, Any],
+                  value: Any) -> bool:
     """
     Check if an option's requirements are met.
     
@@ -137,7 +139,8 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
         # Set values based on type
         if opt["type"] == "bool":
             # Check conflicts and requirements
-            if check_conflicts(config, opt, True) or not check_requires(config, opt, True):
+            if (check_conflicts(config, opt, True) or
+                    not check_requires(config, opt, True)):
                 set_option(config, opt["name"], False)
             else:
                 set_option(config, opt["name"], True)
@@ -147,6 +150,9 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
             set_option(config, opt["name"], True)
         elif opt["type"] == "str":
             set_option(config, opt["name"], "/usr")
+        else:
+            # Handle any other option types with a default value
+            set_option(config, opt["name"], False)
         
         # Apply implied relationships
         apply_implies(config, opt)
@@ -165,6 +171,21 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
             for req in opt["requires"]:
                 if not config.get(req, False):
                     config[opt["name"]] = False
+    
+    # Fourth pass: ensure all options have a value
+    for opt in grammar["options"]:
+        if opt["name"] not in config:
+            # Set default values for any options that weren't handled
+            if opt["type"] == "bool":
+                config[opt["name"]] = False
+            elif opt["type"] == "enum":
+                config[opt["name"]] = opt["values"][0] if opt["values"] else ""
+            elif opt["type"] == "depends":
+                config[opt["name"]] = False
+            elif opt["type"] == "str":
+                config[opt["name"]] = ""
+            else:
+                config[opt["name"]] = False
     
     return config
 
@@ -202,7 +223,8 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     return ""
 
 
-def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> List[str]:
+def generate_cli_args(grammar: Dict[str, Any],
+                     config: Optional[Dict[str, Any]] = None) -> List[str]:
     """
     Generate CLI arguments from configuration.
     
@@ -225,7 +247,8 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
     return cli_args
 
 
-def generate_cli_string(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> str:
+def generate_cli_string(grammar: Dict[str, Any],
+                       config: Optional[Dict[str, Any]] = None) -> str:
     """
     Generate CLI arguments as a single string.
     
@@ -244,3 +267,15 @@ def request_configurations(grammar_file):
     grammar = load_grammar(grammar_file)
     cli_string = generate_cli_string(grammar)
     return [cli_string]
+
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python strategy.py <grammar_file>")
+        sys.exit(1)
+    
+    grammar_file = sys.argv[1]
+    configurations = request_configurations(grammar_file)
+    for config in configurations:
+        print(config)

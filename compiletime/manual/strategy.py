@@ -23,6 +23,12 @@ def request_configurations(grammar_file):
     
     if benchmark_name == "libxml2_xmllint":
         return [
-            "--disable-shared --without-debug --without-http --without-python",
             "--disable-shared --without-debug --without-http --without-python --with-zlib --with-lzma"
         ]
+    elif benchmark_name == "pcre2_pcre2test":
+        return [
+            "--enable-fuzz-support --enable-never-backslash-C --with-match-limit=1000000 --with-match-limit-depth=1000000 --enable-pcre2-16 --enable-pcre2-32"]
+    elif benchmark_name == "libpng_pngtest":
+        return [""]
+    elif benchmark_name == "bison_bison":
+        return [""]

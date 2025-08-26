@@ -5,7 +5,8 @@
       "name": "pcre2-8",
       "type": "bool",
       "default": true,
-        "cli": "--enable-pcre2-8",
+      "cli": "--enable-pcre2-8",
+      "override": "--enable-pcre2-8",
         "pairwise_constraints" : [
             [true,[
               ["pcre2-16",false],

@@ -268,7 +268,7 @@ if __name__ == "__main__":
             try:
                 success = future.result()
                 if success:
-                    logging.info(f"Successfully built benchmark: {benchmark} for fuzzer: {fuzzer}")
+                    logging.info(f"Successfully built benchmark: {fuzzer}_{benchmark}")
                     fuzzer_benchmark_pairs.append(f"{fuzzer}_{benchmark}")
 
                     if benchmark not in built_benchmarks:
@@ -277,14 +277,14 @@ if __name__ == "__main__":
                         built_benchmarks[benchmark].append(fuzzer)
 
                 else:
-                    logging.error(f"Failed to build benchmark: {benchmark} for fuzzer: {fuzzer}")
+                    logging.error(f"Failed to build benchmark: {fuzzer}_{benchmark}")
                     if benchmark not in benchmark_failures:
                         benchmark_failures[benchmark] = [fuzzer]
                     else:
                         benchmark_failures[benchmark].append(fuzzer)
 
             except Exception as e:
-                logging.error(f"Exception while building {benchmark} for {fuzzer}: {e}")
+                logging.error(f"Exception while building {fuzzer}_{benchmark}: {e}")
                 if benchmark not in benchmark_failures:
                     benchmark_failures[benchmark] = [fuzzer]
                 else:

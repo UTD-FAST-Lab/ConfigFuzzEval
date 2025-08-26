@@ -1,5 +1,5 @@
 #!/bin/bash
-./configure --disable-shared
+./configure --disable-shared {{CT_CONFIGURATION}} 
 make check CC=$CC CXX=$CXX
 make install CC=$CC CXX=$CXX
 

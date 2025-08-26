@@ -101,7 +101,7 @@ def request_configurations(grammar_file):
 
 def main():
 
-    grammar_file = "benchmarks/libpng_pngimage/ct_grammar.json"
+    grammar_file = "benchmarks/bison_bison/ct_grammar.json"
     print(request_configurations(grammar_file))
 
 if __name__ == "__main__":

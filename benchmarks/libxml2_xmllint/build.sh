@@ -5,7 +5,7 @@ apt-get update && apt-get install -y \
   liblzma-dev python3-dev zlib1g-dev \
   libxslt1-dev xsltproc doxygen
 
-./autogen.sh --disable-shared
+./autogen.sh
 ./configure --disable-shared {{CT_CONFIGURATION}} 
 
 make -j$(nproc) CC=$CC CXX=$CXX

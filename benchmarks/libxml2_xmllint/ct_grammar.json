@@ -6,13 +6,7 @@
         "type": "bool",
         "default": false,
         "cli": "--enable-static",
-        "conflicts": ["shared"],
-        "override": "",
-        "pairwise_constraints" : [
-          [true,[
-            ["shared",false]
-          ]]
-        ]
+        "override": ""
       },
       {
         "name": "fast-install",

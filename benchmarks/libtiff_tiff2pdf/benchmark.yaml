@@ -1,0 +1,4 @@
+commit: e9f494b5b751290f7d416b7b2c5d9e2b1d3692c4
+commit_date: 2025-02-11 18:15:07+00:00
+fuzz_target: tiff2pdf
+project: libtiff

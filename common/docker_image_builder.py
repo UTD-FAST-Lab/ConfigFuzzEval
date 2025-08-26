@@ -195,7 +195,7 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                     runtime, trials, trial_id, experiment_path, core_id, 
-                    data_storage):
+                    data_storage, memory_limit):
     # setup
     individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial{trial_id}")
     os.makedirs(individual_data_storage, exist_ok=True)
@@ -212,13 +212,12 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             "run",
             "--rm",
             f"--cpuset-cpus={core_id}-{core_id+1}",
-            "-v",
-            f"{benchmark_location}:/benchmark",
-            "-v",
-            f"{fuzzer_location}:/fuzzer",
-            "-v",
-            f"{individual_data_storage}:/fuzzer_output",
-            f"fbpp/runner"
+            "-m", f"{memory_limit}g",
+            f"--memory-swap={memory_limit}g",
+            "-v", f"{benchmark_location}:/benchmark",
+            "-v", f"{fuzzer_location}:/fuzzer",
+            "-v", f"{individual_data_storage}:/fuzzer_output",
+            "fbpp/runner"
         ], check=True)
         
         # Time to calculate coverage
@@ -228,16 +227,13 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             "run",
             "--rm",
             f"--cpuset-cpus={core_id}-{core_id+1}",
-            "-v",
-            f"{coverage_binary_location}:/benchmark",
-            "-v",
-            f"{fuzzer_location}:/fuzzer",
-            "-v",
-            f"{individual_data_storage}:/fuzzer_output",
-            f"fbpp/runner-coverage"
+            "-m", f"{memory_limit}g",
+            f"--memory-swap={memory_limit}g",
+            "-v", f"{coverage_binary_location}:/benchmark",
+            "-v", f"{fuzzer_location}:/fuzzer",
+            "-v", f"{individual_data_storage}:/fuzzer_output",
+            "fbpp/runner-coverage"
         ], check=True)
-        
-        
         
     except subprocess.CalledProcessError as e:
         print(f"[ERROR] Failed while running {fuzzer} on {benchmark}.")

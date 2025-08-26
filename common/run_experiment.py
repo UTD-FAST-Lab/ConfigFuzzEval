@@ -58,7 +58,8 @@ def run_experiments(experiment_state):
                                 trial_id,
                                 experiment_state["experiment_path"],
                                 core_start,
-                                data_storage
+                                data_storage,
+                                experiment_state["total_memory_needed_gb"]
                             )
                     core_start += 1
     else:

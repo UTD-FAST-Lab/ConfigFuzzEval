@@ -5,11 +5,8 @@ apt-get update && apt-get install -y \
   liblzma-dev python3-dev zlib1g-dev \
   libxslt1-dev xsltproc doxygen
 
-./autogen.sh
-# ./configure {{CT_CONFIGURATION}} 
-./configure --disable-shared
+./autogen.sh --disable-shared
+./configure --disable-shared {{CT_CONFIGURATION}} 
 
-make -j$(nproc)
+make -j$(nproc) CC=$CC CXX=$CXX
 
-# Copy the binary to the destination directory
-cp xmllint $OUT/xmllint

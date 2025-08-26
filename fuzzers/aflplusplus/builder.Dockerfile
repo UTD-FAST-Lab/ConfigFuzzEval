@@ -1,17 +1,3 @@
-# Copyright 2020 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 ARG parent_image
 FROM $parent_image
 
@@ -35,15 +21,22 @@ RUN apt-get update && \
         libstdc++-$(gcc --version|head -n1|sed 's/\..*//'|sed 's/.* //')-dev
 
 # Download afl++.
-RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /afl && \
-    cd /afl && \
+RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /aflplusplus && \
+    cd /aflplusplus && \
     git checkout 56d5aa3101945e81519a3fac8783d0d8fad82779 || \
     true
 
 # Build without Python support as we don't need it.
 # Set AFL_NO_X86 to skip flaky tests.
-RUN cd /afl && \
+RUN cd /aflplusplus && \
     unset CFLAGS CXXFLAGS && \
     export CC=clang AFL_NO_X86=1 && \
-    PYTHON_INCLUDE=/ make && \
-    cp utils/aflpp_driver/libAFLDriver.a /
+    PYTHON_INCLUDE=/ make
+
+# GENERAL
+ENV FUZZER_COMP=/aflplusplus/afl-clang-fast
+ENV FUZZER_COMPXX=/aflplusplus/afl-clang-fast++
+COPY run.sh /aflplusplus
+COPY coverage.py /aflplusplus
+
+CMD ["bash", "-c", "cp -r /aflplusplus /fuzzer_output/", "&&", "cp /aflplusplus/run.sh /fuzzer_output/ ", "&&", "cp /aflplusplus/coverage.py /fuzzer_output/"]

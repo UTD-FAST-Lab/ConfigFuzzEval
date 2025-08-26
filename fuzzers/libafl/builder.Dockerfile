@@ -1,54 +1,44 @@
-# Copyright 2020 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 ARG parent_image
 FROM $parent_image
 
-# Uninstall old Rust & Install the latest one.
-RUN if which rustup; then rustup self uninstall -y; fi && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /rustup.sh && \
-    sh /rustup.sh --default-toolchain nightly-2024-08-12 -y && \
-    rm /rustup.sh
 
-# Install dependencies.
 RUN apt-get update && \
-    apt-get remove -y llvm-10 && \
-    apt-get install -y \
-        build-essential \
-        lsb-release wget software-properties-common gnupg && \
-    apt-get install -y wget libstdc++5 libtool-bin automake flex bison \
-        libglib2.0-dev libpixman-1-dev python3-setuptools unzip \
-        apt-utils apt-transport-https ca-certificates joe curl && \
-    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 17
+    apt-get install -y libinih-dev libcurl4-openssl-dev libpng-dev xmlto vim nano htop autoconf automake build-essential libtool cmake git sudo software-properties-common gperf libselinux1-dev  bison texinfo flex zlib1g-dev libexpat1-dev libmpg123-dev wget curl python3-pip unzip pkg-config clang llvm-dev &&\
+    python3 -m pip install -U pip
+RUN wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/llvm-archive-keyring.gpg && \
+    add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" && \
+    apt-get update
 
-RUN wget https://gist.githubusercontent.com/tokatoka/26f4ba95991c6e33139999976332aa8e/raw/698ac2087d58ce5c7a6ad59adce58dbfdc32bd46/createAliases.sh && chmod u+x ./createAliases.sh && ./createAliases.sh 
+RUN (apt update && apt install -y llvm-18 clang-18 lld-18 llvm-18-dev  libjson-c-dev libgsl-dev )
 
-# Download libafl.
-RUN git clone https://github.com/AFLplusplus/LibAFL /libafl
+# Install Rust (latest version)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Checkout a current commit
-RUN cd /libafl && git pull && git checkout f856092f3d393056b010fcae3b086769377cba18 || true
-# Note that due a nightly bug it is currently fixed to a known version on top!
+RUN wget https://apt.llvm.org/llvm.sh
+RUN chmod +x llvm.sh
+RUN ./llvm.sh 18
+RUN apt install -y gettext libgpgmepp-dev libfontconfig-dev libfreetype-dev   libjpeg-dev ninja-build libopenjp2-7 libopenjp2-7-dev  libopenjp2-tools libnss3-dev libboost-dev libboost-all-dev  libboost-dev clang-format
 
-# Compile libafl.
-RUN cd /libafl && \
-    unset CFLAGS CXXFLAGS && \
-    export LIBAFL_EDGES_MAP_SIZE=2621440 && \
-    cd ./fuzzers/fuzzbench/fuzzbench && \
-    PATH="/root/.cargo/bin/:$PATH" cargo build --profile release-fuzzbench --features no_link_main
 
-# Auxiliary weak references.
-RUN cd /libafl/fuzzers/fuzzbench/fuzzbench && \
-    clang -c stub_rt.c && \
-    ar r /stub_rt.a stub_rt.o
+
+
+
+# setup LibAFL
+RUN git clone https://github.com/AFLplusplus/LibAFL.git /libafl
+WORKDIR /libafl
+RUN cargo build --release
+WORKDIR /libafl/fuzzers/forkserver/libafl-fuzz/
+RUN cargo build 
+WORKDIR /libafl/fuzzers/forkserver/libafl-fuzz/test
+RUN ./test.sh || true
+WORKDIR /
+
+# GENERAL
+ENV FUZZER_COMP=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast
+ENV FUZZER_COMPXX=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast++
+COPY run.sh /libafl
+COPY coverage.py /libafl
+RUN chmod +x /libafl/run.sh
+
+CMD ["bash", "-c", "cp -r /libafl /fuzzer_output/", "&&", "cp /libafl/run.sh /fuzzer_output/", "&&", "cp /libafl/coverage.py /fuzzer_output/"]

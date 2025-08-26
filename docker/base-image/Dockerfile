@@ -1,66 +1,39 @@
-# Copyright 2020 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Base image: Ubuntu 22.04 (Jammy)
+FROM ubuntu:22.04
 
-FROM ubuntu:focal
-
+# Ensure non-interactive mode
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Python 3.10.8 is not the default version in Ubuntu 20.04 (Focal Fossa).
-ENV PYTHON_VERSION 3.10.8
-# Install dependencies required by Python3 or Pip3.
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y \
-    curl \
-    xz-utils \
-    build-essential \
-    zlib1g-dev \
-    libssl-dev \
-    libffi-dev \
-    libsqlite3-dev \
-    libbz2-dev \
-    liblzma-dev
+# Update and install common dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    wget curl git build-essential ninja-build pkg-config cmake \
+    automake autoconf libtool libglib2.0-dev libpixman-1-dev \
+    python3 python3-pip python3-setuptools python3-dev \
+    zlib1g-dev liblzma-dev libbz2-dev libssl-dev \
+    libxml2-dev libsqlite3-dev libpng-dev libjpeg-dev \
+    llvm \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN cd /tmp/ && \
-    curl -O https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz && \
-    tar -xvf Python-$PYTHON_VERSION.tar.xz > /dev/null && \
-    cd Python-$PYTHON_VERSION && \
-    ./configure \
-        --enable-loadable-sqlite-extensions \
-        --enable-optimizations \
-        > /dev/null && \
-    make -j install > /dev/null && \
-    rm -r /tmp/Python-$PYTHON_VERSION.tar.xz /tmp/Python-$PYTHON_VERSION && \
-    ln -s /usr/local/bin/python3 /usr/local/bin/python && \
-    ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+# Install Clang/LLVM 18
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget gnupg lsb-release software-properties-common && \
+    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && \
+    ./llvm.sh 18 all && \
+    rm -f llvm.sh && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install common python dependencies.
-COPY ./requirements.txt /tmp
-RUN pip install -r /tmp/requirements.txt
+# Set Clang 18 as default compiler
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 && \
+    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100 && \
+    update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld-18 100 && \
+    update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-18 100 && \
+    update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-18 100 && \
+    update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-18 100
 
-# Install dependencies required by google-cloud-cli.
-RUN apt-get update && \
-    apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    rsync \
-    gnupg
+# Install AFL++ common Python deps
+RUN pip3 install --no-cache-dir \
+    psutil numpy matplotlib seaborn
 
-# Install google-cloud-cli (previously named google-cloud-sdk).
-RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" \
-    | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
-    | apt-key add - && \
-    apt-get update && \
-    apt-get install -y google-cloud-cli
+# DEBUG: Print clang version on container startup
+# CMD ["clang --version"]

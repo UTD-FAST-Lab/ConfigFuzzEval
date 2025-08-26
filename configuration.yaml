@@ -2,12 +2,11 @@ trials: 1
 
 # The amount of time in seconds that each trial is run for.
 # 1 day = 24 * 60 * 60 = 86400
-max_total_time: 600
+max_total_time: 10
 
 # The location of the docker registry.
 # FIXME: Support custom docker registry.
 # See https://github.com/google/fuzzbench/issues/777
-docker_registry: gcr.io/fuzzbench
 
 # The local experiment folder that will store most of the experiment data.
 # Please use an absolute path.
@@ -17,5 +16,16 @@ experiment_filestore: /tmp/experiment-data
 # Please use an absolute path.
 report_filestore: /tmp/report-data
 
-# Flag that indicates this is a local experiment.
-local_experiment: true
+# base image
+base_image_path: docker/base-image
+
+# runner image
+runner_image_path: docker/runner-image
+
+# Cores/threads to use
+cores_to_use: 10
+
+allow_serial_execution: True
+
+# Memory per experiment in mb (3 GB by default)
+experiment_memory: 3072

@@ -9,7 +9,8 @@
     },
     {
       "name": "aix-soname",
-      "type": "value",
+      "type": "enum",
+      "values": ["aix","svr4","both"],
       "default": "aix",
       "cli": "--enable-aix-soname"
     },

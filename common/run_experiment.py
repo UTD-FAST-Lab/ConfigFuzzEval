@@ -62,7 +62,7 @@ def run_experiments(experiment_state):
                             )
                     core_start += 1
     else:
-        # handle serial executions
+        # TODO: handle serial executions
         pass
 
 
@@ -81,13 +81,6 @@ if __name__ == "__main__":
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
     
     args = parser.parse_args()
-    
-    logging.info("Running experiments with the following parameters:")
-    logging.info(f"Configuration file: {args.config}")
-    logging.info(f"Fuzzers: {args.fuzzers}")
-    logging.info(f"Benchmarks: {args.benchmarks}")
-    logging.info(f"Compile time strategies: {args.compiletime}")
-    logging.info(f"Experiment name: {args.experiment_name}")
     
     # Read configuration
     with open(args.config, "r") as f:
@@ -113,6 +106,15 @@ if __name__ == "__main__":
         "experiment_memory": config["experiment_memory"]
     }
     
+    logging.info("Running experiments with the following parameters:")
+    logging.info(f"Configuration file: {args.config}")
+    logging.info(f"Fuzzers: {args.fuzzers}")
+    logging.info(f"Benchmarks: {args.benchmarks}")
+    logging.info(f"Compile time strategies: {args.compiletime}")
+    logging.info(f"Experiment name: {args.experiment_name}")
+    logging.info(f"Trials: {experiment_state['trials']}")
+    logging.info(f"Runtime per trial (seconds): {experiment_state['max_total_time']}")
+
     # build experiment in filestore
     experiment_filestore = experiment_state["experiment_filestore"]
     report_filestore = experiment_state["report_filestore"]
@@ -268,6 +270,7 @@ if __name__ == "__main__":
     # Run experiments
     logging.info("Ready to begin experiments!")
     run_experiments(experiment_state)
+    
     
 
     

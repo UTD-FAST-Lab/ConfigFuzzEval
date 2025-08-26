@@ -1,6 +1,6 @@
 # cd pcre2
 ./autogen.sh
-./configure --disable-shared
+./configure --disable-shared {{CT_CONFIGURATION}}
 make
 make install CC=$CC CXX=$CXX
 

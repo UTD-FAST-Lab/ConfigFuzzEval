@@ -15,19 +15,6 @@
         ]
       },
       {
-        "name": "shared",
-        "type": "bool",
-        "default": true,
-        "cli": "--enable-shared",
-        "conflicts": ["static"],
-        "override": "--disable-shared",
-        "pairwise_constraints" : [
-          [true,[
-            ["static",false]
-          ]]
-        ]
-      },
-      {
         "name": "fast-install",
         "type": "bool",
         "default": true,

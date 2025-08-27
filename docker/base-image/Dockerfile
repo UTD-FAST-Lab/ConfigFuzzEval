@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget curl git build-essential ninja-build pkg-config cmake \
     automake autoconf libtool libglib2.0-dev libpixman-1-dev \
     python3 python3-pip python3-setuptools python3-dev \
-    zlib1g-dev liblzma-dev libbz2-dev libssl-dev \
+    zlib1g-dev liblzma-dev libbz2-dev libssl-dev libdeflate0 libjbig0 libjbig-dev \
     libxml2-dev libsqlite3-dev libpng-dev libjpeg-dev \
     llvm \
     && rm -rf /var/lib/apt/lists/*

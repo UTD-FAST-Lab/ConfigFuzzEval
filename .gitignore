@@ -52,3 +52,6 @@ docker/generated.mk
 
 # cts benchmarks
 benchmarks/cts*
+
+experiment-data/
+report-data/

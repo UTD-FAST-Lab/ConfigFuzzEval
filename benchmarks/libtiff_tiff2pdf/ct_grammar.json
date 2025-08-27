@@ -14,12 +14,6 @@
       "cli": "--enable-largefile"
     },
     {
-      "name": "tools",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-tools"
-    },
-    {
       "name": "tests",
       "type": "bool",
       "default": true,
@@ -138,12 +132,6 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-webp"
-    },
-    {
-      "name": "jpeg12",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-jpeg12"
     },
     {
       "name": "cxx",

@@ -155,56 +155,10 @@ def generate_benchmark_level_reports(path_to_trial_data):
                 "covered_lines_ls": covered_lines_ls
             }
         )
+    
+
+
     return results
-
-
-
-
-    # Compute averages across trials for the same base (strip trailing
-    # _trial_N)
-    averages = {}
-    groups = {}
-    for r in results:
-        trial_name = r["trial"]
-        base = re.sub(r"_trial_\d+$", "", trial_name)
-        groups.setdefault(base, []).append(r)
-
-    for base, items in groups.items():
-        # Filter only items with valid integer counts
-        valid_lines = [
-            it for it in items
-            if isinstance(it["lines"].get("covered"), int)
-            and isinstance(it["lines"].get("total"), int)
-        ]
-        valid_branches = [
-            it for it in items
-            if isinstance(it["branches"].get("covered"), int)
-            and isinstance(it["branches"].get("total"), int)
-        ]
-
-        def _avg(values):
-            if not values:
-                return None
-            return sum(values) / float(len(values))
-
-        line_cov_avg = _avg([it["lines"]["covered"] for it in valid_lines])
-        line_tot_avg = _avg([it["lines"]["total"] for it in valid_lines])
-        br_cov_avg = _avg([it["branches"]["covered"] for it in valid_branches])
-        br_tot_avg = _avg([it["branches"]["total"] for it in valid_branches])
-        averages[base] = {
-            "trials": len(items),
-            "lines": {
-                "covered_avg": line_cov_avg,
-                "total_avg": line_tot_avg,
-            },
-            "branches": {
-                "covered_avg": br_cov_avg,
-                "total_avg": br_tot_avg,
-            },
-        }
-    return averages
-
-    # Print averages table
 
 
 def group_and_print(data):
@@ -310,7 +264,14 @@ def main():
     # comp = compare_executed_lines(res, res2)
     # print(comp)
     individual_results = generate_benchmark_level_reports(path)
-    print(individual_results)
+
+    types_by_key = {k: type(v).__name__ for k, v in individual_results[0].items()}
+    print(types_by_key)
+    print(f"Generated {len(individual_results)} individual benchmark reports.")
+
+
+
+
     # res = group_by_target(individual_results)
     # group_and_print(individual_results)
     

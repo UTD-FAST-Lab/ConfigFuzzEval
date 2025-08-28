@@ -32,3 +32,7 @@ def request_configurations(grammar_file):
         return [""]
     elif benchmark_name == "bison_bison":
         return [""]
+    elif benchmark_name == "file_file":
+        return ["--enable-static --enable-fsect-man5"]
+    elif benchmark_name == "expat_xmlwf":
+        return [""]

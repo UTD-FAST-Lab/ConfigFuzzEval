@@ -1,0 +1,105 @@
+{
+  "name": "expat_xmlwf",
+  "options": [
+    {
+      "name": "static",
+      "type": "value", 
+      "default": "yes",
+      "cli": "--enable-static",
+      "conflicts": []
+    },
+    {
+      "name": "fast-install",
+      "type": "value",
+      "default": "yes",
+      "cli": "--enable-fast-install",
+      "conflicts": []
+    },
+    {
+      "name": "libtool-lock",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libtool-lock",
+      "conflicts": []
+    },
+    {
+      "name": "xml-attr-info",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-xml-attr-info",
+      "conflicts": []
+    },
+    {
+      "name": "xml-context",
+      "type": "value",
+      "default": "1024",
+      "cli": "--enable-xml-context",
+      "conflicts": []
+    },
+    {
+      "name": "pic",
+      "type": "value",
+      "default": "both",
+      "cli": "--with-pic",
+      "conflicts": []
+    },
+    {
+      "name": "aix-soname",
+      "type": "enum",
+      "values": ["aix", "svr4", "both"],
+      "default": "aix",
+      "cli": "--with-aix-soname",
+      "conflicts": []
+    },
+    {
+      "name": "gnu-ld",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-gnu-ld",
+      "conflicts": []
+    },
+    {
+      "name": "sysroot",
+      "type": "value",
+      "default": null,
+      "cli": "--with-sysroot",
+      "conflicts": []
+    },
+    {
+      "name": "examples",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-examples",
+      "conflicts": []
+    },
+    {
+      "name": "tests",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-tests",
+      "conflicts": []
+    },
+    {
+      "name": "libbsd",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-libbsd",
+      "conflicts": []
+    },
+    {
+      "name": "getrandom",
+      "type": "value",
+      "default": "check",
+      "cli": "--with-getrandom",
+      "conflicts": []
+    },
+    {
+      "name": "sys-getrandom",
+      "type": "value",
+      "default": "check",
+      "cli": "--with-sys-getrandom",
+      "conflicts": []
+    }
+  ],
+  "removed_options": []
+}

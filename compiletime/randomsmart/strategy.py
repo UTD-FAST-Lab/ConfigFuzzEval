@@ -138,7 +138,7 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     return ""
 
 
-def request_configurations(grammar_file: str, n: int = 10) -> List[str]:
+def request_configurations(grammar_file: str, n: int = 2) -> List[str]:
     grammar = load_grammar(grammar_file)
     configs = generate_n_valid_random_configs(grammar, n)
     cli_lines = []

@@ -7,7 +7,7 @@ from color_logger import get_logger
 logging = get_logger(__name__)
 
 
-def build_runner_image(runner_image_path, project_root, runtime):
+def build_runner_image(runner_image_path, project_root):
     runner_image_path = os.path.join(project_root, runner_image_path)
     runner_image_name = "fbpp/runner"
 
@@ -21,8 +21,6 @@ def build_runner_image(runner_image_path, project_root, runtime):
         "build",
         "-t",
         runner_image_name,
-        "--build-arg",
-        f"RUNTIME={runtime}",
         runner_image_path,
         "--no-cache"
     ], check=True)
@@ -33,8 +31,6 @@ def build_runner_image(runner_image_path, project_root, runtime):
         "build",
         "-t",
         f"{runner_image_name}-coverage",
-        "--build-arg",
-        f"RUNTIME={runtime}",
         "--build-arg",
         f"COVERAGE=true",
         runner_image_path,
@@ -210,10 +206,13 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                   runtime, trials, trial_id, experiment_path, core_id, 
-                  data_storage, memory_limit):
+                  data_storage, memory_limit, tot_cts_count):
     # setup
     individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
     os.makedirs(individual_data_storage, exist_ok=True)
+    
+    actual_runtime = runtime // tot_cts_count if tot_cts_count > 0 else runtime
+    print(f"Total CTs: {tot_cts_count}, Adjusted runtime per CT: {actual_runtime}")
 
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
@@ -233,6 +232,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
                 f"--cpuset-cpus={core_id}-{core_id+1}",
                 "-m", f"{memory_limit}g",
                 f"--memory-swap={memory_limit}g",
+                "-e", f"RUNTIME={actual_runtime}",
                 "-v", f"{benchmark_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",

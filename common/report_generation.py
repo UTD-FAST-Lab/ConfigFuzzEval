@@ -7,6 +7,7 @@ import re
 import traceback
 from color_logger import get_logger
 import pprint
+import pandas as pd
 
 
 logging = get_logger(__name__)
@@ -161,49 +162,6 @@ def generate_benchmark_level_reports(path_to_trial_data):
     return results
 
 
-def group_and_print(data):
-    grouped = defaultdict(lambda: defaultdict(list))
-
-    for entry in data:
-        trial_name = entry['trial']
-        parts = trial_name.split("_", 1)
-        fuzzer, rest = parts[0], parts[1]
-
-        # only keep trial id (e.g., "trial_0")
-        trial_id = "_".join(trial_name.split("_")[-2:])
-
-        simplified = {
-            "trial": trial_id,
-            "lines": entry["lines"],
-            "branches": entry["branches"],
-        }
-
-        grouped[rest][fuzzer].append(simplified)
-
-    # ---- printing with averages ----
-    for strat_target, fuzzers in grouped.items():
-        print(f"\n=== {strat_target} ===")
-        for fuzzer, trials in fuzzers.items():
-            print(f"  Fuzzer: {fuzzer}")
-            covered_lines = covered_branches = 0
-
-            for t in trials:
-                lc = t["lines"]["covered"]
-                bc = t["branches"]["covered"]
-
-                print(f"    {t['trial']}: "
-                      f"lines {lc}, branches {bc}")
-
-                covered_lines += lc
-                covered_branches += bc
-
-            # compute averages (just raw averages of covered counts)
-            n = len(trials)
-            avg_line_cov = covered_lines / n if n else 0
-            avg_branch_cov = covered_branches / n if n else 0
-
-            print(f"    -> Avg line coverage: {avg_line_cov:.2f}")
-            print(f"    -> Avg branch coverage: {avg_branch_cov:.2f}")
 
 
 def compare_executed_lines(*dicts):
@@ -240,34 +198,177 @@ def compare_executed_lines(*dicts):
     }
 
 
+def reformat_result_dict(data: dict) -> dict:
+    """
+    Transform a fuzzing coverage dict:
+      1) Replace 'lines' -> 'lines_covered' with value data['lines']['covered'].
+      2) Replace 'branches' -> 'branches_covered' with value data['branches']['covered'].
+      3) Lift/unravel all items under 'covered_lines_ls' to top level,
+         then remove that key.
+    """
+    out = {}
+
+    # Keep existing top-level keys except the ones we will replace
+    for k, v in data.items():
+        if k not in ("lines", "branches", "covered_lines_ls"):
+            out[k] = v
+
+    # 1) lines -> lines_covered
+    out["lines_covered"] = data["lines"]["covered"]
+
+    # 2) branches -> branches_covered
+    out["branches_covered"] = data["branches"]["covered"]
+    out['covered_lines_ls'] = data['covered_lines_ls']
+
+    return out
+
+
+def results_json_records(data):
+    output = []
+
+    for file,lines in data["covered_lines_ls"].items():
+        record = {}
+        record['trial'] = data['trial']
+        record['lines_covered'] = data['lines_covered']
+        record['branches_covered'] = data['branches_covered']
+        record['file'] = file
+        record['covered_lines_ls'] = lines
+        output.append(record)   
+    
+    return output
+
+
+def records_to_dataframe(raw_results):
+    """
+    Convert a list of dictionaries (records) into a pandas DataFrame.
+
+    Args:
+        records (list): List of dictionaries where each dictionary represents a record.
+
+    Returns:
+        pandas.DataFrame: DataFrame containing the data from the records.
+    """
+    records = []
+    for result in raw_results:
+        # print(result)
+        # print()
+        # print()
+        formatted_result = reformat_result_dict(result)
+        records += results_json_records(formatted_result)    
+
+    df = pd.DataFrame(records)
+    df['trial_split'] = df['trial'].apply(lambda x: x.split('_'))
+    df['fuzzer'] = df['trial_split'].apply(lambda x: x[0])
+    df['cts'] = df['trial_split'].apply(lambda x: x[2])
+    df['benchmark'] = df['trial_split'].apply(lambda x: "_".join(x[3:5]))
+    df['bin_no'] = df['trial_split'].apply(lambda x: x[5])
+    df['trial_no'] = df['trial_split'].apply(lambda x: x[7])
+
+    # Rearrange the columns in the specified order
+    df = df[
+        [
+            "trial",
+            "benchmark",
+            "bin_no",
+            "fuzzer",
+            "cts",
+            "trial_no",
+            "file",
+            "covered_lines_ls",
+            "lines_covered",
+            "branches_covered",
+        ]
+    ]
+
+    return df
+
+
+def average_coverage(res_df):
+    avg_df = res_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts']).agg({
+        'lines_covered': 'mean',
+        'branches_covered': 'mean'
+    }).reset_index()
+    return avg_df
+
+def union_line_coverage(res_df):
+    union_df = res_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts','file']).agg({
+        'covered_lines_ls': lambda lists: sorted(set().union(*lists))
+    }).reset_index()
+    return union_df
+
+def group_files_by_case(res_df):
+    grouped = res_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts'])
+    result = {}
+    for group, data in grouped:
+        files_dict = dict(zip(data['file'], data['covered_lines_ls']))
+        result[group] = files_dict
+    return result
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python report_generation.py <path_to_trial_data>")
         sys.exit(1)
     path = sys.argv[1]
     
-    # with open(path, "r", encoding="utf-8") as f:
-    #     data = json.load(f)
-
-    # res = get_covered_lines(data)
-    # tot_lines = sum(len(lines) for lines in res.values())
-    # print(tot_lines)
-    # path2 = sys.argv[2]
-    
-    # with open(path2, "r", encoding="utf-8") as f:
-    #     data2 = json.load(f)
-        
-    # res2 = get_covered_lines(data2)
-    # tot_lines2 = sum(len(lines) for lines in res2.values())
-    # print(tot_lines2)
-    
-    # comp = compare_executed_lines(res, res2)
-    # print(comp)
     individual_results = generate_benchmark_level_reports(path)
+    results_df = records_to_dataframe(individual_results)
 
-    types_by_key = {k: type(v).__name__ for k, v in individual_results[0].items()}
-    print(types_by_key)
-    print(f"Generated {len(individual_results)} individual benchmark reports.")
+    temp_df = results_df[
+        [
+            "trial",
+            "benchmark",
+            "bin_no",
+            "fuzzer",
+            "cts",
+            "trial_no",
+            "file",
+        ]
+    ]
+    print(temp_df.head())
+    print()
+
+    benchmark_count = len(results_df['benchmark'].unique())
+    trial_count = len(results_df['trial_no'].unique())
+    fuzzer_count = len(results_df['fuzzer'].unique())
+    cts_count = len(results_df['cts'].unique())
+    file_count = results_df.groupby(['benchmark','bin_no','fuzzer','cts','trial_no'])['file'].count()
+
+    print(f"Benchmarks: {benchmark_count}, Trials: {trial_count}, Fuzzers: {fuzzer_count}, CTS: {cts_count}")
+    print(file_count)
+    print()
+
+    print("Individual Results DataFrame:")
+    avgs = average_coverage(results_df)
+    print(avgs)
+    print()
+
+    print("Union Line Coverage DataFrame:")
+    line_cov_df = union_line_coverage(results_df)
+    print(line_cov_df)
+    print()
+
+    print("Unique Files:")
+    file_df = results_df.groupby(['benchmark','bin_no','fuzzer','cts'])['file'].nunique().reset_index()
+    print(file_df)
+    print()
+
+    print("Files Grouped by Case:")
+    grouped_files = group_files_by_case(line_cov_df)
+    for key, value in grouped_files.items():
+        print(f"{key}:",type(value), "...")
+
+
+    print("Compare Executed Lines:")
+    comparison = compare_executed_lines(*[v for v in grouped_files.values()])
+    print(comparison)
+    print()
+
+    
+    
+
+
+
+
 
 
 

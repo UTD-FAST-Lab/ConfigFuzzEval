@@ -57,6 +57,8 @@ def apply_ct_strategy(strategy, project_root, benchmarks):
     spec = importlib.util.spec_from_file_location(strategy, strategy_file)
     strategy_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(strategy_module)
+    
+    tot_cts = {}
 
     for benchmark in benchmarks:
         new_benchmarks = []
@@ -64,6 +66,8 @@ def apply_ct_strategy(strategy, project_root, benchmarks):
         benchmark_grammar = f"{benchmark_path}/ct_grammar.json"
 
         ct_configurations = retrieve_configs(benchmark_grammar, strategy_module)
+        
+        ct_configs_count = len(ct_configurations)
         
         for idx, each_ct_config in enumerate(ct_configurations):
             logging.debug(f"Applying config {each_ct_config} to benchmark {benchmark}")
@@ -75,6 +79,8 @@ def apply_ct_strategy(strategy, project_root, benchmarks):
             new_benchmarks.append(new_benchmark_name)
 
             new_benchmark_build = f"{new_benchmark_path}/build.sh"
+            
+            tot_cts[new_benchmark_name] = ct_configs_count
             
             if not os.path.exists(new_benchmark_build):
                 logging.error(f"Benchmark build script not found: {new_benchmark_build}")
@@ -90,7 +96,7 @@ def apply_ct_strategy(strategy, project_root, benchmarks):
             sys.exit(1)
 
         mapping[(strategy, benchmark)] = new_benchmarks
-    return mapping
+    return (mapping, tot_cts)
 
 
 # DEBUG

@@ -1,10 +1,12 @@
 FROM fbpp/base
 
-ARG RUNTIME
 ARG COVERAGE=false
-ENV RUNTIME=${RUNTIME}
 ENV OUT=/fuzzer_output
 ENV COVERAGE=${COVERAGE}
+
+# ENV RUNTIME is defined at docker run
+ENV RUNTIME=0
+
 
 # Single CMD, branch at runtime
 CMD ["bash", "-c", " \

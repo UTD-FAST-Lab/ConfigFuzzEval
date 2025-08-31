@@ -250,9 +250,6 @@ def records_to_dataframe(raw_results):
     """
     records = []
     for result in raw_results:
-        # print(result)
-        # print()
-        # print()
         formatted_result = reformat_result_dict(result)
         records += results_json_records(formatted_result)    
 
@@ -269,9 +266,9 @@ def records_to_dataframe(raw_results):
         [
             "trial",
             "benchmark",
-            "bin_no",
             "fuzzer",
             "cts",
+            "bin_no",
             "trial_no",
             "file",
             "covered_lines_ls",
@@ -291,17 +288,34 @@ def average_coverage(res_df):
     return avg_df
 
 def union_line_coverage(res_df):
-    union_df = res_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts','file']).agg({
+    union_df = res_df.groupby(['benchmark', 'fuzzer', 'cts','file']).agg({
         'covered_lines_ls': lambda lists: sorted(set().union(*lists))
     }).reset_index()
     return union_df
 
+def average_coverage_by_case(res_df):
+    avg_df = res_df.groupby(['benchmark', 'fuzzer', 'cts','trial_no', 'file']).agg({
+        'covered_lines_ls': lambda lists: sorted(set().union(*lists))
+    }).reset_index()
+
+    avg_df['num_lines'] = avg_df['covered_lines_ls'].apply(len)
+    avg_df = avg_df.groupby(['benchmark', 'fuzzer', 'cts', 'trial_no']).agg({
+        'num_lines': 'sum'
+    }).reset_index()
+    avg_df = avg_df.groupby(['benchmark', 'fuzzer', 'cts']).agg({
+        'num_lines': 'mean'
+    }).reset_index().rename(columns={'num_lines': 'avg_lines_covered'})
+    return avg_df
+
 def group_files_by_case(res_df):
-    grouped = res_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts'])
+    grouped_benchmark = res_df.groupby(['benchmark'])
     result = {}
-    for group, data in grouped:
-        files_dict = dict(zip(data['file'], data['covered_lines_ls']))
-        result[group] = files_dict
+    for benchmark, data in grouped_benchmark:
+        grouped_fuzz_cts = data.groupby(['fuzzer','cts'])
+        result[benchmark[0]] = {}
+        for group, data in grouped_fuzz_cts:
+            files_dict = dict(zip(data['file'], data['covered_lines_ls']))
+            result[benchmark[0]][group] = files_dict
     return result
 
 def main():
@@ -324,8 +338,6 @@ def main():
             "file",
         ]
     ]
-    print(temp_df.head())
-    print()
 
     benchmark_count = len(results_df['benchmark'].unique())
     trial_count = len(results_df['trial_no'].unique())
@@ -333,59 +345,72 @@ def main():
     cts_count = len(results_df['cts'].unique())
     file_count = results_df.groupby(['benchmark','bin_no','fuzzer','cts','trial_no'])['file'].count()
 
-    print(f"Benchmarks: {benchmark_count}, Trials: {trial_count}, Fuzzers: {fuzzer_count}, CTS: {cts_count}")
+    print("=" * 80)
+    print(f"Summary:")
+    print("-" * 80)
+    print(f"Benchmarks: {benchmark_count}")
+    print(f"Trials: {trial_count}")
+    print(f"Fuzzers: {fuzzer_count}")
+    print(f"CTS: {cts_count}")
+    print("-" * 80)
+    print("File Count by Benchmark, Bin, Fuzzer, CTS, and Trial:")
+    print("-" * 80)
     print(file_count)
+    print("=" * 80)
     print()
 
+    print("=" * 80)
     print("Individual Results DataFrame:")
+    print("-" * 80)
+    print(results_df)
+    print("=" * 80)
+    print()
+
+    print("=" * 80)
+    print("Average Coverage DataFrame:")
+    print("-" * 80)
     avgs = average_coverage(results_df)
     print(avgs)
+    print("=" * 80)
     print()
 
-    print("Union Line Coverage DataFrame:")
-    line_cov_df = union_line_coverage(results_df)
-    print(line_cov_df)
+    print("=" * 80)
+    print("Average Coverage by Case DataFrame:")
+    print("-" * 80)
+    avg_case_df = average_coverage_by_case(results_df)
+    print(avg_case_df)
+    print("=" * 80)
     print()
 
-    print("Unique Files:")
-    file_df = results_df.groupby(['benchmark','bin_no','fuzzer','cts'])['file'].nunique().reset_index()
+    print("=" * 80)
+    print("Unique Files DataFrame:")
+    print("-" * 80)
+    file_df = results_df.groupby(['benchmark', 'bin_no', 'fuzzer', 'cts'])['file'].nunique().reset_index()
     print(file_df)
+    print("=" * 80)
     print()
 
+    print("=" * 80)
     print("Files Grouped by Case:")
-    grouped_files = group_files_by_case(line_cov_df)
-    for key, value in grouped_files.items():
-        print(f"{key}:",type(value), "...")
-
-
-    print("Compare Executed Lines:")
-    comparison = compare_executed_lines(*[v for v in grouped_files.values()])
-    print(comparison)
-    print()
-
-    
-    
-
-
-
-
-
-
-
-
-    # res = group_by_target(individual_results)
-    # group_and_print(individual_results)
-    
-    # averages = compute_averages(individual_results)
-    # # print("Computed Averages:")
-    # # print(averages)
-    # target_res = group_by_target(averages)
-    
-    
-    
-    
-    
-    # print_averages(averages)
+    print("-" * 80)
+    grouped_files = group_files_by_case(results_df)
+    for benchmark, files in grouped_files.items():
+        print(f"Benchmark: {benchmark}")
+        for key, value in files.items():
+            print(f"\tGroup: {key}")
+            print(f"\tFiles: {str(value):.50} ...")
+            print("-" * 80)
+        
+        if len(files) < 2:
+            print("\tNot enough groups to compare executed lines.")
+            print("-" * 80)
+            continue
+        print("\tCompare Executed Lines:")
+        comparison = compare_executed_lines(*[v for v in files.values()])
+        print("\tComparison Result:", comparison)
+        print("-" * 80)
+        print()
+    print("=" * 80)
 
 
 if __name__ == "__main__":

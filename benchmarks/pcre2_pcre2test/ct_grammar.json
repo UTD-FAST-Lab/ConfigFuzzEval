@@ -87,7 +87,13 @@
       "name": "unicode",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unicode"
+      "cli": "--enable-unicode",
+      "conflicts": ["ebcdic"],
+      "pairwise_constraints" : [
+          [true,[
+            ["ebcdic",false]
+          ]]
+        ]
     },
     {
       "name": "newline-is-cr",
@@ -136,6 +142,21 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-never-backslash-C"
+    },
+    {
+      "name": "ebcdic",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-ebcdic",
+      "pairwise_constraints" : [
+          [true,[
+            ["unicode",false],
+            ["pcre2-8",true],
+            ["pcre2-16",false],
+            ["pcre2-32",false]
+          ]]
+        ],
+      "conflicts": ["unicode"]
     },
     {
       "name": "ebcdic-nl25",
@@ -215,7 +236,14 @@
       "name": "diff-fuzz-support",
       "type": "bool",
       "default": false,
-      "cli": "--enable-diff-fuzz-support"
+      "cli": "--enable-diff-fuzz-support",
+      "implies": ["jit=true","fuzz-support=true"],
+      "pairwise_constraints" : [
+          [true,[
+            ["jit",true],
+            ["fuzz-support",true]
+          ]]
+        ]
     },
     {
       "name": "percent-zt",
@@ -285,18 +313,6 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-errwarn"
-    },
-    {
-      "name": "ebcdic",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-ebcdic",
-      "pairwise_constraints" : [
-          [true,[
-            ["unicode",false]
-          ]]
-        ],
-      "conflicts": ["unicode"]
     },
     {
       "name": "coverage",

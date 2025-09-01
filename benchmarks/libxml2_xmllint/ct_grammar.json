@@ -1,301 +1,167 @@
 {
-    "name": "libxml2_xmllint",
-    "options": [
-      {
-        "name": "static",
-        "type": "bool",
-        "default": false,
-        "cli": "--enable-static",
-        "override": ""
-      },
-      {
-        "name": "fast-install",
-        "type": "bool",
-        "default": true,
-        "cli": "--enable-fast-install"
-      },
-      {
-        "name": "silent-rules",
-        "type": "bool",
-        "default": false,
-        "cli": "--enable-silent-rules"
-      },
-      {
-        "name": "maintainer-mode",
-        "type": "bool",
-        "default": false,
-        "cli": "--enable-maintainer-mode"
-      },
-      {
-        "name": "dependency-tracking",
-        "type": "bool",
-        "default": false,
-        "cli": "--enable-dependency-tracking"
-      },
-      {
-        "name": "libtool-lock",
-        "type": "bool",
-        "default": true,
-        "cli": "--enable-libtool-lock"
-      },
-      {
-        "name": "pic",
-        "type": "bool",
-        "default": null,
-        "cli": "--with-pic"
-      },
-      {
-        "name": "aix-soname",
-        "type": "enum",
-        "values": ["aix", "svr4", "both"],
-        "default": "aix",
-        "cli": "--with-aix-soname"
-      },
-      {
-        "name": "gnu-ld",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-gnu-ld"
-      },
-      {
-        "name": "sysroot",
-        "type": "str",
-        "default": null,
-        "cli": "--with-sysroot"
-      },
-      {
-        "name": "c14n",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-c14n"
-      },
-      {
-        "name": "catalog",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-catalog"
-      },
-      {
-        "name": "debug",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-debug"
-      },
-      {
-        "name": "history",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-history"
-      },
-      {
-        "name": "readline",
-        "type": "depends",
-        "default": false,
-        "cli": "--with-readline",
-        "desc": "Path or bool"
-      },
-      {
-        "name": "html",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-html"
-      },
-      {
-        "name": "http",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-http"
-      },
-      {
-        "name": "iconv",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-iconv",
-        "desc": "Path or bool"
-      },
-      {
-        "name": "icu",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-icu"
-      },
-      {
-        "name": "iso8859x",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-iso8859x",
-        "implies": ["iconv=false"],
-        "pairwise_constraints" : [
-          [true,[
-            ["iconv",true]
-          ]]
-        ]
-      },
-      {
-        "name": "lzma",
-        "type": "depends",
-        "default": false,
-        "cli": "--with-lzma",
-        "desc": "Path or bool"
-      },
-      {
-        "name": "modules",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-modules"
-      },
-      {
-        "name": "output",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-output"
-      },
-      {
-        "name": "pattern",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-pattern"
-      },
-      {
-        "name": "push",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-push"
-      },
-      {
-        "name": "reader",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-reader"
-      },
-      {
-        "name": "regexps",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-regexps"
-      },
-      {
-        "name": "relaxng",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-relaxng"
-      },
-      {
-        "name": "sax1",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-sax1"
-      },
-      {
-        "name": "schemas",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-schemas"
-      },
-      {
-        "name": "schematron",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-schematron"
-      },
-      {
-        "name": "threads",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-threads",
-        "implies": ["thread_alloc"]
-      },
-      {
-        "name": "thread-alloc",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-thread-alloc",
-        "requires": ["threads"]
-      },
-      {
-        "name": "valid",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-valid"
-      },
-      {
-        "name": "writer",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-writer"
-      },
-      {
-        "name": "xinclude",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-xinclude"
-      },
-      {
-        "name": "xpath",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-xpath"
-      },
-      {
-        "name": "xptr",
-        "type": "bool",
-        "default": true,
-        "cli": "--with-xptr"
-      },
-      {
-        "name": "zlib",
-        "type": "depends",
-        "default": false,
-        "cli": "--with-zlib",
-        "desc": "Path or bool"
-      },
-      {
-        "name": "minimum",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-minimum",
-        "implies": [
-          "debug=false",
-          "history=false",
-          "readline=false",
-          "html=false",
-          "http=false",
-          "iconv=false",
-          "icu=false",
-          "iso8859x=false",
-          "lzma=false",
-          "modules=false",
-          "output=false",
-          "pattern=false",
-          "python=false",
-          "reader=false",
-          "regexps=false",
-          "relaxng=false",
-          "sax1=false",
-          "schemas=false",
-          "schematron=false",
-          "threads=false",
-          "thread_alloc=false",
-          "valid=false",
-          "writer=false",
-          "xinclude=false",
-          "xpath=false",
-          "xptr=false",
-          "zlib=false"
-        ]
-      },
-      {
-        "name": "legacy",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-legacy"
-      },
-      {
-        "name": "tls",
-        "type": "bool",
-        "default": false,
-        "cli": "--with-tls"
-      }
-    ]
-  }
-  
+  "name": "libxml2_xmllint",
+  "options": [
+    { "name": "static", "type": "bool", "default": false, "cli": "--enable-static", "override": "" },
+    { "name": "fast-install", "type": "bool", "default": true, "cli": "--enable-fast-install" },
+    { "name": "silent-rules", "type": "bool", "default": false, "cli": "--enable-silent-rules" },
+    { "name": "maintainer-mode", "type": "bool", "default": false, "cli": "--enable-maintainer-mode" },
+    { "name": "dependency-tracking", "type": "bool", "default": false, "cli": "--enable-dependency-tracking" },
+    { "name": "libtool-lock", "type": "bool", "default": true, "cli": "--enable-libtool-lock" },
+    { "name": "pic", "type": "bool", "default": null, "cli": "--with-pic" },
+    { "name": "aix-soname", "type": "enum", "values": ["aix", "svr4", "both"], "default": "aix", "cli": "--with-aix-soname" },
+    { "name": "gnu-ld", "type": "bool", "default": false, "cli": "--with-gnu-ld" },
+    { "name": "sysroot", "type": "str", "default": null, "cli": "--with-sysroot" },
+
+    { "name": "c14n", "type": "bool", "default": true, "cli": "--with-c14n" },
+    { "name": "catalog", "type": "bool", "default": true, "cli": "--with-catalog" },
+    { "name": "debug", "type": "bool", "default": true, "cli": "--with-debug" },
+    { "name": "history", "type": "bool", "default": false, "cli": "--with-history" },
+    { "name": "readline", "type": "depends", "default": false, "cli": "--with-readline", "desc": "Path or bool" },
+    { "name": "html", "type": "bool", "default": true, "cli": "--with-html" },
+
+    {
+      "name": "http",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-http",
+      "implies": ["output=true"],
+      "pairwise_constraints": [
+        [true, [["output", true]]]
+      ]
+    },
+
+    { "name": "iconv", "type": "bool", "default": true, "cli": "--with-iconv", "desc": "Path or bool" },
+    { "name": "icu", "type": "bool", "default": false, "cli": "--with-icu" },
+
+    {
+      "name": "iso8859x",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-iso8859x",
+      "implies": ["iconv=false"],
+      "pairwise_constraints": [
+        [true, [["iconv", false]]]
+      ]
+    },
+
+    { "name": "lzma", "type": "depends", "default": false, "cli": "--with-lzma", "desc": "Path or bool" },
+    { "name": "modules", "type": "bool", "default": true, "cli": "--with-modules" },
+    { "name": "output", "type": "bool", "default": true, "cli": "--with-output" },
+    { "name": "pattern", "type": "bool", "default": true, "cli": "--with-pattern" },
+    { "name": "push", "type": "bool", "default": true, "cli": "--with-push" },
+    { "name": "reader", "type": "bool", "default": true, "cli": "--with-reader" },
+
+    { "name": "regexps", "type": "bool", "default": true, "cli": "--with-regexps" },
+    { "name": "relaxng", "type": "bool", "default": true, "cli": "--with-relaxng" },
+    { "name": "sax1", "type": "bool", "default": true, "cli": "--with-sax1" },
+    { "name": "schemas", "type": "bool", "default": true, "cli": "--with-schemas" },
+
+    { "name": "schematron", "type": "bool", "default": true, "cli": "--with-schematron", "implies": ["xpath=true"],
+      "pairwise_constraints": [[true, [["xpath", true]]]] },
+
+    {
+      "name": "threads",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-threads"
+    },
+
+    {
+      "name": "thread-alloc",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-thread-alloc",
+      "requires": ["threads"],
+      "pairwise_constraints": [
+        [true, [["threads", true]]]
+      ]
+    },
+
+    { "name": "valid", "type": "bool", "default": true, "cli": "--with-valid" },
+
+    {
+      "name": "writer",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-writer",
+      "implies": ["output=true"],
+      "pairwise_constraints": [
+        [true, [["output", true]]]
+      ]
+    },
+
+    {
+      "name": "xinclude",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xinclude",
+      "implies": ["xptr=true", "xpath=true"],
+      "pairwise_constraints": [
+        [true, [["xptr", true], ["xpath", true]]]
+      ]
+    },
+
+    {
+      "name": "xpath",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xpath",
+      "implies": ["regexps=true"],
+      "pairwise_constraints": [
+        [true, [["regexps", true]]]
+      ]
+    },
+
+    {
+      "name": "xptr",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xptr",
+      "implies": ["xpath=true"],
+      "pairwise_constraints": [
+        [true, [["xpath", true]]]
+      ]
+    },
+
+    { "name": "zlib", "type": "depends", "default": false, "cli": "--with-zlib", "desc": "Path or bool" },
+
+    {
+      "name": "minimum",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-minimum",
+      "implies": [
+        "debug=false",
+        "history=false",
+        "readline=false",
+        "html=false",
+        "http=false",
+        "iconv=false",
+        "icu=false",
+        "iso8859x=false",
+        "lzma=false",
+        "modules=false",
+        "output=false",
+        "pattern=false",
+        "python=false",
+        "reader=false",
+        "regexps=false",
+        "relaxng=false",
+        "sax1=false",
+        "schemas=false",
+        "schematron=false",
+        "threads=false",
+        "thread-alloc=false",
+        "valid=false",
+        "writer=false",
+        "xinclude=false",
+        "xpath=false",
+        "xptr=false",
+        "zlib=false"
+      ]
+    },
+
+    { "name": "legacy", "type": "bool", "default": false, "cli": "--with-legacy" },
+    { "name": "tls", "type": "bool", "default": false, "cli": "--with-tls" }
+  ]
+}

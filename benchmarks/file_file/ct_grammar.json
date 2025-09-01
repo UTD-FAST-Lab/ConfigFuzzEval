@@ -1,0 +1,75 @@
+{
+  "name": "file_file",
+  "options": [
+    {
+      "name": "elf",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-elf",
+      "desc": "disable builtin ELF support"
+    },
+    {
+      "name": "elf-core",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-elf-core",
+      "desc": "disable ELF core file support"
+    },
+    {
+      "name": "zlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-zlib",
+      "desc": "disable zlib compression support"
+    },
+    {
+      "name": "bzlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-bzlib",
+      "desc": "disable bz2lib compression support"
+    },
+    {
+      "name": "xzlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-xzlib",
+      "desc": "disable liblzma/xz compression support"
+    },
+    {
+      "name": "zstdlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-zstdlib",
+      "desc": "disable zstdlib compression support"
+    },
+    {
+      "name": "lzlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzlib",
+      "desc": "disable liblz (lzip) compression support"
+    },
+    {
+      "name": "lrziplib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lrziplib",
+      "desc": "disable liblrzip (lrzip) compression support"
+    },
+    {
+      "name": "libseccomp",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libseccomp",
+      "desc": "disable libseccomp sandboxing"
+    },
+    {
+      "name": "fsect-man5",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-fsect-man5",
+      "desc": "enable file formats in man section 5"
+    }
+  ]
+}

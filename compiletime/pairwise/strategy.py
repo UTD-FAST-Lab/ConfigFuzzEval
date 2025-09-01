@@ -1,9 +1,5 @@
-"""
-Grammar Configuration Module
-
-This module provides functionality to load grammar configurations from JSON files
-and generate CLI arguments based on option relationships and constraints.
-"""
+# Grammar Configuration Module
+# (updated: fixes constraint matching and CLI generation)
 
 import json
 from typing import Dict, List, Any, Optional
@@ -30,43 +26,88 @@ def implies(A,B):
 def load_grammar(grammar_file) -> Dict[str, Any]:
     """
     Load grammar configuration from JSON file.
-    
-    Args:
-        grammar_file: Path to the grammar JSON file
-        
-    Returns:
-        Grammar configuration dictionary
     """
     with open(grammar_file, "r") as f:
         return json.load(f)
 
 
-def option_to_cli(config_sample: Any,grammar: Dict[str,Any]) -> str:
+def option_to_cli(config_sample: Any, grammar: Dict[str, Any]) -> List[str]:
     """
-    Convert option and value to CLI argument string.
-    
-    Args:
-        opt: Option configuration
-        val: Option value
-        
-    Returns:
-        CLI argument string, empty if not applicable
-    """
-    args=[]
+    Convert option and value to CLI argument strings.
 
-    for opt,val in config_sample.items():
+    Args:
+        config_sample: OrderedDict of {option_name: chosen_value}
+        grammar: mapping option_name -> option metadata
+
+    Returns:
+        list of CLI argument strings for this sample
+    """
+    args = []
+
+    for opt, val in config_sample.items():
         arg = None
-        if grammar[opt]["type"]=="bool":
-            arg = f"--{val}-{opt}" # for boolean values, value will be either enable or diable
-        elif grammar[opt]["type"]=="enum":
-            arg  = f"--enable-{opt}={val}"
+        meta = grammar.get(opt)
+        if meta is None:
+            # skip unknown option
+            continue
+
+        # detect CLI prefix (enable / with)
+        cli_prefix = meta.get("cli", "").lstrip("-").split("-")[0] if "cli" in meta else None
+
+        if meta["type"] == "bool":
+            # expecting val to be strings like "enable"/"disable" or "with"/"without"
+            # produce "--enable-<opt>" or "--with-<opt>"
+            arg = f"--{val}-{opt}"
+        elif meta["type"] == "enum":
+            # use the CLI prefix from the grammar (usually "with")
+            if cli_prefix:
+                arg = f"--{cli_prefix}-{opt}={val}"
+            else:
+                # fallback
+                arg = f"--{opt}={val}"
         else:
             raise ValueError("Invalid Type, the Grammar Options must be of type: [enum,bool]")
+
         args.append(arg)
-    
+
     return args
 
-def generate_filter_functions(config,grammar):
+
+def _bool_to_token(opt_name: str, boolean: bool, grammar: Dict[str, Any]) -> str:
+    """
+    Map a boolean constraint value to the token used in the AllPairs rows,
+    depending on the option's CLI prefix (enable/with).
+    """
+    meta = grammar.get(opt_name)
+    if not meta:
+        # default mapping
+        return "enable" if boolean else "disable"
+
+    cli = meta.get("cli", "")
+    cli_prefix = cli.lstrip("-").split("-")[0] if cli else None
+
+    if cli_prefix == "enable":
+        return "enable" if boolean else "disable"
+    elif cli_prefix == "with":
+        return "with" if boolean else "without"
+    else:
+        # fallback: use enable/disable
+        return "enable" if boolean else "disable"
+
+
+def _normalize_constraint_value(opt_name: str, val: Any, grammar: Dict[str, Any]) -> Any:
+    """
+    Convert a constraint value (which may be boolean True/False or a string)
+    into the value that appears in the AllPairs row (e.g. "with"/"without" or enum string).
+    """
+    if isinstance(val, bool):
+        return _bool_to_token(opt_name, val, grammar)
+    else:
+        # enum or already tokenized string -> leave unchanged
+        return val
+
+
+def generate_filter_functions(config, grammar):
     """
     Generate a filter function to enforce pairwise constraints from grammar.
 
@@ -75,54 +116,100 @@ def generate_filter_functions(config,grammar):
         grammar: Dictionary containing option metadata and pairwise constraints
 
     Returns:
-        A function that takes a row (list of option values) and returns True if it satisfies all constraints,
+        A function that takes a row (list/tuple of option values) and returns True if it satisfies all constraints,
         otherwise False
     """
     options = list(config.keys())
-    indices = [i for i in range(len(options))]
+    idx_mapping = dict(zip(options, range(len(options))))
+
+    # Build a unified list of constraints from both pairwise_constraints and implies
+    # Each entry will be a tuple: (antecedent_option, antecedent_value, list_of[(consequent_option, consequent_value), ...])
+    constraints = []
+
+    for opt_name, meta in grammar.items():
+        # pairwise_constraints already in structured format
+        pc = meta.get("pairwise_constraints")
+        if pc:
+            for const_val, const_opts in pc:
+                constraints.append((opt_name, const_val, const_opts))
+
+        # also support 'implies' strings like "output=true"
+        imps = meta.get("implies")
+        if imps:
+            for imp in imps:
+                if isinstance(imp, str):
+                    # parse "opt=val"
+                    if "=" in imp:
+                        other, val_str = imp.split("=", 1)
+                        # interpret value strings "true"/"false" (case-insensitive)
+                        if val_str.lower() == "true":
+                            parsed_val = True
+                        elif val_str.lower() == "false":
+                            parsed_val = False
+                        else:
+                            parsed_val = val_str
+                        # implies is interpreted as: when opt_name == True => other == parsed_val
+                        constraints.append((opt_name, True, [[other, parsed_val]]))
+                elif isinstance(imp, list):
+                    # handle list of "opt=val" strings (if present)
+                    parsed = []
+                    for item in imp:
+                        if isinstance(item, str) and "=" in item:
+                            other, val_str = item.split("=", 1)
+                            if val_str.lower() == "true":
+                                parsed_val = True
+                            elif val_str.lower() == "false":
+                                parsed_val = False
+                            else:
+                                parsed_val = val_str
+                            parsed.append([other, parsed_val])
+                    if parsed:
+                        constraints.append((opt_name, True, parsed))
 
     def filter_function(row):
-        idx_mapping = dict(zip(options,indices))
-        grammar_inner = dict(grammar)
+        """
+        row: tuple or list with values in same order as config keys
+        """
         n = len(row)
-
-        for key,value in grammar_inner.items():
-            if "pairwise_constraints" not in value:
+        # check constraints
+        for antecedent_opt, antecedent_val, consequents in constraints:
+            # skip constraints that reference options not in the discrete config space
+            if antecedent_opt not in idx_mapping:
                 continue
 
-            for const_val,const_opts in value["pairwise_constraints"]:
-                for opt,opt_val in const_opts:
-                    o1 = key
-                    o2 = opt
-                    if idx_mapping[o1]>=n or idx_mapping[o2]>=n:
+            a_idx = idx_mapping[antecedent_opt]
+            if a_idx >= n:
+                continue
+
+            # normalize expected antecedent token (e.g., True -> "with"/"enable")
+            expected_a_token = _normalize_constraint_value(antecedent_opt, antecedent_val, grammar)
+            row_a_token = row[a_idx]
+
+            # if antecedent holds, check consequents
+            if row_a_token == expected_a_token:
+                for (c_opt, c_val) in consequents:
+                    if c_opt not in idx_mapping:
+                        # if consequent option not part of this discrete config, ignore constraint
                         continue
-
-                    o1_val = row[idx_mapping[o1]]
-                    o2_val = row[idx_mapping[o2]]
-
-                    if not implies(o1_val==const_val, o2_val==opt_val):
-                        return False 
+                    c_idx = idx_mapping[c_opt]
+                    if c_idx >= n:
+                        continue
+                    expected_c_token = _normalize_constraint_value(c_opt, c_val, grammar)
+                    row_c_token = row[c_idx]
+                    if row_c_token != expected_c_token:
+                        return False  # constraint violated
 
         return True
-    
+
     return filter_function
 
-    
-    
+
 def filter_discrete_options(grammar, return_override=False):
     """
     Filters the given grammar to include only options with discrete types ('enum' or 'bool').
-
-    Args:
-        grammar (dict): A dictionary representing a parameter grammar, which must contain
-                        an 'options' key with a list of option dictionaries. Each option
-                        should have a 'type' key.
-
-    Returns:
-        dict: A new grammar dictionary containing only the filtered 'enum' and 'bool' options.
     """
     new_grammar = dict(grammar)
-    filtered_opts = [opt for opt in new_grammar["options"] if (opt["type"] in ["enum","bool"]) and ("override" not in opt)]
+    filtered_opts = [opt for opt in new_grammar["options"] if (opt["type"] in ["enum", "bool"]) and ("override" not in opt)]
     override_opts = [opt["override"] for opt in new_grammar["options"] if "override" in opt]
     new_grammar["options"] = filtered_opts
     if return_override:
@@ -130,74 +217,52 @@ def filter_discrete_options(grammar, return_override=False):
     else:
         return new_grammar
 
+
 def get_config_dict(grammar: Dict[str, Any]):
     """
-    Convert grammar options into a configuration dictionary.
-
-    Args:
-        grammar: Grammar definition containing a list of options with types and CLI formats
-
-    Returns:
-        Ordered dictionary mapping each option name to its list of possible values
-
-    Raises:
-        ValueError: If an option type is not 'enum' or 'bool'
+    Convert grammar options into a configuration dictionary used for AllPairs.
     """
-    
     config = OrderedDict()
     for opt in grammar["options"]:
         name = opt["name"]
-        cli_type = opt["cli"].strip("-").split("-")[0]
-        if opt["type"]=="bool" and cli_type=="enable":
-            values = ["enable","disable"]
-        elif opt["type"]=="bool" and cli_type=="with":
-            values = ["with","without"]
-        elif opt["type"]=="enum":
+        cli_type = opt["cli"].lstrip("-").split("-")[0]
+        if opt["type"] == "bool" and cli_type == "enable":
+            values = ["enable", "disable"]
+        elif opt["type"] == "bool" and cli_type == "with":
+            values = ["with", "without"]
+        elif opt["type"] == "enum":
             values = opt["values"]
         else:
             raise ValueError("Invalid Type, the Grammar Options must be of type: [enum,bool]")
-        config[name]=values
-    
+        config[name] = values
+
     return config
 
 
-
-def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> List[str]:
+def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> List[List[str]]:
     """
-    Generate CLI arguments from configuration.
-    
-    Args:
-        grammar: Grammar configuration dictionary
-        config: Configuration dictionary. If None, generates all-enabled config.
-        
-    Returns:
-        List of CLI argument strings
+    Generate CLI argument lists from configuration.
     """
+    grammar_filtered, grammar_override = filter_discrete_options(grammar, return_override=True)
+    grammar_dict = dict(zip(list(map(lambda x: x["name"], grammar_filtered["options"])), grammar_filtered["options"]))
 
-    grammar_filtered,grammar_override = filter_discrete_options(grammar,return_override=True)
-    grammar_dict = dict(zip(list(map(lambda x: x["name"],grammar_filtered["options"])),grammar_filtered["options"]))
-    
     config_dict = get_config_dict(grammar_filtered)
     config_vals = list(config_dict.values())
-    filter_function = generate_filter_functions(config_dict,grammar_dict)
-    samples = AllPairs(config_vals,filter_func=filter_function)
-    samples = [OrderedDict(zip(config_dict.keys(),sample)) for sample in samples]
-    
-    cli_args = [option_to_cli(sample,grammar_dict) for sample in samples]
+    filter_function = generate_filter_functions(config_dict, grammar_dict)
+    samples = AllPairs(config_vals, filter_func=filter_function)
+    samples = [OrderedDict(zip(config_dict.keys(), sample)) for sample in samples]
+
+    cli_args = [option_to_cli(sample, grammar_dict) for sample in samples]
+
+    # append overrides (if any)
+    # grammar_override is a list (possibly empty). keep behavior similar to original.
     cli_args = [sample + grammar_override for sample in cli_args]
     return cli_args
 
 
-def generate_cli_string(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> str:
+def generate_cli_string(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> List[str]:
     """
-    Generate CLI arguments as a single string.
-    
-    Args:
-        grammar: Grammar configuration dictionary
-        config: Configuration dictionary. If None, generates all-enabled config.
-        
-    Returns:
-        Space-separated CLI arguments string
+    Generate CLI arguments as a single string per configuration.
     """
     return [" ".join(cli_args) for cli_args in generate_cli_args(grammar, config)]
 
@@ -211,12 +276,13 @@ def request_configurations(grammar_file):
 
 def main():
 
-    grammar_file = "benchmarks/libxml2_xmllint/ct_grammar.json"
+    grammar_file = "/data/tahmeed/FuzzBenchPlusPlus/benchmarks/libxml2_xmllint/ct_grammar.json"
     cli_strings = request_configurations(grammar_file)
     for s in cli_strings:
         print(s)
         print()
         print()
+
 
 if __name__ == "__main__":
     main()

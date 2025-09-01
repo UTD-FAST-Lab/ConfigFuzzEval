@@ -1,0 +1,1 @@
+/benchmark/file -m /usr/share/misc/magic @@

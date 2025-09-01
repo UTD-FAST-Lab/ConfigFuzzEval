@@ -8,6 +8,7 @@ from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies
 from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import pprint
 
 
 def delete_cts_benchmarks(experiment_state, project_root):
@@ -42,13 +43,15 @@ def run_experiments(experiment_state):
 
         # Collect all runs
         for each_built_bench in built_benchmarks:
+            tot_cts_count = experiment_state["tot_cts"].get(each_built_bench, 1)
             for each_fuzzer in built_benchmarks[each_built_bench]:
                 for trial_id in range(experiment_state["trials"]):
                     tasks.append((
                         each_fuzzer,
                         each_built_bench,
                         trial_id,
-                        core_start
+                        core_start,
+                        tot_cts_count
                     ))
                     core_start += 1
 
@@ -67,19 +70,20 @@ def run_experiments(experiment_state):
                     experiment_state["experiment_path"],
                     core_id,
                     data_storage,
-                    experiment_state["total_memory_needed_gb"]
-                ): (fuzzer, benchmark, trial_id, core_id)
-                for (fuzzer, benchmark, trial_id, core_id) in tasks
+                    experiment_state["total_memory_needed_gb"],
+                    tot_cts_count
+                ): (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
+                for (fuzzer, benchmark, trial_id, core_id, tot_cts_count) in tasks
             }
 
             for future in as_completed(future_to_task):
-                fuzzer, benchmark, trial_id, core_id = future_to_task[future]
+                fuzzer, benchmark, trial_id, core_id, tot_cts_count = future_to_task[future]
                 try:
                     success = future.result()
                     if success:
-                        logging.info(f"[SUCCESS] Completed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                        logging.info(f"[SUCCESS] Completed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}, total cts {tot_cts_count}")
                     else:
-                        logging.error(f"[FAILURE] Failed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                        logging.error(f"[FAILURE] Failed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}, total cts {tot_cts_count}")
                 except Exception as e:
                     logging.error(f"[EXCEPTION] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
     else:
@@ -175,8 +179,7 @@ if __name__ == "__main__":
     logging.info("Building runner image...")
     runner_img_path = experiment_state["runner_image_path"]
     runner_image = f"{runner_img_path}"
-    runtime = experiment_state["max_total_time"]
-    if build_runner_image(runner_image, project_root, runtime):
+    if build_runner_image(runner_image, project_root):
         logging.error("Failed to build runner image.")
         sys.exit(1)
         
@@ -227,10 +230,11 @@ if __name__ == "__main__":
 
     benchmark_mappings = {}
     failed_strategies = []
+    tot_cts = {}
 
     for strategy in experiment_state["compiletime"]:
         try:
-            new_benchmark_mapping = apply_ct_strategy(strategy,
+            new_benchmark_mapping, tot_cts = apply_ct_strategy(strategy,
                                     project_root,
                                     experiment_state["benchmarks"])
             if new_benchmark_mapping:
@@ -243,6 +247,7 @@ if __name__ == "__main__":
     
     experiment_state["benchmark_mappings"] = benchmark_mappings
     experiment_state["failed_strategies"] = failed_strategies
+    experiment_state["tot_cts"] = tot_cts
     
     # Build benchmarks
     logging.info("Building selected benchmarks...")
@@ -345,7 +350,7 @@ if __name__ == "__main__":
     logging.info("Allocating resources for the experiment...")
     experiment_state = allocate_resources(experiment_state)
     logging.success("Resources allocated successfully.")
-    logging.debug(f"Experiment state after resource allocation: {experiment_state}")
+    logging.debug(f"Experiment state after resource allocation: {pprint.pformat(experiment_state)}")
 
     # Run experiments
     logging.info("Ready to begin experiments!")

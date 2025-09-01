@@ -4,9 +4,8 @@ apt-get update && apt-get install -y \
   libreadline-dev libcurl4-openssl-dev libicu-dev \
   liblzma-dev python3-dev zlib1g-dev \
   libxslt1-dev xsltproc doxygen
-
-./autogen.sh
-./configure --disable-shared {{CT_CONFIGURATION}} 
+./autogen.sh --disable-shared CC=clang CXX=clang++
+./configure CC=clang CXX=clang++ --disable-shared --enable-static {{CT_CONFIGURATION}} 
 
 make -j$(nproc) CC=$CC CXX=$CXX
 

@@ -29,9 +29,9 @@ ARG CFLAGS=""
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev
 
-RUN git clone https://github.com/pnggroup/libpng.git
+RUN git clone https://github.com/pnggroup/libpng.git /libpng
 
-WORKDIR ./libpng
+WORKDIR /libpng
 
 COPY build.sh .
 
@@ -41,7 +41,7 @@ RUN bash build.sh
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
-
+COPY dict /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libpng/pngimage /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp -r /libpng/pngimage /benchmark_out_dir/  && cp /dict /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
 

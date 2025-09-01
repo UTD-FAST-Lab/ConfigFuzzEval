@@ -25,11 +25,11 @@ ARG CFLAGS=""
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
-
+WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
 RUN wget  https://ftp.gnu.org/gnu/bison/bison-3.8.tar.xz
 RUN tar -xf bison-3.8.tar.xz
-WORKDIR ./bison-3.8
+WORKDIR /bison-3.8
 
 COPY build.sh .
 RUN bash build.sh
@@ -38,6 +38,6 @@ RUN bash build.sh
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
-
+COPY dict /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /bison-3.8/src/bison /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp -r /bison-3.8/src/bison /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed"]

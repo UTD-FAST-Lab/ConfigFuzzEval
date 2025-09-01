@@ -27,14 +27,14 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 
 RUN apt-get install -y --no-install-recommends \
-        make autoconf libtool pkg-config \
-        zlib1g-dev liblzma-dev
+    make autoconf libtool pkg-config \
+    zlib1g-dev liblzma-dev
 
 # Build requires automake 1.16.3
 RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
     apt install ./automake_1.16.5-1.3_all.deb
-RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git
-WORKDIR libxml2
+RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /libxml2
+WORKDIR /libxml2
 COPY build.sh .
 
 RUN bash build.sh
@@ -43,7 +43,7 @@ RUN bash build.sh
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
+COPY dict /
 
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
-
+CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]

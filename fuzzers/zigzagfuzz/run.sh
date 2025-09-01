@@ -1,0 +1,1 @@
+/fuzzer/afl-fuzz -i /benchmark/seed -o $OUT -K 2 -a /benchmark/dict -V $RUNTIME $RUN_TARGET 

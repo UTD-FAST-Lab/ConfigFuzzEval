@@ -1,7 +1,10 @@
 # cd pcre2
-./autogen.sh
-./configure --disable-shared {{CT_CONFIGURATION}}
+./autogen.sh  CC=clang CXX=clang++
+./configure  CC=clang CXX=clang++ --disable-shared {{CT_CONFIGURATION}}
 make CC=$CC CXX=$CXX
 make install CC=$CC CXX=$CXX
 
-# cp pcre2test $OUT/pcre2test
+# ./autogen.sh CC=$CC CXX=$CXX
+# ./configure  CC=$CC CXX=$CXX --disable-shared {{CT_CONFIGURATION}}
+# make CC=$CC CXX=$CXX
+# make install CC=$CC CXX=$CXX

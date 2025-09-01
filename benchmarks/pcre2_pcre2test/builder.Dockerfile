@@ -45,7 +45,7 @@
     # Copy supporting files to the docker image
     COPY run_target.sh /
     COPY seed /seed
-    
+    COPY dict /
     # Copy the binary to fuzz into benchmark_out_dir when container starts
-    CMD ["bash", "-c", "cp -r /pcre2/pcre2test /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp -r /pcre2/pcre2test /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
     

@@ -33,8 +33,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Build requires automake 1.16.3
 RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
     apt install ./automake_1.16.5-1.3_all.deb
-RUN git clone --depth 1 https://github.com/libexpat/libexpat.git
-WORKDIR libexpat/expat
+RUN git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat
+WORKDIR /libexpat/expat
 COPY build.sh .
 
 RUN bash build.sh
@@ -43,7 +43,8 @@ RUN bash build.sh
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
+COPY dict /
 
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/   && cp /dict /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
 

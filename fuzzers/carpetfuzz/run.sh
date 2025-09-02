@@ -1,0 +1,1 @@
+/fuzzer/afl-fuzz -i /benchmark/seed -o $OUT -K /benchmark/ranked_stubs.txt -V $RUNTIME -- $RUN_TARGET

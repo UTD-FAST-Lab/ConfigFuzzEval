@@ -1,0 +1,3 @@
+2
+pcre2test -version @@
+pcre2test @@

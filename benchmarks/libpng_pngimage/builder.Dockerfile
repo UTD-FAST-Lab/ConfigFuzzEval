@@ -42,6 +42,8 @@ RUN bash build.sh
 COPY run_target.sh /
 COPY seed /seed
 COPY dict /
+COPY ranked_stubs.txt /
+COPY build.sh /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libpng/pngimage /benchmark_out_dir/  && cp /dict /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp -r /libpng/pngimage /benchmark_out_dir/    && cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
 

@@ -1,0 +1,330 @@
+329
+xmlwf -e UTF-8 -d /tmp/ -c -n -r -m -x -N -s -k -w  @@
+xmlwf -p -b 2048 -e US-ASCII -d /tmp/ -n -r -m -x -s -k -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -n -r -m -x -N -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -n -r -m -x -s -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -n -r -m -N -k  @@
+xmlwf -p -e UTF-8 -d /tmp/ -n -r -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -n -r -s -k -w  @@
+xmlwf -d /tmp/ -n -r -x -N -s -a 80.0  @@
+xmlwf -p -e US-ASCII -d /tmp/ -n -r -m -s  @@
+xmlwf -d /tmp/ -n -r -x -N -k  @@
+xmlwf -p -b 2048 -d /tmp/ -c -n -r -m -N -w  @@
+xmlwf -p -b 2048 -d /tmp/ -n -r -m -x -N -s  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -c -n -m -x -N -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -n -r -N -s -k -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -c -n -m -s -w -a 80.0  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -n -m -s -w -a 80.0  @@
+xmlwf -e US-ASCII -d /tmp/ -c -n -r -x -k -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -n -m -x -w -a 80.0  @@
+xmlwf -p -e US-ASCII -d /tmp/ -n -m -x -N -s -k  @@
+xmlwf -b 2048 -d /tmp/ -n -m -x -N -w  @@
+xmlwf -e UTF-8 -d /tmp/ -c -n -m -N -a 80.0  @@
+xmlwf -d /tmp/ -n -m -s -a 80.0  @@
+xmlwf -e US-ASCII -d /tmp/ -n -m -s -k  @@
+xmlwf -p -d /tmp/ -c -n -m -x -k  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -n -x -N -k -w  @@
+xmlwf -p -d /tmp/ -c -n -r  @@
+xmlwf -d /tmp/ -n -N -k -w -a 80.0  @@
+xmlwf -p -d /tmp/ -n -x -s -k -w  @@
+xmlwf -b 2048 -d /tmp/ -n -x -N -w -a 80.0  @@
+xmlwf -b 2048 -e ISO-8859-1 -n -r -m -N -s -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -n -r -m -N -w -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -n -r -x -w  @@
+xmlwf -p -c -n -r -x -N -k -w  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -d /tmp/ -c -n -N -k -a 80.0  @@
+xmlwf -b 2048 -e UTF-8 -n -r -m -k  @@
+xmlwf -e US-ASCII -c -n -r -m -x -s  @@
+xmlwf -p -n -r -m -N -s -k  @@
+xmlwf -p -b 2048 -c -n -r -x -s -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -r -m -a 80.0  @@
+xmlwf -d /tmp/ -c -n -x -N -w  @@
+xmlwf -c -n -r -m -x -N -w -a 80.0  @@
+xmlwf -p -b 2048 -n -r -w -a 80.0  @@
+xmlwf -p -d /tmp/ -r -m -x -N -k -w  @@
+xmlwf -p -d /tmp/ -c -r -m -s -k -w  @@
+xmlwf -p -e US-ASCII -c -n -r -N -s -w  @@
+xmlwf -n -r -x -s -k -w -a 80.0  @@
+xmlwf -p -c -n -r -m -x -s  @@
+xmlwf -b 2048 -e UTF-8 -c -n -r -N  @@
+xmlwf -b 2048 -d /tmp/ -r -x -N -k  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -c -r -m -x -s -k  @@
+xmlwf -b 2048 -d /tmp/ -c -n -N -s -k  @@
+xmlwf -e UTF-8 -c -n -r -k  @@
+xmlwf -e ISO-8859-1 -c -n -m -x -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -n -x -s -w  @@
+xmlwf -e ISO-8859-1 -n -x -N -a 80.0  @@
+xmlwf -p -c -n -m -N -s -w -a 80.0  @@
+xmlwf -p -n -m -x -N -k -a 80.0  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -m -N -k -a 80.0  @@
+xmlwf -b 2048 -c -n -m -w  @@
+xmlwf -p -b 2048 -n -m -x -N -s -w -a 80.0  @@
+xmlwf -e UTF-8 -c -n -m -N -k  @@
+xmlwf -p -b 2048 -e UTF-8 -c -n -x -N -s -k  @@
+xmlwf -p -b 2048 -c -n -N -k -w -a 80.0  @@
+xmlwf -n -s -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -r -t -x -N -s -w -a 80.0  @@
+xmlwf -p -n -x -s  @@
+xmlwf -e ISO-8859-1 -d /tmp/ -x -N -s -k -w  @@
+xmlwf -e US-ASCII -d /tmp/ -c -r -t -x -N -s -k -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -r -m -t -x -N -k -w -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -r -t -N -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -r -m -t -N -k -w -a 80.0  @@
+xmlwf -p -b 2048 -n -m -s -k -w  @@
+xmlwf -b 2048 -n -m -x -N -s -k  @@
+xmlwf -p -b 2048 -e US-ASCII -c -r -m -t -x -k -w  @@
+xmlwf -b 2048 -d /tmp/ -c -r -m -t -s -k -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -r -m -t -x -k -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -r -m -t -x -N -w  @@
+xmlwf -p -c -r -m -t -N -s -w  @@
+xmlwf -p -b 2048 -d /tmp/ -x -s -a 80.0  @@
+xmlwf -b 2048 -c -r -t -s -k -w -a 80.0  @@
+xmlwf -e ISO-8859-1 -d /tmp/ -r -m -t -x  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -c -r -t -s -w  @@
+xmlwf -p -r -m -t -x -N -s -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -r -m -t -s -k -w -a 80.0  @@
+xmlwf -p -b 2048 -r -t -x -s -k -w  @@
+xmlwf -p -d /tmp/ -c -r -t -x -k -a 80.0  @@
+xmlwf -b 2048 -r -m -t -x -k -a 80.0  @@
+xmlwf -b 2048 -e UTF-8 -r -m -x -N -s -k  @@
+xmlwf -c -r -m -t -x -N -s -k  @@
+xmlwf -e US-ASCII -d /tmp/ -c -r -m -t -w -a 80.0  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -c -r -t -k  @@
+xmlwf -b 2048 -c -r -t -x -N  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -r -t -x -N -s -k -a 80.0  @@
+xmlwf -e UTF-8 -c -r -m -t -N -w  @@
+xmlwf -e UTF-8 -d /tmp/ -w -a 80.0  @@
+xmlwf -p -b 2048 -c -r -m -k -a 80.0  @@
+xmlwf -d /tmp/ -r -m -t -N -s -k -w -a 80.0  @@
+xmlwf -b 2048 -r -t -N -w  @@
+xmlwf -d /tmp/ -r -t -x -k  @@
+xmlwf -p -e US-ASCII -c -r -s -w -a 80.0  @@
+xmlwf -p -e UTF-8 -r -t -x -N -s -k -w  @@
+xmlwf -p -b 2048 -d /tmp/ -c -x -N -s -w  @@
+xmlwf -p -d /tmp/ -r -t -s -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -r -t -s  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -c -t -x -N -s -w -a 80.0  @@
+xmlwf -b 2048 -e UTF-8 -r -m -t -s  @@
+xmlwf -p -b 2048 -d /tmp/ -r -t --  @@
+xmlwf -d /tmp/ -c -N -s  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -c -t -N -s -k -w -a 80.0  @@
+xmlwf -p -c -r -m -t --  @@
+xmlwf -p -c -r -x -N -s -a 80.0  @@
+xmlwf -r -x -N -s -k -w -a 80.0  @@
+xmlwf -b 2048 -e ISO-8859-1 -c -m -t -N -k -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -m -t -x -N -w -a 80.0  @@
+xmlwf -b 2048 -e ISO-8859-1 -t -x -k -w -a 80.0  @@
+xmlwf -e ISO-8859-1 -c -t -x -s -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -m -t -x -s -a 80.0  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -c -m -t -N -s -k -w  @@
+xmlwf -c -r -x -s -w  @@
+xmlwf -b 2048 -c -m -t -x -s -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -c -t -k -w  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -c -m -t --  @@
+xmlwf -p -d /tmp/ -c -N -a 80.0  @@
+xmlwf -p -b 2048 -e US-ASCII -d /tmp/ -c -m -t -a 80.0  @@
+xmlwf -b 2048 -c -t -k -a 80.0  @@
+xmlwf -b 2048 -t -x -s -k -w  @@
+xmlwf -p -e US-ASCII -d /tmp/ -m -t -k -w  @@
+xmlwf -p -d /tmp/ -c -m -t -s -k  @@
+xmlwf -b 2048 -d /tmp/ -t -x -a 80.0  @@
+xmlwf -b 2048 -e UTF-8 -c -N -s -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -m -t -N -k -w -a 80.0  @@
+xmlwf -p -b 2048 -c -m -x -N -a 80.0  @@
+xmlwf -b 2048 -c -m -x -k -w  @@
+xmlwf -p -b 2048 -t -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -t -x -s -k -a 80.0  @@
+xmlwf -t -k -w -a 80.0  @@
+xmlwf -p -c -t -x -s -k -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -m -t -N -s -w  @@
+xmlwf -p -e ISO-8859-1 -m -x -s -k -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -c -m -t -N  @@
+xmlwf -p -d /tmp/ -c -m -t -x -N -k  @@
+xmlwf -m -t -w  @@
+xmlwf -p -e UTF-8 -c -m  @@
+xmlwf -p -b 2048 -t -N -s -k  @@
+xmlwf -c -m -s -w -a 80.0  @@
+xmlwf -d /tmp/ -t -N  @@
+xmlwf -m -t -x -N -s -w  @@
+xmlwf -b 2048 -e UTF-8 -k -w  @@
+xmlwf -p -e US-ASCII -d /tmp/ -t --  @@
+xmlwf  @@
+xmlwf -b 2048 -e UTF-16 -c -n -r -m -N -s -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -c -n -N -s -w  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -n -x  @@
+xmlwf -p -b 2048 -e UTF-16 -c -n -x -a 80.0  @@
+xmlwf -e UTF-16 -n -N -s -w -a 80.0  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -c -r -m -N -k -w -a 80.0  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -r -x -s -w -a 80.0  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -c -m -s -k  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -r -t -x -s -k -w  @@
+xmlwf -p -e UTF-16 -c -r -t -x -s -k -a 80.0  @@
+xmlwf -p -e UTF-16 -d /tmp/ -N -s -k  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -m -t -x -N -s  @@
+xmlwf -p -e UTF-16 -c -r -m -x -N -w -a 80.0  @@
+xmlwf -e UTF-16 -m -t -x -N -k -w -a 80.0  @@
+xmlwf -p -e UTF-16 -d /tmp/ -m -N -w  @@
+xmlwf -e UTF-16 -d /tmp/ -c -t -x -k  @@
+xmlwf -p -e UTF-16 -t -N -k  @@
+xmlwf -p -b 2048 -e UTF-16 -r -s  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -c -n -r -m -- -k  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -c -n -r -m -- -s -k -w  @@
+xmlwf -b 2048 -e UTF-8 -d /tmp/ -n -r -m -- -N -w  @@
+xmlwf -p -b 2048 -e US-ASCII -d /tmp/ -c -r -- -x -w  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -c -n -m -- -x -w  @@
+xmlwf -p -e UTF-16 -d /tmp/ -c -n -r -m -- -N -s -k -a 80.0  @@
+xmlwf -p -b 2048 -e US-ASCII -d /tmp/ -c -r -- -x -N -s -k -w -a 80.0  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -c -n -r -- -x -N -k -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -n -r -- -x -s -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -n -r -m -- -x -w  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -c -n -m -- -x -N -s -k  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -c -n -r -- -N -s -w -a 80.0  @@
+xmlwf -p -e US-ASCII -d /tmp/ -c -n -r -- -x -N -s  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -d /tmp/ -m -- -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -c -- -x -N -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-16 -d /tmp/ -n -- -w -a 80.0  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -n -r -- -N -s -k -w  @@
+xmlwf -b 2048 -d /tmp/ -c -n -r -m -- -N -s -k  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -d /tmp/ -n -- -N -s -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -c -n -m -- -x -a 80.0  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -d /tmp/ -c -r -m -t -- -N -s -a 80.0  @@
+xmlwf -e UTF-16 -d /tmp/ -c -r -m -- -s -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -n -m -- -x -s -k -a 80.0  @@
+xmlwf -b 2048 -e UTF-16 -d /tmp/ -n -- -k -w -a 80.0  @@
+xmlwf -p -e UTF-16 -d /tmp/ -r -m -- -x -N -s  @@
+xmlwf -e ISO-8859-1 -d /tmp/ -c -n -m -- -x -N -s -w -a 80.0  @@
+xmlwf -p -e UTF-8 -d /tmp/ -n -r -- -s -k -w  @@
+xmlwf -p -d /tmp/ -n -r -m -- -x -s -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -n -- -N -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -r -- -k  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -r -m -t -- -x -N -k -a 80.0  @@
+xmlwf -e UTF-16 -d /tmp/ -n -m -- -x -s -w  @@
+xmlwf -b 2048 -d /tmp/ -n -m -- -N -s -k -w  @@
+xmlwf -b 2048 -d /tmp/ -c -m -- -x -N -s -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -n -r -- -x -k -a 80.0  @@
+xmlwf -e UTF-8 -d /tmp/ -c -n -- -x -s -k -w  @@
+xmlwf -b 2048 -d /tmp/ -c -n -- -s -w -a 80.0  @@
+xmlwf -p -d /tmp/ -c -n -m -- -k -w  @@
+xmlwf -p -d /tmp/ -c -n -r -- -x -N -w -a 80.0  @@
+xmlwf -e US-ASCII -d /tmp/ -n -r -- -N  @@
+xmlwf -p -b 2048 -d /tmp/ -n -- -x -N -s -w  @@
+xmlwf -p -b 2048 -e US-ASCII -c -n -m -- -s  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -c -n -m -- -x -N -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -r -m -t -- -x -s -w  @@
+xmlwf -b 2048 -e UTF-16 -c -r -m -t -- -x -w -a 80.0  @@
+xmlwf -d /tmp/ -n -r -m -- -N -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -d /tmp/ -r -t -- -x -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -c -n -r -- -s -k -a 80.0  @@
+xmlwf -p -b 2048 -e US-ASCII -r -m -t -- -x -N  @@
+xmlwf -b 2048 -e ISO-8859-1 -d /tmp/ -c -r -t -- -x -N  @@
+xmlwf -p -d /tmp/ -c -n -- -x -a 80.0  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -c -m -t -- -w -a 80.0  @@
+xmlwf -d /tmp/ -c -r -m -- -x -s -k  @@
+xmlwf -p -b 2048 -e UTF-16 -c -n -m -- -N -s -k -w  @@
+xmlwf -b 2048 -e US-ASCII -c -r -t -- -x -s -k  @@
+xmlwf -b 2048 -e UTF-16 -c -n -r -- -x -s -w -a 80.0  @@
+xmlwf -p -e UTF-16 -c -r -m -t -- -s -k -w  @@
+xmlwf -p -d /tmp/ -n -- -N -w  @@
+xmlwf -d /tmp/ -c -n -- -s -a 80.0  @@
+xmlwf -e UTF-8 -d /tmp/ -c -r -m -t -- -x -N -a 80.0  @@
+xmlwf -p -d /tmp/ -n -- -x -N -s -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e UTF-8 -n -r -- -x -N -s -k  @@
+xmlwf -p -b 2048 -d /tmp/ -c -r -t -- -N -k -a 80.0  @@
+xmlwf -p -b 2048 -c -n -r -m -- -x -N -s -w  @@
+xmlwf -b 2048 -e UTF-8 -c -m -t -- -x -N -s -k -a 80.0  @@
+xmlwf -p -d /tmp/ -r -- -N -k -w -a 80.0  @@
+xmlwf -p -b 2048 -e ISO-8859-1 -r -m -- -x -k -a 80.0  @@
+xmlwf -b 2048 -e US-ASCII -d /tmp/ -t -- -x -N -s -k -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -c -m -t -- -x -N -k  @@
+xmlwf -d /tmp/ -c -- -x -k -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -c -t -- -x -s -w  @@
+xmlwf -p -e UTF-8 -n -r -m -- -x -k  @@
+xmlwf -p -b 2048 -c -r -m -- -N -s -w  @@
+xmlwf -b 2048 -e UTF-8 -d /tmp/ -t -- -s -k -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -r -m -t -- -k -w  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -m -t -- -x -N -s -k -w  @@
+xmlwf -e US-ASCII -d /tmp/ -c -r -t -- -N -k -w  @@
+xmlwf -p -b 2048 -c -r -t -- -x -N -s -k -w -a 80.0  @@
+xmlwf -p -d /tmp/ -- -x -s -k  @@
+xmlwf -b 2048 -e UTF-8 -m -t -- -x -k  @@
+xmlwf -p -b 2048 -e UTF-16 -t -- -N -s  @@
+xmlwf -d /tmp/ -m -- -x  @@
+xmlwf -b 2048 -e ISO-8859-1 -r -t -- -N -w -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -n -r -m -- -x -N -w  @@
+xmlwf -b 2048 -e ISO-8859-1 -m -t -- -x -N -s -w  @@
+xmlwf -p -e UTF-8 -d /tmp/ -c -t -- -x -s -k -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -c -r -t -- -x -N -k -a 80.0  @@
+xmlwf -b 2048 -e UTF-16 -c -r -- -x -a 80.0  @@
+xmlwf -p -e ISO-8859-1 -d /tmp/ -c -t -- -w -a 80.0  @@
+xmlwf -p -b 2048 -d /tmp/ -r -t -- -N -s  @@
+xmlwf -p -e US-ASCII -c -m -t -- -x -N  @@
+xmlwf -p -b 2048 -r -m -t -- -N -k -w  @@
+xmlwf -e US-ASCII -d /tmp/ -c -m -t -- -x -s -k -a 80.0  @@
+xmlwf -p -d /tmp/ -c -m -t -- -N -w -a 80.0  @@
+xmlwf -p -b 2048 -m -t -- -s -k -w -a 80.0  @@
+xmlwf -p -c -n -r -m -- -k -w -a 80.0  @@
+xmlwf -p -e UTF-16 -m -t -- -x -w -a 80.0  @@
+xmlwf -p -b 2048 -m -t -- -x  @@
+xmlwf -p -e US-ASCII -c -t -- -s -w  @@
+xmlwf -b 2048 -n -r -m -- -x -s -k -w -a 80.0  @@
+xmlwf -p -e UTF-8 -c -n -- -N -s -w -a 80.0  @@
+xmlwf -e US-ASCII -d /tmp/ -r -t -- -x -s -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -m -t -- -N -s -a 80.0  @@
+xmlwf -d /tmp/ -c -r -m -t -- -s -k  @@
+xmlwf -e US-ASCII -r -m -t -- -k -a 80.0  @@
+xmlwf -p -b 2048 -n -m -- -N -a 80.0  @@
+xmlwf -d /tmp/ -c -r -m -t -- -x -N -s -w  @@
+xmlwf -p -b 2048 -c -n -- -x -k -w  @@
+xmlwf -e UTF-16 -d /tmp/ -r -t -- -N -s -w  @@
+xmlwf -e US-ASCII -n -r -m -- -x -a 80.0  @@
+xmlwf -p -e US-ASCII -n -m -- -k -w -a 80.0  @@
+xmlwf -p -d /tmp/ -r -m -t -- -x -N -w  @@
+xmlwf -p -b 2048 -d /tmp/ -t -- -x -N -k -w  @@
+xmlwf -b 2048 -e ISO-8859-1 -n -- -s -k -w  @@
+xmlwf -e US-ASCII -n -r -m -- -N -s  @@
+xmlwf -p -b 2048 -c -m -- -N -s -k -a 80.0  @@
+xmlwf -b 2048 -e UTF-8 -m -- -s  @@
+xmlwf -p -b 2048 -r -m -- -N -s -w -a 80.0  @@
+xmlwf -p -b 2048 -c -n -- -k  @@
+xmlwf -p -d /tmp/ -r -m -t -- -s -k  @@
+xmlwf -e US-ASCII -c -n -r -- -k -w -a 80.0  @@
+xmlwf -p -d /tmp/ -r -t -- -x -N -s -w -a 80.0  @@
+xmlwf -b 2048 -n -r -- -x -N -k -w  @@
+xmlwf -b 2048 -c -t -- -N -w -a 80.0  @@
+xmlwf -p -c -m -t -- -x -N -s -k -a 80.0  @@
+xmlwf -b 2048 -n -r -- -s  @@
+xmlwf -e ISO-8859-1 -c -t -- -k -a 80.0  @@
+xmlwf -c -r -m -t -- -x -s -k -w -a 80.0  @@
+xmlwf -e ISO-8859-1 -c -t -- -x -N -s  @@
+xmlwf -e UTF-16 -m -t -- -N -s -a 80.0  @@
+xmlwf -p -c -r -t -- -N -s  @@
+xmlwf -d /tmp/ -c -m -t -- -x -k -w -a 80.0  @@
+xmlwf -e US-ASCII -c -m -- -N -k -w  @@
+xmlwf -p -c -r -t -- -x -N -k -w  @@
+xmlwf -b 2048 -c -n -- -x -N -a 80.0  @@
+xmlwf -p -d /tmp/ -r -t -- -x -k  @@
+xmlwf -p -e UTF-16 -t -- -x -N -k -w -a 80.0  @@
+xmlwf -b 2048 -d /tmp/ -t -- -x -N -s -w  @@
+xmlwf -p -b 2048 -- -N -k -w  @@
+xmlwf -r -m -t -- -N -s -k  @@
+xmlwf -c -n -m -- -x -N  @@
+xmlwf -e ISO-8859-1 -r -- -N -s -k -a 80.0  @@
+xmlwf -c -n -r -- -N -a 80.0  @@
+xmlwf -p -c -r -- -x -N -k  @@
+xmlwf -e US-ASCII -t -- -x -N -k -a 80.0  @@
+xmlwf -p -r -t -- -x -N -a 80.0  @@
+xmlwf -p -n -r -- -s -w  @@
+xmlwf -p -c -t -- -N -k  @@
+xmlwf -p -r -t -- -s -k -a 80.0  @@
+xmlwf -d /tmp/ -c -t -- -N -s -k  @@
+xmlwf -e ISO-8859-1 -n -- -x -N -s -k -a 80.0  @@
+xmlwf -c -n -m -- -x -N -k -a 80.0  @@
+xmlwf -p -d /tmp/ -t -- -x -s -w  @@
+xmlwf -c -r -m -- -N -w -a 80.0  @@
+xmlwf -r -t -- -x -w  @@
+xmlwf -c -n -- -N -s -k -w  @@
+xmlwf -r -m -- -x -k -w -a 80.0  @@
+xmlwf -m -t -- -x -s -a 80.0  @@
+xmlwf -n -- -x -k  @@
+xmlwf -b 2048 -- -x -N -s -a 80.0  @@
+xmlwf -e UTF-8 -- -N -w  @@

@@ -1,0 +1,21 @@
+20
+tiff2pdf -j -z -n -F @@
+tiff2pdf -b -i -F @@
+tiff2pdf -z -f -d @@
+tiff2pdf -n -b -F -j -z @@
+tiff2pdf -d -j @@
+tiff2pdf -i -z -F -b -f @@
+tiff2pdf -F -d -n @@
+tiff2pdf -f -b -i -z @@
+tiff2pdf -n -j -F -b @@
+tiff2pdf -d -f -j -z @@
+tiff2pdf -j -n @@
+tiff2pdf -F -z -b -i -n -d @@
+tiff2pdf -f -F -i @@
+tiff2pdf -z -n -j -d -b @@
+tiff2pdf -b -f -F -n @@
+tiff2pdf -i -j -d @@
+tiff2pdf -n -z -f @@
+tiff2pdf -j -i -F -z @@
+tiff2pdf -b -d -n -F @@
+tiff2pdf -f -z -i -j -b @@

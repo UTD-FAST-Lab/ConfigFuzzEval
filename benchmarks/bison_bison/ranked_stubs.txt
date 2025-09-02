@@ -1,0 +1,485 @@
+484
+bison --color=always -g -F NAME=1234 -t -p ./ -r cex -y -x  @@ -o /tmp/foo
+bison --style --color=always -l -v -L C -D NAME=1234 -t --defines -y -x  @@ -o /tmp/foo
+bison -g -l -L C -t --defines -d -r solved -y  @@ -o /tmp/foo
+bison --style -g -l -v -D NAME=1234 --locations -t -p ./ -S -y  @@ -o /tmp/foo
+bison --color=never -g --defines -b ./ -d -S -y  @@ -o /tmp/foo
+bison  @@ -o /tmp/foo
+bison --color=auto -F NAME=1234 -u -L Java -D NAME=1234 --locations --defines -d -r lookaheads  @@ -o /tmp/foo
+bison --style -g -v -F NAME=1234 -u -D NAME=1234 --locations --defines -p ./ -b ./ -S -x  @@ -o /tmp/foo
+bison -k -l -v -F NAME=1234 -M OLD -L Java -D NAME=1234 --locations -t -b ./ -S -x  @@ -o /tmp/foo
+bison --style -k -g -v -F NAME=1234 -u -M NEW -L Python --locations -d -S -y  @@ -o /tmp/foo
+bison --style -k --color=always -g -l -F NAME=1234 -u -M NEW --defines -p ./ -b ./ -r cex -S -x  @@ -o /tmp/foo
+bison -g -l -v -M OLD -L Rust -D NAME=1234 -t -p ./ -x  @@ -o /tmp/foo
+bison --color=auto -l -v -F NAME=1234 -u -M OLD -t --defines -p ./ -d -S -y  @@ -o /tmp/foo
+bison -g -l -u -M OLD -D NAME=1234 -t --defines -S --report-file  @@ -o /tmp/foo
+bison --style -k -g -l -F NAME=1234 -M OLD -L C++ --defines -r none  @@ -o /tmp/foo
+bison --color=always -g -v -u -M OLD -L Java -t -b ./ -d -S -x  @@ -o /tmp/foo
+bison --style -W conflict-rr --color=auto -v -F NAME=1234 -u -M NEW -L Python -D NAME=1234 --locations -t -d -y -x --report-file  @@ -o /tmp/foo
+bison -W precedence -k --color=never -F NAME=1234 -M OLD -L Java -D NAME=1234 -t -p ./ -d -r lookaheads -y  @@ -o /tmp/foo
+bison -W error -k -l -F NAME=1234 -u -M OLD --locations -t -p ./ -r itemsets -y -x --report-file  @@ -o /tmp/foo
+bison --style -W all -l -F NAME=1234 -u -M OLD -L Python -D NAME=1234 -f syntax-only --locations --defines -p ./ -d -r all -S -x  @@ -o /tmp/foo
+bison -k --color=always -g -l -F NAME=1234 -M OLD -D NAME=1234 -f syntax-only --locations -d -r cex -S -y -x --report-file  @@ -o /tmp/foo
+bison -W error -g -l -M NEW -L Python -D NAME=1234 -f caret --locations -t --defines -p ./ -b ./ -d -r cex  @@ -o /tmp/foo
+bison --style -W no-CATEGORY --color=never -F NAME=1234 -M NEW -L C -D NAME=1234 --defines -S  @@ -o /tmp/foo
+bison --color=auto -F NAME=1234 -M OLD -L C++ -f none -t --defines -p ./ -b ./ -r itemsets --report-file  @@ -o /tmp/foo
+bison --style -k -F NAME=1234 -M OLD -D NAME=1234 -f syntax-only -t -b ./ -r none -S -y --report-file  @@ -o /tmp/foo
+bison -W empty-rule -k -l -v -u -M OLD -L C++ --locations -t --defines -d -S  @@ -o /tmp/foo
+bison --style -k -g -l -F NAME=1234 -u -M OLD -D NAME=1234 -f caret --locations --defines -p ./ -r cex -y  @@ -o /tmp/foo
+bison --style -W yacc -l -F NAME=1234 -L Rust --locations -t -p ./ -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison -k --color=always -F NAME=1234 -u -M NEW -L C -D NAME=1234 -f all -t --defines -r all -S -x  @@ -o /tmp/foo
+bison -W precedence -k -g -l -F NAME=1234 -u -M NEW -L C --defines -p ./ -d -y --report-file  @@ -o /tmp/foo
+bison --style -u -M NEW -D NAME=1234 -f all --locations -d -r solved -x --report-file  @@ -o /tmp/foo
+bison --style -W empty-rule -k -g -u -M NEW -L Python -f none -t -p ./ -d -r states -y -x --report-file  @@ -o /tmp/foo
+bison -W no-CATEGORY --color=never -g -l -v -F NAME=1234 -M NEW -L Java -D NAME=1234 --defines -b ./ -x  @@ -o /tmp/foo
+bison --style --color=never -l -v -F NAME=1234 -M NEW -f fixit --locations -t --defines -p ./ -S -x --report-file  @@ -o /tmp/foo
+bison -W conflict-sr -k --color=always -F NAME=1234 -M OLD -L Java -D NAME=1234 -f caret -t --defines -p ./ -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison -W no-CATEGORY -g -F NAME=1234 -u -M NEW -L C --locations -p ./ -b ./ -d -r lookaheads -S --report-file  @@ -o /tmp/foo
+bison --color=always -M NEW -L C -D NAME=1234 --locations -t --defines -p ./ -b ./ -d -r lookaheads -y -x --report-file  @@ -o /tmp/foo
+bison --style --color=never -l -F NAME=1234 -M NEW -L Java --locations -b ./ -d -r all -S -y --report-file  @@ -o /tmp/foo
+bison --style -W deprecated -g -F NAME=1234 -u -L Java --locations -t --defines -r solved -y -x --report-file  @@ -o /tmp/foo
+bison --style -W yacc --color=always -l -v -u -M OLD --locations --defines -b ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W all -k -g -v -F NAME=1234 -u -M NEW -L Rust -D NAME=1234 --print-datadir -t --defines -p ./ -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison --style -W midrule-values -l -L Python -D NAME=1234 -f caret --locations -t -r itemsets -S --report-file  @@ -o /tmp/foo
+bison -g -v -F NAME=1234 -u -M OLD -L Java -D NAME=1234 -f syntax-only --defines -p ./ -S -y  @@ -o /tmp/foo
+bison -k -l -u -M NEW -L Java -f all --locations --defines -p ./ -b ./ -r itemsets  @@ -o /tmp/foo
+bison -k -g -F NAME=1234 -u -M NEW -f none -d -r solved --report-file  @@ -o /tmp/foo
+bison --style -W precedence -v -u -M OLD -L C -t --defines -p ./ -b ./ -S  @@ -o /tmp/foo
+bison -W error -v -F NAME=1234 -u -L Python -t -y -x  @@ -o /tmp/foo
+bison --style -W empty-rule -k -g -v -F NAME=1234 -u -L Rust -f none --locations -t --defines -p ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -l -v -F NAME=1234 -M OLD -L Java -D NAME=1234 -t --defines -p ./ -b ./ -d --report-file  @@ -o /tmp/foo
+bison -W none -g -l -v -F NAME=1234 -u -M OLD -D NAME=1234 -f caret --locations -p ./ -y -x  @@ -o /tmp/foo
+bison -W none -l -M OLD -L Java --locations -t -p ./ -S -y  @@ -o /tmp/foo
+bison -W conflict-sr --color=always -g -l -v -F NAME=1234 -u -M OLD -L Java -D NAME=1234 --print-datadir -f syntax-only --locations -p ./ -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -g -v -F NAME=1234 -u -M OLD -D NAME=1234 -f all -t -b ./ -d -x  @@ -o /tmp/foo
+bison --style -W deprecated -k --color=never -g -M OLD -D NAME=1234 --locations -t --defines -b ./  @@ -o /tmp/foo
+bison -W precedence -k --color=always -v -F NAME=1234 -u -M OLD -L Java -f syntax-only --defines -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -k -l -M NEW -D NAME=1234 -f all -t --defines -p ./ -r all -x  @@ -o /tmp/foo
+bison -W conflict-rr -k --color=always -u -M OLD -D NAME=1234 -f caret --locations -p ./ -b ./ -d -y --report-file  @@ -o /tmp/foo
+bison --style -W conflict-rr -k --color=never -g -l -F NAME=1234 -u -M OLD -f fixit --locations -t --defines -p ./ -d -S -y -x  @@ -o /tmp/foo
+bison -W no-CATEGORY -k -u -L Java --locations -t --defines -p ./ -r all -S  @@ -o /tmp/foo
+bison --style -W conflict-sr -k -g -l -v -u -M NEW -L Python -D NAME=1234 --print-datadir -f all -p ./ -b ./ -y -x  @@ -o /tmp/foo
+bison -W other --color=auto -g -l -M OLD --locations -b ./ -r itemsets -S -x  @@ -o /tmp/foo
+bison -k -g -F NAME=1234 -L C -D NAME=1234 -f none --locations -t -r solved -y --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -v -F NAME=1234 -M OLD -f syntax-only --locations -t -b ./ -S -y  @@ -o /tmp/foo
+bison -W yacc -k --color=auto -l -F NAME=1234 -M OLD -L Python --print-datadir -f fixit --locations -t -p ./ -b ./ -d -r itemsets -S -x --report-file  @@ -o /tmp/foo
+bison -W none --color=always -F NAME=1234 -M OLD -f syntax-only -p ./ -d -r all -x --report-file  @@ -o /tmp/foo
+bison --style -W other -k -v -M NEW -L Python -D NAME=1234 --print-datadir -f syntax-only --locations --defines -y  @@ -o /tmp/foo
+bison -W yacc -g -v -u -M NEW -L Rust -D NAME=1234 --print-datadir -t -p ./ -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -W other -g -F NAME=1234 -M NEW -L Rust --print-datadir -f none --locations -t --defines -p ./ -r all -S -y -x  @@ -o /tmp/foo
+bison --style -k -g -l -L Rust -f caret -t --defines -d -y -x  @@ -o /tmp/foo
+bison --style -g -l -M NEW -f syntax-only --locations -b ./ -d -y -x  @@ -o /tmp/foo
+bison --style -k --color=never -g -l -F NAME=1234 -u -M NEW -L C -t -r none -x --report-file  @@ -o /tmp/foo
+bison --style -W cex -k -g -v -M OLD -L C -f caret --locations -t --defines -p ./ -x --report-file  @@ -o /tmp/foo
+bison --style -W other -k -l -F NAME=1234 -D NAME=1234 -p ./ -b ./ -r solved -y -x --report-file  @@ -o /tmp/foo
+bison -W all -g -l -v -F NAME=1234 -L Python -f syntax-only --defines -p ./ -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison -k --color=auto -v -F NAME=1234 -u -M NEW -L C -D NAME=1234 -p ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -g -M OLD -L Python -D NAME=1234 --print-datadir -f none --locations -p ./ -d -r all -S -y -x  @@ -o /tmp/foo
+bison --style --color=always -g -l -F NAME=1234 -u -L C++ -f caret --locations -p ./ -r cex -S  @@ -o /tmp/foo
+bison -k --color=never -l -F NAME=1234 -u -M NEW -L Rust --print-datadir -t --defines -p ./ -d -r states -y -x  @@ -o /tmp/foo
+bison -W dangling-alias -k --color=always -g -l -u -L C -D NAME=1234 --locations --defines -p ./ -r itemsets -S -y --report-file  @@ -o /tmp/foo
+bison -W yacc -k --color=always -g -l -v -u -M NEW -L C++ -D NAME=1234 --print-datadir -f syntax-only -t --defines -S -y  @@ -o /tmp/foo
+bison -k --color=auto -M OLD -L Python -D NAME=1234 --print-datadir --locations -b ./ -r solved -y --report-file  @@ -o /tmp/foo
+bison --style -W other -k --color=auto -g -l -v -F NAME=1234 -L C -D NAME=1234 --locations --defines -p ./ -b ./ -d -S -y --report-file  @@ -o /tmp/foo
+bison -W all -k -F NAME=1234 -u -M NEW -L Java --print-datadir -f caret -b ./ -d -r cex -S -y -x  @@ -o /tmp/foo
+bison --style -W error -k -g -l -v -F NAME=1234 -L Rust -D NAME=1234 --print-datadir -f fixit -t -p ./ -d  @@ -o /tmp/foo
+bison -l -u -M OLD -L Python -D NAME=1234 --print-datadir -t -b ./ -r solved -S -y -x  @@ -o /tmp/foo
+bison --color=never -g -u -L Rust -D NAME=1234 --locations -t -p ./ -b ./ -x --report-file  @@ -o /tmp/foo
+bison -W error -k -g -v -u -M OLD -D NAME=1234 -f all -t --defines -b ./ -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=never -l -M OLD -D NAME=1234 -t -d -y --report-file  @@ -o /tmp/foo
+bison -W no-CATEGORY -k --color=always -g -l -v -u -L C++ --locations -t --defines -p ./ -d -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -g -l -v -u -L Python -D NAME=1234 -d -y -x --report-file  @@ -o /tmp/foo
+bison --style -W error --color=always -l -F NAME=1234 -u -M OLD -D NAME=1234 --print-datadir -f syntax-only -t -p ./ -r solved --report-file  @@ -o /tmp/foo
+bison -W conflict-sr -k --color=never -v -F NAME=1234 -L Python -D NAME=1234 --print-datadir -f fixit --locations -t --defines -y -x  @@ -o /tmp/foo
+bison --style -W yacc --color=never -u -M OLD -L C++ -D NAME=1234 --print-datadir --locations -t --defines -b ./ -S -y -x  @@ -o /tmp/foo
+bison --style -W none --color=auto -l -F NAME=1234 -M OLD -D NAME=1234 --print-datadir -f caret --locations --defines -p ./ -b ./ -y -x  @@ -o /tmp/foo
+bison --style -W midrule-values -k -g -F NAME=1234 -M OLD -L C++ --print-datadir -f none --locations -p ./ -b ./ -r none -x --report-file  @@ -o /tmp/foo
+bison --style -W conflict-rr -k -l -F NAME=1234 -u -M OLD -D NAME=1234 --print-datadir --locations -t --defines -b ./ -d -r cex -y --report-file  @@ -o /tmp/foo
+bison -W dangling-alias -k -g -l -M NEW -L C++ -D NAME=1234 --print-datadir -y -x  @@ -o /tmp/foo
+bison -W all -k -g -l -v -F NAME=1234 -M OLD -D NAME=1234 --print-datadir --defines -p ./ -d --report-file  @@ -o /tmp/foo
+bison -k -l -v -u -L Rust --locations --defines -b ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison --style -W none --color=never -v -F NAME=1234 -M NEW -D NAME=1234 --print-datadir --locations -t -p ./ -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison -W other --color=always -g -l -F NAME=1234 -M OLD -D NAME=1234 --print-datadir -t -d -r all -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -g -l -F NAME=1234 -u -M OLD -L Java --print-datadir --locations -t -p ./ -b ./ -d -r none -x  @@ -o /tmp/foo
+bison -W dangling-alias -g -v -F NAME=1234 -M NEW -D NAME=1234 --print-datadir -f caret --locations -t -b ./ -S --report-file  @@ -o /tmp/foo
+bison --style -W error --color=never -g -v -u -M NEW -L C -D NAME=1234 --print-datadir -f all --locations --defines -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison --style --color=auto -g -v -F NAME=1234 -u -L Python -D NAME=1234 --print-datadir --defines -p ./ -d -S -y --report-file  @@ -o /tmp/foo
+bison -W none -F NAME=1234 -M NEW -D NAME=1234 --print-datadir -f caret --locations --defines -b ./ -r states  @@ -o /tmp/foo
+bison --color=always -g -l -v -F NAME=1234 -u -M NEW -D NAME=1234 --print-datadir --locations -p ./ -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison --style -k -l -v -F NAME=1234 -u -L Python -D NAME=1234 --print-datadir -f all --locations --defines -b ./ -S  @@ -o /tmp/foo
+bison -k --color=never -g -v -F NAME=1234 -u -M NEW -D NAME=1234 --print-datadir --locations -t --defines -S -x --report-file  @@ -o /tmp/foo
+bison -k --color=auto -l -M OLD -L C++ -D NAME=1234 --print-datadir -f all -t -p ./ -S --report-file  @@ -o /tmp/foo
+bison -W empty-rule -g -v -M OLD -f syntax-only -t --defines -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W cex -k --color=auto -g -l -v -F NAME=1234 -M OLD --print-datadir -f fixit -t --defines -d -y -x --report-file  @@ -o /tmp/foo
+bison --color=never -g -l -F NAME=1234 -L C -D NAME=1234 -f syntax-only --defines -p ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison --style -W midrule-values -k -g -l -v --locations -t -b ./ -d -y --report-file  @@ -o /tmp/foo
+bison --style -l -F NAME=1234 -u -M OLD -D NAME=1234 --print-datadir -f all -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison --color=always -u -D NAME=1234 -f fixit --locations -t -p ./ -b ./ -r none -S -x --report-file  @@ -o /tmp/foo
+bison --style -g -F NAME=1234 -L Python -D NAME=1234 --print-datadir -t -b ./ -r cex -S -x  @@ -o /tmp/foo
+bison --style -g -F NAME=1234 -M NEW -L C++ --print-datadir -f syntax-only --locations --defines -d -S  @@ -o /tmp/foo
+bison -W empty-rule --color=always -l -v -L C++ -D NAME=1234 -f fixit --locations -t --defines -p ./ -d -y --report-file  @@ -o /tmp/foo
+bison -g -l -F NAME=1234 -u -f none --locations -t --defines -b ./ -d -r states -S -y -x --report-file  @@ -o /tmp/foo
+bison -W precedence --color=auto -l -v -u -L Python -D NAME=1234 --print-datadir -f syntax-only -p ./ -b ./ -d -x --report-file  @@ -o /tmp/foo
+bison -W conflict-sr -k --color=auto -g -u -M OLD -D NAME=1234 --print-datadir -f caret --defines -d -r states -S  @@ -o /tmp/foo
+bison --style -W conflict-rr -k -l -v -u -M NEW -D NAME=1234 --print-datadir --locations -d -S -y --report-file  @@ -o /tmp/foo
+bison -W precedence --color=auto -g -v -F NAME=1234 -u -M OLD --print-datadir --locations -t --defines -p ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -l -F NAME=1234 -M NEW -L C --print-datadir -f caret -t -b ./ -r states -S  @@ -o /tmp/foo
+bison -W error -k -l -L C -D NAME=1234 --defines -p ./ -d -r solved --report-file  @@ -o /tmp/foo
+bison --style -W precedence -v -u -L Rust -D NAME=1234 --print-datadir -f syntax-only --defines -p ./ -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison -W error -k -l -v -F NAME=1234 -u -M NEW --print-datadir -f fixit --locations -p ./ -b ./ -d  @@ -o /tmp/foo
+bison --style -g -v -u -M NEW -L C -D NAME=1234 --print-datadir -f none -S --report-file  @@ -o /tmp/foo
+bison -W no-CATEGORY --color=never -l -v -M NEW -D NAME=1234 --print-datadir --locations -t -b ./  @@ -o /tmp/foo
+bison --style -W conflict-sr -v -F NAME=1234 -L Python --print-datadir -S -x  @@ -o /tmp/foo
+bison --style -W none -g -l -M OLD -D NAME=1234 --print-datadir --locations --defines -b ./ -d -r itemsets -S -y -x  @@ -o /tmp/foo
+bison -k --color=auto -g -v -F NAME=1234 -u -D NAME=1234 -f none --locations -t --defines -p ./ -d -y -x  @@ -o /tmp/foo
+bison -W conflict-rr -l -F NAME=1234 -L Python --print-datadir --defines -p ./ -b ./ -r cex -y  @@ -o /tmp/foo
+bison -W conflict-sr -k -g -F NAME=1234 -M OLD --print-datadir --defines -p ./ -b ./ -d -S -y  @@ -o /tmp/foo
+bison --color=never -l -v -u -L Java -f caret --locations -t -p ./ -b ./ -d -y  @@ -o /tmp/foo
+bison -W none -v -M OLD -D NAME=1234 --print-datadir -t -p ./ -b ./ -d -x  @@ -o /tmp/foo
+bison --style -k --color=never -v -u -L Rust -t --defines -p ./ --report-file  @@ -o /tmp/foo
+bison -W yacc -k -F NAME=1234 -D NAME=1234 --locations -p ./ -S  @@ -o /tmp/foo
+bison -M OLD -L C -D NAME=1234 --print-datadir -f fixit --locations -t --defines -p ./ -d -r none -S --report-file  @@ -o /tmp/foo
+bison --style --color=always -g -u -L C++ -D NAME=1234 -f caret -t --defines -b ./ -r itemsets -S -y  @@ -o /tmp/foo
+bison --style -k --color=auto -l -u -M NEW -D NAME=1234 --print-datadir --defines -p ./ -d -r cex -y --report-file  @@ -o /tmp/foo
+bison --style -W other -g -l -u -D NAME=1234 -p ./ -d -r states -S  @@ -o /tmp/foo
+bison --style --color=auto -l -v -L Rust -D NAME=1234 --print-datadir --locations -t --defines -b ./ -d -y --report-file  @@ -o /tmp/foo
+bison -k --color=never -l -F NAME=1234 -L C -D NAME=1234 -f fixit --locations -t --defines -S -y -x  @@ -o /tmp/foo
+bison --style -g -l -v -F NAME=1234 -M NEW --print-datadir -t -S  @@ -o /tmp/foo
+bison -k -g -F NAME=1234 -u -L Rust --print-datadir -f caret --locations --defines -b ./ -r none -S -y -x  @@ -o /tmp/foo
+bison --color=always -u -M OLD -D NAME=1234 --print-datadir --defines -b ./ -d -r all -S  @@ -o /tmp/foo
+bison --style -v -F NAME=1234 -u -M OLD --print-datadir -f none -b ./ -y  @@ -o /tmp/foo
+bison --style -v -F NAME=1234 -M OLD --print-datadir --locations -p ./ -y -x --report-file  @@ -o /tmp/foo
+bison -F NAME=1234 -u -M NEW --print-datadir -f fixit --locations -t --defines -p ./ -b ./ -x  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=never -v -F NAME=1234 -u --locations -p ./ -b ./ -y  @@ -o /tmp/foo
+bison --color=auto -v -F NAME=1234 -f none -b ./ -d -y --report-file  @@ -o /tmp/foo
+bison --style -W dangling-alias -k -l -F NAME=1234 -u -L Java -f all --locations -S -y --report-file  @@ -o /tmp/foo
+bison --style -k -L Java -D NAME=1234 -t --defines -p ./ -b ./ -r all -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -g -l -v -u -D NAME=1234 -f none --locations -t -b ./ -S --report-file  @@ -o /tmp/foo
+bison --style -v -F NAME=1234 -D NAME=1234 -f none -t -p ./ -b ./ -d -S -y  @@ -o /tmp/foo
+bison -k --color=never -g -l -F NAME=1234 -L C++ --locations -t -p ./ -b ./ -d -r none --report-file  @@ -o /tmp/foo
+bison -W empty-rule --color=never -g -v -F NAME=1234 -u -p ./ -b ./ -d -y -x  @@ -o /tmp/foo
+bison -W error -k -F NAME=1234 -f all --locations -t --defines -b ./ -d -r none -S  @@ -o /tmp/foo
+bison --style -W dangling-alias -k --color=always -v -D NAME=1234 --locations --defines -p ./ -d -x  @@ -o /tmp/foo
+bison -W all -k --color=auto -g -v -F NAME=1234 -u -D NAME=1234 -f none -t --defines -d -S -y  @@ -o /tmp/foo
+bison -W empty-rule -k -g -l -L C++ -D NAME=1234 -f caret -t -b ./ -d  @@ -o /tmp/foo
+bison --style -W dangling-alias -k --color=never -l -D NAME=1234 -f all -b ./ -d -r none -y --report-file  @@ -o /tmp/foo
+bison -W all -k -g -l -F NAME=1234 -u -L Java -D NAME=1234 --print-datadir -f all -t -b ./ -d -r solved -x --report-file  @@ -o /tmp/foo
+bison -W precedence -k -g -l -u -t -p ./ -b ./ -d -r states -S -y -x  @@ -o /tmp/foo
+bison --style -W other --color=always -F NAME=1234 -L Java -D NAME=1234 --print-datadir -t --defines -d -r cex -S -x --report-file  @@ -o /tmp/foo
+bison -k -l -v -u -D NAME=1234 -f fixit --defines -b ./ -y  @@ -o /tmp/foo
+bison --style -W dangling-alias -g -v -F NAME=1234 -u -f all --locations --defines -p ./ -d -x --report-file  @@ -o /tmp/foo
+bison --style -W error -k --color=auto -v -L C -D NAME=1234 -f caret -b ./ -d -S -x  @@ -o /tmp/foo
+bison -k -g -v -L C++ -D NAME=1234 --locations --defines -p ./ -b ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -u -D NAME=1234 --locations -t -r states -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W deprecated -k --color=auto -g -l -f none -t -p ./ -r states -x --report-file  @@ -o /tmp/foo
+bison -W deprecated --color=auto -v -F NAME=1234 -u -L C -D NAME=1234 --print-datadir --locations -t -S -y -x  @@ -o /tmp/foo
+bison -W midrule-values -k --color=never -F NAME=1234 -u -L Java --print-datadir --locations -t -b ./ -r states -S -x --report-file  @@ -o /tmp/foo
+bison -W other --color=auto -F NAME=1234 -f syntax-only --defines -x  @@ -o /tmp/foo
+bison --style -k -l -F NAME=1234 -L C++ -D NAME=1234 --print-datadir -f none --defines -p ./ -b ./ -r states -S -y -x  @@ -o /tmp/foo
+bison -g -l -F NAME=1234 -L C++ -D NAME=1234 --print-datadir --locations -t --defines -p ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison --style -W none -k --color=never -g -l -F NAME=1234 -D NAME=1234 --print-datadir --locations -t -p ./ -d -r itemsets -S  @@ -o /tmp/foo
+bison --style -g -D NAME=1234 --locations --defines -b ./ -r states -x --report-file  @@ -o /tmp/foo
+bison --style -W no-CATEGORY --color=always -g -F NAME=1234 -u -D NAME=1234 --print-datadir -f fixit --locations -b ./ -d -r lookaheads -y -x  @@ -o /tmp/foo
+bison -W deprecated -k --color=never -u -L C++ -D NAME=1234 --print-datadir --defines -b ./  @@ -o /tmp/foo
+bison -k -v -F NAME=1234 -D NAME=1234 -t -d --report-file  @@ -o /tmp/foo
+bison -W conflict-rr -k -g -v -D NAME=1234 -f none -b ./ -S -x  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -k -F NAME=1234 -u -D NAME=1234 --print-datadir -f none --defines -p ./ -d -r all -S -y --report-file  @@ -o /tmp/foo
+bison -W conflict-rr -g -l -v -F NAME=1234 -D NAME=1234 --print-datadir --locations -S -y --report-file  @@ -o /tmp/foo
+bison --style -W other -l -F NAME=1234 -u -D NAME=1234 --print-datadir -f fixit --locations -t -p ./ -b ./ -d -r lookaheads -S -x  @@ -o /tmp/foo
+bison --style -W yacc -k --color=always -l -u -L C -D NAME=1234 --print-datadir -f none --locations -t --defines -b ./ -r cex -y -x  @@ -o /tmp/foo
+bison --style -W other --color=auto -g -l -F NAME=1234 -u -L C --print-datadir -t -p ./ -d -y  @@ -o /tmp/foo
+bison --style -W all -g -v -u -f none -t --defines -p ./ -S  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=never -g -u -L C -D NAME=1234 --print-datadir -t --defines -p ./ -d -r solved -y -x  @@ -o /tmp/foo
+bison --style -W conflict-sr -k -g -l -u -L C -D NAME=1234 --print-datadir -f caret --locations -t --defines -p ./ -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison -k --color=always -g -l -F NAME=1234 -u -D NAME=1234 --print-datadir -b ./ -y  @@ -o /tmp/foo
+bison --style -k --color=never -F NAME=1234 -u -L C++ --print-datadir -d -r itemsets -x --report-file  @@ -o /tmp/foo
+bison --style --color=never -l -v -F NAME=1234 -D NAME=1234 --print-datadir -f fixit -t --defines -p ./ -x  @@ -o /tmp/foo
+bison --style --color=auto -l -F NAME=1234 -u -D NAME=1234 --print-datadir --locations -t -d -S -x  @@ -o /tmp/foo
+bison -k --color=always -v -F NAME=1234 -D NAME=1234 --print-datadir -f caret --locations --defines -p ./ -b ./ -d -S -y -x  @@ -o /tmp/foo
+bison --style -W cex -k -u -M NEW --defines -p ./ -b ./ -d -r all -y  @@ -o /tmp/foo
+bison -W no-CATEGORY -k --color=auto -g -l -v -F NAME=1234 -u --print-datadir --locations --defines -p ./ -b ./ -x --report-file  @@ -o /tmp/foo
+bison -l -F NAME=1234 -D NAME=1234 --print-datadir --locations -p ./ -b ./ -r lookaheads -S --report-file  @@ -o /tmp/foo
+bison --style -W dangling-alias -k --color=always -l -v -F NAME=1234 --print-localedir -M OLD -L Java -t -p ./ -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison --style -W other -k --color=always -g -l -F NAME=1234 --print-localedir -L Java -D NAME=1234 --print-datadir -f all --defines -d -r lookaheads -S -y  @@ -o /tmp/foo
+bison --style -k -g -v -L C -D NAME=1234 --print-datadir -t --defines -p ./ -b ./ -d -y  @@ -o /tmp/foo
+bison --style -W all --color=always -g -l -v -F NAME=1234 --print-localedir -u --locations -x --report-file  @@ -o /tmp/foo
+bison -W conflict-sr -k --color=never -g -v -F NAME=1234 --print-localedir --print-datadir --locations -d -y --report-file  @@ -o /tmp/foo
+bison --style -W none -k -g -l -v -F NAME=1234 --print-localedir -M NEW -f all --locations -t -p ./ -S --report-file  @@ -o /tmp/foo
+bison --style -W cex --color=always -l -v -F NAME=1234 --print-localedir -D NAME=1234 -f syntax-only --locations --defines -p ./ -S  @@ -o /tmp/foo
+bison --style -W other --color=always -g -v -F NAME=1234 --print-localedir -u -L Java -D NAME=1234 -f all -t -p ./ -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -W precedence --color=never -g -v -F NAME=1234 --print-localedir -M NEW -L C --print-datadir --defines -p ./ -b ./ -d -S -y -x  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=auto -g -l -F NAME=1234 --print-localedir -M OLD -L Rust -D NAME=1234 --print-datadir --locations -t --defines -r solved -S -x --report-file  @@ -o /tmp/foo
+bison -W yacc -k --color=auto -g -l -F NAME=1234 --print-localedir -u -M NEW -L Python -f all -b ./ -S  @@ -o /tmp/foo
+bison -W conflict-sr --color=never -g -l -v -F NAME=1234 --print-localedir -L Python -D NAME=1234 --print-datadir -f none -t --defines -b ./ -y --report-file  @@ -o /tmp/foo
+bison --style -W none -k --color=always -g -F NAME=1234 --print-localedir -u -M NEW -L C --print-datadir -f caret -t --defines -p ./ -b ./ -r cex -y  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -k --color=auto -g -F NAME=1234 --print-localedir -u -D NAME=1234 -f all --locations -t --defines -r none -y -x --report-file  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=always -g -l -F NAME=1234 --print-localedir -u -M OLD -L C -f none --locations -t --defines -b ./ -d -r states -S  @@ -o /tmp/foo
+bison --style -W empty-rule --color=auto -l -v -F NAME=1234 --print-localedir -M OLD -L C++ -D NAME=1234 -f fixit -t --defines -b ./ -y -x  @@ -o /tmp/foo
+bison --style -W none -k -g -l -v -F NAME=1234 --print-localedir -u -f fixit --defines -p ./ -b ./ -S -x --report-file  @@ -o /tmp/foo
+bison --style -W other -k --color=always -F NAME=1234 --print-localedir -M OLD -D NAME=1234 --print-datadir -f fixit -b ./ -r none -S -x --report-file  @@ -o /tmp/foo
+bison --style -W deprecated --color=always -g -F NAME=1234 --print-localedir -u -M NEW -L C++ -D NAME=1234 --print-datadir --report-file  @@ -o /tmp/foo
+bison --style -k -F NAME=1234 -L C --print-datadir -f all --locations -t --defines -p ./ -y --report-file  @@ -o /tmp/foo
+bison -W conflict-sr --color=auto -g -l -F NAME=1234 --print-localedir -u -M NEW -t --defines -p ./ -r itemsets  @@ -o /tmp/foo
+bison -W cex -k --color=never -g -F NAME=1234 --print-localedir -L Rust -D NAME=1234 -f caret --locations -t -p ./ -b ./ -r itemsets -x  @@ -o /tmp/foo
+bison -W other -k -g -l -v -F NAME=1234 --print-localedir -u -L Python --print-datadir -f all --locations --defines -p ./ -b ./ -d -S -y  @@ -o /tmp/foo
+bison --style -W empty-rule --color=auto -l -F NAME=1234 --print-localedir -u --print-datadir -f fixit -t --defines -b ./ -r itemsets -S -x  @@ -o /tmp/foo
+bison -W empty-rule -k --color=always -v -F NAME=1234 --print-localedir -M OLD --print-datadir -f syntax-only -t  @@ -o /tmp/foo
+bison --style -W none -k -g -l -F NAME=1234 --print-localedir -u -M OLD --print-datadir --locations -t --defines -d -x  @@ -o /tmp/foo
+bison -W conflict-sr --color=never -g -v -F NAME=1234 --print-localedir -u -M NEW -L Java --print-datadir -f all --locations -d -S -x  @@ -o /tmp/foo
+bison --style -W none --color=always -g -F NAME=1234 --print-localedir -M NEW -f all -t --defines -p ./ -d -r states -S -y --report-file  @@ -o /tmp/foo
+bison -W no-CATEGORY -k --color=always -g -F NAME=1234 --print-localedir -M OLD -D NAME=1234 --print-datadir -t -p ./ -b ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W all -k -l -v -F NAME=1234 --print-localedir --defines -b ./ -d -S -y -x  @@ -o /tmp/foo
+bison -W dangling-alias -k -g -l -v -F NAME=1234 --print-localedir -u -t -p ./ -b ./ -S -x --report-file  @@ -o /tmp/foo
+bison -W none --color=never -l -v -F NAME=1234 --print-localedir --print-datadir -f syntax-only --locations -t -b ./ -d -S -y --report-file  @@ -o /tmp/foo
+bison -W yacc -k --color=never -g -F NAME=1234 --print-localedir -u -L Rust -f none -r lookaheads --report-file  @@ -o /tmp/foo
+bison -W conflict-sr --color=never -l -v -F NAME=1234 --print-localedir -u -M NEW -D NAME=1234 --print-datadir --defines -d -S -x --report-file  @@ -o /tmp/foo
+bison --style -W other -k -l -v -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -f syntax-only -t -p ./ -y --report-file  @@ -o /tmp/foo
+bison -W dangling-alias -k --color=always -g -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -f none --locations -p ./ -b ./ -d -r cex  @@ -o /tmp/foo
+bison -W error --color=always -g -l -F NAME=1234 --print-localedir -u -M NEW -f all --locations --defines -b ./ -S --report-file  @@ -o /tmp/foo
+bison -W none --color=auto -l -F NAME=1234 --print-localedir -u -M NEW -L Rust --print-datadir -f caret --locations --defines -p ./ -b ./ -d -r cex -y -x --report-file  @@ -o /tmp/foo
+bison --style -W midrule-values -l -v -F NAME=1234 --print-localedir -u -M OLD -L Java --print-datadir -f none -d -y  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -k -g -F NAME=1234 --print-localedir -L Python -D NAME=1234 --locations --defines -b ./ -d -r none --report-file  @@ -o /tmp/foo
+bison -W empty-rule -g -l -v -F NAME=1234 --print-localedir -u -M OLD -L C -f none -t -b ./ -d --report-file  @@ -o /tmp/foo
+bison -W conflict-rr -k --color=auto -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -f syntax-only --locations -t --defines -p ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison --style -W other --color=never -F NAME=1234 --print-localedir -u -L Rust --print-datadir -p ./ -b ./ -r cex -S -y --report-file  @@ -o /tmp/foo
+bison --style -W empty-rule -l -v -F NAME=1234 --print-localedir -L C -D NAME=1234 -f caret --locations -p ./ -d -y -x  @@ -o /tmp/foo
+bison --style -W midrule-values -k -l -F NAME=1234 --print-localedir -u -L Python -D NAME=1234 -f all -b ./ -d -r lookaheads -y  @@ -o /tmp/foo
+bison --style -W dangling-alias -g -v -F NAME=1234 --print-localedir -M NEW -L Java -D NAME=1234 -f none -S -y -x  @@ -o /tmp/foo
+bison -W other -k -g -l -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir --locations -t --defines -p ./ -d -S -y --report-file  @@ -o /tmp/foo
+bison -W deprecated -k -v -F NAME=1234 --print-localedir -u -D NAME=1234 --locations -t --defines -p ./ -b ./ --report-file  @@ -o /tmp/foo
+bison -W error -k -v -F NAME=1234 --print-localedir -L Java -D NAME=1234 -d -S -x --report-file  @@ -o /tmp/foo
+bison -W none -g -v -F NAME=1234 --print-localedir --locations -t --defines -p ./ -d -S -y -x  @@ -o /tmp/foo
+bison --style -W yacc -g -F NAME=1234 --print-localedir -M OLD -D NAME=1234 --print-datadir --locations -p ./ -r all -y  @@ -o /tmp/foo
+bison -W no-CATEGORY -g -l -F NAME=1234 --print-localedir -u --print-datadir -f caret -t -p ./ -r none -S -y --report-file  @@ -o /tmp/foo
+bison -W precedence -k -g -F NAME=1234 --print-localedir --print-datadir -t --defines -b ./ -y -x  @@ -o /tmp/foo
+bison --style -W cex -k -F NAME=1234 --print-localedir -D NAME=1234 --print-datadir -f syntax-only --locations -t --defines -b ./ -d -r cex -x --report-file  @@ -o /tmp/foo
+bison --style -W all -k -F NAME=1234 --print-localedir -u -M NEW -L C -D NAME=1234 --print-datadir --locations --defines -r none -y -x --report-file  @@ -o /tmp/foo
+bison -W empty-rule -g -v -F NAME=1234 --print-localedir --print-datadir -f caret -t --defines -p ./ -b ./ -S -x --report-file  @@ -o /tmp/foo
+bison -W all -l -F NAME=1234 --print-localedir -u -M OLD -D NAME=1234 --locations -t -b ./ -r all -S -y  @@ -o /tmp/foo
+bison --style -W all -F NAME=1234 --print-localedir -u -M OLD -D NAME=1234 -t --defines -d -S -y -x  @@ -o /tmp/foo
+bison --style -W precedence --color=always -M NEW -L C -f caret -r all -S -y -x  @@ -o /tmp/foo
+bison --style --color=auto -g -v -F NAME=1234 -u --print-datadir -f all -t --defines -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison -W none -l -F NAME=1234 --print-localedir -D NAME=1234 -t --defines -p ./ -d -r itemsets  @@ -o /tmp/foo
+bison --style -W precedence -F NAME=1234 --print-localedir -M OLD -L Java -p ./ -b ./ -d -r cex -x  @@ -o /tmp/foo
+bison --style --color=never -g -l -F NAME=1234 -u --print-datadir -f none --defines -d -r all -S -x  @@ -o /tmp/foo
+bison -W other -F NAME=1234 --print-localedir -M NEW -D NAME=1234 --print-datadir -f none --defines -p ./ -d -r itemsets -y -x --report-file  @@ -o /tmp/foo
+bison -W all -F NAME=1234 --print-localedir -u -M OLD --print-datadir --defines -d -r itemsets -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -F NAME=1234 -u --print-datadir --locations --defines -p ./ -r cex  @@ -o /tmp/foo
+bison --style -k --color=never -g -l -v -F NAME=1234 --print-localedir -M NEW -D NAME=1234 --locations --defines -p ./ -d -y -x  @@ -o /tmp/foo
+bison -W midrule-values -F NAME=1234 --print-localedir -u --print-datadir --locations -t --defines -p ./ -r all --report-file  @@ -o /tmp/foo
+bison -k --color=always -g -l -v -F NAME=1234 --print-localedir -L C --print-datadir -t --defines -b ./ -S  @@ -o /tmp/foo
+bison --style -k --color=auto -l -v -F NAME=1234 --print-localedir -u -M NEW -L Rust -D NAME=1234 --print-datadir -f fixit --locations -t --defines -d --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -g -v -F NAME=1234 --print-localedir --defines -S -x --report-file  @@ -o /tmp/foo
+bison --style -l -v -F NAME=1234 -u --print-datadir -f all --locations --defines -d  @@ -o /tmp/foo
+bison --color=auto -g -l -D NAME=1234 --print-datadir -f syntax-only --defines -p ./ -b ./ -r cex -S --report-file  @@ -o /tmp/foo
+bison --style -k -g -u -D NAME=1234 --print-datadir --locations -t -p ./ -d -S  @@ -o /tmp/foo
+bison --style -k -l -v -F NAME=1234 --print-datadir -f none --locations -p ./ -b ./ -d -x --report-file  @@ -o /tmp/foo
+bison --style --color=always -l -v -F NAME=1234 --print-localedir -D NAME=1234 --print-datadir --locations -t -p ./ -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison -g -v -u -D NAME=1234 --print-datadir --locations -t --defines -d -y  @@ -o /tmp/foo
+bison -k --color=always -g -l -F NAME=1234 --print-localedir -M NEW -D NAME=1234 -f syntax-only --locations --defines -b ./ -r none -y --report-file  @@ -o /tmp/foo
+bison --style -k --color=never -v -F NAME=1234 --print-localedir -u -M NEW --print-datadir -p ./ -b ./ -d -S  @@ -o /tmp/foo
+bison --style --color=never -g -l -F NAME=1234 --print-localedir -u -D NAME=1234 -t -p ./ -b ./ -d -r cex -y  @@ -o /tmp/foo
+bison --style -k -g -l -v -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -f none --defines -p ./ -x  @@ -o /tmp/foo
+bison --color=always -g -l -v -F NAME=1234 --print-localedir -M OLD --print-datadir --locations -t -b ./ -S -y -x  @@ -o /tmp/foo
+bison -k --color=auto -g -v -F NAME=1234 --print-localedir -L Java -D NAME=1234 --print-datadir -f caret --locations -p ./ --report-file  @@ -o /tmp/foo
+bison --style --color=never -g -v -F NAME=1234 --print-localedir -M NEW -L Java -D NAME=1234 --locations -b ./ -d  @@ -o /tmp/foo
+bison -k --color=always -g -l -F NAME=1234 --print-localedir -u -L Rust -D NAME=1234 --defines -p ./ -b ./ -d -r none -S -y -x  @@ -o /tmp/foo
+bison --style --color=auto -g -v -F NAME=1234 --print-localedir -M NEW -b ./ -S --report-file  @@ -o /tmp/foo
+bison --style --color=always -g -l -F NAME=1234 --print-localedir --print-datadir -f none -p ./  @@ -o /tmp/foo
+bison --style -k --color=always -F NAME=1234 --print-localedir -u -L C++ -f all --locations -t -p ./ -b ./ -d -S -y -x  @@ -o /tmp/foo
+bison -k --color=never -l -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -r solved -S -y -x  @@ -o /tmp/foo
+bison -k --color=always -g -F NAME=1234 --print-localedir -u -M OLD -L Java -D NAME=1234 --print-datadir --locations -t --defines -p ./ -b ./ -d -r cex -S -y --report-file  @@ -o /tmp/foo
+bison --style -k -l -v -F NAME=1234 --print-localedir -u -L Rust -t -b ./  @@ -o /tmp/foo
+bison --style --color=auto -l -F NAME=1234 --print-localedir -L C --locations --defines -p ./ -r cex -x --report-file  @@ -o /tmp/foo
+bison -k -u -D NAME=1234 --print-datadir --locations -t -p ./ -b ./ -d -r lookaheads -y  @@ -o /tmp/foo
+bison --color=auto -g -l -F NAME=1234 --print-localedir -M NEW --print-datadir --defines -b ./ -d -r all -x --report-file  @@ -o /tmp/foo
+bison --color=auto -g -v -F NAME=1234 --print-localedir -D NAME=1234 -f caret -t --defines -p ./ -b ./ -d -x  @@ -o /tmp/foo
+bison -k --color=auto -g -F NAME=1234 --print-localedir -u -M OLD -L C -D NAME=1234 --locations -t -r none -S  @@ -o /tmp/foo
+bison --style -k -g -v -F NAME=1234 --print-localedir --print-datadir -t -p ./ -d -S -y -x --report-file  @@ -o /tmp/foo
+bison -k --color=always -v -F NAME=1234 --print-localedir -u -D NAME=1234 --print-datadir -f none --locations -t -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison -k -l -v -F NAME=1234 --print-localedir -M OLD -D NAME=1234 -f none --defines -b ./ -d -y -x  @@ -o /tmp/foo
+bison --style -g -v -F NAME=1234 --print-localedir -M NEW -L C++ -D NAME=1234 --print-datadir -f none --locations -t --defines -d -S -x  @@ -o /tmp/foo
+bison --style -g -l -F NAME=1234 --print-localedir -D NAME=1234 -f caret --defines -y --report-file  @@ -o /tmp/foo
+bison -k -g -v -F NAME=1234 --print-localedir -u -M NEW -D NAME=1234 --print-datadir -t --defines -p ./ -y  @@ -o /tmp/foo
+bison -k -g -l -F NAME=1234 --print-localedir -M OLD -L C --print-datadir -f all -p ./ -r lookaheads -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k -l -F NAME=1234 --print-localedir -D NAME=1234 --locations -t --defines -p ./ -d -r none -S -y --report-file  @@ -o /tmp/foo
+bison --color=never -v -F NAME=1234 --print-localedir -M NEW -L C++ -D NAME=1234 --locations --defines -b ./ -d -S -y  @@ -o /tmp/foo
+bison --style -g -l -F NAME=1234 --print-localedir -M NEW -L Java --print-datadir --locations -p ./ -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -k -g -F NAME=1234 --print-localedir -M NEW -L C++ -D NAME=1234 --print-datadir -f all -t --defines -b ./ -d --report-file  @@ -o /tmp/foo
+bison --style -k -v -F NAME=1234 --print-localedir -u -M OLD -L Java --print-datadir --locations -t --defines -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison -k -l -v -F NAME=1234 --print-localedir -L C++ --print-datadir --locations -t -p ./ -d -S -x  @@ -o /tmp/foo
+bison --color=always -v -F NAME=1234 --print-localedir -u -L Python -D NAME=1234 --print-datadir -f syntax-only -t --defines -p ./ -d --report-file  @@ -o /tmp/foo
+bison --style --color=always -F NAME=1234 --print-localedir -u -L Java --print-datadir -f all --locations -t -d -S --report-file  @@ -o /tmp/foo
+bison -k -g -l -F NAME=1234 --print-localedir -L Java -D NAME=1234 --locations -t --defines -b ./ -d -y  @@ -o /tmp/foo
+bison --style -k -g -F NAME=1234 --print-localedir -M NEW -f all --defines -b ./ -d -r all -S -y --report-file  @@ -o /tmp/foo
+bison -k --color=auto -F NAME=1234 --print-localedir -M NEW --print-datadir -f all --locations -y  @@ -o /tmp/foo
+bison --style -g -F NAME=1234 --print-localedir --print-datadir -f syntax-only --locations -t -b ./ -d -r itemsets -S  @@ -o /tmp/foo
+bison -k -l -F NAME=1234 --print-localedir -M NEW --locations -p ./ -d -x  @@ -o /tmp/foo
+bison --color=always -F NAME=1234 --print-localedir -M OLD -L Rust --print-datadir -t --defines -d -x --report-file  @@ -o /tmp/foo
+bison -l -v -F NAME=1234 --print-localedir -u -L C -D NAME=1234 -f all -t -p ./ -b ./ -y -x  @@ -o /tmp/foo
+bison --style -k -F NAME=1234 --print-localedir -u -L Python -f none --defines -p ./ -d -r states -x  @@ -o /tmp/foo
+bison -k -v -F NAME=1234 --print-localedir -M OLD -L Java -f syntax-only --locations -t -p ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison -g -v -F NAME=1234 --print-localedir -u -L Java --print-datadir -p ./ -b ./ -d -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k -F NAME=1234 --print-localedir -u -M OLD -L Rust -D NAME=1234 -f syntax-only --locations -b ./ -y -x --report-file  @@ -o /tmp/foo
+bison --style -l -F NAME=1234 --print-localedir -u -L Java -D NAME=1234 --print-datadir -t --defines -r lookaheads -S -y -x --report-file  @@ -o /tmp/foo
+bison -g -l -F NAME=1234 --print-localedir -M OLD -L Java -D NAME=1234 --print-datadir -f fixit -t -d -r all -x  @@ -o /tmp/foo
+bison -k -l -F NAME=1234 --print-localedir -u -f all --locations --defines -d -r states -S --report-file  @@ -o /tmp/foo
+bison --style -v -F NAME=1234 --print-localedir -M NEW -f all -t --defines -p ./ -b ./ -x  @@ -o /tmp/foo
+bison -k -l -F NAME=1234 --print-localedir -u -M NEW -D NAME=1234 -f none --locations -t -p ./ -b ./ --report-file  @@ -o /tmp/foo
+bison --style -k -F NAME=1234 --print-localedir -M OLD --print-datadir --locations -p ./ -b ./ -d -r itemsets -y --report-file  @@ -o /tmp/foo
+bison -g -l -F NAME=1234 --print-localedir -u -L C -b ./ -r itemsets -y  @@ -o /tmp/foo
+bison -k -g -F NAME=1234 --print-localedir -u -M OLD -L C -D NAME=1234 --print-datadir -f all -t -d -y --report-file  @@ -o /tmp/foo
+bison -g -F NAME=1234 --print-localedir -u -D NAME=1234 -f none --locations -b ./ -S -x  @@ -o /tmp/foo
+bison --style -F NAME=1234 --print-localedir -u -M OLD -L Python -D NAME=1234 --locations -t --defines -p ./ -b ./ -r solved -S  @@ -o /tmp/foo
+bison -g -F NAME=1234 --print-localedir -u -M NEW -L Rust -D NAME=1234 -f none --locations --defines -p ./ -b ./ -d -r itemsets -y --report-file  @@ -o /tmp/foo
+bison -g -F NAME=1234 --print-localedir -u -D NAME=1234 --locations --defines -p ./ -b ./ -r cex -y  @@ -o /tmp/foo
+bison -F NAME=1234 --print-localedir -u -M OLD -D NAME=1234 --print-datadir -f fixit -t -d -r all -y  @@ -o /tmp/foo
+bison -k --color=always -g -v -M OLD -L Rust --print-datadir --locations -t -p ./ -d -S -y  @@ -o /tmp/foo
+bison --style -W all -k --color=never -g -l -v -M NEW -L C --print-datadir -x --report-file  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=auto -g -v -u -M NEW -L C --print-datadir -f all --locations -t -p ./ -b ./ -y  @@ -o /tmp/foo
+bison --style --color=always -g -M NEW -L Java --print-datadir --locations --defines -p ./ -r cex --report-file  @@ -o /tmp/foo
+bison --style -k -l -v -M OLD -L Java --print-datadir -f caret --defines -b ./ -d -S -y --report-file  @@ -o /tmp/foo
+bison -W empty-rule -u -M OLD -L C++ --print-datadir --locations -b ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison --color=always -g -l -u -M OLD -L C++ --print-datadir -f caret --defines -r cex -y --report-file  @@ -o /tmp/foo
+bison --style -W other --color=always -l -u -M OLD --print-datadir -f all --locations -t --defines -r cex -y  @@ -o /tmp/foo
+bison -W empty-rule -k --color=never -g -M NEW --print-datadir -f fixit --defines -p ./ -b ./ -d -r all -y -x --report-file  @@ -o /tmp/foo
+bison --style -W deprecated -g -M OLD --print-datadir -f caret -p ./ -d  @@ -o /tmp/foo
+bison --style -W all -k -M OLD --print-datadir --locations -t --defines -p ./ -d -S -x  @@ -o /tmp/foo
+bison -k -l -M OLD --defines -p ./ -b ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison -k --color=always -g -l -v -M NEW --print-datadir --locations -t --defines -p ./ -b ./ -d -x  @@ -o /tmp/foo
+bison --style -k -M NEW --print-datadir --locations -t --defines -b ./ -r states -S --report-file  @@ -o /tmp/foo
+bison -v -u -M OLD --print-datadir -f fixit --locations --defines -p ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison -W cex -k --color=always -l -v -p ./ -d -S --report-file  @@ -o /tmp/foo
+bison -W dangling-alias -k --color=always -g -v -L Java --print-datadir -f none -t --defines -p ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison -W other --color=never -l -v -L Java --print-datadir -d -S -y  @@ -o /tmp/foo
+bison -W conflict-rr -g -L Java --print-datadir -t -d -r lookaheads --report-file  @@ -o /tmp/foo
+bison -g -l -v -L Java --print-datadir -f all --locations -b ./ -x --report-file  @@ -o /tmp/foo
+bison --style -g -L Java --print-datadir --locations -p ./ -d -r all -S -y -x --report-file  @@ -o /tmp/foo
+bison -k -L Java --print-datadir --defines -p ./ -b ./ -d -r none -S -x  @@ -o /tmp/foo
+bison --style -W empty-rule -k --color=always -g -v -u --print-datadir -f none -p ./ -S -x  @@ -o /tmp/foo
+bison --style -k --color=auto -g -l -u -L C --print-datadir -f caret --locations -t --defines -p ./ -b ./ -r solved -S -x --report-file  @@ -o /tmp/foo
+bison --style -W error -k --color=always -g -v -u --print-datadir --locations -t -p ./ -b ./ -y -x  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -k --color=always -g -l --print-datadir -b ./ -r lookaheads -S -y --report-file  @@ -o /tmp/foo
+bison --style -W conflict-sr --color=never -l -u --print-datadir -t --defines -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison --style -W other -k --color=never -g -l -v --print-localedir -u -M OLD -D NAME=1234 -t --defines -p ./ -S -y --report-file  @@ -o /tmp/foo
+bison --style -W deprecated -k --color=never -v --print-datadir -f syntax-only --locations -t -p ./ -b ./ -S -y  @@ -o /tmp/foo
+bison --style -W dangling-alias -k --color=never -g -l -v --print-localedir -M OLD -D NAME=1234 -t -b ./ -d -S -x  @@ -o /tmp/foo
+bison --style -W none -k --color=always -l -v --print-localedir -u -M NEW -L Java -D NAME=1234 --print-datadir --locations -p ./ -x  @@ -o /tmp/foo
+bison -W none -k --color=never -g -l -v --print-localedir -L Java -f none --defines -p ./ -y  @@ -o /tmp/foo
+bison --style -W error -k --color=auto -g -l --print-localedir -L C -D NAME=1234 --print-datadir --defines -p ./ -b ./ -d -S -x  @@ -o /tmp/foo
+bison --style -W none -k -g -u --print-datadir -t --defines -d -S --report-file  @@ -o /tmp/foo
+bison --style --color=auto -v -L C --print-datadir --defines -p ./ -S -y -x  @@ -o /tmp/foo
+bison --style -W cex --color=never -g -l --print-localedir -L C++ -f all -p ./ -b ./ -d -r none  @@ -o /tmp/foo
+bison -W midrule-values --color=never -g -l -v --print-localedir -u -D NAME=1234 -f all -t -d -S -x  @@ -o /tmp/foo
+bison --style -W dangling-alias -k --color=always -g --print-localedir -M NEW -L Python --locations --defines -b ./ -d -r itemsets -y  @@ -o /tmp/foo
+bison --style -W other -k --color=never -l --print-localedir -D NAME=1234 -f none --locations --defines -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -k --color=auto -l --print-localedir -u --print-datadir --defines -r all --report-file  @@ -o /tmp/foo
+bison --style -W yacc -k --color=always -v --print-localedir -M OLD --print-datadir --locations --defines -d -S  @@ -o /tmp/foo
+bison --style -W yacc --color=auto --print-datadir --defines -p ./ -b ./ -d -r solved -S  @@ -o /tmp/foo
+bison -W cex -k -l --print-datadir -f fixit --locations --defines -r solved -x  @@ -o /tmp/foo
+bison -W other -k --color=always -l --print-localedir -L Python --locations -t --defines -d -r itemsets -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W none -k -g -l --print-localedir -u -M NEW -L Java -D NAME=1234 -f caret -t --defines -p ./ -b ./ -S -y -x  @@ -o /tmp/foo
+bison -W yacc -k -g -l -v --print-localedir -M NEW -L Python -D NAME=1234 --print-datadir --locations -t -b ./ -d -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W other --color=never -g --print-localedir --print-datadir -f fixit --locations -t --defines -p ./ -b ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -W yacc -g -l -v --print-localedir -u -D NAME=1234 --print-datadir --defines -p ./ -b ./ -d --report-file  @@ -o /tmp/foo
+bison -W other -k --color=always -l --print-localedir --print-datadir -f all -t --defines -p ./ -x --report-file  @@ -o /tmp/foo
+bison --style -W none --color=auto -v --print-localedir -M OLD -D NAME=1234 -f syntax-only --locations -t --defines -b ./ -d --report-file  @@ -o /tmp/foo
+bison --style -W conflict-rr --color=never -l --print-localedir -u -M NEW -D NAME=1234 --print-datadir -f fixit -p ./ -b ./ -S -y --report-file  @@ -o /tmp/foo
+bison -W yacc --color=auto -g -v --print-localedir -u -f caret --locations -t --defines -b ./ -y -x  @@ -o /tmp/foo
+bison --style -W error -k -g -v --print-localedir -L C -D NAME=1234 --print-datadir -f all --locations -d -S -y -x --report-file  @@ -o /tmp/foo
+bison -W midrule-values -k --color=always -v --print-localedir -M OLD --print-datadir --locations --defines -p ./ -b ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison --style -W dangling-alias -k -g -v --print-localedir -u -D NAME=1234 --print-datadir --defines -b ./ -S -y  @@ -o /tmp/foo
+bison -W empty-rule -k -g -v --print-localedir -u -M NEW -b ./ -y  @@ -o /tmp/foo
+bison --style -W no-CATEGORY --color=auto --print-localedir -u -M OLD --locations -t -p ./ -d -r lookaheads -S -x --report-file  @@ -o /tmp/foo
+bison -W cex --color=always -v --print-localedir -M NEW -L C --locations -p ./ -b ./ -S --report-file  @@ -o /tmp/foo
+bison --style -W yacc -k -v --print-localedir -u --print-datadir -f caret --locations -t -b ./ -d -x  @@ -o /tmp/foo
+bison --style -W deprecated -k -g --print-localedir -D NAME=1234 -t -r itemsets -S -y  @@ -o /tmp/foo
+bison -W conflict-rr -k -g -l --print-localedir -u -M NEW -L C++ -D NAME=1234 --print-datadir --defines -b ./ -r solved -x --report-file  @@ -o /tmp/foo
+bison --style -W none -k -g --print-localedir -u -M NEW --print-datadir -f all --locations -t --defines -r cex -S -y --report-file  @@ -o /tmp/foo
+bison -W precedence -k --color=never --print-localedir -M NEW --print-datadir -t -b ./ -d -r itemsets  @@ -o /tmp/foo
+bison --style -W deprecated -l -v --print-localedir -u -L C --print-datadir -f all -t --defines -S -x --report-file  @@ -o /tmp/foo
+bison --style -W deprecated -k -l --print-localedir -u -L C++ -f all --locations -t -p ./ -b ./ -d -r cex --report-file  @@ -o /tmp/foo
+bison -W error --color=auto -l --print-localedir -u -M OLD -L Python -D NAME=1234 -f fixit --locations --defines -d -y  @@ -o /tmp/foo
+bison -W other -k --color=always --print-localedir -M OLD -D NAME=1234 --locations --defines -p ./ -b ./ -r all -S -x  @@ -o /tmp/foo
+bison --style -W none -g -l --print-localedir -u -M OLD -L Python -D NAME=1234 --locations -t -d -r none -y --report-file  @@ -o /tmp/foo
+bison -W cex --color=never -l --print-localedir -L Java -D NAME=1234 --print-datadir -f all --locations -t --defines -p ./ -b ./ -r cex -S -y  @@ -o /tmp/foo
+bison -W other -k -g -l --print-localedir -M OLD -L Java -D NAME=1234 --print-datadir --locations -t -p ./ -r cex -x  @@ -o /tmp/foo
+bison --style -W conflict-rr -k -v --print-localedir -u -M OLD -L Rust -D NAME=1234 -f caret -t --defines -p ./ -d -S -y -x  @@ -o /tmp/foo
+bison -W conflict-rr -g -l -v --print-localedir -u -M NEW -D NAME=1234 -f all --locations --defines -d -y -x --report-file  @@ -o /tmp/foo
+bison --style -W other -g -l --print-localedir --print-datadir --locations --defines -p ./ -b ./ -r states -S -y -x --report-file  @@ -o /tmp/foo
+bison -W deprecated --color=auto -g --print-localedir -u -M NEW -L Rust -D NAME=1234 --print-datadir -f syntax-only -t -b ./ -d -r all -S -y --report-file  @@ -o /tmp/foo
+bison -W empty-rule --color=auto -l --print-localedir -M NEW --print-datadir -f caret -r cex -S -x --report-file  @@ -o /tmp/foo
+bison --style -W all -l --print-localedir -M NEW -f none --defines -b ./ -r none -S --report-file  @@ -o /tmp/foo
+bison -W error --color=auto --print-localedir -D NAME=1234 -t --defines -b ./ -r none -y -x --report-file  @@ -o /tmp/foo
+bison -W cex -k -l --print-localedir -u -M NEW -D NAME=1234 -f all -t -d -r lookaheads -S -y -x --report-file  @@ -o /tmp/foo
+bison -W precedence -g -v --print-localedir -L C++ --locations -t --defines -b ./  @@ -o /tmp/foo
+bison -W other --color=never --print-localedir -f none --locations -p ./ -d -r cex -y -x  @@ -o /tmp/foo
+bison --style -W empty-rule -v --print-localedir -L C++ --locations -p ./ -d -y --report-file  @@ -o /tmp/foo
+bison -W error -g -l --print-localedir -M NEW --print-datadir -f syntax-only -t --defines -p ./ -b ./ -d -r itemsets -S -y -x  @@ -o /tmp/foo
+bison -W midrule-values -k -g --print-localedir -M NEW -f all --locations -t -d -S  @@ -o /tmp/foo
+bison --style -W no-CATEGORY -g --print-localedir -u -L Java --print-datadir --locations -t -b ./ --report-file  @@ -o /tmp/foo
+bison -W error -g -l --print-localedir -u -L C -f fixit -t -p ./ -y -x  @@ -o /tmp/foo
+bison -W midrule-values -k -l --print-localedir -u -M OLD -L Rust -D NAME=1234 --defines -p ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison -W deprecated -g --print-localedir -u -L C++ -D NAME=1234 --print-datadir --defines -p ./ -r lookaheads -S -x  @@ -o /tmp/foo
+bison -W no-CATEGORY -k --print-localedir -u -M NEW -L Java --print-datadir -f caret --locations -p ./ -r states -S --report-file  @@ -o /tmp/foo
+bison -W yacc -k --print-localedir -D NAME=1234 --print-datadir -f none -t -p ./ -b ./ -r itemsets -S  @@ -o /tmp/foo
+bison -W deprecated --print-localedir -L Java -D NAME=1234 --print-datadir -f fixit -t -d -S -y --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -g --print-datadir -f caret --locations -S -y -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -g -l -v --print-localedir -M OLD --print-datadir -f all --defines -p ./ -b ./  @@ -o /tmp/foo
+bison -k -l -v -u --print-datadir -f syntax-only -t -p ./ -S -y -x --report-file  @@ -o /tmp/foo
+bison --style --color=always -g -l -v --print-localedir -L Python --print-datadir -f syntax-only --locations -t --defines -p ./ -d -S  @@ -o /tmp/foo
+bison --style --color=never -l --print-datadir -f all -t -b ./ -d -r lookaheads -y -x  @@ -o /tmp/foo
+bison -k --color=always -g -l --print-localedir -u -M OLD --print-datadir -f none --locations -t -d -r all -y  @@ -o /tmp/foo
+bison -k --color=always -g -v --print-localedir -u -L Rust -f caret --locations --defines -x  @@ -o /tmp/foo
+bison --style --color=never -l -v --print-localedir -M NEW -f fixit --locations -y --report-file  @@ -o /tmp/foo
+bison -k --color=never -l -v --print-localedir -M OLD -D NAME=1234 --print-datadir -t --defines -p ./ -b ./ -S -y  @@ -o /tmp/foo
+bison --style --color=always -g -v --print-localedir -M OLD -L Java -D NAME=1234 --print-datadir -f none -t -p ./ -y -x --report-file  @@ -o /tmp/foo
+bison --style --color=always -g -l --print-localedir -M NEW -L C -D NAME=1234 -f fixit -t -b ./ -d -r solved -S -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=auto -l --print-localedir -M NEW -L C -D NAME=1234 --print-datadir -p ./ -d -r lookaheads -S  @@ -o /tmp/foo
+bison --style -k --color=never -g --print-localedir -L Python -f all -t -r lookaheads -S -x --report-file  @@ -o /tmp/foo
+bison --style -k --color=always -l --print-localedir -u -L Python --locations -b ./ -d -r solved -S -y -x  @@ -o /tmp/foo
+bison --style -k -g -l -v --print-localedir -u -M NEW -L Rust -f syntax-only --locations -p ./ -b ./ -S -y -x  @@ -o /tmp/foo
+bison --style -g -l --print-datadir -f all -t --defines -p ./ -d -r lookaheads -y --report-file  @@ -o /tmp/foo
+bison -k --color=auto -g -l --print-localedir -u -M NEW -D NAME=1234 -f caret -p ./ -d -r all -y -x --report-file  @@ -o /tmp/foo
+bison --style -g -l -v --print-localedir -u -M NEW -L Java -t --defines -p ./ -d -y -x --report-file  @@ -o /tmp/foo
+bison -k --color=auto -g --print-localedir -u -f fixit -t --defines -p ./ -b ./ -d -r states --report-file  @@ -o /tmp/foo
+bison --style --color=always -v --print-localedir -u -D NAME=1234 --print-datadir --defines -b ./ -d -y -x  @@ -o /tmp/foo
+bison --style -k -g -v --print-localedir -M NEW -D NAME=1234 -f caret -p ./ -b ./ -d -S --report-file  @@ -o /tmp/foo
+bison --style -k -g -l --print-localedir -u --print-datadir --locations -p ./ -b ./ -r lookaheads -y --report-file  @@ -o /tmp/foo
+bison -k --color=auto -l --print-localedir -L C -D NAME=1234 --print-datadir --locations -b ./ -d  @@ -o /tmp/foo
+bison --color=auto -l -v --print-localedir -u -M OLD -L C++ -D NAME=1234 -f all --locations --defines -p ./ -b ./ -d -S -x --report-file  @@ -o /tmp/foo
+bison --style --color=auto -l --print-localedir -u --locations --defines -p ./ -b ./ -y  @@ -o /tmp/foo
+bison --color=always -g -l --print-localedir -D NAME=1234 --print-datadir --locations -t -d -r itemsets -x --report-file  @@ -o /tmp/foo
+bison --style -k -g -l --print-localedir -u -D NAME=1234 --print-datadir -f syntax-only --locations -p ./ -b ./ -d -r all -S -x --report-file  @@ -o /tmp/foo
+bison -k --color=always -g --print-localedir -u -M NEW -L Python --locations --defines -p ./ -d -S -y -x --report-file  @@ -o /tmp/foo
+bison -k --color=never -v --print-localedir -u -L Java --print-datadir -f none -t --defines -b ./ -d -S -y  @@ -o /tmp/foo
+bison --style --color=never -g --print-localedir -u -M OLD -f all -b ./ -r all -x  @@ -o /tmp/foo
+bison --style -k --color=always --print-localedir -M NEW -f all --locations -t --defines -d -r states -y  @@ -o /tmp/foo
+bison -k -g --print-datadir --locations -d -r solved -S -x  @@ -o /tmp/foo
+bison --style --color=always -v --print-localedir -L Java -t --defines -d -S -x --report-file  @@ -o /tmp/foo
+bison --style -k -g --print-localedir -u -M OLD -D NAME=1234 --locations --defines -d -r lookaheads -y -x  @@ -o /tmp/foo
+bison --color=never -v --print-localedir -u -M OLD -D NAME=1234 -f all -p ./  @@ -o /tmp/foo
+bison --style -l -v --print-localedir -u -M OLD -D NAME=1234 --print-datadir -f none --locations -t --defines -p ./ -b ./ -d -S -y -x --report-file  @@ -o /tmp/foo
+bison --color=never -v --print-localedir -u --print-datadir --locations -t -d -S -y --report-file  @@ -o /tmp/foo
+bison --color=never -l --print-localedir -u -M OLD -L C -D NAME=1234 -t -p ./ -b ./ -d -y -x  @@ -o /tmp/foo
+bison -g -l -v --print-localedir -u -M NEW -L C --print-datadir --locations -t --defines -p ./ -S --report-file  @@ -o /tmp/foo
+bison --color=never -l --print-localedir -u -L Rust -D NAME=1234 --print-datadir -f caret --locations --defines -b ./ -d -r solved -x --report-file  @@ -o /tmp/foo
+bison -g -l -v --print-localedir -u --print-datadir -d -S -y -x  @@ -o /tmp/foo
+bison -k -g -l --print-localedir -D NAME=1234 --print-datadir -f caret --locations -t --defines -p ./ -r all -x  @@ -o /tmp/foo
+bison --style --color=auto --print-localedir -u -M NEW -L C++ -D NAME=1234 --print-datadir --locations -p ./ -b ./ -r solved -x --report-file  @@ -o /tmp/foo
+bison --color=always --print-localedir -M OLD --print-datadir -f all --locations --defines -p ./ -r itemsets -S -y  @@ -o /tmp/foo
+bison --style -k --print-localedir -M OLD -L Python --print-datadir -t -b ./ -r none -y -x --report-file  @@ -o /tmp/foo
+bison -l -v --print-localedir -M NEW -L C++ --print-datadir --locations --defines -y -x  @@ -o /tmp/foo
+bison --style -k --print-localedir -u -D NAME=1234 -p ./ -S -x --report-file  @@ -o /tmp/foo
+bison -l -v --print-localedir -L Java -D NAME=1234 --print-datadir -f none -p ./ -b ./ -S  @@ -o /tmp/foo
+bison --style -v --print-localedir -u --locations -t -p ./ -d -S -x  @@ -o /tmp/foo
+bison -k -g --print-localedir -u --print-datadir -t --defines -b ./ -r itemsets -x  @@ -o /tmp/foo
+bison -l --print-localedir -u -L C -d -r all -S --report-file  @@ -o /tmp/foo
+bison --style --print-localedir -u -L Java -D NAME=1234 --print-datadir -f fixit --locations -t -r cex  @@ -o /tmp/foo
+bison -g --print-localedir -M OLD -D NAME=1234 -p ./ -b ./ -r itemsets -x --report-file  @@ -o /tmp/foo
+bison -v --print-localedir -D NAME=1234 --print-datadir --locations --defines -S --report-file  @@ -o /tmp/foo
+bison -g --print-localedir -L Rust -D NAME=1234 -f syntax-only -p ./ -b ./ -d -r states -S -y  @@ -o /tmp/foo
+bison -k --print-localedir -L Java -f caret --locations -t --defines -p ./ -b ./ -r itemsets -S -y -x  @@ -o /tmp/foo
+bison -g --print-localedir -u -L C --print-datadir -f fixit --locations --defines -p ./ -b ./ -d --report-file  @@ -o /tmp/foo
+bison --style --print-localedir -u -t -b ./ -d -x --report-file  @@ -o /tmp/foo
+bison -v --print-localedir -M NEW -L C -t --defines -y --report-file  @@ -o /tmp/foo

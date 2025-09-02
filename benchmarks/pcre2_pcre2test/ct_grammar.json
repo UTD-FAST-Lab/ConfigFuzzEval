@@ -156,7 +156,8 @@
             ["pcre2-32",false]
           ]]
         ],
-      "conflicts": ["unicode"]
+      "conflicts": ["unicode"],
+      "implies": ["pcre2-8=true"]
     },
     {
       "name": "ebcdic-nl25",
@@ -230,7 +231,16 @@
       "name": "fuzz-support",
       "type": "bool",
       "default": false,
-      "cli": "--enable-fuzz-support"
+      "cli": "--enable-fuzz-support",
+      "implies": ["pcre2-8=true"],
+      "pairwise_constraints" : [
+          [true,[
+            ["pcre2-8",true],
+            ["pcre2-16",false],
+            ["pcre2-32",false]
+          ]]
+        ]
+      
     },
     {
       "name": "diff-fuzz-support",

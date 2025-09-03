@@ -87,13 +87,7 @@
       "name": "unicode",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unicode",
-      "conflicts": ["ebcdic"],
-      "pairwise_constraints" : [
-          [true,[
-            ["ebcdic",false]
-          ]]
-        ]
+      "cli": "--enable-unicode"
     },
     {
       "name": "newline-is-cr",
@@ -142,48 +136,6 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-never-backslash-C"
-    },
-    {
-      "name": "ebcdic",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-ebcdic",
-      "pairwise_constraints" : [
-          [true,[
-            ["unicode",false],
-            ["pcre2-8",true],
-            ["pcre2-16",false],
-            ["pcre2-32",false]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["pcre2-8=true"]
-    },
-    {
-      "name": "ebcdic-nl25",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-ebcdic-nl25",
-      "pairwise_constraints" : [
-          [true,[
-            ["ebcdic",true]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["ebcdic=true"]
-    },
-    {
-      "name": "ebcdic-ignoring-compiler",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-ebcdic-ignoring-compiler",
-      "pairwise_constraints" : [
-          [true,[
-            ["ebcdic",true]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["ebcdic=true"]
     },
     {
       "name": "pcre2grep-libz",
@@ -317,7 +269,54 @@
       "cli": "--with-match-limit-depth"
     }
   ],
-  "reoved_options": [
+
+  "meta_constraints": [
+    "(pcre2-8 + pcre2-16 + pcre2-32)==1"
+  ],
+
+  "removed_options": [
+    {
+      "name": "ebcdic",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-ebcdic",
+      "pairwise_constraints" : [
+          [true,[
+            ["unicode",false],
+            ["pcre2-8",true],
+            ["pcre2-16",false],
+            ["pcre2-32",false]
+          ]]
+        ],
+      "conflicts": ["unicode"],
+      "implies": ["pcre2-8=true"]
+    },
+    {
+      "name": "ebcdic-nl25",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-ebcdic-nl25",
+      "pairwise_constraints" : [
+          [true,[
+            ["ebcdic",true]
+          ]]
+        ],
+      "conflicts": ["unicode"],
+      "implies": ["ebcdic=true"]
+    },
+    {
+      "name": "ebcdic-ignoring-compiler",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-ebcdic-ignoring-compiler",
+      "pairwise_constraints" : [
+          [true,[
+            ["ebcdic",true]
+          ]]
+        ],
+      "conflicts": ["unicode"],
+      "implies": ["ebcdic=true"]
+    },
     {
       "name": "errwarn",
       "type": "bool",

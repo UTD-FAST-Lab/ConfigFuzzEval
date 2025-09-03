@@ -1,0 +1,12 @@
+{
+    "cmdline": "$inopts $INPUTFILE",
+    "connector": "=",
+    "strmax": 3,
+    "options": [
+    ],
+    "depend": [],
+    "conflict": [
+    ],
+    "maxcombs": 3,
+    "notes": "pngimage has no rt congigs"
+}

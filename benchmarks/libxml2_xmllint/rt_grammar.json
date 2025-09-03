@@ -1,0 +1,152 @@
+{
+    "cmdline":  "$inopts $INPUTFILE",
+    "connector": " ",
+    "strmax":   19,
+    "options":  [{
+                    "opt": "--shell",
+                    "type": "bool"
+                  },
+                  {
+                    "opt": "--debug",
+                    "type": "bool"
+                  },
+                  {"opt":     "--copy",
+                   "type":    "bool"},
+                  {"opt":     "--recover",
+                   "type":    "bool"},
+                  {"opt":     "--huge",
+                   "type":    "bool"},
+                  {"opt":     "--noent",
+                   "type":    "bool"},
+                  {"opt":     "--noenc",
+                   "type":    "bool"},
+                {
+                  "opt": "--noout",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--path",
+                  "type": "bool"
+                },
+                  {"opt":     "--load-trace",
+                   "type":    "bool"},
+                  {"opt":     "--nonet",
+                   "type":    "bool"},
+                  {"opt":     "--nocompact",
+                   "type":    "bool"},
+                  {"opt":     "--valid",
+                   "type":    "bool"},
+                {
+                  "opt": "--postvalid",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--insert",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--strict-namespace",
+                  "type": "bool"
+                },
+                  {"opt":     "--quiet",
+                   "type":    "bool"},
+                  {"opt":     "--timing",
+                   "type":    "bool"},
+                  {"opt":     "--repeat",
+                   "type":    "bool"},
+                {
+                  "opt": "--droptd",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--html",
+                  "type": "bool"
+                },
+                  {"opt":     "--xmlout",
+                   "type":    "bool"},
+                  {"opt":     "--nodefdtd",
+                   "type":    "bool"},
+                  {"opt":     "--push",
+                   "type":    "bool"},
+                  {"opt":     "--memory",
+                   "type":    "bool"},
+                  {"opt":     "--maxmem",
+                   "type":    "intnum",
+                   "range":  [0,2147483647]},
+                  {"opt":     "--nowarning",
+                   "type":    "bool"},
+                  {"opt":     "--noblanks",
+                   "type":    "bool"},
+                {
+                  "opt": "--nocdata",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--nodict",
+                  "type": "bool"
+                },
+                {
+                  "opt": "--pedantic",
+                  "type": "bool"
+                },
+                  {"opt":     "--format",
+                   "type":    "bool"},
+                  {"opt":     "--dropdtd",
+                   "type":    "bool"},
+                  {"opt":     "--pretty",
+                   "type":    "choice",
+                   "choices": ["0", "1", "2"]},
+                  {"opt":     "--c14n",
+                   "type":    "bool"},
+                  {"opt":     "--c14n11",
+                   "type":    "bool"},
+                  {"opt":     "--exc-c14n",
+                   "type":    "bool"},
+                  {"opt":     "--nsclean",
+                   "type":    "bool"},
+                  {"opt":     "--testIO",
+                   "type":    "bool"},
+                  {"opt":     "--catalogs",
+                   "type":    "bool"},
+                  {"opt":     "--nocatalogs",
+                   "type":    "bool"},
+                  {"opt":     "--auto",
+                   "type":    "bool"},
+                  {"opt":     "--xinclude",
+                   "type":    "bool"},
+                  {"opt":     "--noxincludenode",
+                   "type":    "bool"},
+                  {"opt":     "--nofixup-base-uris",
+                   "type":    "bool"},
+                  {"opt":     "--loaddtd",
+                   "type":    "bool"},
+                  {"opt":     "--dtdattr",
+                   "type":    "bool"},
+                  {"opt":     "--stream",
+                   "type":    "bool"},
+                  {"opt":     "--walker",
+                   "type":    "bool"},
+                  {"opt":     "--sax1",
+                   "type":    "bool"},
+                  {"opt":     "--sax",
+                   "type":    "bool"},
+                  {"opt":     "--oldxml10",
+                   "type":    "bool"},
+                {
+                  "opt": "--max-ampl",
+                  "type": "intnum",
+                  "range": [
+                    0,
+                    2147483647
+                  ]
+                }
+                 ],
+     "depend":   [{"opt":     "--xmlout",
+                   "on":      ["--html"]}
+                 ],
+     "conflict": [["--catalogs", "--nocatalogs"],
+                  ["--xinclude", "--noxincludenode"]                 ],
+     "maxcombs": 2,
+     "notes": "xmllint removed: --version --dtdvalid URL        --dtdvalidfpi         --output file --encode encoding --pattern pattern_value     --relaxng schema         --schema schema --xpath expr --noout --max-ampl value"
+  }
+

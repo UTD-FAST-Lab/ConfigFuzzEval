@@ -1,0 +1,123 @@
+{
+    "cmdline": "$inopts $INPUTFILE",
+    "connector": " ",
+    "strmax": 3,
+    "options": [
+        {
+            "opt": "-8",
+            "type": "bool"
+        },
+        {
+            "opt": "-ac",
+            "type": "bool"
+        },
+        {
+            "opt": "-AC",
+            "type": "bool"
+        },
+        {
+            "opt": "-b",
+            "type": "bool"
+        },
+        {
+            "opt": "-C",
+            "type": "bool"
+        },
+        {
+            "opt": "-d",
+            "type": "bool"
+        },
+        {
+            "opt": "-dfa",
+            "type": "bool"
+        },
+        {
+            "opt": "-E",
+            "type": "bool"
+        },
+        {
+            "opt": "-help",
+            "type": "bool"
+        },
+        {
+            "opt": "-i",
+            "type": "bool"
+        },
+        {
+            "opt": "-jit",
+            "type": "bool"
+        },
+        {
+            "opt": "-jitfast",
+            "type": "bool"
+        },
+        {
+            "opt": "-jitverify",
+            "type": "bool"
+        },
+        {
+            "opt": "-LM",
+            "type": "bool"
+        },
+        {
+            "opt": "-LP",
+            "type": "bool"
+        },
+        {
+            "opt": "-LS",
+            "type": "bool"
+        },
+        {
+            "opt": "-q",
+            "type": "bool"
+        },
+        {
+            "opt": "-S",
+            "type": "intnum",
+            "range": [
+                0,
+                2147483647
+            ]
+        },
+        {
+            "opt": "-t",
+            "type": "intnum",
+            "range": [
+                0,
+                2147483647
+            ]
+        },
+        {
+            "opt": "-tm",
+            "type": "intnum",
+            "range": [
+                0,
+                2147483647
+            ]
+        },
+        {
+            "opt": "-T",
+            "type": "bool"
+        },
+        {
+            "opt": "-TM",
+            "type": "bool"
+        },
+        {
+            "opt": "-malloc",
+            "type": "bool"
+        },
+        {
+            "opt": "-v",
+            "type": "bool"
+        },
+        {
+            "opt": "--version",
+            "type": "bool"
+        }
+    ],
+    "depend": [],
+    "conflict": [],
+    "maxcombs": 2,
+    "notes": "Removed string/text options: -C arg, -error <n,m,..>, -pattern <s>, -subject <s>. These require non-numeric arguments and are excluded from options."
+}

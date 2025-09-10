@@ -7,18 +7,25 @@ from shutil import copytree
 
 logging = get_logger(__name__)
 
-
-def retrieve_configs(benchmark_grammar, strategy_module):
-    # check if grammar exists
-    if not os.path.exists(benchmark_grammar):
-        logging.warning(f"Compile-time grammar not found: {benchmark_grammar}")
-        sys.exit(1)
+def retrieve_configs(benchmark_grammar, strategy_module,
+                     random_seed=None, experiment_path=None,
+                     strategy=None, benchmark=None):
     try:
-        ct_configs = strategy_module.request_configurations(benchmark_grammar)
-        return ct_configs
-    except AttributeError:
-        logging.error(f"Strategy {strategy} does not define request_configurations()")
-    sys.exit(1)
+        if strategy_module.__name__ == "randomsmart":
+            # Extended signature just for randomsmart
+            return strategy_module.request_configurations(
+                grammar_file=benchmark_grammar,
+                random_seed=random_seed,
+                experiment_path=experiment_path,
+                strategy=strategy,
+                benchmark=benchmark
+            )
+        else:
+            # All other strategies use the old signature
+            return strategy_module.request_configurations(benchmark_grammar)
+    except Exception as e:
+        print(f"[ERROR] Failed retrieving configurations from {strategy_module}: {e}")
+        return []
 
 
 def ct_change_build(benchmark_build, ct_config):
@@ -46,7 +53,7 @@ def ct_change_build(benchmark_build, ct_config):
         sys.exit(1)   # or: raise
 
 
-def apply_ct_strategy(strategy, project_root, benchmarks):
+def apply_ct_strategy(strategy, project_root, benchmarks, random_seed=None, experiment_path=None):
     mapping = {}
     
     logging.info(f"Applying compile-time strategy: {strategy}")
@@ -65,7 +72,13 @@ def apply_ct_strategy(strategy, project_root, benchmarks):
         benchmark_path = f"{project_root}/benchmarks/{benchmark}"
         benchmark_grammar = f"{benchmark_path}/ct_grammar.json"
 
-        ct_configurations = retrieve_configs(benchmark_grammar, strategy_module)
+        ct_configurations = retrieve_configs(
+            benchmark_grammar, strategy_module,
+            random_seed=random_seed,
+            experiment_path=experiment_path,
+            strategy=strategy,
+            benchmark=benchmark
+        )
         
         ct_configs_count = len(ct_configurations)
         

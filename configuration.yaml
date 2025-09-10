@@ -2,7 +2,7 @@ trials: 1
 
 # The amount of time in seconds that each trial is run for.
 # 1 day = 24 * 60 * 60 = 86400
-max_total_time: 86400
+max_total_time: 100
 
 # The location of the docker registry.
 # FIXME: Support custom docker registry.
@@ -10,11 +10,11 @@ max_total_time: 86400
 
 # The local experiment folder that will store most of the experiment data.
 # Please use an absolute path.
-experiment_filestore: /data/tahmeed/FuzzBenchPlusPlus/experiment-data
+experiment_filestore: /home/arnab/fb2/results/experiment-data
 
 # The local report folder where HTML reports and summary data will be stored.
 # Please use an absolute path.
-report_filestore: /data/tahmeed/FuzzBenchPlusPlus/report-data
+report_filestore: /home/arnab/fb2/results/report-data
 
 # base image
 base_image_path: docker/base-image
@@ -23,9 +23,12 @@ base_image_path: docker/base-image
 runner_image_path: docker/runner-image
 
 # Cores/threads to use
-cores_to_use: 62
+cores_to_use: 48
 
 allow_serial_execution: False
 
 # Memory per experiment in mb (3 GB by default)
 experiment_memory: 2048
+
+
+random_seed: 48

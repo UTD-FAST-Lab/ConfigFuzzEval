@@ -1,4 +1,4 @@
-import os
+
 import json
 import random
 from typing import Dict, Any, List
@@ -256,10 +256,7 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
 
 
 def request_configurations(grammar_file: str, n: int = 10,
-                           random_seed: int = None,
-                           experiment_path: str = None,
-                           strategy: str = None,
-                           benchmark: str = None) -> List[str]:
+                           random_seed: int = None) -> List[str]:
     grammar = load_grammar(grammar_file)
 
     # Set deterministic seed if provided
@@ -275,24 +272,8 @@ def request_configurations(grammar_file: str, n: int = 10,
             if arg:
                 cli_args.append(arg)
         cli_lines.append(" ".join(cli_args))
-
-    # Save generated configurations if experiment_path provided
-    if experiment_path is not None and strategy is not None and benchmark is not None:
-        save_dir = os.path.join(experiment_path, "ct_strategies")
-        os.makedirs(save_dir, exist_ok=True)
-        save_file = os.path.join(save_dir, f"{strategy}_{benchmark}_configs.txt")
-        with open(save_file, "w") as f:
-            # Write the seed at the top
-            if random_seed is not None:
-                f.write(f"# random_seed={random_seed}\n")
-            else:
-                f.write("# random_seed=None\n")
-            # Write configurations
-            for line in cli_lines:
-                f.write(line + "\n")
-
-
     return cli_lines
+    
 
 
 if __name__ == "__main__":

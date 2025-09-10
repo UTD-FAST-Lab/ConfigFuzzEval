@@ -36,6 +36,16 @@ def run_experiments(experiment_state):
     experiment_path = experiment_state["experiment_path"]
     data_storage = os.path.join(experiment_path, "data")
     os.makedirs(data_storage, exist_ok=True)
+    
+    logging.info(f"Creating experiment-data/data/ct_seed.txt file")
+
+    config_file = os.path.join(data_storage, "ct_seed.txt")
+    random_seed = experiment_state["random_seed"]
+    with open(config_file, "w") as f:
+        if random_seed is not None:
+            f.write(f"# random_seed={random_seed}\n")
+        else:
+            f.write("# random_seed=None\n")
 
     if experiment_state["serial_executions"] == 0:
         core_start = experiment_state["cores_range"][0]
@@ -128,7 +138,7 @@ if __name__ == "__main__":
         "cores_to_use": config["cores_to_use"],
         "allow_serial_execution": config["allow_serial_execution"],
         "experiment_memory": config["experiment_memory"],
-        "random_seed": config.get("random_seed", None) 
+        "random_seed": config["random_seed"] 
     }
     
     logging.info("Running experiments with the following parameters:")
@@ -228,6 +238,7 @@ if __name__ == "__main__":
     validate_ct_strategies(experiment_state["compiletime"], project_root)
     logging.info("Compile-time strategies validated successfully.")
     logging.info("Applying selected compile-time strategies...")
+    
 
     benchmark_mappings = {}
     failed_strategies = []
@@ -238,8 +249,7 @@ if __name__ == "__main__":
             new_benchmark_mapping, tot_cts = apply_ct_strategy(strategy,
                                     project_root,
                                     experiment_state["benchmarks"],
-                                    experiment_state["random_seed"],              # <--- added
-                                    experiment_state["experiment_path"]           # <--- added
+                                    experiment_state["random_seed"]         
                                 )
             if new_benchmark_mapping:
                 benchmark_mappings.update(new_benchmark_mapping)

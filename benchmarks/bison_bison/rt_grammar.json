@@ -1,0 +1,116 @@
+{
+    "cmdline": "$inopts $INPUTFILE",
+    "connector": "=",
+    "strmax": 3,
+    "options": [
+        {
+            "opt": "--print-localedir",
+            "type": "bool"
+        },
+        {
+            "opt": "--print-datadir",
+            "type": "bool"
+        },
+        {
+            "opt": "-u",
+            "type": "bool"
+        },
+        {
+            "opt": "-f",
+            "type": "choice",
+            "choices": [
+                "caret",
+                "fixit",
+                "all",
+                "none"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-W",
+            "type": "choice",
+            "choices": [
+                "counterexamples",
+                "cex",
+                "deprecated",
+                "precedence",
+                "yacc",
+                "other",
+                "all",
+                "none",
+                "error"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "--color",
+            "type": "choice",
+            "choices": [
+                "always",
+                "yes",
+                "never",
+                "no",
+                "auto",
+                "tty"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-L",
+            "type": "choice","choices": [
+                "python",
+                "java",
+                "javascript",
+                "php"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-t",
+            "type": "bool"
+        },
+        {
+            "opt": "--locations",
+            "type": "bool"
+        },
+        {
+            "opt": "-l",
+            "type": "bool"
+        },
+        {
+            "opt": "-k",
+            "type": "bool"
+        },
+        {
+            "opt": "-y",
+            "type": "bool"
+        },
+        {
+            "opt": "-d",
+            "type": "bool"
+        },
+        {
+            "opt": "-r",
+            "type": "choice",
+            "choices": [
+                "states",
+                "itemsets",
+                "lookaheads",
+                "solved",
+                "all",
+                "none"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-v",
+            "type": "bool"
+        }
+    ],
+    "depend": [],
+    "conflict": [
+    ],
+    "maxcombs": 3,
+    "notes":"bison"
+}
+

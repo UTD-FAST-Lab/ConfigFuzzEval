@@ -127,7 +127,8 @@ if __name__ == "__main__":
         "project_root": os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
         "cores_to_use": config["cores_to_use"],
         "allow_serial_execution": config["allow_serial_execution"],
-        "experiment_memory": config["experiment_memory"]
+        "experiment_memory": config["experiment_memory"],
+        "random_seed": config.get("random_seed", None) 
     }
     
     logging.info("Running experiments with the following parameters:")
@@ -236,7 +237,10 @@ if __name__ == "__main__":
         try:
             new_benchmark_mapping, tot_cts = apply_ct_strategy(strategy,
                                     project_root,
-                                    experiment_state["benchmarks"])
+                                    experiment_state["benchmarks"],
+                                    experiment_state["random_seed"],              # <--- added
+                                    experiment_state["experiment_path"]           # <--- added
+                                )
             if new_benchmark_mapping:
                 benchmark_mappings.update(new_benchmark_mapping)
             else:

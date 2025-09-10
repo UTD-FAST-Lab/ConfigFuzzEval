@@ -1,0 +1,116 @@
+{
+    "cmdline": "$inopts $INPUTFILE",
+    "connector": "=",
+    "strmax": 3,
+    "options": [
+        {
+            "opt": "-j",
+            "type": "bool"
+        },
+        {
+            "opt": "-z",
+            "type": "bool"
+        },
+        {
+            "opt": "-q",
+            "type": "intnum",
+            "range": [
+                1,
+                10
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-n",
+            "type": "bool"
+        },
+        {
+            "opt": "-d",
+            "type": "bool"
+        },
+        {
+            "opt": "-i",
+            "type": "bool"
+        },
+        {
+            "opt": "-u",
+            "type": "choice",
+            "choices": [
+                "i",
+                "m"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-x",
+            "type": "intnum",
+            "range": [
+                1,
+                10
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-y",
+            "type": "intnum",
+            "range": [
+                1,
+                10
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-w",
+            "type": "intnum",
+            "range": [
+                1,
+                10
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-l",
+            "type": "intnum",
+            "range": [
+                1,
+                10
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-r",
+            "type": "choice",
+            "choices": [
+                "d",
+                "o"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-F",
+            "type": "bool"
+        },
+        {
+            "opt": "-f",
+            "type": "bool"
+        },
+        {
+            "opt": "-b",
+            "type": "bool"
+        },
+        {
+            "opt": "-m",
+            "type": "intnum",
+            "range": [
+                0,
+                1024
+            ],
+            "connector": " "
+        }
+    ],
+    "depend": [],
+    "conflict": [
+    ],
+    "maxcombs": 3,
+    "notes": "tiff2pdf removed:-o -p -e -c -a -t -s -k -b -h"
+}

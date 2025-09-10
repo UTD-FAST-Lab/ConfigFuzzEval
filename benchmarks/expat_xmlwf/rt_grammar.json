@@ -1,0 +1,88 @@
+{
+    "cmdline": "$inopts $INPUTFILE",
+    "connector": " ",
+    "strmax": 3,
+    "options": [
+        {
+            "opt": "-s",
+            "type": "bool"
+        },
+        {
+            "opt": "-n",
+            "type": "bool"
+        },
+        {
+            "opt": "-p",
+            "type": "bool"
+        },
+        {
+            "opt": "-x",
+            "type": "bool"
+        },
+        {
+            "opt": "-w",
+            "type": "bool"
+        },
+        {
+            "opt": "-r",
+            "type": "bool"
+        },
+        {
+            "opt": "-g",
+            "type": "intnum",
+            "range": [
+                0,
+                2048
+            ]
+        },
+        {
+            "opt": "-k",
+            "type": "bool"
+        },
+        {
+            "opt": "-c",
+            "type": "bool"
+        },
+        {
+            "opt": "-m",
+            "type": "bool"
+        },
+        {
+            "opt": "-t",
+            "type": "bool"
+        },
+        {
+            "opt": "-N",
+            "type": "bool"
+        },
+        {
+            "opt": "-a",
+            "type": "floatnum",
+            "range": [
+                1,
+                2147483647
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-b",
+            "type": "intnum",
+            "range": [
+                1,
+                2147483647
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-q",
+            "type": "bool"
+        }
+    ],
+    "depend": [
+    ],
+    "conflict": [
+    ],
+    "maxcombs": 3,
+    "notes": "xmlwf removed: -e ENCODING -d DIRECTORY --help --version"
+}
+

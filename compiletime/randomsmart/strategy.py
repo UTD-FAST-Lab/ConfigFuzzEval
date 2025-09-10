@@ -1,3 +1,4 @@
+
 import json
 import random
 from typing import Dict, Any, List
@@ -254,8 +255,14 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     return ""
 
 
-def request_configurations(grammar_file: str, n: int = 10) -> List[str]:
+def request_configurations(grammar_file: str, n: int = 10,
+                           random_seed: int = None) -> List[str]:
     grammar = load_grammar(grammar_file)
+
+    # Set deterministic seed if provided
+    if random_seed is not None:
+        random.seed(random_seed)
+
     configs = generate_n_valid_random_configs(grammar, n)
     cli_lines = []
     for config in configs:
@@ -266,6 +273,8 @@ def request_configurations(grammar_file: str, n: int = 10) -> List[str]:
                 cli_args.append(arg)
         cli_lines.append(" ".join(cli_args))
     return cli_lines
+    
+
 
 if __name__ == "__main__":
 

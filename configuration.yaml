@@ -10,11 +10,11 @@ max_total_time: 100
 
 # The local experiment folder that will store most of the experiment data.
 # Please use an absolute path.
-experiment_filestore: /home/arnab/fb2/results/experiment-data
+experiment_filestore: /home/arnab/fb2/libf/results/experiment-data
 
 # The local report folder where HTML reports and summary data will be stored.
 # Please use an absolute path.
-report_filestore: /home/arnab/fb2/results/report-data
+report_filestore: /home/arnab/fb2/libf/results/report-data
 
 # base image
 base_image_path: docker/base-image

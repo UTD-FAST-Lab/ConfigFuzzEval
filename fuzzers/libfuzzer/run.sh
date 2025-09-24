@@ -1,0 +1,1 @@
+LLVM_PROFILE_FILE=$OUT/profraw/default.profraw /benchmark/libfuzzerrunner /benchmark/corpus -dict=/benchmark/harness/dict.dict -rss_limit_mb=2000 -max_total_time=$RUNTIME

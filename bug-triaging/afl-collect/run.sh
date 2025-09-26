@@ -1,0 +1,2 @@
+
+afl-collect --help

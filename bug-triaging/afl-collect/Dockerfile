@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y gdb
 
 WORKDIR /afl-utils
 RUN python3 setup.py install
-COPY run.sh afl-utils/
+COPY run.sh .
 
 
-CMD ["./run.sh"]
+CMD ["bash", "run.sh"]

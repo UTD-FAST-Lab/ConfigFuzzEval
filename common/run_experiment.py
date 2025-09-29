@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer, build_benchmark, run_benchmark, build_runner_image
+from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark, build_runner_image
 from color_logger import get_logger
 from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies
@@ -110,6 +110,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiments.")
     parser.add_argument("--config", type=str, required=True, help="Path to the configuration file.")
     parser.add_argument("--fuzzers", type=str, nargs='+', required=True, help="List of fuzzers to run.")
+    parser.add_argument("--bug-triaging", type=str, nargs='+', required=False, help="List of Triaging Tools to run.")
     parser.add_argument("--benchmarks", type=str, nargs='+', required=True, help="List of benchmarks to run.")
     parser.add_argument("--compiletime", type=str, nargs='+', required=False, default=["default"], help="Compile time strategies to use.")
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
@@ -127,6 +128,7 @@ if __name__ == "__main__":
     experiment_state = {
         "fuzzers": args.fuzzers,
         "benchmarks": args.benchmarks,
+        "bug_triaging": args.bug_triaging,
         "compiletime": args.compiletime,
         "trials": config["trials"],
         "max_total_time": config["max_total_time"],
@@ -227,6 +229,39 @@ if __name__ == "__main__":
 
     experiment_state["built_fuzzers"] = built_fuzzers
     experiment_state["fuzzer_failures"] = fuzzer_failures
+
+    # Validate and build selected triaging tools
+    logging.info("Validating Triaging tools...")
+    # validate_fuzzers(experiment_state["fuzzers"], project_root)
+    logging.info("Triagers validated successfully.")
+    logging.info("Building selected Triagers...")
+    built_triagers = []
+    triager_failures = []
+    with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:  # adjust max_workers as needed
+        future_to_triagers = {
+            executor.submit(build_bug_triager, bug_triager, experiment_path, project_root): bug_triager
+            for bug_triager in experiment_state['bug_triaging']
+        }
+
+        for future in as_completed(future_to_triagers):
+            triager = future_to_triagers[future]
+            try:
+                success = future.result()
+                if success:
+                    built_triagers.append(triager)
+                else:
+                    triager_failures.append(triager)
+            except Exception as e:
+                # if build_fuzzer itself raises
+                triager_failures.append(triager)
+                logging.error(f"Error building {triager}: {e}")
+
+    if triager_failures:
+        logging.warning(f"Triager build failures: {triager_failures}")    
+    logging.success(f"Triagers built successfully: {built_triagers}")
+
+    experiment_state["built_triagers"] = built_triagers
+    experiment_state["triager_failures"] = triager_failures
 
     # validate selected benchmarks
     logging.info("Validating benchmarks...")

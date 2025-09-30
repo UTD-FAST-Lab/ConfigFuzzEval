@@ -238,6 +238,7 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
                 subprocess.run([
                     "docker", "run",
                     "--rm",
+                    "-e", "TEST_TRIAGE=1",
                     "-v", f"{triager_path}:/triaging_output",
                     f"fbpp/bug-triaging:{bug_triager_name}"
                 ], check=True, stdout=lf, stderr=lf)
@@ -253,6 +254,7 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
                 subprocess.run([
                     "docker", "run",
                     "--rm",
+                    "-e", "TEST_TRIAGE=1",
                     "-v", f"{triager_path}:/triaging_output",
                     f"fbpp/bug-triaging:{bug_triager_name}"
                 ], check=True, stdout=lf, stderr=lf)
@@ -342,4 +344,66 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             return False
 
     logging.success(f"Finished {fuzzer} on {benchmark}, trial {trial_id} (logs: {log_file})")
+    return True
+
+
+def run_triaging(triager,fuzzer, benchmark,trials, trial_id,
+                    experiment_path, core_id,data_storage, memory_limit):
+    # setup
+    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
+    if not os.path.exists(individual_data_storage):
+        msg = f"[ERROR] Data storage path {individual_data_storage} does not exist. Cannot run triaging tool.\n"
+        logging.error(msg.strip())
+        return False
+    
+    os.makedirs(os.path.join(individual_data_storage,"triaging"), exist_ok=True)
+    triaging_data_storage = os.path.join(individual_data_storage,"triaging", triager)
+    os.makedirs(triaging_data_storage, exist_ok=True)
+
+    benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
+    fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
+    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
+
+    # log file
+    log_file = os.path.join(triaging_data_storage, f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log")
+
+    with open(log_file, "w") as lf:
+        try:
+            lf.write(f"[INFO] Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}\n")
+            logging.info(f"Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}")
+
+            # print("="*80)
+            # print(" ".join([
+            #     "docker", "run", "--rm",
+            #     f"--cpuset-cpus={core_id}-{core_id+1}",
+            #     "-m", f"{memory_limit}g",
+            #     f"--memory-swap={memory_limit}g",
+            #     "-v", f"{benchmark_location}:/benchmark",
+            #     "-v", f"{fuzzer_location}:/fuzzer",
+            #     "-v", f"{individual_data_storage}:/fuzzer_output",
+            #     f"fbpp/bug-triaging:{triager}"
+            # ]))
+            # print("="*80)
+            # print()
+
+            # Run the benchmark
+            subprocess.run([
+                "docker", "run", "--rm",
+                f"--cpuset-cpus={core_id}-{core_id+1}",
+                "-m", f"{memory_limit}g",
+                f"--memory-swap={memory_limit}g",
+                "-v", f"{benchmark_location}:/benchmark",
+                "-v", f"{fuzzer_location}:/fuzzer",
+                "-v", f"{individual_data_storage}:/fuzzer_output",
+                f"fbpp/bug-triaging:{triager}"
+            ], check=True, stdout=lf, stderr=lf)
+
+        except subprocess.CalledProcessError as e:
+            lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id} using {triager}\n")
+            lf.write(f"[ERROR] Command: {e.cmd}\n")
+            lf.write(f"[ERROR] Return code: {e.returncode}\n")
+            logging.error(f"Failed Triaging: {fuzzer} on {benchmark}, trial {trial_id} using {triager}. See {log_file} for details.")
+            return False
+
+    logging.success(f"Finished Triaging {fuzzer} on {benchmark}, trial {trial_id} using {triager} (logs: {log_file})")
     return True

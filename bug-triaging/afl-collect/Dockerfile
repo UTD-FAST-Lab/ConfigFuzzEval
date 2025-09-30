@@ -8,4 +8,8 @@ RUN python3 setup.py install
 COPY run.sh .
 
 
+# Set default value (can be overridden at runtime)
+ENV TEST_TRIAGE=0
+
+
 CMD ["bash", "run.sh"]

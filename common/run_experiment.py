@@ -2,10 +2,10 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark, build_runner_image
+from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image
 from color_logger import get_logger
 from resource_allocation import allocate_resources
-from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies
+from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers
 from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
@@ -100,6 +100,67 @@ def run_experiments(experiment_state):
         # TODO: handle serial executions
         pass
 
+
+def triage_on_experiments(experiment_state):
+    built_benchmarks = experiment_state["built_benchmarks"]
+    coverage_binaries = experiment_state["coverage_binaries"]
+    experiment_path = experiment_state["experiment_path"]
+    data_storage = os.path.join(experiment_path, "data")
+    os.makedirs(data_storage, exist_ok=True)
+
+    if experiment_state["serial_executions"] == 0:
+        core_start = experiment_state["cores_range"][0]
+        tasks = []
+
+        # Collect all runs
+        for each_built_bench in built_benchmarks:
+            tot_cts_count = experiment_state["tot_cts"].get(each_built_bench, 1)
+            for each_fuzzer in built_benchmarks[each_built_bench]:
+                for trial_id in range(experiment_state["trials"]):
+                    for triager in experiment_state["built_triagers"]:
+                        tasks.append((
+                            triager,
+                            each_fuzzer,
+                            each_built_bench,
+                            trial_id,
+                            core_start,
+                            tot_cts_count
+                        ))
+                        core_start += 1
+
+        # Run all tasks in parallel
+        with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:
+            future_to_task = {
+                executor.submit(
+                    run_triaging,
+                    triager,
+                    fuzzer,
+                    benchmark,
+                    experiment_state["trials"],
+                    trial_id,
+                    experiment_state["experiment_path"],
+                    core_id,
+                    data_storage,
+                    experiment_state["total_memory_needed_gb"]
+                ): (triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count)
+                for (triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count) in tasks
+            }
+
+            for future in as_completed(future_to_task):
+                triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count = future_to_task[future]
+                try:
+                    success = future.result()
+                    if success:
+                        logging.info(f"[SUCCESS] Completed Triaging {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} using {triager}, total cts {tot_cts_count}")
+                    else:
+                        logging.error(f"[FAILURE] Failed Triaging {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} using {triager}, total cts {tot_cts_count}")
+                except Exception as e:
+                    logging.error(f"[EXCEPTION] Triaging {triager} with {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
+    else:
+        # TODO: handle serial executions
+        pass
+
+
 if __name__ == "__main__":
     # Set up logging
     logging = get_logger(__name__)
@@ -110,7 +171,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiments.")
     parser.add_argument("--config", type=str, required=True, help="Path to the configuration file.")
     parser.add_argument("--fuzzers", type=str, nargs='+', required=True, help="List of fuzzers to run.")
-    parser.add_argument("--bug-triaging", type=str, nargs='+', required=False, help="List of Triaging Tools to run.")
+    parser.add_argument("--bug-triaging", type=str, nargs='+', required=False, default=[], help="List of Triaging Tools to run.")
     parser.add_argument("--benchmarks", type=str, nargs='+', required=True, help="List of benchmarks to run.")
     parser.add_argument("--compiletime", type=str, nargs='+', required=False, default=["default"], help="Compile time strategies to use.")
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
@@ -232,7 +293,7 @@ if __name__ == "__main__":
 
     # Validate and build selected triaging tools
     logging.info("Validating Triaging tools...")
-    # validate_fuzzers(experiment_state["fuzzers"], project_root)
+    validate_triagers(experiment_state["bug_triaging"], project_root)
     logging.info("Triagers validated successfully.")
     logging.info("Building selected Triagers...")
     built_triagers = []
@@ -404,6 +465,10 @@ if __name__ == "__main__":
     # Run experiments
     logging.info("Ready to begin experiments!")
     run_experiments(experiment_state)
+
+    logging.info("Experiments completed. Starting triaging...")
+    triage_on_experiments(experiment_state)
+    logging.info("Triaging completed.")
     
     
 

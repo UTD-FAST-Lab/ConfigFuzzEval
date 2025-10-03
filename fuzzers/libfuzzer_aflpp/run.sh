@@ -1,0 +1,1 @@
+/fuzzer/afl-fuzz -i /benchmark/corpus -o $OUT -V $RUNTIME -- $RUN_TARGET

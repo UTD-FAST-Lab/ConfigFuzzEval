@@ -205,7 +205,7 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
 
 # Build bug triaging tools images based on bug-triaging <tool>/Dockerfile
 def build_bug_triager(bug_triager_name, experiment_path, project_root):
-    triager_path = os.path.join(experiment_path, "bug-triaging")
+    triager_path = os.path.join(experiment_path, "bug-triaging", bug_triager_name)
     os.makedirs(triager_path, exist_ok=True)
 
     # Log file per Triager
@@ -347,46 +347,38 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     return True
 
 
-def run_triaging(triager,fuzzer, benchmark,trials, trial_id,
-                    experiment_path, core_id,data_storage, memory_limit):
-    # setup
+def run_triaging(triager, fuzzer, benchmark, trials, trial_id,
+                 experiment_path, core_id, data_storage, memory_limit):
+    # Setup
     individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
     if not os.path.exists(individual_data_storage):
         msg = f"[ERROR] Data storage path {individual_data_storage} does not exist. Cannot run triaging tool.\n"
         logging.error(msg.strip())
         return False
-    
-    os.makedirs(os.path.join(individual_data_storage,"triaging"), exist_ok=True)
-    triaging_data_storage = os.path.join(individual_data_storage,"triaging", triager)
-    os.makedirs(triaging_data_storage, exist_ok=True)
+
+    # --- New output directory for this triaging trial ---
+    triager_base_path = os.path.join(experiment_path, "bug-triaging", triager)
+    triager_output_base = os.path.join(triager_base_path, "output")
+    trial_output_name = f"{fuzzer}_{benchmark}_trial_{trial_id}"      # 🔹 new name
+    trial_output_path = os.path.join(triager_output_base, trial_output_name)
+    os.makedirs(trial_output_path, exist_ok=True)
+
+    # For backwards compatibility: keep logs directly under triager folder
+    os.makedirs(triager_base_path, exist_ok=True)
 
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
     coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
 
-    # log file
-    log_file = os.path.join(triaging_data_storage, f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log")
+    # Log file inside the new output folder
+    log_file = os.path.join(trial_output_path, f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log")
 
     with open(log_file, "w") as lf:
         try:
             lf.write(f"[INFO] Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}\n")
             logging.info(f"Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}")
 
-            # print("="*80)
-            # print(" ".join([
-            #     "docker", "run", "--rm",
-            #     f"--cpuset-cpus={core_id}-{core_id+1}",
-            #     "-m", f"{memory_limit}g",
-            #     f"--memory-swap={memory_limit}g",
-            #     "-v", f"{benchmark_location}:/benchmark",
-            #     "-v", f"{fuzzer_location}:/fuzzer",
-            #     "-v", f"{individual_data_storage}:/fuzzer_output",
-            #     f"fbpp/bug-triaging:{triager}"
-            # ]))
-            # print("="*80)
-            # print()
-
-            # Run the benchmark
+            # Mount output folder into container at /triaging_output
             subprocess.run([
                 "docker", "run", "--rm",
                 f"--cpuset-cpus={core_id}-{core_id+1}",
@@ -395,6 +387,7 @@ def run_triaging(triager,fuzzer, benchmark,trials, trial_id,
                 "-v", f"{benchmark_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",
+                "-v", f"{trial_output_path}:/triaging_output",
                 f"fbpp/bug-triaging:{triager}"
             ], check=True, stdout=lf, stderr=lf)
 

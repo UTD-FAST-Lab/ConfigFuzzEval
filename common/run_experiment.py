@@ -116,17 +116,15 @@ def triage_on_experiments(experiment_state):
         for each_built_bench in built_benchmarks:
             tot_cts_count = experiment_state["tot_cts"].get(each_built_bench, 1)
             for each_fuzzer in built_benchmarks[each_built_bench]:
-                for trial_id in range(experiment_state["trials"]):
-                    for triager in experiment_state["built_triagers"]:
-                        tasks.append((
-                            triager,
-                            each_fuzzer,
-                            each_built_bench,
-                            trial_id,
-                            core_start,
-                            tot_cts_count
-                        ))
-                        core_start += 1
+                for triager in experiment_state["built_triagers"]:
+                    tasks.append((
+                        triager,
+                        each_fuzzer,
+                        each_built_bench,
+                        core_start,
+                        tot_cts_count
+                    ))
+                    core_start += 1
 
         # Run all tasks in parallel
         with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:
@@ -137,25 +135,24 @@ def triage_on_experiments(experiment_state):
                     fuzzer,
                     benchmark,
                     experiment_state["trials"],
-                    trial_id,
                     experiment_state["experiment_path"],
                     core_id,
                     data_storage,
                     experiment_state["total_memory_needed_gb"]
-                ): (triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count)
-                for (triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count) in tasks
+                ): (triager,fuzzer, benchmark, core_id, tot_cts_count)
+                for (triager,fuzzer, benchmark, core_id, tot_cts_count) in tasks
             }
 
             for future in as_completed(future_to_task):
-                triager,fuzzer, benchmark, trial_id, core_id, tot_cts_count = future_to_task[future]
+                triager,fuzzer, benchmark, core_id, tot_cts_count = future_to_task[future]
                 try:
                     success = future.result()
                     if success:
-                        logging.info(f"[SUCCESS] Completed Triaging {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} using {triager}, total cts {tot_cts_count}")
+                        logging.info(f"[SUCCESS] Completed Triaging {fuzzer} on {benchmark}, core {core_id} using {triager}, total cts {tot_cts_count}")
                     else:
-                        logging.error(f"[FAILURE] Failed Triaging {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} using {triager}, total cts {tot_cts_count}")
+                        logging.error(f"[FAILURE] Failed Triaging {fuzzer} on {benchmark}, core {core_id} using {triager}, total cts {tot_cts_count}")
                 except Exception as e:
-                    logging.error(f"[EXCEPTION] Triaging {triager} with {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
+                    logging.error(f"[EXCEPTION] Triaging {triager} with {fuzzer} on {benchmark}, core {core_id} -> {e}")
     else:
         # TODO: handle serial executions
         pass

@@ -347,20 +347,18 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     return True
 
 
-def run_triaging(triager, fuzzer, benchmark, trials, trial_id,
+def run_triaging(triager, fuzzer, benchmark, trials,
                  experiment_path, core_id, data_storage, memory_limit):
-    # Setup
-    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
-    if not os.path.exists(individual_data_storage):
-        msg = f"[ERROR] Data storage path {individual_data_storage} does not exist. Cannot run triaging tool.\n"
-        logging.error(msg.strip())
-        return False
+    """
+    Runs the triager for all trials of a given fuzzer-benchmark pair,
+    pooling all crashes into a single output folder.
+    """
 
-    # --- New output directory for this triaging trial ---
+    # --- Shared output directory for all trials ---
     triager_base_path = os.path.join(experiment_path, "bug-triaging", triager)
     triager_output_base = os.path.join(triager_base_path, "output")
-    trial_output_name = f"{fuzzer}_{benchmark}_trial_{trial_id}"      # 🔹 new name
-    trial_output_path = os.path.join(triager_output_base, trial_output_name)
+    pooled_output_name = f"{fuzzer}_{benchmark}"
+    trial_output_path = os.path.join(triager_output_base, pooled_output_name)
     os.makedirs(trial_output_path, exist_ok=True)
 
     # For backwards compatibility: keep logs directly under triager folder
@@ -370,33 +368,47 @@ def run_triaging(triager, fuzzer, benchmark, trials, trial_id,
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
     coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
 
-    # Log file inside the new output folder
-    log_file = os.path.join(trial_output_path, f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log")
+    # --- Loop over all trials ---
+    for trial_id in range(trials):
+        individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
+        if not os.path.exists(individual_data_storage):
+            msg = f"[ERROR] Data storage path {individual_data_storage} does not exist for trial {trial_id}. Skipping.\n"
+            logging.error(msg.strip())
+            continue
 
-    with open(log_file, "w") as lf:
-        try:
-            lf.write(f"[INFO] Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}\n")
-            logging.info(f"Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}")
+        # Per-trial log file in shared output folder
+        log_file = os.path.join(
+            trial_output_path,
+            f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log"
+        )
 
-            # Mount output folder into container at /triaging_output
-            subprocess.run([
-                "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id}-{core_id+1}",
-                "-m", f"{memory_limit}g",
-                f"--memory-swap={memory_limit}g",
-                "-v", f"{benchmark_location}:/benchmark",
-                "-v", f"{fuzzer_location}:/fuzzer",
-                "-v", f"{individual_data_storage}:/fuzzer_output",
-                "-v", f"{trial_output_path}:/triaging_output",
-                f"fbpp/bug-triaging:{triager}"
-            ], check=True, stdout=lf, stderr=lf)
+        with open(log_file, "w") as lf:
+            try:
+                lf.write(f"[INFO] Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}\n")
+                logging.info(f"Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}")
 
-        except subprocess.CalledProcessError as e:
-            lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id} using {triager}\n")
-            lf.write(f"[ERROR] Command: {e.cmd}\n")
-            lf.write(f"[ERROR] Return code: {e.returncode}\n")
-            logging.error(f"Failed Triaging: {fuzzer} on {benchmark}, trial {trial_id} using {triager}. See {log_file} for details.")
-            return False
+                # Mount trial-specific input, but shared output
+                subprocess.run([
+                    "docker", "run", "--rm",
+                    f"--cpuset-cpus={core_id}-{core_id+1}",
+                    "-m", f"{memory_limit}g",
+                    f"--memory-swap={memory_limit}g",
+                    "-v", f"{benchmark_location}:/benchmark",
+                    "-v", f"{fuzzer_location}:/fuzzer",
+                    "-v", f"{individual_data_storage}:/fuzzer_output",
+                    "-v", f"{trial_output_path}:/triaging_output",
+                    f"fbpp/bug-triaging:{triager}"
+                ], check=True, stdout=lf, stderr=lf)
 
-    logging.success(f"Finished Triaging {fuzzer} on {benchmark}, trial {trial_id} using {triager} (logs: {log_file})")
+            except subprocess.CalledProcessError as e:
+                lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id} using {triager}\n")
+                lf.write(f"[ERROR] Command: {e.cmd}\n")
+                lf.write(f"[ERROR] Return code: {e.returncode}\n")
+                logging.error(f"Failed Triaging for trial {trial_id}. See {log_file} for details.")
+                continue
+
+        logging.success(f"Finished triaging {fuzzer} on {benchmark}, trial {trial_id} using {triager} (log: {log_file})")
+
+    logging.success(f"✅ All trials completed for {fuzzer} on {benchmark} using {triager}. Output pooled at {trial_output_path}")
     return True
+

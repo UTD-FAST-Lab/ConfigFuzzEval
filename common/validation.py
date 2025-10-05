@@ -27,10 +27,10 @@ def validate_configuration(config):
 
 def validate_fuzzers(fuzzers_selected, project_root):
     fuzzers_dir = os.path.join(project_root, "fuzzers")
-    avaibale_fuzzers = [fuzzer.name for fuzzer in os.scandir(fuzzers_dir) if fuzzer.is_dir()]
+    available_triagers = [fuzzer.name for fuzzer in os.scandir(fuzzers_dir) if fuzzer.is_dir()]
     
     for potential_fuzzer in fuzzers_selected:
-        if potential_fuzzer not in avaibale_fuzzers:
+        if potential_fuzzer not in available_triagers:
             logging.error(f"Fuzzer {potential_fuzzer} is not available in the project.")
             sys.exit(1)
 
@@ -52,4 +52,13 @@ def validate_benchmarks(benchmarks_selected, project_root):
     for potential_benchmark in benchmarks_selected:
         if potential_benchmark not in available_benchmarks:
             logging.error(f"Benchmark {potential_benchmark} is not available in the project.")
+            sys.exit(1)
+
+def validate_triagers(triagers_selected, project_root):
+    btt_dir = os.path.join(project_root, "bug-triaging")
+    available_triagers = [triager.name for triager in os.scandir(btt_dir) if triager.is_dir()]
+    
+    for potential_triager in triagers_selected:
+        if potential_triager not in available_triagers:
+            logging.error(f"Triaging {potential_triager} is not available in the project.")
             sys.exit(1)

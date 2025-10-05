@@ -295,21 +295,6 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             lf.write(f"[INFO] Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}\n")
             logging.info(f"Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}")
 
-            print("="*80)
-            print(" ".join([
-                "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id}-{core_id+1}",
-                "-m", f"{memory_limit}g",
-                f"--memory-swap={memory_limit}g",
-                "-e", f"RUNTIME={actual_runtime}",
-                "-v", f"{benchmark_location}:/benchmark",
-                "-v", f"{fuzzer_location}:/fuzzer",
-                "-v", f"{individual_data_storage}:/fuzzer_output",
-                "fbpp/runner"
-            ]))
-            print("="*80)
-            print()
-
             # Run the benchmark
             subprocess.run([
                 "docker", "run", "--rm",

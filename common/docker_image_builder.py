@@ -3,6 +3,7 @@ import subprocess
 import sys
 from shutil import copytree, copyfile
 from color_logger import get_logger
+import time
 
 logging = get_logger(__name__)
 
@@ -306,7 +307,11 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",
                 "fbpp/runner"
-            ], check=True, stdout=lf, stderr=lf)
+            ], check=True, stdout=lf, stderr=lf, timeout=(actual_runtime + 600))
+            
+            lf.flush()
+            os.fsync(lf.fileno())
+            time.sleep(5)
 
             # Run coverage
             lf.write(f"[INFO] Calculating coverage for {benchmark}, trial {trial_id}\n")
@@ -327,6 +332,14 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
             logging.error(f"Failed: {fuzzer} on {benchmark}, trial {trial_id}. See {log_file} for details.")
             return False
+        except subprocess.TimeoutExpired as e:
+            lf.write(f"[ERROR] Timeout expired for {fuzzer} on {benchmark}, trial {trial_id}\n")
+            logging.error(f"Timeout: {fuzzer} on {benchmark}, trial {trial_id}")
+            return False
+        finally:
+            lf.flush()
+            os.fsync(lf.fileno())
+
 
     logging.success(f"Finished {fuzzer} on {benchmark}, trial {trial_id} (logs: {log_file})")
     return True

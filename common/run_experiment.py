@@ -98,6 +98,7 @@ def run_experiments(experiment_state):
                     logging.error(f"[EXCEPTION] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
     else:
         # TODO: handle serial executions
+        logging.error("Serial execution mode is not yet implemented.")
         pass
 
 
@@ -155,6 +156,7 @@ def triage_on_experiments(experiment_state):
                     logging.error(f"[EXCEPTION] Triaging {triager} with {fuzzer} on {benchmark}, core {core_id} -> {e}")
     else:
         # TODO: handle serial executions
+        logging.error("Serial execution mode is not yet implemented.")
         pass
 
 

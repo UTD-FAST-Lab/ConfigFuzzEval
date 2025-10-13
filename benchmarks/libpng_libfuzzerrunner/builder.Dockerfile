@@ -11,6 +11,7 @@ RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
 RUN apt-get update -qq && apt-get install -y clang-14 llvm-14
 ENV CC=clang-14
 ENV CXX=clang++-14
+
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV LIBPNG_DIR=/LIBPNG_FUZZER/libpng
@@ -25,7 +26,11 @@ RUN git clone --depth 1 https://github.com/madler/zlib.git /LIBPNG_FUZZER/zlib &
     ./configure && \
     make -j$(nproc)
 
-RUN git clone --depth 1 https://github.com/pnggroup/libpng.git /LIBPNG_FUZZER/libpng
+# RUN git clone --depth 1 https://github.com/pnggroup/libpng.git /LIBPNG_FUZZER/libpng
+RUN wget https://download.sourceforge.net/libpng/libpng-1.6.44.tar.gz && \
+    tar xf libpng-1.6.44.tar.gz && \
+    mv libpng-1.6.44 /LIBPNG_FUZZER/libpng
+
 
 COPY harness /LIBPNG_FUZZER/harness
 COPY harness/dict.dict /LIBPNG_FUZZER/harness
@@ -35,8 +40,13 @@ RUN bash build.sh
 
 COPY run_target.sh /
 
+ENV FUZZER_FLAGS=""
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+ARG FUZZER_FLAGS=$FUZZER_FLAGS
+
 # Build the libfuzzer binary
-RUN clang++ ${CFLAGS} -std=c++11  -fsanitize=fuzzer,address \
+RUN ${CXX} ${CFLAGS} ${FUZZER_FLAGS} -std=c++11 \
     -I/LIBPNG_FUZZER/libpng -I/LIBPNG_FUZZER/zlib /LIBPNG_FUZZER/harness/libpng_read_fuzzer.cc /LIBPNG_FUZZER/libpng/.libs/libpng16.a /LIBPNG_FUZZER/zlib/libz.a \
     -o /LIBPNG_FUZZER/libfuzzerrunner
 

@@ -170,20 +170,47 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
                     "--build-arg", "parent_image=fbpp/base",
-                    "--build-arg", "CC=clang",
-                    "--build-arg", "CXX=clang++",
+                        "--build-arg", "CC=clang",
+                        "--build-arg", "CXX=clang++",
+                        "--build-arg", "FUZZER_FLAGS=-fsanitize=fuzzer,address",
                     "--build-arg", "CFLAGS=-fprofile-instr-generate -fcoverage-mapping",
                     "--no-cache"
                 ], check=True, stdout=lf, stderr=lf)
             else:
-                subprocess.run([
+                # Extract environment variables from fuzzer image
+                env_vars = {}
+                try:
+                    # Get environment variables from the fuzzer image
+                    result = subprocess.run([
+                        "docker", "run", "--rm", f"fbpp/fuzzer:{fuzzer}",
+                        "env"
+                    ], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                    
+                    # Parse environment variables
+                    for line in result.stdout.strip().split('\n'):
+                        if '=' in line:
+                            key, value = line.split('=', 1)
+                            if key.startswith('FUZZER_'):
+                                env_vars[key] = value
+                                lf.write(f"[INFO] Found {key}={value}\n")
+                except subprocess.CalledProcessError as e:
+                    lf.write(f"[WARNING] Could not extract env vars from fuzzer image: {e}\n")
+                
+                # Build benchmark with environment variables as build args
+                build_args = [
                     "docker", "build",
                     "-t", f"fbpp/benchmark:{benchmark_pair_name}",
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
                     "--build-arg", f"parent_image=fbpp/fuzzer:{fuzzer}",
                     "--no-cache"
-                ], check=True, stdout=lf, stderr=lf)
+                ]
+                
+                # Add environment variables as build arguments
+                for key, value in env_vars.items():
+                    build_args.extend(["--build-arg", f"{key}={value}"])
+                
+                subprocess.run(build_args, check=True, stdout=lf, stderr=lf)
 
             subprocess.run([
                 "docker", "run",

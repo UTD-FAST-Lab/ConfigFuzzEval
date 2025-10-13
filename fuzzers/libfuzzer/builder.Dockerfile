@@ -8,8 +8,10 @@ RUN mkdir /libfuzzer
 COPY run.sh /libfuzzer/
 COPY coverage.py /libfuzzer/
 
-ENV CC=clang
-ENV CXX=clang++
+
+ENV FUZZER_COMP=clang
+ENV FUZZER_COMPXX=clang++
+ENV FUZZER_FLAGS="-fsanitize=fuzzer,address"
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 

@@ -9,6 +9,7 @@ from validation import validate_configuration, validate_fuzzers, validate_benchm
 from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
+import itertools
 
 
 def delete_cts_benchmarks(experiment_state, project_root):
@@ -36,70 +37,88 @@ def run_experiments(experiment_state):
     experiment_path = experiment_state["experiment_path"]
     data_storage = os.path.join(experiment_path, "data")
     os.makedirs(data_storage, exist_ok=True)
-    
-    logging.info(f"Creating experiment-data/data/ct_seed.txt file")
 
+    # --- Write seed info ---
     config_file = os.path.join(data_storage, "ct_seed.txt")
     random_seed = experiment_state["random_seed"]
     with open(config_file, "w") as f:
-        if random_seed is not None:
-            f.write(f"# random_seed={random_seed}\n")
-        else:
-            f.write("# random_seed=None\n")
+        f.write(f"# random_seed={random_seed if random_seed is not None else 'None'}\n")
 
-    if experiment_state["serial_executions"] == 0:
-        core_start = experiment_state["cores_range"][0]
-        tasks = []
+    cores = experiment_state["cores_range"]
+    max_workers = len(cores)
+    logging.info(f"Detected cores: {cores}, using up to {max_workers} workers")
 
-        # Collect all runs
-        for each_built_bench in built_benchmarks:
-            tot_cts_count = experiment_state["tot_cts"].get(each_built_bench, 1)
-            for each_fuzzer in built_benchmarks[each_built_bench]:
-                for trial_id in range(experiment_state["trials"]):
-                    tasks.append((
-                        each_fuzzer,
-                        each_built_bench,
-                        trial_id,
-                        core_start,
-                        tot_cts_count
-                    ))
-                    core_start += 1
+    # --- Collect tasks ---
+    tasks = []
+    for benchmark in built_benchmarks:
+        tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
+        for fuzzer in built_benchmarks[benchmark]:
+            for trial_id in range(experiment_state["trials"]):
+                tasks.append((fuzzer, benchmark, trial_id, tot_cts_count))
 
-        # Run all tasks in parallel
-        with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:
-            future_to_task = {
-                executor.submit(
-                    run_benchmark,
-                    fuzzer,
-                    benchmark,
-                    coverage_binaries[benchmark],
-                    experiment_state["report_path"],
-                    experiment_state["max_total_time"],
-                    experiment_state["trials"],
-                    trial_id,
-                    experiment_state["experiment_path"],
-                    core_id,
-                    data_storage,
-                    experiment_state["total_memory_needed_gb"],
-                    tot_cts_count
-                ): (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
-                for (fuzzer, benchmark, trial_id, core_id, tot_cts_count) in tasks
-            }
+    # --- Initialize executor ---
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        core_cycle = itertools.cycle(cores)  # Round-robin assignment of cores
+        running = {}  # Map of futures → (task, core_id)
 
-            for future in as_completed(future_to_task):
-                fuzzer, benchmark, trial_id, core_id, tot_cts_count = future_to_task[future]
+        # Start initial batch
+        for _ in range(min(max_workers, len(tasks))):
+            fuzzer, benchmark, trial_id, tot_cts_count = tasks.pop(0)
+            core_id = next(core_cycle)
+            future = executor.submit(
+                run_benchmark,
+                fuzzer,
+                benchmark,
+                coverage_binaries[benchmark],
+                experiment_state["report_path"],
+                experiment_state["max_total_time"],
+                experiment_state["trials"],
+                trial_id,
+                experiment_state["experiment_path"],
+                core_id,
+                data_storage,
+                experiment_state["total_memory_needed_gb"],
+                tot_cts_count
+            )
+            running[future] = (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
+            logging.info(f"[START] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+
+        # As tasks finish, schedule new ones on the freed core
+        while running:
+            for finished_future in as_completed(list(running.keys()), timeout=None):
+                fuzzer, benchmark, trial_id, core_id, tot_cts_count = running.pop(finished_future)
                 try:
-                    success = future.result()
+                    success = finished_future.result()
                     if success:
-                        logging.info(f"[SUCCESS] Completed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}, total cts {tot_cts_count}")
+                        logging.info(f"[SUCCESS] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
                     else:
-                        logging.error(f"[FAILURE] Failed {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}, total cts {tot_cts_count}")
+                        logging.error(f"[FAILURE] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
                 except Exception as e:
                     logging.error(f"[EXCEPTION] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
-    else:
-        # TODO: handle serial executions
-        logging.error("Serial execution mode is not yet implemented.")
-        pass
+
+                # Launch next task (reuse freed core)
+                if tasks:
+                    next_fuzzer, next_bench, next_trial, next_tot_cts = tasks.pop(0)
+                    new_future = executor.submit(
+                        run_benchmark,
+                        next_fuzzer,
+                        next_bench,
+                        coverage_binaries[next_bench],
+                        experiment_state["report_path"],
+                        experiment_state["max_total_time"],
+                        experiment_state["trials"],
+                        next_trial,
+                        experiment_state["experiment_path"],
+                        core_id,  # reuse same core
+                        data_storage,
+                        experiment_state["total_memory_needed_gb"],
+                        next_tot_cts
+                    )
+                    running[new_future] = (next_fuzzer, next_bench, next_trial, core_id, next_tot_cts)
+                    logging.info(f"[START] {next_fuzzer} on {next_bench}, trial {next_trial}, core {core_id}")
+
+                # Break after processing one finished future
+                break
 
 
 def triage_on_experiments(experiment_state):

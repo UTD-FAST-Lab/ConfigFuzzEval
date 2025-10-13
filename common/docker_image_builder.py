@@ -299,7 +299,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             # Run the benchmark
             subprocess.run([
                 "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id}-{core_id+1}",
+                f"--cpuset-cpus={core_id-1}-{core_id}",
                 "-m", f"{memory_limit}g",
                 f"--memory-swap={memory_limit}g",
                 "-e", f"RUNTIME={actual_runtime}",
@@ -317,9 +317,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
             lf.write(f"[INFO] Calculating coverage for {benchmark}, trial {trial_id}\n")
             subprocess.run([
                 "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id}-{core_id+1}",
-                # "-m", f"{memory_limit}g",
-                # f"--memory-swap={memory_limit}g",
+                f"--cpuset-cpus={core_id-1}-{core_id}",
                 "-v", f"{coverage_binary_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",

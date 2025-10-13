@@ -53,9 +53,16 @@ RUN bash build.sh
 COPY run_target.sh /
 
 
+
+ENV FUZZER_FLAGS=""
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+ARG FUZZER_FLAGS=$FUZZER_FLAGS
+
+
 # Build fuzz target
 WORKDIR /LIBTIFF_FUZZER
-RUN clang++ ${CFLAGS} -std=c++11 -fsanitize=fuzzer,address \
+RUN ${CXX} ${CFLAGS} ${FUZZER_FLAGS} -std=c++11 \
     -I/LIBTIFF_FUZZER/libtiff/libtiff \
     /LIBTIFF_FUZZER/harness/libtiff_tiff_read_fuzzer.cc \
     /LIBTIFF_FUZZER/libtiff/libtiff/.libs/libtiff.a \

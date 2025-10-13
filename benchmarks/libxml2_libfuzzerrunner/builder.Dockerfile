@@ -42,9 +42,13 @@ RUN bash build.sh
 
 # Copy runner script
 COPY run_target.sh /
+ENV FUZZER_FLAGS=""
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+ARG FUZZER_FLAGS=$FUZZER_FLAGS
 
 # Build the fuzz target binary
-RUN clang++ ${CFLAGS} -std=c++11 -fsanitize=fuzzer,address \
+RUN ${CXX} ${CFLAGS} ${FUZZER_FLAGS} -std=c++11  \
     -I/LIBXML2_FUZZER/libxml2/include \
     /LIBXML2_FUZZER/harness/libxml2_xml_read_fuzzer.cc \
     /LIBXML2_FUZZER/libxml2/.libs/libxml2.a \

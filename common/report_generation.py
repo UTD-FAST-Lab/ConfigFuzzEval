@@ -319,11 +319,18 @@ def group_files_by_case(res_df):
     return result
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python report_generation.py <path_to_trial_data>")
-        sys.exit(1)
-    path = sys.argv[1]
-    
+    parser = argparse.ArgumentParser(description="Generate fuzzing experiment reports")
+    parser.add_argument("path_to_trial_data", help="Path to the trial data directory")
+    parser.add_argument("--output-dir", "-o", help="Output directory for CSV reports", default=None)
+    args = parser.parse_args()
+
+    path = args.path_to_trial_data
+    output_dir = args.output_dir
+
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        logging.info(f"Output directory created or exists: {output_dir}")
+
     individual_results = generate_benchmark_level_reports(path)
     results_df = records_to_dataframe(individual_results)
 
@@ -359,13 +366,17 @@ def main():
     print("=" * 80)
     print()
 
+    # --- Individual Results DataFrame ---
     print("=" * 80)
     print("Individual Results DataFrame:")
     print("-" * 80)
     print(results_df)
     print("=" * 80)
     print()
+    if output_dir:
+        results_df.to_csv(os.path.join(output_dir, "individual_results.csv"), index=False)
 
+    # --- Average Coverage DataFrame ---
     print("=" * 80)
     print("Average Coverage DataFrame:")
     print("-" * 80)
@@ -373,7 +384,10 @@ def main():
     print(avgs)
     print("=" * 80)
     print()
+    if output_dir:
+        avgs.to_csv(os.path.join(output_dir, "average_coverage.csv"), index=False)
 
+    # --- Average Coverage by Case DataFrame ---
     print("=" * 80)
     print("Average Coverage by Case DataFrame:")
     print("-" * 80)
@@ -381,7 +395,10 @@ def main():
     print(avg_case_df)
     print("=" * 80)
     print()
+    if output_dir:
+        avg_case_df.to_csv(os.path.join(output_dir, "average_coverage_by_case.csv"), index=False)
 
+    # --- Unique Files DataFrame ---
     print("=" * 80)
     print("Unique Files DataFrame:")
     print("-" * 80)
@@ -389,7 +406,10 @@ def main():
     print(file_df)
     print("=" * 80)
     print()
+    if output_dir:
+        file_df.to_csv(os.path.join(output_dir, "unique_files.csv"), index=False)
 
+    # --- Files Grouped by Case ---
     print("=" * 80)
     print("Files Grouped by Case:")
     print("-" * 80)
@@ -398,7 +418,7 @@ def main():
         print(f"Benchmark: {benchmark}")
         for key, value in files.items():
             print(f"\tGroup: {key}")
-            print(f"\tFiles: {str(value):.50} ...")
+            print(f"\tFiles: {str(value)[:50]} ...")
             print("-" * 80)
         
         if len(files) < 2:
@@ -411,6 +431,7 @@ def main():
         print("-" * 80)
         print()
     print("=" * 80)
+
 
 
 if __name__ == "__main__":

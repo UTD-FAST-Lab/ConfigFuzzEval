@@ -45,7 +45,9 @@ def run_experiments(experiment_state):
         f.write(f"# random_seed={random_seed if random_seed is not None else 'None'}\n")
 
     cores = experiment_state["cores_range"]
-    max_workers = len(cores)
+    core_start = cores[0]
+    core_end = cores[1]
+    max_workers = core_end - core_start + 1
     logging.info(f"Detected cores: {cores}, using up to {max_workers} workers")
 
     # --- Collect tasks ---

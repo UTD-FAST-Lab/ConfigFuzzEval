@@ -13,7 +13,7 @@ CMD ["bash", "-c", " \
     if [ \"$COVERAGE\" = \"false\" ]; then \
         RUN_TARGET=$(cat /benchmark/run_target.sh); \
         export RUN_TARGET; \
-        exec bash fuzzer/run.sh; \
+        exec bash fuzzer/run.sh & wait; \
     else \
         RUN_TARGET=$(cat /benchmark/run_target.sh); \
         export RUN_TARGET; \

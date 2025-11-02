@@ -17,8 +17,15 @@ RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
 
 # Install Clang 14 (matching OSS-Fuzz baseline)
 RUN apt-get update -qq && apt-get install -y clang-14 llvm-14
-ENV CC=clang-14
-ENV CXX=clang++-14
+RUN apt-get update && apt-get install -y wget gnupg lsb-release && \
+    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && \
+    ./llvm.sh 18 && \
+    ln -sf /usr/bin/clang-18 /usr/bin/clang && \
+    ln -sf /usr/bin/clang++-18 /usr/bin/clang++ && \
+    ln -sf /usr/bin/llvm-profdata-18 /usr/bin/llvm-profdata && \
+    ln -sf /usr/bin/llvm-cov-18 /usr/bin/llvm-cov
+ENV CC=clang-18
+ENV CXX=clang++-18
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 

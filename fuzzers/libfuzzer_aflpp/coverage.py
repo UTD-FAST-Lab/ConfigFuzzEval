@@ -64,7 +64,7 @@ def main():
     # Merge all profraw into a single profdata file
     merged_profdata = coverage_dir / "merged.profdata"
     if profraw_files:
-        merge_cmd = ["llvm-profdata-14", "merge", "-sparse", "-o", str(merged_profdata)] + profraw_files
+        merge_cmd = ["llvm-profdata-18", "merge", "-sparse", "-o", str(merged_profdata)] + profraw_files
         print(f"[+] Merging {len(profraw_files)} profraw files into {merged_profdata}")
         try:
             subprocess.run(merge_cmd, check=True)
@@ -82,13 +82,13 @@ def main():
     try:
         with open(report_json, "w") as f:
             subprocess.run(
-                ["llvm-cov-14", "export", binary, f"-instr-profile={merged_profdata}"],
+                ["llvm-cov-18", "export", binary, f"-instr-profile={merged_profdata}"],
                 check=True,
                 stdout=f
             )
         with open(report_txt, "w") as f:
             subprocess.run(
-                ["llvm-cov-14", "report", binary, f"-instr-profile={merged_profdata}"],
+                ["llvm-cov-18", "report", binary, f"-instr-profile={merged_profdata}"],
                 check=True,
                 stdout=f
             )

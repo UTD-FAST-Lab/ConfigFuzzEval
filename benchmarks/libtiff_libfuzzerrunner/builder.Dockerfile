@@ -27,11 +27,17 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     liblzma-dev \
     libjbig-dev \
     && rm -rf /var/lib/apt/lists/*
-
+RUN apt-get update && apt-get install -y wget gnupg lsb-release && \
+    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && \
+    ./llvm.sh 18 && \
+    ln -sf /usr/bin/clang-18 /usr/bin/clang && \
+    ln -sf /usr/bin/clang++-18 /usr/bin/clang++ && \
+    ln -sf /usr/bin/llvm-profdata-18 /usr/bin/llvm-profdata && \
+    ln -sf /usr/bin/llvm-cov-18 /usr/bin/llvm-cov
 # Install Clang 14 (matching OSS-Fuzz baseline)
 RUN apt-get update -qq && apt-get install -y clang-14 llvm-14
-ENV CC=clang-14
-ENV CXX=clang++-14
+ENV CC=clang-18
+ENV CXX=clang++-18
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 # Setup directories
@@ -62,12 +68,13 @@ ARG FUZZER_FLAGS=$FUZZER_FLAGS
 
 # Build fuzz target
 WORKDIR /LIBTIFF_FUZZER
+RUN apt-get update && apt-get install -y libdeflate-dev
 RUN ${CXX} ${CFLAGS} ${FUZZER_FLAGS} -std=c++11 \
     -I/LIBTIFF_FUZZER/libtiff/libtiff \
     /LIBTIFF_FUZZER/harness/libtiff_tiff_read_fuzzer.cc \
     /LIBTIFF_FUZZER/libtiff/libtiff/.libs/libtiff.a \
     -o /LIBTIFF_FUZZER/libfuzzerrunner \
-    -lz -ljpeg -llzma -ljbig
+    -lz -ljpeg -llzma -ljbig -ldeflate
 
 
 # General ASAN/UBSAN for runtime

@@ -19,7 +19,8 @@ RUN apt-get update && \
     ninja-build \
     gcc-$(gcc --version|head -n1|sed 's/\..*//'|sed 's/.* //')-plugin-dev \
     libstdc++-$(gcc --version|head -n1|sed 's/\..*//'|sed 's/.* //')-dev
-
+ENV CC=clang-18
+ENV CXX=clang++-18
 # Download afl++.
 RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /libfuzzer_aflpp && \
     cd /libfuzzer_aflpp && \
@@ -30,7 +31,7 @@ RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /libfuzzer_aflpp
 # Set AFL_NO_X86 to skip flaky tests.
 RUN cd /libfuzzer_aflpp && \
     unset CFLAGS CXXFLAGS && \
-    export CC=clang AFL_NO_X86=1 && \
+    export CC=clang-18 AFL_NO_X86=1 && \
     PYTHON_INCLUDE=/ make
 
 ENV FUZZER_COMP=/libfuzzer_aflpp/afl-clang-fast
@@ -44,8 +45,6 @@ COPY run.sh /libfuzzer_aflpp/
 COPY coverage.py /libfuzzer_aflpp/
 
 
-ENV CC=clang
-ENV CXX=clang++
 
 
 CMD ["bash", "-c", "cp -r /libfuzzer_aflpp /fuzzer_output/", "&&", "cp /libfuzzer_aflpp/run.sh /fuzzer_output/ ", "&&", "cp /libfuzzer_aflpp/coverage.py /fuzzer_output/"]

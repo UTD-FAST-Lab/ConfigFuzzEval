@@ -14,5 +14,7 @@ ENV FUZZER_COMPXX=clang++
 ENV FUZZER_FLAGS="-fsanitize=fuzzer,address"
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
+ENV CC=clang-18
+ENV CXX=clang++-18
 
 CMD ["bash", "-c", "cp -r /libfuzzer /fuzzer_output/ && cp /libfuzzer/run.sh /fuzzer_output/ && cp /libfuzzer/coverage.py /fuzzer_output/"]

@@ -44,11 +44,12 @@ def run_experiments(experiment_state):
     with open(config_file, "w") as f:
         f.write(f"# random_seed={random_seed if random_seed is not None else 'None'}\n")
 
-    cores = experiment_state["cores_range"]
-    core_start = cores[0]
-    core_end = cores[1]
+    core_range = experiment_state["cores_range"]
+    core_start = core_range[0]
+    core_end = core_range[1]
     max_workers = core_end - core_start + 1
-    logging.info(f"Detected cores: {cores}, using up to {max_workers} workers")
+    cores = [core for core in range(core_start, core_end + 1)]
+    logging.info(f"Core range: {core_range}, using up to {max_workers} workers")
 
     # --- Collect tasks ---
     tasks = []

@@ -267,7 +267,7 @@ if __name__ == "__main__":
     report_filestore = experiment_state["report_filestore"]
     
     if not (os.path.exists(experiment_filestore) and os.path.exists(report_filestore)):
-        logging.error(f"One or multiple filestores does not exist.")
+        logging.warning(f"One or multiple filestores does not exist.")
         os.makedirs(experiment_filestore, exist_ok=True)
         os.makedirs(report_filestore, exist_ok=True)
     

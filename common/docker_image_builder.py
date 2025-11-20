@@ -413,7 +413,7 @@ def run_triaging(triager, fuzzer, benchmark, trials,
                 # Mount trial-specific input, but shared output
                 subprocess.run([
                     "docker", "run", "--rm",
-                    f"--cpuset-cpus={core_id}-{core_id+1}",
+                    f"--cpuset-cpus={core_id-1}-{core_id}",
                     "-m", f"{memory_limit}g",
                     f"--memory-swap={memory_limit}g",
                     "-v", f"{benchmark_location}:/benchmark",

@@ -8,16 +8,21 @@ RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
 # Environment for build
 # ENV CC=$CC_LIBFUZZER
 # ENV CXX=$CXX_LIBFUZZER
-RUN apt-get update -qq && apt-get install -y clang-14 llvm-14
-ENV CC=clang-14
-ENV CXX=clang++-14
-
+# RUN apt-get update -qq && apt-get install -y clang-14 llvm-14
+RUN apt-get update && apt-get install -y wget gnupg lsb-release && \
+    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && \
+    ./llvm.sh 18 && \
+    ln -sf /usr/bin/clang-18 /usr/bin/clang && \
+    ln -sf /usr/bin/clang++-18 /usr/bin/clang++ && \
+    ln -sf /usr/bin/llvm-profdata-18 /usr/bin/llvm-profdata && \
+    ln -sf /usr/bin/llvm-cov-18 /usr/bin/llvm-cov
+ENV CC=clang
+ENV CXX=clang++
 ENV CFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV CXXFLAGS="-fprofile-instr-generate -fcoverage-mapping"
 ENV LIBPNG_DIR=/LIBPNG_FUZZER/libpng
 ENV ZLIB_DIR=/LIBPNG_FUZZER/zlib
 ENV HARNESS_DIR=/LIBPNG_FUZZER/harness
-
 RUN mkdir /LIBPNG_FUZZER
 
 # Build zlib

@@ -1,5 +1,5 @@
 {
-  "name": "libtiff",
+  "name": "libtiff_tiff2pdf",
   "options": [
     {
       "name": "deprecated",
@@ -14,10 +14,28 @@
       "cli": "--enable-largefile"
     },
     {
+      "name": "ld-version-script",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-ld-version-script"
+    },
+    {
+      "name": "rpath",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-rpath"
+    },
+    {
       "name": "tests",
       "type": "bool",
       "default": true,
       "cli": "--enable-tests"
+    },
+    {
+      "name": "tools",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-tools"
     },
     {
       "name": "contrib",
@@ -136,7 +154,7 @@
     {
       "name": "cxx",
       "type": "bool",
-      "default": false,
+      "default": true,
       "cli": "--enable-cxx"
     },
     {
@@ -188,124 +206,166 @@
       "cli": "--enable-sphinx"
     },
     {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-shared"
+    },
+    {
+      "name": "static",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-static"
+    },
+    {
       "name": "pic",
-      "type": "value",
-      "default": "use both",
+      "type": "bool",
+      "default": true,
       "cli": "--with-pic"
     },
     {
-      "name": "aix-soname",
-      "type": "value",
-      "default": "aix",
-      "cli": "--with-aix-soname"
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-maintainer-mode"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
     },
     {
       "name": "zlib-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-zlib-include-dir"
     },
     {
       "name": "zlib-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-zlib-lib-dir"
     },
     {
       "name": "libdeflate-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-libdeflate-include-dir"
     },
     {
       "name": "libdeflate-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-libdeflate-lib-dir"
     },
     {
       "name": "jpeg-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jpeg-include-dir"
     },
     {
       "name": "jpeg-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jpeg-lib-dir"
     },
     {
       "name": "jbig-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jbig-include-dir"
     },
     {
       "name": "jbig-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jbig-lib-dir"
     },
     {
       "name": "lerc-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-lerc-include-dir"
     },
     {
       "name": "lerc-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-lerc-lib-dir"
     },
     {
       "name": "lzma-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-lzma-include-dir"
     },
     {
       "name": "lzma-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-lzma-lib-dir"
     },
     {
       "name": "zstd-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-zstd-include-dir"
     },
     {
       "name": "zstd-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-zstd-lib-dir"
     },
     {
       "name": "webp-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-webp-include-dir"
     },
     {
       "name": "webp-lib-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-webp-lib-dir"
     },
     {
       "name": "jpeg12-include-dir",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jpeg12-include-dir"
     },
     {
       "name": "jpeg12-lib",
-      "type": "value",
+      "type": "string",
       "default": null,
       "cli": "--with-jpeg12-lib"
+    },
+    {
+      "name": "jpeg12",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-jpeg12"
+    },
+    {
+      "name": "docdir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-docdir"
     },
     {
       "name": "x",

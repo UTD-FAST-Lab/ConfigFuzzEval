@@ -70,6 +70,55 @@
       "default": false,
       "cli": "--enable-fsect-man5",
       "desc": "enable file formats in man section 5"
+    },
+    {
+      "name": "warnings",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-warnings",
+      "desc": "enable compiler warnings"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules",
+      "desc": "less verbose build output (undo: \"make V=1\")"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking",
+      "desc": "do not reject slow dependency extractors"
+    },
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-shared",
+      "desc": "build shared libraries"
+    },
+    {
+      "name": "static",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-static",
+      "desc": "build static libraries"
+    },
+    {
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install",
+      "desc": "optimize for fast installation"
+    },
+    {
+      "name": "year2038",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-year2038",
+      "desc": "support timestamps after 2038"
     }
   ]
 }

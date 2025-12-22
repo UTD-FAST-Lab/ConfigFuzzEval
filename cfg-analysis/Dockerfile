@@ -40,5 +40,12 @@ WORKDIR /superc/
 RUN make configure
 RUN make
 
-COPY dummy.c /dummy.c
-CMD ["java", "superc.SuperC", "-silent", "-printAST", "-nostdinc", "/dummy.c"]
+COPY cfg-analysis/run_superc.sh /superc/run_superc.sh
+COPY benchmarks/bison_bison/load_src.sh /load_src.sh
+
+WORKDIR /
+RUN bash load_src.sh
+WORKDIR /superc/
+
+
+CMD ["bash", "run_superc.sh"]

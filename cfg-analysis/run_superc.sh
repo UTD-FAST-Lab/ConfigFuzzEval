@@ -1,16 +1,20 @@
 #!/bin/bash
 
 # Root directory containing source files
-SRC_DIR="/home/safeer/test_super_c/bison"
+SRC_DIR="/src_dir"
 
 # Output directory for sourcelinePC files
 OUT_DIR="${SRC_DIR}/sourceline_pc_outputs"
 
-# Include directories (edit or add more as needed)
-INCLUDE_DIRS=(
-    "-I /home/safeer/test_super_c/bison/src"
-    "-I /home/safeer/test_super_c/bison/lib"
-)
+# Load include directories from file
+INCLUDE_DIRS_FILE="${SRC_DIR}/include_dirs.txt"
+if [ ! -f "$INCLUDE_DIRS_FILE" ]; then
+    echo "Error: Include directories file not found: $INCLUDE_DIRS_FILE"
+    exit 1
+fi
+
+# Read include directories from file into array
+mapfile -t INCLUDE_DIRS < "$INCLUDE_DIRS_FILE"
 
 # Ensure output directory exists
 mkdir -p "$OUT_DIR"

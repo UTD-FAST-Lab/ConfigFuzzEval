@@ -4,7 +4,11 @@
 SRC_DIR="/src_dir"
 
 # Output directory for sourcelinePC files
-OUT_DIR="${SRC_DIR}/sourceline_pc_outputs"
+OUT_DIR="/fuzzer_output/sourceline_pc_outputs"
+
+cd /benchmark
+bash load_src.sh
+cd -
 
 # Load include directories from file
 INCLUDE_DIRS_FILE="${SRC_DIR}/include_dirs.txt"

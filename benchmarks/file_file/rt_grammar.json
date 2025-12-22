@@ -1,8 +1,18 @@
 {
-    "cmdline": "$inopts $INPUTFILE",
+    "cmdline": "$inopts -m /usr/share/misc/magic $INPUTFILE",
     "connector": " ",
     "strmax": 3,
     "options": [
+        {
+            "opt": "-v",
+            "type": "bool"
+        },
+        {
+            "opt": "-m",
+            "type": "choice",
+            "choices": ["/usr/share/misc/magic", "/etc/magic", "./magic", "magic.mgc", "~/.magic"],
+            "connector": " "
+        },
         {
             "opt": "-z",
             "type": "bool"
@@ -20,7 +30,47 @@
             "type": "bool"
         },
         {
+            "opt": "-e",
+            "type": "choice",
+            "choices": ["apptype", "ascii", "cdf", "compress", "csv", "elf", "encoding", "soft", "tar", "json", "simh", "text", "tokens"],
+            "connector": " "
+        },
+        {
+            "opt": "--exclude-quiet",
+            "type": "choice",
+            "choices": ["apptype", "ascii", "cdf", "compress", "csv", "elf", "encoding", "soft", "tar", "json", "simh", "text", "tokens"],
+            "connector": " "
+        },
+        {
+            "opt": "-f",
+            "type": "choice",
+            "choices": ["filelist.txt", "files.txt", "input.txt", "list.txt"],
+            "connector": " "
+        },
+        {
+            "opt": "-F",
+            "type": "choice",
+            "choices": [":", ",", "|", ";", " "],
+            "connector": " "
+        },
+        {
             "opt": "-i",
+            "type": "bool"
+        },
+        {
+            "opt": "--apple",
+            "type": "bool"
+        },
+        {
+            "opt": "--extension",
+            "type": "bool"
+        },
+        {
+            "opt": "--mime-type",
+            "type": "bool"
+        },
+        {
+            "opt": "--mime-encoding",
             "type": "bool"
         },
         {
@@ -36,7 +86,7 @@
             "type": "bool"
         },
         {
-            "opt": "-H",
+            "opt": "-h",
             "type": "bool"
         },
         {
@@ -52,12 +102,14 @@
             "type": "bool"
         },
         {
-            "opt": "-P",
+            "opt": "-p",
             "type": "bool"
         },
         {
-            "opt": "-p",
-            "type": "bool"
+            "opt": "-P",
+            "type": "choice",
+            "choices": ["bytes=1000000", "bytes=7340032", "elf_notes=256", "elf_phnum=2048", "elf_shnum=32768", "elf_shsize=134217728", "encoding=65536", "indir=50", "name=150", "regex=8192", "magwarn=64"],
+            "connector": " "
         },
         {
             "opt": "-r",
@@ -81,7 +133,11 @@
         }
     ],
     "depend": [],
-    "conflict": [],
-    "maxcombs": 3,
-    "notes": "file removed:-F, --separator STRING   -f, --files-from FILE  -e, --exclude TEST, -m, --magic-file LIST --help --version"
+    "conflict": [
+        ["-L", "-h"],
+        ["-i", "--mime-type"],
+        ["-i", "--mime-encoding"],
+        ["--mime-type", "--mime-encoding"]
+    ],
+    "maxcombs": 3
 }

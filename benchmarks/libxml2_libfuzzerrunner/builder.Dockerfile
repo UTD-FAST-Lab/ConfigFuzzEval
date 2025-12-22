@@ -42,7 +42,7 @@ RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /LIBXML2_FUZZ
 COPY harness /LIBXML2_FUZZER/harness
 COPY harness/dict.dict /LIBXML2_FUZZER/harness
 COPY corpus /LIBXML2_FUZZER/corpus
-
+WORKDIR /LIBXML2_FUZZER/libxml2
 # Copy build script and run it
 COPY build.sh .
 RUN bash build.sh

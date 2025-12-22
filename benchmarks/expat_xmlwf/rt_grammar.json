@@ -20,6 +20,12 @@
             "type": "bool"
         },
         {
+            "opt": "-e",
+            "type": "choice",
+            "choices": ["UTF-8", "UTF-16", "ISO-8859-1", "US-ASCII", "windows-1252"],
+            "connector": " "
+        },
+        {
             "opt": "-w",
             "type": "bool"
         },
@@ -30,14 +36,18 @@
         {
             "opt": "-g",
             "type": "intnum",
-            "range": [
-                0,
-                2048
-            ]
+            "range": [1, 65536],
+            "connector": " "
         },
         {
             "opt": "-k",
             "type": "bool"
+        },
+        {
+            "opt": "-d",
+            "type": "choice",
+            "choices": ["./output", "./out", "/tmp", ".", ".."],
+            "connector": " "
         },
         {
             "opt": "-c",
@@ -57,32 +67,34 @@
         },
         {
             "opt": "-a",
-            "type": "floatnum",
-            "range": [
-                1,
-                2147483647
-            ],
+            "type": "intnum",
+            "range": [1, 1000],
             "connector": " "
         },
         {
             "opt": "-b",
             "type": "intnum",
-            "range": [
-                1,
-                2147483647
-            ],
+            "range": [1, 67108864],
             "connector": " "
         },
         {
             "opt": "-q",
             "type": "bool"
+        },
+        {
+            "opt": "-h",
+            "type": "bool"
+        },
+        {
+            "opt": "-v",
+            "type": "bool"
         }
     ],
-    "depend": [
-    ],
+    "depend": [],
     "conflict": [
+        ["-c", "-m"],
+        ["-c", "-t"],
+        ["-m", "-t"]
     ],
-    "maxcombs": 3,
-    "notes": "xmlwf removed: -e ENCODING -d DIRECTORY --help --version"
+    "maxcombs": 3
 }
-

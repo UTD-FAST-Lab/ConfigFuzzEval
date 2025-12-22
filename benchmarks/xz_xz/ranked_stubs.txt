@@ -1,0 +1,11 @@
+10
+xz -d -f -7 -e
+xz -e -h -l
+xz -2
+xz -z -q
+xz -t -H
+xz -7 -d -V -H
+xz -k -v
+xz -2
+xz -k
+xz -f -v -2

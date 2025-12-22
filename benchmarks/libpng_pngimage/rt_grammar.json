@@ -7,6 +7,5 @@
     "depend": [],
     "conflict": [
     ],
-    "maxcombs": 3,
-    "notes": "pngimage has no rt congigs"
+    "maxcombs": 3
 }

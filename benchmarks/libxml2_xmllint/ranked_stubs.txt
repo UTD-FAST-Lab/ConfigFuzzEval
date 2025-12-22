@@ -1,4 +1,11 @@
-3
---maxmem 102400 --c14n --noent --load-trace --insert --nocatalogs --noout --stream --testIO --catalogs --xinclude --dtdattr --debug --auto --xpath "//element/@attribute" --repeat --postvalid --chkregister --nocdata --copy --nsclean --timing --pattern /foo/bar --recover --loaddtd  @@ 
---maxmem 102400 --walker --noent --html --valid --shell --nocatalogs --noout --dropdtd --xmlout --stream --compress --testIO --htmlout --catalogs --xinclude --dtdattr --debug --auto --xpath "//element/@attribute" --repeat --chkregister --push --nocdata --copy --nowrap --pattern /foo/bar --loaddtd  @@ 
---maxmem 102400 --walker --noent --valid --insert --shell --nocatalogs --xmlout --format --stream --noxincludenode --compress --htmlout --catalogs --dtdattr --encode UTF-16 --debug --auto --xpath "//element/@attribute" --nonet --repeat --push --copy --timing --pattern /foo/bar --loaddtd --output /tmp/foo  @@ 
+10
+xmllint --relaxng relaxng.rng --sax1 --noent --copy --nonet --xinclude @@
+xmllint --exc-c14n --version --xpath //node[@id] --nowarning --timing --auto --noenc --nocdata @@
+xmllint --xpath //node[@id] --repeat --format --dtdvalidfpi FPI --nsclean --postvalid --exc-c14n --html --nocdata @@
+xmllint --xpath //node[@id] --nsclean --stream --nodict @@
+xmllint --noblanks @@
+xmllint --quiet --html --nodefdtd --noout @@
+xmllint --shell --dtdattr --noent --nofixup-base-uris --pedantic --relaxng relaxng.rng @@
+xmllint --version --noout --dtdattr --repeat --nodefdtd @@
+xmllint --recover --noxincludenode --c14n11 --loaddtd --shell @@
+xmllint --memory --xpath0 //element --html --postvalid --nocdata --version --xmlout --dropdtd --nocatalogs --xinclude @@

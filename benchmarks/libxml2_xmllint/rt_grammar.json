@@ -2,14 +2,13 @@
     "cmdline":  "$inopts $INPUTFILE",
     "connector": " ",
     "strmax":   19,
-    "options":  [{
-                    "opt": "--shell",
-                    "type": "bool"
-                  },
-                  {
-                    "opt": "--debug",
-                    "type": "bool"
-                  },
+    "options":  [
+                  {"opt":     "--version",
+                   "type":    "bool"},
+                  {"opt":     "--shell",
+                   "type":    "bool"},
+                  {"opt":     "--debug",
+                   "type":    "bool"},
                   {"opt":     "--copy",
                    "type":    "bool"},
                   {"opt":     "--recover",
@@ -20,14 +19,12 @@
                    "type":    "bool"},
                   {"opt":     "--noenc",
                    "type":    "bool"},
-                {
-                  "opt": "--noout",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--path",
-                  "type": "bool"
-                },
+                  {"opt":     "--noout",
+                   "type":    "bool"},
+                  {"opt":     "--path",
+                   "type":    "choice",
+                   "choices": ["/usr/share/xml", "/etc/xml", "./xml", ".", ".."],
+                   "connector": " "},
                   {"opt":     "--load-trace",
                    "type":    "bool"},
                   {"opt":     "--nonet",
@@ -36,35 +33,33 @@
                    "type":    "bool"},
                   {"opt":     "--valid",
                    "type":    "bool"},
-                {
-                  "opt": "--postvalid",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--insert",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--strict-namespace",
-                  "type": "bool"
-                },
+                  {"opt":     "--postvalid",
+                   "type":    "bool"},
+                  {"opt":     "--dtdvalid",
+                   "type":    "choice",
+                   "choices": ["http://example.com/dtd.dtd", "file:///path/to/dtd.dtd", "./dtd.dtd", "dtd.dtd"],
+                   "connector": " "},
+                  {"opt":     "--dtdvalidfpi",
+                   "type":    "choice",
+                   "choices": ["-//W3C//DTD XHTML 1.0//EN", "-//OASIS//DTD DocBook XML V4.5//EN", "FPI"],
+                   "connector": " "},
+                  {"opt":     "--insert",
+                   "type":    "bool"},
+                  {"opt":     "--strict-namespace",
+                   "type":    "bool"},
                   {"opt":     "--quiet",
                    "type":    "bool"},
                   {"opt":     "--timing",
                    "type":    "bool"},
                   {"opt":     "--repeat",
                    "type":    "bool"},
-                {
-                  "opt": "--droptd",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--html",
-                  "type": "bool"
-                },
-                  {"opt":     "--xmlout",
+                  {"opt":     "--dropdtd",
+                   "type":    "bool"},
+                  {"opt":     "--html",
                    "type":    "bool"},
                   {"opt":     "--nodefdtd",
+                   "type":    "bool"},
+                  {"opt":     "--xmlout",
                    "type":    "bool"},
                   {"opt":     "--push",
                    "type":    "bool"},
@@ -72,30 +67,36 @@
                    "type":    "bool"},
                   {"opt":     "--maxmem",
                    "type":    "intnum",
-                   "range":  [0,2147483647]},
+                   "range":  [0,2147483647],
+                   "connector": " "},
                   {"opt":     "--nowarning",
                    "type":    "bool"},
                   {"opt":     "--noblanks",
                    "type":    "bool"},
-                {
-                  "opt": "--nocdata",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--nodict",
-                  "type": "bool"
-                },
-                {
-                  "opt": "--pedantic",
-                  "type": "bool"
-                },
+                  {"opt":     "--nocdata",
+                   "type":    "bool"},
+                  {"opt":     "--nodict",
+                   "type":    "bool"},
+                  {"opt":     "--pedantic",
+                   "type":    "bool"},
+                  {"opt":     "--output",
+                   "type":    "choice",
+                   "choices": ["output.xml", "result.xml", "out.xml", "file.xml"],
+                   "connector": " "},
+                  {"opt":     "-o",
+                   "type":    "choice",
+                   "choices": ["output.xml", "result.xml", "out.xml", "file.xml"],
+                   "connector": " "},
                   {"opt":     "--format",
                    "type":    "bool"},
-                  {"opt":     "--dropdtd",
-                   "type":    "bool"},
+                  {"opt":     "--encode",
+                   "type":    "choice",
+                   "choices": ["UTF-8", "UTF-16", "ISO-8859-1", "US-ASCII"],
+                   "connector": " "},
                   {"opt":     "--pretty",
                    "type":    "choice",
-                   "choices": ["0", "1", "2"]},
+                   "choices": ["0", "1", "2"],
+                   "connector": " "},
                   {"opt":     "--c14n",
                    "type":    "bool"},
                   {"opt":     "--c14n11",
@@ -103,8 +104,6 @@
                   {"opt":     "--exc-c14n",
                    "type":    "bool"},
                   {"opt":     "--nsclean",
-                   "type":    "bool"},
-                  {"opt":     "--testIO",
                    "type":    "bool"},
                   {"opt":     "--catalogs",
                    "type":    "bool"},
@@ -126,27 +125,44 @@
                    "type":    "bool"},
                   {"opt":     "--walker",
                    "type":    "bool"},
+                  {"opt":     "--pattern",
+                   "type":    "choice",
+                   "choices": ["//element", "/root/*", "//node[@attr]", "pattern"],
+                   "connector": " "},
+                  {"opt":     "--relaxng",
+                   "type":    "choice",
+                   "choices": ["schema.rng", "relaxng.rng", "validation.rng", "schema.xml"],
+                   "connector": " "},
+                  {"opt":     "--schema",
+                   "type":    "choice",
+                   "choices": ["schema.xsd", "validation.xsd", "wsdl.xsd", "schema.xml"],
+                   "connector": " "},
                   {"opt":     "--sax1",
                    "type":    "bool"},
                   {"opt":     "--sax",
                    "type":    "bool"},
                   {"opt":     "--oldxml10",
                    "type":    "bool"},
-                {
-                  "opt": "--max-ampl",
-                  "type": "intnum",
-                  "range": [
-                    0,
-                    2147483647
-                  ]
-                }
+                  {"opt":     "--xpath",
+                   "type":    "choice",
+                   "choices": ["//element", "/root/child", "//node[@id]", "//*"],
+                   "connector": " "},
+                  {"opt":     "--xpath0",
+                   "type":    "choice",
+                   "choices": ["//element", "/root/child", "//node[@id]", "//*"],
+                   "connector": " "},
+                  {"opt":     "--max-ampl",
+                   "type":    "intnum",
+                   "range":  [0,2147483647],
+                   "connector": " "}
                  ],
      "depend":   [{"opt":     "--xmlout",
                    "on":      ["--html"]}
                  ],
      "conflict": [["--catalogs", "--nocatalogs"],
-                  ["--xinclude", "--noxincludenode"]                 ],
-     "maxcombs": 2,
-     "notes": "xmllint removed: --version --dtdvalid URL        --dtdvalidfpi         --output file --encode encoding --pattern pattern_value     --relaxng schema         --schema schema --xpath expr --noout --max-ampl value"
-  }
-
+                  ["--xinclude", "--noxincludenode"],
+                  ["--output", "-o"],
+                  ["--xpath", "--xpath0"]
+                 ],
+     "maxcombs": 2
+}

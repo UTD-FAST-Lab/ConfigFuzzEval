@@ -1,4 +1,11 @@
-3
-bison --color=always -g -F NAME=1234 -t -p ./ -r cex -y -x  @@ -o /tmp/foo
-bison --style --color=always -l -v -L C -D NAME=1234 -t --defines -y -x  @@ -o /tmp/foo
-bison -g -l -L C -t --defines -d -r solved -y  @@ -o /tmp/foo
+10
+bison -k @@
+bison -p lex -F api.prefix=yy -f=diagnostics-parseable-fixits -y -D api.prefix=my --locations -L d @@
+bison -F api.prefix=yy -y -o output.c -V -S lalr1.cc -t -b output @@
+bison -b output -F api.prefix=yy -u @@
+bison -S lalr1.cc --locations -h -p lex -d -W=error @@
+bison --print-datadir -l -v --html=output.html @@
+bison --locations -y -L d -d @@
+bison -d @@
+bison -d -y -H=output.h -D api.prefix=my --style=style.css @@
+bison -D api.prefix=my --html=output.html -t --color=no --print-datadir -g=output.dot --report-file=parser.report -L d -r=itemsets --style=style.css @@

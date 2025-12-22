@@ -1,4 +1,3 @@
-cd /LIBPNG_FUZZER/libpng
 export CPPFLAGS="-I$PWD/LIBPNG_FUZZER/zlib"
 export LDFLAGS="-L$PWD/LIBPNG_FUZZER/zlib"
 autoreconf -f -i

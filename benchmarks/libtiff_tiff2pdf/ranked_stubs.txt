@@ -1,21 +1,11 @@
-20
-tiff2pdf -j -z -n -F @@
-tiff2pdf -b -i -F @@
-tiff2pdf -z -f -d @@
-tiff2pdf -n -b -F -j -z @@
-tiff2pdf -d -j @@
-tiff2pdf -i -z -F -b -f @@
-tiff2pdf -F -d -n @@
-tiff2pdf -f -b -i -z @@
-tiff2pdf -n -j -F -b @@
-tiff2pdf -d -f -j -z @@
-tiff2pdf -j -n @@
-tiff2pdf -F -z -b -i -n -d @@
-tiff2pdf -f -F -i @@
-tiff2pdf -z -n -j -d -b @@
-tiff2pdf -b -f -F -n @@
-tiff2pdf -i -j -d @@
-tiff2pdf -n -z -f @@
-tiff2pdf -j -i -F -z @@
-tiff2pdf -b -d -n -F @@
-tiff2pdf -f -z -i -j -b @@
+10
+tiff2pdf -r d -d -u m @@
+tiff2pdf -z -b -c Creator @@
+tiff2pdf -j -p legal -t Title -f -a Author -k index -F -r d -u m -h @@
+tiff2pdf -p legal -b -k index -f -r d -c Creator -o output.pdf -d @@
+tiff2pdf -p legal -u m -i -z -F -h -c Creator @@
+tiff2pdf -a Author @@
+tiff2pdf -z -k index -f -c Creator -r d -n -i -p legal @@
+tiff2pdf -p legal -h -k index -j @@
+tiff2pdf -t Title -o output.pdf -s Content @@
+tiff2pdf -e 20250101000000 -n -k index -f -t Title @@

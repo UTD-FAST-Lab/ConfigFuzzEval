@@ -1,0 +1,11 @@
+10
+x264 --bff --input-res 64x64  -o /dev/null @@
+x264 --preset ultrafast --pulldown euro --level 1 --fullhelp --profile high --tff --input-res 64x64  -o /dev/null @@
+x264 --longhelp --vf select_every:3,0 -o out.264 --input-res 64x64  -o /dev/null @@
+x264 --preset ultrafast --input-res 64x64  -o /dev/null @@
+x264 --tune grain --pulldown euro --vf select_every:3,0 --profile high -p 2 --fullhelp --sar 2.40:1 --preset ultrafast --quiet --input-res 64x64  -o /dev/null @@
+x264 --pulldown euro --sar 2.40:1 --profile high --vf select_every:3,0 -o out.264 -p 2 --input-res 64x64  -o /dev/null @@
+x264 --quiet --input-res 64x64  -o /dev/null @@
+x264 --tff -o out.264 -h -p 2 --fps 23.976 --preset ultrafast --input-res 64x64  -o /dev/null @@
+x264 --preset ultrafast --fullhelp --level 1 --tune grain --input-res 64x64  -o /dev/null @@
+x264 --level 1 --longhelp --pulldown euro --bff -o out.264 --input-res 64x64  -o /dev/null @@

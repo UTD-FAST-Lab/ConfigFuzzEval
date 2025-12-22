@@ -1,5 +1,107 @@
 {
   "name": "binutils_objdump",
   "options": [
+    {
+      "name": "checking",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-checking"
+    },
+    {
+      "name": "targets",
+      "type": "string",
+      "default": null,
+      "cli": "--enable-targets"
+    },
+    {
+      "name": "deterministic-archives",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-deterministic-archives"
+    },
+    {
+      "name": "default-strings-all",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-default-strings-all"
+    },
+    {
+      "name": "f-for-ifunc-symbols",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-f-for-ifunc-symbols"
+    },
+    {
+      "name": "follow-debug-links",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-follow-debug-links"
+    },
+    {
+      "name": "libctf",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libctf"
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-maintainer-mode"
+    },
+    {
+      "name": "largefile",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-largefile"
+    },
+    {
+      "name": "nls",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-nls"
+    },
+    {
+      "name": "zlib",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-zlib"
+    },
+    {
+      "name": "debuginfod",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-debuginfod"
+    },
+    {
+      "name": "libiconv-prefix",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libiconv-prefix"
+    },
+    {
+      "name": "build-warnings",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-build-warnings"
+    },
+    {
+      "name": "werror",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-werror"
+    },
+    {
+      "name": "windres",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-windres"
+    },
+    {
+      "name": "windmc",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-windmc"
+    }
   ]
 }

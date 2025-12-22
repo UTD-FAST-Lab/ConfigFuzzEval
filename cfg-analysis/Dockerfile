@@ -4,9 +4,6 @@ FROM ubuntu:22.04
 # Avoid interactive prompts during build
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Argument to specify additional script to load source code
-ARG LOAD_SRC_SCRIPT=""
-
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -43,12 +40,8 @@ WORKDIR /superc/
 RUN make configure
 RUN make
 
-COPY cfg-analysis/run_superc.sh /superc/run_superc.sh
-COPY ${LOAD_SRC_SCRIPT} /load_src.sh
-
-WORKDIR /
-RUN bash load_src.sh
+COPY run_superc.sh /superc/run_superc.sh
 WORKDIR /superc/
 
 
-# CMD ["bash", "run_superc.sh"]
+CMD ["bash", "run_superc.sh"]

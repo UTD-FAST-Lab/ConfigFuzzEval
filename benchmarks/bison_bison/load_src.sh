@@ -6,7 +6,7 @@ set -e
 
 BISON_VERSION="3.8"
 BISON_URL="https://ftp.gnu.org/gnu/bison/bison-${BISON_VERSION}.tar.gz"
-DOWNLOAD_DIR="src_dir"
+DOWNLOAD_DIR="/src_dir"
 
 # Create src_dir if it doesn't exist
 mkdir -p "${DOWNLOAD_DIR}"

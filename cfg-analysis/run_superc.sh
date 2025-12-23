@@ -4,7 +4,7 @@
 SRC_DIR="/src_dir"
 
 # Output directory for sourcelinePC files
-OUT_DIR="/fuzzer_output/sourceline_pc_outputs"
+OUT_DIR="/fuzzer_output/pc_analysis/sourceline_pc_outputs"
 
 cd /benchmark
 bash load_src.sh

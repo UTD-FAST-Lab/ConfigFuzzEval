@@ -302,7 +302,7 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
 
 # Build SuperC CFG analysis image
 def build_superc(superc_path, experiment_path, project_root):
-    output_path = os.path.join(experiment_path, "cfg-analysis")
+    output_path = os.path.join(experiment_path, "superc")
     os.makedirs(output_path, exist_ok=True)
 
     # Log file

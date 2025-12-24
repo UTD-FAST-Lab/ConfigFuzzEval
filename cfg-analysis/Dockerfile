@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     libz3-java \
     libjson-java \
     sat4j \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Set JAVA_HOME
@@ -41,7 +43,11 @@ RUN make configure
 RUN make
 
 COPY run_superc.sh /superc/run_superc.sh
-WORKDIR /superc/
+COPY 1_merge_pc_with_coverage.py /1_merge_pc_with_coverage.py
+COPY 2_analyze_pc_coverage.py /2_analyze_pc_coverage.py
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
+WORKDIR /
 
-CMD ["bash", "run_superc.sh"]
+CMD ["bash", "entrypoint.sh"]

@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image
+from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_superc
 from color_logger import get_logger
 from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers
@@ -124,6 +124,80 @@ def run_experiments(experiment_state):
                 break
 
 
+def run_superc_on_experiments(experiment_state):
+    built_benchmarks = experiment_state["built_benchmarks"]
+    experiment_path = experiment_state["experiment_path"]
+    data_storage = os.path.join(experiment_path, "data")
+    os.makedirs(data_storage, exist_ok=True)
+
+    core_range = experiment_state["cores_range"]
+    core_start = core_range[0]
+    core_end = core_range[1]
+    max_workers = core_end - core_start + 1
+    cores = [core for core in range(core_start, core_end + 1)]
+    logging.info(f"Core range: {core_range}, using up to {max_workers} workers for SuperC analysis")
+
+    # --- Collect tasks ---
+    tasks = []
+    for benchmark in built_benchmarks:
+        tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
+        for fuzzer in built_benchmarks[benchmark]:
+            for trial_id in range(experiment_state["trials"]):
+                tasks.append((fuzzer, benchmark, trial_id, tot_cts_count))
+
+    # --- Initialize executor ---
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        core_cycle = itertools.cycle(cores)  # Round-robin assignment of cores
+        running = {}  # Map of futures → (task, core_id)
+
+        # Start initial batch
+        for _ in range(min(max_workers, len(tasks))):
+            fuzzer, benchmark, trial_id, tot_cts_count = tasks.pop(0)
+            core_id = next(core_cycle)
+            future = executor.submit(
+                run_superc,
+                fuzzer,
+                benchmark,
+                trial_id,
+                experiment_state["experiment_path"],
+                core_id,
+                data_storage,
+                experiment_state["total_memory_needed_gb"]
+            )
+            running[future] = (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
+            logging.info(f"[START] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+
+        # As tasks finish, schedule new ones on the freed core
+        while running:
+            for finished_future in as_completed(list(running.keys()), timeout=None):
+                fuzzer, benchmark, trial_id, core_id, tot_cts_count = running.pop(finished_future)
+                try:
+                    success = finished_future.result()
+                    if success:
+                        logging.info(f"[SUCCESS] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                    else:
+                        logging.error(f"[FAILURE] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                except Exception as e:
+                    logging.error(f"[EXCEPTION] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
+
+                # Launch next task (reuse freed core)
+                if tasks:
+                    next_fuzzer, next_bench, next_trial, next_tot_cts = tasks.pop(0)
+                    new_future = executor.submit(
+                        run_superc,
+                        next_fuzzer,
+                        next_bench,
+                        next_trial,
+                        experiment_state["experiment_path"],
+                        core_id,  # reuse same core
+                        data_storage,
+                        experiment_state["total_memory_needed_gb"]
+                    )
+                    running[new_future] = (next_fuzzer, next_bench, next_trial, core_id, next_tot_cts)
+                    logging.info(f"[START] SuperC analysis: {next_fuzzer} on {next_bench}, trial {next_trial}, core {core_id}")
+
+                # Break after processing one finished future
+                break
 
 
 def triage_on_experiments(experiment_state):
@@ -374,6 +448,15 @@ if __name__ == "__main__":
         experiment_state["built_triagers"] = built_triagers
         experiment_state["triager_failures"] = triager_failures
 
+    # Build SuperC CFG analysis container
+    logging.info("Building SuperC CFG analysis container...")
+    superc_path = "cfg-analysis"
+    if build_superc(superc_path, experiment_path, project_root):
+        logging.success("SuperC container built successfully.")
+    else:
+        logging.error("Failed to build SuperC container.")
+        sys.exit(1)
+
     # validate selected benchmarks
     logging.info("Validating benchmarks...")
     validate_benchmarks(experiment_state["benchmarks"], project_root)
@@ -516,8 +599,13 @@ if __name__ == "__main__":
     logging.info("Ready to begin experiments!")
     run_experiments(experiment_state)
 
+    # Run SuperC CFG analysis on experiments
+    logging.info("Experiments completed. Starting SuperC CFG analysis...")
+    run_superc_on_experiments(experiment_state)
+    logging.info("SuperC CFG analysis completed.")
+
     if experiment_state.get("built_triagers"):
-        logging.info("Experiments completed. Starting triaging...")
+        logging.info("Starting triaging...")
         triage_on_experiments(experiment_state)
         logging.info("Triaging completed.")
     

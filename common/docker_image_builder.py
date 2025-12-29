@@ -300,6 +300,60 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
     logging.success(f"Built and ran bug-triaging tool: {bug_triager_name} (logs: {log_file})")
     return True
 
+# Build SuperC CFG analysis image
+def build_superc(superc_path, experiment_path, project_root):
+    output_path = os.path.join(experiment_path, "superc")
+    os.makedirs(output_path, exist_ok=True)
+
+    # Log file
+    log_file = os.path.join(output_path, "superc_build.log")
+    with open(log_file, "w") as lf:
+        # Find the superc directory in the project
+        superc_dir = os.path.join(project_root, superc_path)
+        superc_dockerfile = os.path.join(superc_dir, "Dockerfile")
+
+        if not os.path.exists(superc_dockerfile):
+            msg = f"[ERROR] SuperC Dockerfile {superc_dockerfile} does not exist.\n"
+            lf.write(msg)
+            logging.error(msg.strip())
+            return False
+
+        msg = f"[INFO] Building SuperC runner\n"
+        lf.write(msg)
+        logging.info(msg.strip())
+
+        try:
+            # Check if build already exists
+            existing_image = "fbpp/superc_runner"
+            result = subprocess.run(["docker", "images", "-q", existing_image], check=True, stdout=subprocess.PIPE)
+            if result.stdout:
+                msg = f"[WARNING] SuperC image {existing_image} already exists. Skipping build.\n"
+                lf.write(msg)
+                logging.warning(f"SuperC image {existing_image} already exists. Skipping build.")
+            else:
+                subprocess.run([
+                    "docker", "build",
+                    "-t", "fbpp/superc_runner",
+                    "-f", superc_dockerfile,
+                    superc_dir,
+                    "--no-cache"
+                ], check=True, stdout=lf, stderr=lf)
+
+        except subprocess.CalledProcessError as e:
+            lf.write(f"[ERROR] Failed while building SuperC runner.\n")
+            lf.write(f"[ERROR] Command: {e.cmd}\n")
+            lf.write(f"[ERROR] Return code: {e.returncode}\n")
+
+            logging.error(f"Failed while building SuperC runner. See {log_file} for details.")
+            return False
+
+        lf.write(f"[SUCCESS] Built SuperC runner\n")
+
+    logging.success(f"Built SuperC runner (logs: {log_file})")
+    return True
+
+
+
 
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                   runtime, trials, trial_id, experiment_path, core_id, 
@@ -433,5 +487,57 @@ def run_triaging(triager, fuzzer, benchmark, trials,
         logging.success(f"Finished triaging {fuzzer} on {benchmark}, trial {trial_id} using {triager} (log: {log_file})")
 
     logging.success(f"✅ All trials completed for {fuzzer} on {benchmark} using {triager}. Output pooled at {trial_output_path}")
+    return True
+
+
+
+
+
+# Run SuperC CFG analysis on a benchmark
+def run_superc(fuzzer, benchmark, trial_id, experiment_path, core_id, 
+               data_storage, memory_limit):
+    # setup
+    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
+    
+    if not os.path.exists(individual_data_storage):
+        logging.error(f"Data storage path {individual_data_storage} does not exist for trial {trial_id}")
+        return False
+
+    benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
+
+    # log file
+    log_file = os.path.join(individual_data_storage, f"superc_{fuzzer}_{benchmark}_trial{trial_id}.log")
+
+    with open(log_file, "w") as lf:
+        try:
+            lf.write(f"[INFO] Running SuperC analysis on benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}\n")
+            logging.info(f"Running SuperC analysis on benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}")
+
+            # Run SuperC
+            subprocess.run([
+                "docker", "run", "--rm",
+                f"--cpuset-cpus={core_id-1}-{core_id}",
+                "-m", f"{memory_limit}g",
+                f"--memory-swap={memory_limit}g",
+                "-v", f"{benchmark_location}:/benchmark",
+                "-v", f"{individual_data_storage}:/fuzzer_output",
+                "fbpp/superc_runner"
+            ], check=True, stdout=lf, stderr=lf)
+            
+            lf.flush()
+            os.fsync(lf.fileno())
+
+        except subprocess.CalledProcessError as e:
+            lf.write(f"[ERROR] Failed while running SuperC on {fuzzer}_{benchmark}, trial {trial_id}\n")
+            lf.write(f"[ERROR] Command: {e.cmd}\n")
+            lf.write(f"[ERROR] Return code: {e.returncode}\n")
+
+            logging.error(f"Failed: SuperC on {fuzzer}_{benchmark}, trial {trial_id}. See {log_file} for details.")
+            return False
+        finally:
+            lf.flush()
+            os.fsync(lf.fileno())
+
+    logging.success(f"Finished SuperC analysis on {fuzzer}_{benchmark}, trial {trial_id} (logs: {log_file})")
     return True
 

@@ -1,0 +1,53 @@
+# Base image with Java
+FROM ubuntu:22.04
+
+# Avoid interactive prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    openjdk-11-jdk \
+    make \
+    wget \
+    curl \
+    bison \
+    gcc \
+    libz3-java \
+    libjson-java \
+    sat4j \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Clone SuperC repository
+RUN git clone https://github.com/appleseedlab/superc.git 
+
+# Set JAVA_DEV_ROOT
+ENV JAVA_DEV_ROOT=/superc/
+
+# Build CLASSPATH with included libraries and system-installed libraries
+ENV CLASSPATH=$JAVA_DEV_ROOT/classes:$JAVA_DEV_ROOT/bin/junit.jar:$JAVA_DEV_ROOT/bin/antlr.jar:$JAVA_DEV_ROOT/bin/javabdd.jar:$JAVA_DEV_ROOT/bin/json-simple-1.1.1.jar:/usr/share/java/org.sat4j.core.jar:/usr/share/java/com.microsoft.z3.jar:/usr/share/java/json-lib.jar
+
+# Set JVM arguments
+ENV JAVA_ARGS="-Xms2048m -Xmx4048m -Xss128m"
+
+RUN export JAVA_DEV_ROOT CLASSPATH JAVA_ARGS JAVA_HOME
+
+WORKDIR /superc/
+RUN make configure
+RUN make
+
+COPY run_superc.sh /superc/run_superc.sh
+COPY 1_merge_pc_with_coverage.py /1_merge_pc_with_coverage.py
+COPY 2_analyze_pc_coverage.py /2_analyze_pc_coverage.py
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+WORKDIR /
+
+CMD ["bash", "entrypoint.sh"]

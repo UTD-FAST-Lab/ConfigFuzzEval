@@ -1,9 +1,8 @@
 #!/bin/bash
 export CC=clang
-export CXX=clang++
+export CXX=clang+
 ./autogen.sh
-# ./configure  CC=clang CXX=clang++ --disable-shared {{CT_CONFIGURATION}}
-./configure  CC=clang CXX=clang++ --disable-shared
+./configure  CC=clang CXX=clang++ --disable-shared {{CT_CONFIGURATION}}
 make check
 make install
 

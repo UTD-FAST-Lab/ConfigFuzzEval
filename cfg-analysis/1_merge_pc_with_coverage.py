@@ -21,21 +21,26 @@ def load_pc_file(path):
     with open(path) as f:
         return json.load(f)
 
-def flatten_pc_tree(node, results=None):
+def parse_pc_tree(node, results=None, parent_pc=""):
     if results is None:
         results = []
     if "StartLine" in node and "EndLine" in node and "PC" in node:
         results.append({
             "StartLine": node["StartLine"],
             "EndLine": node["EndLine"],
-            "PC": node["PC"].strip()
+            "PC": parent_pc + "&&"+ node["PC"].strip() if parent_pc != "" else node["PC"].strip()
         })
+        if parent_pc == "":
+             parent_pc = node["PC"].strip() 
+        else:
+            parent_pc = parent_pc + "&&" + node["PC"].strip() 
     for sub in node.get("Sub", []):
+        print("Parent:", parent_pc)
         if isinstance(sub, list):
             for s in sub:
-                flatten_pc_tree(s, results)
+                parse_pc_tree(s, results, parent_pc)
         elif isinstance(sub, dict):
-            flatten_pc_tree(sub, results)
+            parse_pc_tree(sub, results, parent_pc)
     return results
 
 def merge_pc_with_coverage(pc_dir, covered_lines):
@@ -49,17 +54,30 @@ def merge_pc_with_coverage(pc_dir, covered_lines):
         except Exception as e:
             print(f"Skipping {fname} ({e})")
             continue
-        pcs = flatten_pc_tree(pc_tree)
+        pcs = parse_pc_tree(pc_tree)
         base = fname.replace("sourceline_", "").replace(".json", "") + ".c"
         covered = covered_lines.get(base, set())
         if not covered:
             print(f"No coverage info for {base}")
+        line_numbers = set()
+        range_covered_lines = 0
         for entry in pcs:
-            covered_flag = any(
-                entry["StartLine"] <= line <= entry["EndLine"] for line in covered
-            )
-            entry["Covered"] = covered_flag
+           # range_covered_lines = sum(
+           #     1 for line in covered
+           #     if entry["StartLine"] <= line <= entry["EndLine"]
+           # )
+            for line in covered:
+                if entry["StartLine"] <= line <= entry["EndLine"]:
+                    range_covered_lines += 1
+                    line_numbers.add(line)
+
+            entry["Lines Covered"] = range_covered_lines
+            if range_covered_lines:
+                entry["Covered"] = True
+            else:
+                entry["Covered"] = False
             entry["SourceFile"] = base
+            entry["LineNumbers"] = list(line_numbers)
             merged.append(entry)
     return merged
 

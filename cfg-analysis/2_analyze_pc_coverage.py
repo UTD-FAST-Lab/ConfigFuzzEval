@@ -9,22 +9,30 @@ def analyze_pc_coverage(merged_entries):
         "covered_regions": 0,
         "total_lines": 0,
         "covered_lines": 0,
-        "source_files": set()
+        "source_files": set(),
+        "line_numbers": defaultdict(set)
     })
 
     for e in merged_entries:
         pc = e["PC"].strip()
         start, end = e["StartLine"], e["EndLine"]
         covered = e.get("Covered", False)
-        lines = max(0, end - start + 1)
+        tot_lines = max(0, end - start + 1)
+        covered_lines = e["Lines Covered"]
+        line_numbers = e["LineNumbers"]
+        src = e["SourceFile"]
+
 
         s = summary[pc]
         s["regions"] += 1
-        s["total_lines"] += lines
+        s["total_lines"] += tot_lines
         s["source_files"].add(e["SourceFile"])
+
+        s["line_numbers"][src].update(line_numbers)
+
         if covered:
             s["covered_regions"] += 1
-            s["covered_lines"] += lines
+            s["covered_lines"] += covered_lines
 
     # finalize
     for pc, s in summary.items():
@@ -35,6 +43,12 @@ def analyze_pc_coverage(merged_entries):
             s["covered_lines"] / s["total_lines"] if s["total_lines"] > 0 else 0
         )
         s["source_files"] = list(s["source_files"])
+        
+        s["line_numbers"] = {
+            src:sorted(line)
+            for src, line in s["line_numbers"].items()
+        }
+
 
     return summary
 
@@ -62,16 +76,22 @@ def main():
         writer.writerow([
             "PresenceCondition", "Regions", "CoveredRegions",
             "TotalLines", "CoveredLines",
-            "CoverageRatioRegions", "CoverageRatioLines", "SourceFiles"
+            "CoverageRatioRegions", "CoverageRatioLines", "SourceFiles",
+            "LineNumbers"
         ])
         for pc, s in summary.items():
+            line_numbers_str = " | ".join(
+                    f"{src}:{','.join(map(str, lines)) if lines else '-'}"
+                for src, lines in s["line_numbers"].items()
+            )
             writer.writerow([
                 pc.replace("\n", " "),
                 s["regions"], s["covered_regions"],
                 s["total_lines"], s["covered_lines"],
                 f"{s['coverage_ratio_regions']:.2f}",
                 f"{s['coverage_ratio_lines']:.2f}",
-                ";".join(s["source_files"])
+                ";".join(s["source_files"]),
+                line_numbers_str
             ])
 
     print(f"[+] Aggregated {len(summary)} unique presence conditions")

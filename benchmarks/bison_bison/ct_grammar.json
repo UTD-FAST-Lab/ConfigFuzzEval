@@ -85,12 +85,6 @@
       "cli": "--enable-silent-rules"
     },
     {
-      "name": "libtextstyle",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-libtextstyle"
-    },
-    {
       "name": "libtextstyle-prefix",
       "type": "string",
       "default": null,

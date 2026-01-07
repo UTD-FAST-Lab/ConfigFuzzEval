@@ -2,19 +2,6 @@
   "name": "libxml2_xmllint",
   "options": [
     {
-      "name": "static",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-static",
-      "override": ""
-    },
-    {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-shared"
-    },
-    {
       "name": "fast-install",
       "type": "bool",
       "default": true,
@@ -90,12 +77,6 @@
       "type": "bool",
       "default": true,
       "cli": "--with-debug"
-    },
-    {
-      "name": "docs",
-      "type": "bool",
-      "default": false,
-      "cli": "--with-docs"
     },
     {
       "name": "history",
@@ -323,5 +304,7 @@
       "default": false,
       "cli": "--with-tls"
     }
-  ]
+  ],
+  "removed": ["--with-docs","--disable-shared", "--enable-static"]
+
 }

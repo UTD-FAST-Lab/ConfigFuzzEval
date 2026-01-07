@@ -101,7 +101,7 @@ WORKDIR /binutils-2.37
 RUN ./configure CC=clang CXX=clang++
 RUN make  CC=clang CXX=clang++
 WORKDIR ./binutils
-RUN ./configure CC=$CC CXX=$CXX {{CT_CONFIGURATION}}
+RUN ./configure CC=$CC CXX=$CXX 
 RUN make clean
 RUN make CC=$CC CXX=$CXX
 
@@ -145,8 +145,10 @@ RUN ./configure CC=$CC CXX=$CXX
 RUN cp /tmp/bison.help doc/bison.help
 RUN make -j$(nproc) CC=$CC CXX=$CXX src/bison
 
-
-
+# bison
+# ./configure --disable-nls \
+#   --without-libtextstyle-prefix \
+#   --disable-dependency-tracking \ CC=$CC CXX=$CXX {{CT_CONFIGURATION}}
 
 #XMLWF
 WORKDIR /
@@ -196,7 +198,6 @@ WORKDIR /libpng
 
 #TIFF
 WORKDIR /
-
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev libjbig0 libjbig-dev
 RUN git clone https://gitlab.com/libtiff/libtiff.git /libtiff

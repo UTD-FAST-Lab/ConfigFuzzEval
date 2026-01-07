@@ -2,12 +2,6 @@
   "name": "pcre2_pcre2test",
   "options": [
     {
-      "name": "pcre2-8",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-pcre2-8"
-    },
-    {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
@@ -18,18 +12,6 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-pcre2-32"
-    },
-    {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-shared"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-static"
     },
     {
       "name": "fast-install",
@@ -96,12 +78,6 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-pcre2grep-callout-fork"
-    },
-    {
-      "name": "rebuild-chartables",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-rebuild-chartables"
     },
     {
       "name": "unicode",
@@ -427,5 +403,6 @@
       "default": true,
       "cli": "--enable-stack-for-recursion"
     }
-  ]
+  ],
+  "removed": ["--enable-rebuild-chartables","--disable-shared", "--enable-static","--enable-pcre2-8"]
 }

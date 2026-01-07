@@ -32,12 +32,6 @@
       "cli": "--enable-tests"
     },
     {
-      "name": "tools",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-tools"
-    },
-    {
       "name": "contrib",
       "type": "bool",
       "default": true,
@@ -206,18 +200,6 @@
       "cli": "--enable-sphinx"
     },
     {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-shared"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-static"
-    },
-    {
       "name": "pic",
       "type": "bool",
       "default": true,
@@ -344,24 +326,6 @@
       "cli": "--with-webp-lib-dir"
     },
     {
-      "name": "jpeg12-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jpeg12-include-dir"
-    },
-    {
-      "name": "jpeg12-lib",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jpeg12-lib"
-    },
-    {
-      "name": "jpeg12",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-jpeg12"
-    },
-    {
       "name": "docdir",
       "type": "string",
       "default": null,
@@ -385,5 +349,6 @@
       "default": 1048576,
       "cli": "--with-max-dir-count"
     }
-  ]
+  ],
+  "removed": ["tools","--disable-shared", "--enable-static","jpeg12","jpeg12-include-dir", "jpeg12-lib"]
 }

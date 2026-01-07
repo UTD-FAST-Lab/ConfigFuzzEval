@@ -44,13 +44,6 @@
       "conflicts": []
     },
     {
-      "name": "xmlwf",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-xmlwf",
-      "conflicts": []
-    },
-    {
       "name": "examples",
       "type": "bool",
       "default": true,

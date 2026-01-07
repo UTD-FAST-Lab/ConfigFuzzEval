@@ -37,34 +37,6 @@
       "desc": "disable liblzma/xz compression support"
     },
     {
-      "name": "zstdlib",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-zstdlib",
-      "desc": "disable zstdlib compression support"
-    },
-    {
-      "name": "lzlib",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-lzlib",
-      "desc": "disable liblz (lzip) compression support"
-    },
-    {
-      "name": "lrziplib",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-lrziplib",
-      "desc": "disable liblrzip (lrzip) compression support"
-    },
-    {
-      "name": "libseccomp",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-libseccomp",
-      "desc": "disable libseccomp sandboxing"
-    },
-    {
       "name": "fsect-man5",
       "type": "bool",
       "default": false,
@@ -93,20 +65,6 @@
       "desc": "do not reject slow dependency extractors"
     },
     {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-shared",
-      "desc": "build shared libraries"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-static",
-      "desc": "build static libraries"
-    },
-    {
       "name": "fast-install",
       "type": "bool",
       "default": true,
@@ -120,5 +78,6 @@
       "cli": "--enable-year2038",
       "desc": "support timestamps after 2038"
     }
-  ]
+  ],
+  "removed": ["--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static"]
 }

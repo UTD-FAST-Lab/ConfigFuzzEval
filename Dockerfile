@@ -3,7 +3,8 @@ FROM ubuntu:22.04
 
 # Ensure non-interactive mode
 ENV DEBIAN_FRONTEND=noninteractive
-
+ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+ENV AFL_SKIP_CPUFREQ=1
 # Update and install common dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \

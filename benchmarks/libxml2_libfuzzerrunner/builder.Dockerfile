@@ -54,6 +54,9 @@ ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
 ARG FUZZER_FLAGS=$FUZZER_FLAGS
 
+# Copy load source script
+COPY load_src.sh /
+
 # Build the fuzz target binary
 RUN ${CXX} ${CFLAGS} ${FUZZER_FLAGS} -std=c++11  \
     -I/LIBXML2_FUZZER/libxml2/include \
@@ -72,4 +75,5 @@ RUN mkdir -p /profraw
 CMD ["bash", "-c", "cp /LIBXML2_FUZZER/libfuzzerrunner /benchmark_out_dir/ && \
     cp -r /LIBXML2_FUZZER/harness /benchmark_out_dir/harness && \
     cp -r /LIBXML2_FUZZER/corpus /benchmark_out_dir/corpus && \
-    cp /run_target.sh /benchmark_out_dir/"]
+    cp /run_target.sh /benchmark_out_dir/ && \
+    cp -r /load_src.sh /benchmark_out_dir/"]

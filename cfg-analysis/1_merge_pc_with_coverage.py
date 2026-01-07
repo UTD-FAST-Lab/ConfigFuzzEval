@@ -59,13 +59,13 @@ def merge_pc_with_coverage(pc_dir, covered_lines):
         covered = covered_lines.get(base, set())
         if not covered:
             print(f"No coverage info for {base}")
-        line_numbers = set()
-        range_covered_lines = 0
         for entry in pcs:
            # range_covered_lines = sum(
            #     1 for line in covered
            #     if entry["StartLine"] <= line <= entry["EndLine"]
            # )
+            line_numbers = set()
+            range_covered_lines = 0
             for line in covered:
                 if entry["StartLine"] <= line <= entry["EndLine"]:
                     range_covered_lines += 1

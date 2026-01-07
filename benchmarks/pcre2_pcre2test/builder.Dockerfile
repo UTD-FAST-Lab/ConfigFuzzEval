@@ -46,9 +46,10 @@
     COPY run_target.sh /
     COPY seed /seed
     COPY dict /
-COPY ranked_stubs.txt /
-COPY build.sh /
-COPY rt_grammar.json /
+    COPY ranked_stubs.txt /
+    COPY build.sh /
+    COPY rt_grammar.json /
+    COPY load_src.sh /load_src.sh
     # Copy the binary to fuzz into benchmark_out_dir when container starts
-CMD ["bash", "-c", "cp -r /pcre2/pcre2test /benchmark_out_dir/    && cp /build.sh /benchmark_out_dir/   && cp /rt_grammar.json /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/ &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed"]
+    CMD ["bash", "-c", "cp -r /pcre2/pcre2test /benchmark_out_dir/    && cp /build.sh /benchmark_out_dir/   && cp /rt_grammar.json /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/ &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed &&  cp -r /load_src.sh /benchmark_out_dir/"]
     

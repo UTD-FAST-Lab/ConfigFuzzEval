@@ -35,12 +35,7 @@
       "cli": "--enable-checks",
       "desc": "Comma-separated list of integrity checks to build (crc32,crc64,sha256)"
     },
-    {
-      "name": "external-sha256",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-external-sha256"
-    },
+
     {
       "name": "assembler",
       "type": "enum",
@@ -77,12 +72,6 @@
       "type": "value",
       "default": 128,
       "cli": "--enable-assume-ram"
-    },
-    {
-      "name": "xz",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-xz"
     },
     {
       "name": "xzdec",
@@ -149,12 +138,6 @@
       "cli": "--enable-path-for-scripts"
     },
     {
-      "name": "werror",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-werror"
-    },
-    {
       "name": "nls",
       "type": "bool",
       "default": true,
@@ -165,18 +148,6 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-rpath"
-    },
-    {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-shared"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-static"
     },
     {
       "name": "fast-install",
@@ -202,5 +173,7 @@
       "default": true,
       "cli": "--enable-silent-rules"
     }
-  ]
+  ],
+  "removed": ["--enable-xz","--enable-werror","external-sha256","--disable-shared", "--enable-static"]
+
 }

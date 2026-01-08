@@ -1,0 +1,16 @@
+-h
+--longhelp
+--fullhelp
+--profile high
+--preset ultrafast
+--tune grain
+--tff
+--bff
+--pulldown euro
+-p 2
+-o out.264
+--sar 2.40:1
+--fps 23.976
+--level 1
+--quiet
+--vf select_every:3,0

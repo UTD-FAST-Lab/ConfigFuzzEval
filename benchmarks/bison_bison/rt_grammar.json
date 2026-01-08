@@ -4,6 +4,14 @@
     "strmax": 3,
     "options": [
         {
+            "opt": "-h",
+            "type": "bool"
+        },
+        {
+            "opt": "-V",
+            "type": "bool"
+        },
+        {
             "opt": "--print-localedir",
             "type": "bool"
         },
@@ -20,7 +28,10 @@
             "type": "choice",
             "choices": [
                 "caret",
+                "diagnostics-show-caret",
                 "fixit",
+                "diagnostics-parseable-fixits",
+                "syntax-only",
                 "all",
                 "none"
             ],
@@ -30,15 +41,31 @@
             "opt": "-W",
             "type": "choice",
             "choices": [
+                "conflicts-sr",
+                "conflicts-rr",
                 "counterexamples",
                 "cex",
+                "dangling-alias",
                 "deprecated",
+                "empty-rule",
+                "midrule-values",
                 "precedence",
                 "yacc",
                 "other",
                 "all",
                 "none",
-                "error"
+                "error",
+                "no-conflicts-sr",
+                "no-conflicts-rr",
+                "no-counterexamples",
+                "no-cex",
+                "no-dangling-alias",
+                "no-deprecated",
+                "no-empty-rule",
+                "no-midrule-values",
+                "no-precedence",
+                "no-yacc",
+                "no-other"
             ],
             "connector": "="
         },
@@ -56,14 +83,39 @@
             "connector": "="
         },
         {
-            "opt": "-L",
-            "type": "choice","choices": [
-                "python",
-                "java",
-                "javascript",
-                "php"
+            "opt": "--style",
+            "type": "choice",
+            "choices": [
+                "style.css",
+                "default.css",
+                "custom.css",
+                "theme.css"
             ],
             "connector": "="
+        },
+        {
+            "opt": "-L",
+            "type": "choice",
+            "choices": [
+                "c",
+                "c++",
+                "d",
+                "java",
+                "python"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-S",
+            "type": "choice",
+            "choices": [
+                "lalr1.cc",
+                "glr.cc",
+                "lalr1.java",
+                "glr.c",
+                "yacc.c"
+            ],
+            "connector": " "
         },
         {
             "opt": "-t",
@@ -72,6 +124,41 @@
         {
             "opt": "--locations",
             "type": "bool"
+        },
+        {
+            "opt": "-D",
+            "type": "choice",
+            "choices": [
+                "api.prefix=yy",
+                "api.prefix=my",
+                "parse.trace",
+                "parse.error=verbose",
+                "lr.type=canonical-lr"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-F",
+            "type": "choice",
+            "choices": [
+                "api.prefix=yy",
+                "api.prefix=my",
+                "parse.trace",
+                "parse.error=verbose",
+                "lr.type=canonical-lr"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-p",
+            "type": "choice",
+            "choices": [
+                "yy",
+                "my",
+                "parser",
+                "lex"
+            ],
+            "connector": " "
         },
         {
             "opt": "-l",
@@ -86,6 +173,17 @@
             "type": "bool"
         },
         {
+            "opt": "-H",
+            "type": "choice",
+            "choices": [
+                "parser.h",
+                "header.h",
+                "output.h",
+                "y.tab.h"
+            ],
+            "connector": "="
+        },
+        {
             "opt": "-d",
             "type": "bool"
         },
@@ -97,20 +195,96 @@
                 "itemsets",
                 "lookaheads",
                 "solved",
+                "counterexamples",
+                "cex",
                 "all",
                 "none"
             ],
             "connector": "="
         },
         {
+            "opt": "--report-file",
+            "type": "choice",
+            "choices": [
+                "report.txt",
+                "output.report",
+                "parser.report",
+                "automaton.report"
+            ],
+            "connector": "="
+        },
+        {
             "opt": "-v",
             "type": "bool"
+        },
+        {
+            "opt": "-b",
+            "type": "choice",
+            "choices": [
+                "parser",
+                "output",
+                "y",
+                "prefix"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-o",
+            "type": "choice",
+            "choices": [
+                "parser.c",
+                "output.c",
+                "y.tab.c",
+                "result.c"
+            ],
+            "connector": " "
+        },
+        {
+            "opt": "-g",
+            "type": "choice",
+            "choices": [
+                "graph.dot",
+                "automaton.dot",
+                "parser.dot",
+                "output.dot"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "--html",
+            "type": "choice",
+            "choices": [
+                "report.html",
+                "automaton.html",
+                "parser.html",
+                "output.html"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-x",
+            "type": "choice",
+            "choices": [
+                "report.xml",
+                "automaton.xml",
+                "parser.xml",
+                "output.xml"
+            ],
+            "connector": "="
+        },
+        {
+            "opt": "-M",
+            "type": "choice",
+            "choices": [
+                "/old/path=/new/path",
+                "/usr=/opt",
+                "/home/user=/home/other",
+                "old=new"
+            ],
+            "connector": " "
         }
     ],
     "depend": [],
-    "conflict": [
-    ],
-    "maxcombs": 3,
-    "notes":"bison"
+    "conflict": [],
+    "maxcombs": 3
 }
-

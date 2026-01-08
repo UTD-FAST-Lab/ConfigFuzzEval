@@ -1,0 +1,179 @@
+{
+  "name": "xz_xz",
+  "options": [
+    {
+      "name": "debug",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-debug"
+    },
+    {
+      "name": "encoders",
+      "type": "string",
+      "default": "all",
+      "cli": "--enable-encoders",
+      "desc": "Comma-separated list of encoders to build (lzma1,lzma2,delta,x86,powerpc,ia64,arm,armthumb,sparc)"
+    },
+    {
+      "name": "decoders",
+      "type": "string",
+      "default": "all",
+      "cli": "--enable-decoders",
+      "desc": "Comma-separated list of decoders to build"
+    },
+    {
+      "name": "match-finders",
+      "type": "string",
+      "default": "all",
+      "cli": "--enable-match-finders",
+      "desc": "Comma-separated list of match finders to build (hc3,hc4,bt2,bt3,bt4)"
+    },
+    {
+      "name": "checks",
+      "type": "string",
+      "default": "all",
+      "cli": "--enable-checks",
+      "desc": "Comma-separated list of integrity checks to build (crc32,crc64,sha256)"
+    },
+
+    {
+      "name": "assembler",
+      "type": "enum",
+      "values": [
+        "yes",
+        "no",
+        "x86",
+        "x86_64"
+      ],
+      "default": "yes",
+      "cli": "--enable-assembler"
+    },
+    {
+      "name": "small",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-small"
+    },
+    {
+      "name": "threads",
+      "type": "enum",
+      "values": [
+        "yes",
+        "no",
+        "posix",
+        "win95",
+        "vista"
+      ],
+      "default": "yes",
+      "cli": "--enable-threads"
+    },
+    {
+      "name": "assume-ram",
+      "type": "value",
+      "default": 128,
+      "cli": "--enable-assume-ram"
+    },
+    {
+      "name": "xzdec",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-xzdec"
+    },
+    {
+      "name": "lzmadec",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzmadec"
+    },
+    {
+      "name": "lzmainfo",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzmainfo"
+    },
+    {
+      "name": "lzma-links",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzma-links"
+    },
+    {
+      "name": "scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-scripts"
+    },
+    {
+      "name": "doc",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-doc"
+    },
+    {
+      "name": "symbol-versions",
+      "type": "enum",
+      "values": [
+        "yes",
+        "no",
+        "auto"
+      ],
+      "default": "auto",
+      "cli": "--enable-symbol-versions"
+    },
+    {
+      "name": "sandbox",
+      "type": "enum",
+      "values": [
+        "auto",
+        "no",
+        "capsicum"
+      ],
+      "default": "auto",
+      "cli": "--enable-sandbox"
+    },
+    {
+      "name": "path-for-scripts",
+      "type": "string",
+      "default": null,
+      "cli": "--enable-path-for-scripts"
+    },
+    {
+      "name": "nls",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-nls"
+    },
+    {
+      "name": "rpath",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-rpath"
+    },
+    {
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-pic"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
+    }
+  ],
+  "removed": ["--enable-xz","--enable-werror","external-sha256","--disable-shared", "--enable-static"]
+
+}

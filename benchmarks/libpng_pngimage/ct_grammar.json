@@ -2,25 +2,10 @@
   "name": "libpng_pngimage",
   "options": [
     {
-      "name": "fast-install",
-      "type": "value",
-      "default": "yes",
-      "cli": "--enable-fast-install",
-      "conflicts": []
-    },
-    {
-      "name": "aix-soname",
-      "type": "enum",
-      "values": ["aix","svr4","both"],
-      "default": "aix",
-      "cli": "--enable-aix-soname",
-      "conflicts": []
-    },
-    {
-      "name": "libtool-lock",
+      "name": "tests",
       "type": "bool",
       "default": true,
-      "cli": "--enable-libtool-lock",
+      "cli": "--enable-tests",
       "conflicts": []
     },
     {
@@ -66,13 +51,6 @@
       "conflicts": []
     },
     {
-      "name": "intel-sse",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-intel-sse",
-      "conflicts": []
-    },
-    {
       "name": "zlib-prefix",
       "type": "value",
       "default": null,
@@ -99,50 +77,114 @@
       "default": null,
       "cli": "--with-libpng-prefix",
       "conflicts": []
+    },
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-shared",
+      "conflicts": []
+    },
+    {
+      "name": "static",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-static",
+      "conflicts": []
+    },
+    {
+      "name": "fast-install",
+      "type": "value",
+      "default": "yes",
+      "cli": "--enable-fast-install",
+      "conflicts": []
+    },
+    {
+      "name": "libtool-lock",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libtool-lock",
+      "conflicts": []
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-pic",
+      "conflicts": []
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking",
+      "conflicts": []
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules",
+      "conflicts": []
     }
   ],
   "removed_options": [
+    {
+      "name": "intel-sse",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-intel-sse",
+      "conflicts": []
+    },
+    {
+      "name": "aix-soname",
+      "type": "enum",
+      "values": ["aix","svr4","both"],
+      "default": "aix",
+      "cli": "--enable-aix-soname",
+      "conflicts": []
+    },
     {
       "name": "arm-neon",
       "type": "bool",
       "default": false,
       "cli": "--enable-arm-neon",
-      "conflicts": ["mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
+      "conflicts": []
     },
     {
       "name": "mips-msa",
       "type": "bool",
       "default": false,
       "cli": "--enable-mips-msa",
-      "conflicts": ["arm-neon", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
+      "conflicts": []
     },
     {
       "name": "mips-mmi",
       "type": "bool",
       "default": false,
       "cli": "--enable-mips-mmi",
-      "conflicts": ["arm-neon", "mips-msa", "intel-sse", "powerpc-vsx", "loongarch-lsx", "riscv-rvv"]
+      "conflicts": []
     },
     {
       "name": "powerpc-vsx",
       "type": "bool",
       "default": false,
       "cli": "--enable-powerpc-vsx",
-      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "loongarch-lsx", "riscv-rvv"]
+      "conflicts": []
     },
     {
       "name": "loongarch-lsx",
       "type": "bool",
       "default": false,
       "cli": "--enable-loongarch-lsx",
-      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "riscv-rvv"]
+      "conflicts": []
     },
     {
       "name": "riscv-rvv",
       "type": "bool",
       "default": false,
       "cli": "--enable-riscv-rvv",
-      "conflicts": ["arm-neon", "mips-msa", "mips-mmi", "intel-sse", "powerpc-vsx", "loongarch-lsx"]
+      "conflicts": []
     }
   ]
 }

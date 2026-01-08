@@ -38,3 +38,11 @@ def request_configurations(grammar_file):
         return [""]
     elif benchmark_name == "libtiff_tiff2pdf":
         return [""]
+    elif benchmark_name == "binutils_nm-new":
+        return [""]
+    elif benchmark_name == "binutils_objdump":
+        return [""]
+    elif benchmark_name == "xz_xz":
+        return [""]
+    elif benchmark_name == "x264_x264":
+        return [""]

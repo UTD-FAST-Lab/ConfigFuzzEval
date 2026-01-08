@@ -1,50 +1,60 @@
+--version
+--shell
 --debug
---debugent
 --copy
 --recover
 --huge
 --noent
 --noenc
 --noout
+--path ..
+--load-trace
 --nonet
---encode
 --nocompact
---htmlout
---nowrap
 --valid
 --postvalid
+--dtdvalid dtd.dtd
+--dtdvalidfpi FPI
+--insert
+--strict-namespace
 --quiet
 --timing
 --repeat
---insert
+--dropdtd
 --html
---xmlout
 --nodefdtd
+--xmlout
 --push
---pushsmall
 --memory
 --nowarning
---pedantic
 --noblanks
 --nocdata
---format
---dropdtd
 --nodict
+--pedantic
+--output out.xml
+-o result.xml
+--format
+--encode US-ASCII
+--pretty 2
 --c14n
 --c14n11
+--exc-c14n
 --nsclean
---testIO
---compress
 --catalogs
 --nocatalogs
 --auto
 --xinclude
 --noxincludenode
+--nofixup-base-uris
 --loaddtd
 --dtdattr
 --stream
 --walker
---chkregister
+--pattern pattern
+--relaxng relaxng.rng
+--schema schema.xml
 --sax1
 --sax
 --oldxml10
+--xpath //node[@id]
+--xpath0 //element

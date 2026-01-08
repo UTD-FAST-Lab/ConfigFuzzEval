@@ -2,44 +2,46 @@
   "name": "pcre2_pcre2test",
   "options": [
     {
-      "name": "pcre2-8",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-pcre2-8",
-      "override": "--enable-pcre2-8",
-        "pairwise_constraints" : [
-            [true,[
-              ["pcre2-16",false],
-              ["pcre2-32",false]
-            ]]
-          ],
-      "conflicts": ["pcre2-16","pcre2-32"]
-    },
-    {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-16",
-      "pairwise_constraints" : [
-          [true,[
-            ["pcre2-8",false],
-            ["pcre2-32",false]
-          ]]
-        ],
-      "conflicts": ["pcre2-8","pcre2-32"]
+      "cli": "--enable-pcre2-16"
     },
     {
       "name": "pcre2-32",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-32",
-      "pairwise_constraints" : [
-          [true,[
-            ["pcre2-8",false],
-            ["pcre2-16",false]
-          ]]
-        ],
-      "conflicts": ["pcre2-8","pcre2-16"]
+      "cli": "--enable-pcre2-32"
+    },
+    {
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-pic"
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-maintainer-mode"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
     },
     {
       "name": "debug",
@@ -76,12 +78,6 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-pcre2grep-callout-fork"
-    },
-    {
-      "name": "rebuild-chartables",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-rebuild-chartables"
     },
     {
       "name": "unicode",
@@ -154,24 +150,40 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-pcre2test-libedit",
-      "conflicts": ["pcre2test-libreadline"],
-      "pairwise_constraints" : [
-          [true,[
-            ["pcre2test-libreadline",false]
-          ]]
+      "conflicts": [
+        "pcre2test-libreadline"
+      ],
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "pcre2test-libreadline",
+              false
+            ]
+          ]
         ]
+      ]
     },
     {
       "name": "pcre2test-libreadline",
       "type": "bool",
       "default": false,
       "cli": "--enable-pcre2test-libreadline",
-      "conflicts": ["pcre2test-libedit"],
-      "pairwise_constraints" : [
-          [true,[
-            ["pcre2test-libedit",false]
-          ]]
+      "conflicts": [
+        "pcre2test-libedit"
+      ],
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "pcre2test-libedit",
+              false
+            ]
+          ]
         ]
+      ]
     },
     {
       "name": "valgrind",
@@ -184,28 +196,45 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-fuzz-support",
-      "implies": ["pcre2-8=true"],
-      "pairwise_constraints" : [
-          [true,[
-            ["pcre2-8",true],
-            ["pcre2-16",false],
-            ["pcre2-32",false]
-          ]]
+      "implies": [
+        "pcre2-8=true"
+      ],
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "pcre2-8",
+              true
+            ]
+          ]
         ]
-      
+      ]
     },
     {
       "name": "diff-fuzz-support",
       "type": "bool",
       "default": false,
       "cli": "--enable-diff-fuzz-support",
-      "implies": ["jit=true","fuzz-support=true"],
-      "pairwise_constraints" : [
-          [true,[
-            ["jit",true],
-            ["fuzz-support",true]
-          ]]
+      "implies": [
+        "jit=true",
+        "fuzz-support=true"
+      ],
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "jit",
+              true
+            ],
+            [
+              "fuzz-support",
+              true
+            ]
+          ]
         ]
+      ]
     },
     {
       "name": "percent-zt",
@@ -234,7 +263,11 @@
     {
       "name": "link-size",
       "type": "enum",
-      "values": [2,3,4],
+      "values": [
+        2,
+        3,
+        4
+      ],
       "default": 2,
       "cli": "--with-link-size"
     },
@@ -269,53 +302,88 @@
       "cli": "--with-match-limit-depth"
     }
   ],
-
-  "meta_constraints": [
-    "(pcre2-8 + pcre2-16 + pcre2-32)==1"
-  ],
-
+  "meta_constraints": [],
   "removed_options": [
     {
       "name": "ebcdic",
       "type": "bool",
       "default": false,
       "cli": "--enable-ebcdic",
-      "pairwise_constraints" : [
-          [true,[
-            ["unicode",false],
-            ["pcre2-8",true],
-            ["pcre2-16",false],
-            ["pcre2-32",false]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["pcre2-8=true"]
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "unicode",
+              false
+            ],
+            [
+              "pcre2-8",
+              true
+            ],
+            [
+              "pcre2-16",
+              false
+            ],
+            [
+              "pcre2-32",
+              false
+            ]
+          ]
+        ]
+      ],
+      "conflicts": [
+        "unicode"
+      ],
+      "implies": [
+        "pcre2-8=true"
+      ]
     },
     {
       "name": "ebcdic-nl25",
       "type": "bool",
       "default": false,
       "cli": "--enable-ebcdic-nl25",
-      "pairwise_constraints" : [
-          [true,[
-            ["ebcdic",true]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["ebcdic=true"]
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "ebcdic",
+              true
+            ]
+          ]
+        ]
+      ],
+      "conflicts": [
+        "unicode"
+      ],
+      "implies": [
+        "ebcdic=true"
+      ]
     },
     {
       "name": "ebcdic-ignoring-compiler",
       "type": "bool",
       "default": false,
       "cli": "--enable-ebcdic-ignoring-compiler",
-      "pairwise_constraints" : [
-          [true,[
-            ["ebcdic",true]
-          ]]
-        ],
-      "conflicts": ["unicode"],
-      "implies": ["ebcdic=true"]
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "ebcdic",
+              true
+            ]
+          ]
+        ]
+      ],
+      "conflicts": [
+        "unicode"
+      ],
+      "implies": [
+        "ebcdic=true"
+      ]
     },
     {
       "name": "errwarn",
@@ -328,6 +396,13 @@
       "type": "bool",
       "default": false,
       "cli": "--enable-coverage"
+    },
+    {
+      "name": "stack-for-recursion",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-stack-for-recursion"
     }
-  ]
+  ],
+  "removed": ["--enable-rebuild-chartables","--disable-shared", "--enable-static","--enable-pcre2-8"]
 }

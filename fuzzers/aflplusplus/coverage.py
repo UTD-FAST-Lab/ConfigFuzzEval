@@ -60,18 +60,23 @@ def main():
         except subprocess.TimeoutExpired:
             print(f"[!] Timeout on {seed}, skipping...")
 
-# General
+    # Only merge profraw files that actually exist
+    existing_profraw_files = [f for f in profraw_files if Path(f).exists()]
+    print(f"[+] {len(existing_profraw_files)}/{len(profraw_files)} profraw files successfully created")
+
     # Merge all profraw into a single profdata file
     merged_profdata = coverage_dir / "merged.profdata"
-    if profraw_files:
-        merge_cmd = ["llvm-profdata", "merge", "-sparse", "-o", str(merged_profdata)] + profraw_files
-        print(f"[+] Merging {len(profraw_files)} profraw files into {merged_profdata}")
+    if existing_profraw_files:
+        merge_cmd = ["llvm-profdata", "merge", "-sparse", "-o", str(merged_profdata)] + existing_profraw_files
+        print(f"[+] Merging {len(existing_profraw_files)} profraw files into {merged_profdata}")
         try:
             subprocess.run(merge_cmd, check=True)
         except subprocess.CalledProcessError as e:
             print(f"[!] Error merging profraw files: {e}")
+            return
     else:
         print("[!] No profraw files generated, nothing to merge.")
+        return
     
     # Generate coverage report:
     # Run llvm-cov export -> JSON report

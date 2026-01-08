@@ -3,9 +3,16 @@
   "options": [
     {
       "name": "static",
-      "type": "value", 
+      "type": "value",
       "default": "yes",
       "cli": "--enable-static",
+      "conflicts": []
+    },
+    {
+      "name": "shared",
+      "type": "value",
+      "default": "yes",
+      "cli": "--enable-shared",
       "conflicts": []
     },
     {
@@ -20,6 +27,34 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-libtool-lock",
+      "conflicts": []
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-maintainer-mode",
+      "conflicts": []
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking",
+      "conflicts": []
+    },
+    {
+      "name": "examples",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-examples",
+      "conflicts": []
+    },
+    {
+      "name": "tests",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-tests",
       "conflicts": []
     },
     {
@@ -46,7 +81,11 @@
     {
       "name": "aix-soname",
       "type": "enum",
-      "values": ["aix", "svr4", "both"],
+      "values": [
+        "aix",
+        "svr4",
+        "both"
+      ],
       "default": "aix",
       "cli": "--with-aix-soname",
       "conflicts": []
@@ -63,20 +102,6 @@
       "type": "value",
       "default": null,
       "cli": "--with-sysroot",
-      "conflicts": []
-    },
-    {
-      "name": "examples",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-examples",
-      "conflicts": []
-    },
-    {
-      "name": "tests",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-tests",
       "conflicts": []
     },
     {
@@ -98,6 +123,13 @@
       "type": "value",
       "default": "check",
       "cli": "--with-sys-getrandom",
+      "conflicts": []
+    },
+    {
+      "name": "docbook",
+      "type": "value",
+      "default": "check",
+      "cli": "--with-docbook",
       "conflicts": []
     }
   ],

@@ -21,7 +21,21 @@
         },
         {
             "opt": "-C",
-            "type": "bool"
+            "type": "choice",
+            "choices": ["backslash-C", "bsr", "ebcdic", "ebcdic-io", "ebcdic-nl25", "jit", "jitusable", "linksize", "newline", "pcre2-8", "pcre2-16", "pcre2-32", "unicode"],
+            "connector": " "
+        },
+        {
+            "opt": "--color",
+            "type": "choice",
+            "choices": ["always", "auto", "never"],
+            "connector": "="
+        },
+        {
+            "opt": "--colour",
+            "type": "choice",
+            "choices": ["always", "auto", "never"],
+            "connector": "="
         },
         {
             "opt": "-d",
@@ -34,6 +48,12 @@
         {
             "opt": "-E",
             "type": "bool"
+        },
+        {
+            "opt": "-error",
+            "type": "choice",
+            "choices": ["1", "2", "3", "1,2", "1,2,3"],
+            "connector": " "
         },
         {
             "opt": "-help",
@@ -68,32 +88,42 @@
             "type": "bool"
         },
         {
+            "opt": "-malloc",
+            "type": "bool"
+        },
+        {
             "opt": "-q",
             "type": "bool"
         },
         {
+            "opt": "-pattern",
+            "type": "choice",
+            "choices": ["anchored", "caseless", "dotall", "multiline", "extended"],
+            "connector": " "
+        },
+        {
+            "opt": "-subject",
+            "type": "choice",
+            "choices": ["notbol", "noteol", "notempty", "partial_soft", "partial_hard"],
+            "connector": " "
+        },
+        {
             "opt": "-S",
             "type": "intnum",
-            "range": [
-                0,
-                2147483647
-            ]
+            "range": [1, 1024],
+            "connector": " "
         },
         {
             "opt": "-t",
             "type": "intnum",
-            "range": [
-                0,
-                2147483647
-            ]
+            "range": [0, 10000],
+            "connector": " "
         },
         {
             "opt": "-tm",
             "type": "intnum",
-            "range": [
-                0,
-                2147483647
-            ]
+            "range": [0, 10000],
+            "connector": " "
         },
         {
             "opt": "-T",
@@ -104,20 +134,23 @@
             "type": "bool"
         },
         {
-            "opt": "-malloc",
+            "opt": "-unittest",
             "type": "bool"
         },
         {
             "opt": "-v",
             "type": "bool"
-        },
-        {
-            "opt": "--version",
-            "type": "bool"
         }
     ],
     "depend": [],
-    "conflict": [],
-    "maxcombs": 2,
-    "notes": "Removed string/text options: -C arg, -error <n,m,..>, -pattern <s>, -subject <s>. These require non-numeric arguments and are excluded from options."
+    "conflict": [
+        ["-t", "-tm"],
+        ["-t", "-T"],
+        ["-t", "-TM"],
+        ["-tm", "-T"],
+        ["-tm", "-TM"],
+        ["-T", "-TM"],
+        ["--color", "--colour"]
+    ],
+    "maxcombs": 2
 }

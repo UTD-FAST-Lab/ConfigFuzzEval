@@ -1,1 +1,29 @@
- 
+-v
+-m /usr/share/misc/magic
+-z
+-Z
+-b
+-c
+-e tokens
+--exclude-quiet text
+-f filelist.txt
+-F |
+-i
+--apple
+--extension
+--mime-type
+--mime-encoding
+-k
+-l
+-L
+-h
+-n
+-N
+-0
+-p
+-P name=150
+-r
+-s
+-S
+-C
+-d

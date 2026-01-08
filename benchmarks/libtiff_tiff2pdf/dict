@@ -1,8 +1,19 @@
+-o output.pdf
 -j
 -z
 -n
 -d
 -i
+-u m
+-r d
+-p legal
 -F
 -f
+-e 20250101000000
+-c Creator
+-a Author
+-t Title
+-s Content
+-k index
 -b
+-h

@@ -1,14 +1,14 @@
 -8
--16
--32
 -ac
 -AC
 -b
--C
+-C newline
+--color=never
+--colour=always
 -d
 -dfa
 -E
--error
+-error 1,2,3
 -help
 -i
 -jit
@@ -17,13 +17,11 @@
 -LM
 -LP
 -LS
--pattern
+-malloc
 -q
--S
--subject
--t
--tm
+-pattern caseless
+-subject notempty
 -T
 -TM
--malloc
--version
+-unittest
+-v

@@ -1,0 +1,11 @@
+10
+objdump --ctf-parent=.ctf -v --no-show-raw-insn -WN -i -R -j .strtab -a --inlines -f @@
+objdump --visualize-jumps=color --no-show-raw-insn -Wk --dwarf=pubtypes --no-recurse-limit -H -WN --inlines -D -P=ldinfo -f @@
+objdump -x -P=ldinfo -F -h --dwarf=pubtypes --prefix=. --visualize-jumps=color -f @@
+objdump -Wk --disassemble=entry -s --source-comment=; -M att-mnemonic --visualize-jumps=color --show-raw-insn -f -t -f @@
+objdump -I /opt/include -G --dwarf=pubtypes --visualize-jumps=color -i -H -x -h -f @@
+objdump -EL -Wgdb_index --visualize-jumps=color -s --no-addresses -e -f @@
+objdump -G -p -g -R -a -M att-mnemonic -L -i --visualize-jumps=color -Wk -f @@
+objdump -M att-mnemonic -j .strtab --file-start-context -C gnu-v3 -i --disassemble=entry --prefix=. --special-syms -f @@
+objdump -e -EB -H -C gnu-v3 -I /opt/include --prefix-addresses -f @@
+objdump --no-addresses -m l1om -f @@

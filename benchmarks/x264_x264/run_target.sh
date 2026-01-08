@@ -1,0 +1,1 @@
+/benchmark/x264 --input-res 64x64  -o /dev/null @@

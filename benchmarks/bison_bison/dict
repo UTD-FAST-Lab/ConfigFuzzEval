@@ -1,33 +1,30 @@
+-h
+-V
 --print-localedir
 --print-datadir
 -u
--f=caret
--f=fixit
--f=all
--f=none
--W=counterexamples
--W=cex
--W=deprecated
--W=precedence
--W=yacc
---color=always
---color=yes
---color=never
+-f=diagnostics-parseable-fixits
+-W=error
 --color=no
---color=auto
--L=python
--L=java
--L=javascript
--L=php
+--style=style.css
+-L d
+-S lalr1.cc
 -t
 --locations
+-D api.prefix=my
+-F api.prefix=yy
+-p lex
 -l
 -k
 -y
+-H=output.h
 -d
--r=states
 -r=itemsets
--r=lookaheads
--r=solved
--r=all
+--report-file=parser.report
 -v
+-b output
+-o output.c
+-g=output.dot
+--html=output.html
+-x=parser.xml
+-M /usr=/opt

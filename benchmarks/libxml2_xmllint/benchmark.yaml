@@ -1,2 +1,0 @@
-fuzz_target: xmllint
-project: libxml2

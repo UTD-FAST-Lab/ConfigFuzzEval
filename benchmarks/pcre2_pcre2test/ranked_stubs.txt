@@ -1,3 +1,11 @@
-2
-pcre2test -version @@
-pcre2test @@
+10
+pcre2test -pattern caseless -i -help --color=never -dfa -b @@
+pcre2test -malloc -unittest --color=never -jitverify -AC @@
+pcre2test -LS -jitverify -malloc -subject notempty -LP -unittest @@
+pcre2test -d -LP -E -v -jit -jitfast -AC @@
+pcre2test -i -jit -C newline --colour=always @@
+pcre2test -q -8 -E -error 1,2,3 -help -jitverify -b -dfa @@
+pcre2test -q @@
+pcre2test --colour=always -jitfast -subject notempty @@
+pcre2test -jitverify -LS -ac -b -LM -AC -jit -help @@
+pcre2test -q -d -jit -T @@

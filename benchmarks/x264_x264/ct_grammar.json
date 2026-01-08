@@ -1,0 +1,199 @@
+{
+  "name": "X264_x264",
+  "options": [
+    {
+      "name": "cli",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-cli",
+      "desc": "Build command line interface"
+    },
+    {
+      "name": "system-libx264",
+      "type": "bool",
+      "default": false,
+      "cli": "--system-libx264",
+      "desc": "Use system libx264 instead of internal"
+    },
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-shared",
+      "desc": "Build shared library"
+    },
+    {
+      "name": "static",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-static",
+      "desc": "Build static library"
+    },
+    {
+      "name": "bashcompletion",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-bashcompletion",
+      "desc": "Install bash-completion script"
+    },
+    {
+      "name": "bashcompletionsdir",
+      "type": "string",
+      "default": null,
+      "cli": "--bashcompletionsdir",
+      "desc": "Install bash-completion script in DIR"
+    },
+    {
+      "name": "opencl",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-opencl",
+      "desc": "Enable OpenCL features"
+    },
+    {
+      "name": "gpl",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-gpl",
+      "desc": "Enable GPL-only features"
+    },
+    {
+      "name": "thread",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-thread",
+      "desc": "Enable multithreaded encoding"
+    },
+    {
+      "name": "win32thread",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-win32thread",
+      "desc": "Enable win32threads (windows only)"
+    },
+    {
+      "name": "interlaced",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-interlaced",
+      "desc": "Enable interlaced encoding support"
+    },
+    {
+      "name": "bit-depth",
+      "type": "enum",
+      "values": [
+        "8",
+        "10",
+        "all"
+      ],
+      "default": "all",
+      "cli": "--bit-depth",
+      "desc": "Set output bit depth"
+    },
+    {
+      "name": "chroma-format",
+      "type": "enum",
+      "values": [
+        "400",
+        "420",
+        "422",
+        "444",
+        "all"
+      ],
+      "default": "all",
+      "cli": "--chroma-format",
+      "desc": "Output chroma format"
+    },
+    {
+      "name": "asm",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-asm",
+      "desc": "Enable platform-specific assembly optimizations"
+    },
+    {
+      "name": "lto",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-lto",
+      "desc": "Enable link-time optimization"
+    },
+    {
+      "name": "debug",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-debug",
+      "desc": "Add -g"
+    },
+    {
+      "name": "gprof",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-gprof",
+      "desc": "Add -pg"
+    },
+    {
+      "name": "strip",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-strip",
+      "desc": "Add -s"
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-pic",
+      "desc": "Build position-independent code"
+    },
+    {
+      "name": "avs",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-avs",
+      "desc": "Enable avisynth support"
+    },
+    {
+      "name": "swscale",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-swscale",
+      "desc": "Enable swscale support"
+    },
+    {
+      "name": "lavf",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lavf",
+      "desc": "Enable libavformat support"
+    },
+    {
+      "name": "ffms",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-ffms",
+      "desc": "Enable ffmpegsource support"
+    },
+    {
+      "name": "gpac",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-gpac",
+      "desc": "Enable gpac support"
+    },
+    {
+      "name": "lsmash",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lsmash",
+      "desc": "Enable lsmash support"
+    },
+    {
+      "name": "vsx",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-vsx",
+      "desc": "Enable VSX optimizations (PowerPC)"
+    }
+  ]
+}

@@ -1,10 +1,4 @@
-# cd pcre2
 ./autogen.sh  CC=clang CXX=clang++
-./configure  CC=clang CXX=clang++ --disable-shared {{CT_CONFIGURATION}}
+./configure --disable-rebuild-chartables --enable-pcre2-8 CC=clang CXX=clang++ --disable-shared --enable-static {{CT_CONFIGURATION}}
 make CC=$CC CXX=$CXX
 make install CC=$CC CXX=$CXX
-
-# ./autogen.sh CC=$CC CXX=$CXX
-# ./configure  CC=$CC CXX=$CXX --disable-shared {{CT_CONFIGURATION}}
-# make CC=$CC CXX=$CXX
-# make install CC=$CC CXX=$CXX

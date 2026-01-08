@@ -17,18 +17,13 @@
       "name": "threads",
       "type": "enum",
       "default": null,
-      "values" : [
+      "values": [
         "isoc",
         "posix",
         "isoc+posix",
         "windows",
-        "no"],
-      "cli": "--enable-threads"
-    },
-    {
-      "name": "threads",
-      "type": "bool",
-      "default": true,
+        "no"
+      ],
       "cli": "--enable-threads"
     },
     {
@@ -47,7 +42,10 @@
       "name": "cross-guesses",
       "type": "enum",
       "default": null,
-      "values" : ["conservative","risky"],
+      "values": [
+        "conservative",
+        "risky"
+      ],
       "cli": "--enable-cross-guesses"
     },
     {
@@ -67,6 +65,48 @@
       "type": "bool",
       "default": true,
       "cli": "--enable-nls"
+    },
+    {
+      "name": "gcc-warnings",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-gcc-warnings"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
+    },
+    {
+      "name": "libtextstyle-prefix",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libtextstyle-prefix"
+    },
+    {
+      "name": "gnu-ld",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-gnu-ld"
+    },
+    {
+      "name": "libiconv-prefix",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libiconv-prefix"
+    },
+    {
+      "name": "libintl-prefix",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libintl-prefix"
     }
   ]
 }

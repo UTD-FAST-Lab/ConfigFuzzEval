@@ -10,6 +10,7 @@ from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
+import pickle
 
 
 def delete_cts_benchmarks(experiment_state, project_root):
@@ -124,7 +125,7 @@ def run_experiments(experiment_state):
                 break
 
 
-def run_superc_on_experiments(experiment_state):
+def run_superc_on_experiments(experiment_state, logging=None):
     built_benchmarks = experiment_state["built_benchmarks"]
     experiment_path = experiment_state["experiment_path"]
     data_storage = os.path.join(experiment_path, "data")
@@ -595,13 +596,17 @@ if __name__ == "__main__":
     logging.success("Resources allocated successfully.")
     logging.debug(f"Experiment state after resource allocation: {pprint.pformat(experiment_state)}")
 
+    # Save the state
+    with open(f"{experiment_state['experiment_path']}/experiment_state.pkl", "wb") as f:
+        pickle.dump(experiment_state, f)
+
     # Run experiments
     logging.info("Ready to begin experiments!")
     run_experiments(experiment_state)
 
     # Run SuperC CFG analysis on experiments
     logging.info("Experiments completed. Starting SuperC CFG analysis...")
-    run_superc_on_experiments(experiment_state)
+    run_superc_on_experiments(experiment_state, logging)
     logging.info("SuperC CFG analysis completed.")
 
     if experiment_state.get("built_triagers"):

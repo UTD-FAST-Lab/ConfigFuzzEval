@@ -58,6 +58,9 @@ RUN bash build.sh
 
 COPY run_target.sh /
 
+# Copy load source script
+COPY load_src.sh /
+
 
 
 ENV FUZZER_FLAGS=""
@@ -88,4 +91,5 @@ RUN mkdir -p /profraw
 CMD ["bash", "-c", "cp /LIBTIFF_FUZZER/libfuzzerrunner /benchmark_out_dir/ && \
     cp -r /LIBTIFF_FUZZER/harness /benchmark_out_dir/harness && \
     cp -r /LIBTIFF_FUZZER/corpus /benchmark_out_dir/corpus && \
-    cp /run_target.sh /benchmark_out_dir/"]
+    cp /run_target.sh /benchmark_out_dir/ && \
+    cp -r /load_src.sh /benchmark_out_dir/"]

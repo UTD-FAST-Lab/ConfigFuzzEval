@@ -9,7 +9,7 @@ def load_pc_stats(path):
       - number of regions per PC
       - whether any region is covered
       - total lines across all regions
-      - lines covered across all regions (approx: if Covered=True -> whole region)
+      - lines covered across all regions (using "Lines Covered" from entries)
     """
 
     with open(path) as f:
@@ -27,6 +27,7 @@ def load_pc_stats(path):
         start = e["StartLine"]
         end = e["EndLine"]
         covered = e.get("Covered", False)
+        covered_lines = e["Lines Covered"]
 
         region_lines = max(0, end - start + 1)
 
@@ -35,7 +36,7 @@ def load_pc_stats(path):
 
         if covered:
             pcs[pc]["covered_regions"] += 1
-            pcs[pc]["covered_lines"] += region_lines  # approximation
+            pcs[pc]["covered_lines"] += covered_lines
 
     return pcs
 

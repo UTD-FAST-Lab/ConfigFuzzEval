@@ -23,7 +23,7 @@ def calc_coverage(experiment_state):
             
             # Need coreID, coverage_binary_location, fuzzer_location, individual_data_storage
             core_id = experiment_state['cores_range'][0]
-            coverage_binary_location = f"{experiment_state['experiment_path']}/benchmarks/coverage_cts_{strategy}_{library}_{program}_{trial_num}"
+            coverage_binary_location = f"{experiment_state['experiment_path']}/benchmarks/coverage_cts_{strategy}_{library}_{program}_0"
             fuzzer_location = f"{experiment_state['experiment_path']}/fuzzers/{fuzzer}"
             individual_data_storage = full_path
             subprocess.run([

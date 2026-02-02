@@ -2,17 +2,10 @@
   "name": "X264_x264",
   "options": [
     {
-      "name": "cli",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-cli",
-      "desc": "Build command line interface"
-    },
-    {
       "name": "system-libx264",
       "type": "bool",
       "default": false,
-      "cli": "--system-libx264",
+      "cli": "--enable-system-libx264",
       "desc": "Use system libx264 instead of internal"
     },
     {
@@ -38,9 +31,14 @@
     },
     {
       "name": "bashcompletionsdir",
-      "type": "string",
-      "default": null,
-      "cli": "--bashcompletionsdir",
+      "type": "enum",
+      "values": [
+        "/usr/share/bash-completion/completions",
+        "/usr/local/share/bash-completion/completions",
+        "none"
+      ],
+      "default": "none",
+      "cli": "--with-bashcompletionsdir",
       "desc": "Install bash-completion script in DIR"
     },
     {
@@ -67,9 +65,9 @@
     {
       "name": "win32thread",
       "type": "bool",
-      "default": true,
+      "default": false,
       "cli": "--enable-win32thread",
-      "desc": "Enable win32threads (windows only)"
+      "desc": "Enable win32threads (Set to false for Linux builds)"
     },
     {
       "name": "interlaced",
@@ -87,7 +85,7 @@
         "all"
       ],
       "default": "all",
-      "cli": "--bit-depth",
+      "cli": "--with-bit-depth",
       "desc": "Set output bit depth"
     },
     {
@@ -101,7 +99,7 @@
         "all"
       ],
       "default": "all",
-      "cli": "--chroma-format",
+      "cli": "--with-chroma-format",
       "desc": "Output chroma format"
     },
     {

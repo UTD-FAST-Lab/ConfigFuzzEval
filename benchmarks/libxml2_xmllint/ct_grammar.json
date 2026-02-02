@@ -144,12 +144,6 @@
       "cli": "--with-modules"
     },
     {
-      "name": "output",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-output"
-    },
-    {
       "name": "pattern",
       "type": "bool",
       "default": true,
@@ -305,6 +299,5 @@
       "cli": "--with-tls"
     }
   ],
-  "removed": ["--with-docs","--disable-shared", "--enable-static"]
-
+  "removed": ["--with-output","--with-docs","--disable-shared", "--enable-static"]
 }

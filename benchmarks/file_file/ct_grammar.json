@@ -65,5 +65,5 @@
       "desc": "optimize for fast installation"
     }
   ],
-  "removed": ["--enable-elf-core","--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static"]
+  "removed": ["--enable-elf-core","--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static", "--enable-year2038"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "binutils_objdump",
+  "name": "binutils_nm-new",
   "options": [
     {
       "name": "checking",

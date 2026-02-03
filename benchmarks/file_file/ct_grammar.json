@@ -9,13 +9,6 @@
       "desc": "disable builtin ELF support"
     },
     {
-      "name": "elf-core",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-elf-core",
-      "desc": "disable ELF core file support"
-    },
-    {
       "name": "zlib",
       "type": "bool",
       "default": true,
@@ -70,14 +63,7 @@
       "default": true,
       "cli": "--enable-fast-install",
       "desc": "optimize for fast installation"
-    },
-    {
-      "name": "year2038",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-year2038",
-      "desc": "support timestamps after 2038"
     }
   ],
-  "removed": ["--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static"]
+  "removed": ["--enable-elf-core","--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static", "--enable-year2038"]
 }

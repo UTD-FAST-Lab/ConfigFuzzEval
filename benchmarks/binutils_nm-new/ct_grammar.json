@@ -86,12 +86,6 @@
       "cli": "--enable-build-warnings"
     },
     {
-      "name": "werror",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-werror"
-    },
-    {
       "name": "windres",
       "type": "bool",
       "default": false,
@@ -103,5 +97,7 @@
       "default": false,
       "cli": "--with-windmc"
     }
-  ]
+  ],
+  "removed": ["--disable-werror", "--enable-static"]
+
 }

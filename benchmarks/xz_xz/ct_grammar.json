@@ -35,24 +35,16 @@
       "cli": "--enable-checks",
       "desc": "Comma-separated list of integrity checks to build (crc32,crc64,sha256)"
     },
-
     {
       "name": "assembler",
       "type": "enum",
       "values": [
         "yes",
         "no",
-        "x86",
         "x86_64"
       ],
       "default": "yes",
       "cli": "--enable-assembler"
-    },
-    {
-      "name": "small",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-small"
     },
     {
       "name": "threads",
@@ -60,9 +52,7 @@
       "values": [
         "yes",
         "no",
-        "posix",
-        "win95",
-        "vista"
+        "posix"
       ],
       "default": "yes",
       "cli": "--enable-threads"
@@ -125,8 +115,7 @@
       "type": "enum",
       "values": [
         "auto",
-        "no",
-        "capsicum"
+        "no"
       ],
       "default": "auto",
       "cli": "--enable-sandbox"
@@ -174,6 +163,6 @@
       "cli": "--enable-silent-rules"
     }
   ],
-  "removed": ["--enable-xz","--enable-werror","external-sha256","--disable-shared", "--enable-static"]
+  "removed": ["enable-small","--enable-xz","--enable-werror","external-sha256","--disable-shared", "--enable-static"]
 
 }

@@ -29,6 +29,11 @@ ARG CFLAGS=""
 RUN apt-get install -y --no-install-recommends \
     make autoconf libtool pkg-config \
     zlib1g-dev liblzma-dev
+RUN apt-get update && apt-get install -y \
+    build-essential autoconf libtool pkg-config \
+    libreadline-dev libcurl4-openssl-dev \
+    liblzma-dev python3-dev libicu-dev \
+    libxslt1-dev xsltproc zlib1g-dev
 
 # Build requires automake 1.16.3
 RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \

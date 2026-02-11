@@ -14,18 +14,6 @@
       "cli": "enable"
     },
     {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
       "name": "c14n",
       "type": "bool",
       "default": true,
@@ -41,12 +29,6 @@
       "name": "debug",
       "type": "bool",
       "default": true,
-      "cli": "with"
-    },
-    {
-      "name": "docs",
-      "type": "bool",
-      "default": false,
       "cli": "with"
     },
     {
@@ -250,37 +232,7 @@
       "name": "minimum",
       "type": "bool",
       "default": false,
-      "cli": "with",
-      "implies": [
-        "c14n=false",
-        "catalog=false",
-        "debug=false",
-        "history=false",
-        "html=false",
-        "http=false",
-        "iconv=false",
-        "iso8859x=false",
-        "output=false",
-        "pattern=false",
-        "push=false",
-        "python=false",
-        "reader=false",
-        "readline=false",
-        "regexps=false",
-        "relaxng=false",
-        "sax1=false",
-        "schemas=false",
-        "schematron=false",
-        "threads=false",
-        "thread_alloc=false",
-        "valid=false",
-        "writer=false",
-        "xinclude=false",
-        "xpath=false",
-        "xptr=false",
-        "zlib=false",
-        "modules=false"
-      ]
+      "cli": "with"
     }
   ],
   "constraints": [
@@ -413,6 +365,24 @@
           "val": true
         }
       ]
+    },
+    {
+      "name": "shared hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "static hardcoded in build scripts",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "docs hardcoded in build scripts",
+      "type": "bool",
+      "default": false,
+      "cli": "with"
     }
   ]
 }

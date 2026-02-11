@@ -20,12 +20,6 @@
       "cli": "enable"
     },
     {
-      "name": "tools",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
       "name": "tests",
       "type": "bool",
       "default": true,
@@ -33,12 +27,6 @@
     },
     {
       "name": "contrib",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "docs",
       "type": "bool",
       "default": true,
       "cli": "enable"
@@ -395,7 +383,7 @@
       "choices": ["/usr/lib/libjpeg.so", "/usr/local/lib/libjpeg.a"]
     }
   ],
-  "constraints": [
+"constraints": [
     {
       "opt": "pixarlog",
       "val": true,
@@ -417,6 +405,17 @@
         }
       ],
       "desc": "libdeflate is force disabled if zlib is not true"
+    },
+    {
+      "opt": "old-jpeg",
+      "val": true,
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "Old JPEG support requires standard JPEG support to be enabled."
     },
     {
       "opt": "jpeg12",
@@ -518,5 +517,30 @@
       "desc": "Directory Options (*-include-dir) require the Library (*)"
     }
   ],
-  "removed": []
+  "removed": [
+    {
+      "name": "tools hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "shared hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "static hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "docs hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    }
+  ]
 }

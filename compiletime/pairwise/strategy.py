@@ -268,7 +268,14 @@ class PairwiseGenerator:
             else:
                 # Choice / String types
                 # usually --with-name=value
-                args.append(f"--{cli_mode}-{name}={val}")
+                if isinstance(val, bool):
+                    # Handle "Presence" Checks for choice types
+                    if val is True:
+                        args.append(f"--{cli_mode}-{name}")
+                    else:
+                        args.append(f"--without-{name}")
+                else:
+                    args.append(f"--{cli_mode}-{name}={val}")
                 
         return " ".join(args)
 

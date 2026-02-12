@@ -50,15 +50,7 @@ class PairwiseGenerator:
                 self.solver.add(self.z3_vars[name] >= 0)
                 self.solver.add(self.z3_vars[name] < count)
 
-        # 2. explicit 'implies' in option definitions
-        for opt in self.options:
-            if 'implies' in opt and opt['implies']:
-                # imply logic is usually string based in these JSONs e.g. "zlib=false"
-                # For this script, we'll focus on the explicit 'constraints' block 
-                # as that is where the complex logic usually lives.
-                pass 
-
-        # 3. specific 'constraints' block
+        # 2. specific 'constraints' block
         for constr in self.constraints:
             self.add_json_constraint(constr)
 
@@ -122,6 +114,7 @@ class PairwiseGenerator:
                 return False
             
         return True
+
     def get_all_valid_pairs(self):
         """Generates all pairwise combinations (2-way) that are logically possible."""
         print("Generating valid pairs...")

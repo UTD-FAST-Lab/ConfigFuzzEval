@@ -34,7 +34,7 @@ RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 && 
 
 # Install AFL++ common Python deps
 RUN pip3 install --no-cache-dir \
-    psutil numpy matplotlib seaborn
+    psutil numpy matplotlib seaborn z3-solver
 
 # DEBUG: Print clang version on container startup
 # CMD ["clang --version"]

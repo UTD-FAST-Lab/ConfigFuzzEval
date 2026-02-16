@@ -595,7 +595,6 @@ if __name__ == "__main__":
     experiment_state = allocate_resources(experiment_state)
     logging.success("Resources allocated successfully.")
     logging.debug(f"Experiment state after resource allocation: {pprint.pformat(experiment_state)}")
-
     # Save the state
     with open(f"{experiment_state['experiment_path']}/experiment_state.pkl", "wb") as f:
         pickle.dump(experiment_state, f)

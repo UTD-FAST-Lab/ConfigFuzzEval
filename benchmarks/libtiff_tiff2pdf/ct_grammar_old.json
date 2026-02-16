@@ -1,0 +1,354 @@
+{
+  "name": "libtiff_tiff2pdf",
+  "options": [
+    {
+      "name": "deprecated",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-deprecated"
+    },
+    {
+      "name": "largefile",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-largefile"
+    },
+    {
+      "name": "ld-version-script",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-ld-version-script"
+    },
+    {
+      "name": "rpath",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-rpath"
+    },
+    {
+      "name": "tests",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-tests"
+    },
+    {
+      "name": "contrib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-contrib"
+    },
+    {
+      "name": "docs",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-docs"
+    },
+    {
+      "name": "ccitt",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-ccitt"
+    },
+    {
+      "name": "packbits",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-packbits"
+    },
+    {
+      "name": "lzw",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzw"
+    },
+    {
+      "name": "thunder",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-thunder"
+    },
+    {
+      "name": "next",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-next"
+    },
+    {
+      "name": "logluv",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-logluv"
+    },
+    {
+      "name": "mdi",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-mdi"
+    },
+    {
+      "name": "zlib",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-zlib"
+    },
+    {
+      "name": "libdeflate",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libdeflate"
+    },
+    {
+      "name": "pixarlog",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-pixarlog"
+    },
+    {
+      "name": "jpeg",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-jpeg"
+    },
+    {
+      "name": "old-jpeg",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-old-jpeg"
+    },
+    {
+      "name": "jbig",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-jbig"
+    },
+    {
+      "name": "lerc",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lerc"
+    },
+    {
+      "name": "lzma",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-lzma"
+    },
+    {
+      "name": "zstd",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-zstd"
+    },
+    {
+      "name": "webp",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-webp"
+    },
+    {
+      "name": "cxx",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-cxx"
+    },
+    {
+      "name": "opengl",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-opengl"
+    },
+    {
+      "name": "win32-io",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-win32-io"
+    },
+    {
+      "name": "strip-chopping",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-strip-chopping"
+    },
+    {
+      "name": "defer-strile-load",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-defer-strile-load"
+    },
+    {
+      "name": "chunky-strip-read",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-chunky-strip-read"
+    },
+    {
+      "name": "extrasample-as-alpha",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-extrasample-as-alpha"
+    },
+    {
+      "name": "check-ycbcr-subsampling",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-check-ycbcr-subsampling"
+    },
+    {
+      "name": "sphinx",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-sphinx"
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-pic"
+    },
+    {
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-maintainer-mode"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
+    },
+    {
+      "name": "zlib-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-zlib-include-dir"
+    },
+    {
+      "name": "zlib-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-zlib-lib-dir"
+    },
+    {
+      "name": "libdeflate-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libdeflate-include-dir"
+    },
+    {
+      "name": "libdeflate-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-libdeflate-lib-dir"
+    },
+    {
+      "name": "jpeg-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-jpeg-include-dir"
+    },
+    {
+      "name": "jpeg-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-jpeg-lib-dir"
+    },
+    {
+      "name": "jbig-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-jbig-include-dir"
+    },
+    {
+      "name": "jbig-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-jbig-lib-dir"
+    },
+    {
+      "name": "lerc-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-lerc-include-dir"
+    },
+    {
+      "name": "lerc-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-lerc-lib-dir"
+    },
+    {
+      "name": "lzma-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-lzma-include-dir"
+    },
+    {
+      "name": "lzma-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-lzma-lib-dir"
+    },
+    {
+      "name": "zstd-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-zstd-include-dir"
+    },
+    {
+      "name": "zstd-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-zstd-lib-dir"
+    },
+    {
+      "name": "webp-include-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-webp-include-dir"
+    },
+    {
+      "name": "webp-lib-dir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-webp-lib-dir"
+    },
+    {
+      "name": "docdir",
+      "type": "string",
+      "default": null,
+      "cli": "--with-docdir"
+    },
+    {
+      "name": "x",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-x"
+    },
+    {
+      "name": "default-strip-size",
+      "type": "value",
+      "default": 8192,
+      "cli": "--with-default-strip-size"
+    },
+    {
+      "name": "max-dir-count",
+      "type": "value",
+      "default": 1048576,
+      "cli": "--with-max-dir-count"
+    }
+  ],
+  "removed": ["tools","--disable-shared", "--enable-static","jpeg12","jpeg12-include-dir", "jpeg12-lib"]
+}

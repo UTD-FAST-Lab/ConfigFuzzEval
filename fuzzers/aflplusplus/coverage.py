@@ -87,7 +87,7 @@ def main():
     try:
         with open(report_json, "w") as f:
             subprocess.run(
-                ["llvm-cov", "export", binary, f"-instr-profile={merged_profdata}"],
+                ["llvm-cov", "export", binary, f"-instr-profile={merged_profdata}", "-format=lcov"],
                 check=True,
                 stdout=f
             )

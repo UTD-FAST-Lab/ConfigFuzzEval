@@ -1,5 +1,3 @@
-# notes: we first set everything to true, the we sewquentially apply every constraint until we see no change occured in a pass. In this case, if 2 options set the same option as a constraint, lets say A needs b to be false and c needs b to be true, then we set b to true as C comes last.
-
 """
 Grammar Configuration Module - Maximum Strategy (New Format)
 
@@ -10,17 +8,44 @@ attempting to enable all features unless explicitly constrained.
 
 import json
 from typing import Dict, List, Any, Optional
+import random
+
+
+def calculate_constraint_score(rule: Dict[str, Any]) -> int:
+    """
+    Calculate the priority score of a constraint rule.
+    Formula: (Count of forces True) - (Count of forces False).
+    
+    Positive Score: Forces more options ON (High Priority).
+    Negative Score: Forces more options OFF (Low Priority).
+    """
+    score = 0
+    for consequence in rule.get("then", []):
+        # Check for explicit boolean assignments
+        if "val" in consequence:
+            val = consequence["val"]
+            if val is True:
+                score += 1
+            elif val is False:
+                score -= 1
+            # Handle Choice Operators
+            elif val == "==": 
+                 # Forces a specific value -> effectively "Enabling" a specific state (+1)
+                 score += 1
+            elif val == "!=":
+                 # Restricts a value -> effectively "Disabling" a specific state (-1)
+                 score -= 1
+    return score
+
 
 
 def load_grammar(grammar_file) -> Dict[str, Any]:
     """
     Load grammar configuration from JSON file.
-    
     Args:
-        grammar_file: Path to the grammar JSON file
-        
+        grammar_file: Path to the grammar JSON file.
     Returns:
-        Grammar configuration dictionary
+        Grammar configuration dictionary.
     """
     with open(grammar_file, "r") as f:
         return json.load(f)
@@ -55,47 +80,37 @@ def set_option(config: Dict[str, Any], name: str, value: Any) -> None:
     config[name] = value
 
 
-# [NEW] This function replaces check_conflicts/requires/implies
-def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any]) -> bool:
+
+def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_constraints: List[Any]) -> bool:
     """
-    Iterate through constraints and enforce them on the configuration.
+    Iterate through the pre-sorted constraints and enforce them.
     
     Args:
-        grammar: The full grammar dict containing 'constraints'
-        config: The current configuration state
-
-    Returns:
-        bool: True if any changes were made to the config (requires another pass),
-              False if the config is stable.
+        grammar: Used for looking up option definitions (get_option)
+        config: Current configuration state
+        sorted_constraints: List of constraint rules, already sorted by priority
     """
-    if "constraints" not in grammar:
-        return False
-
     changed = False
 
-    for rule in grammar["constraints"]:
-        # 1. Check if the 'condition' (if) part of the rule matches current config
+    for rule in sorted_constraints:
+        # Check if the 'condition' (if) part of the rule matches current config
         trigger_opt = rule.get("opt")
         trigger_val = rule.get("val")
         
-        # If the option isn't in config, we can't evaluate the trigger
         if trigger_opt not in config:
             continue
         
-        # Check if the trigger condition is met
-        # e.g., if config["c14n"] == True
         if config[trigger_opt] == trigger_val:
             
-            # 2. Apply the 'consequences' (then) part of the rule
+            # Apply the 'consequences' (then) part of the rule
             for consequence in rule.get("then", []):
                 target_opt = consequence.get("opt")
                 
-                # Retrieve the target option definition to check for valid choices
                 target_def = get_option(grammar, target_opt)
                 if not target_def:
                     continue
                 
-                # Case A: Comparison Constraint (e.g., target != "choice 1")
+                # Case A: Comparison Constraint
                 if "choice" in consequence and "val" in consequence:
                     operator = consequence["val"]
                     forbidden_choice = consequence["choice"]
@@ -103,23 +118,20 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any]) -> bool:
 
                     if operator == "!=":
                         if current_val == forbidden_choice:
-                            # [STRATEGY] If we must NOT be this choice, pick the next available valid one.
-                            # For Maximum strategy, we usually just pick the first valid option 
-                            # that isn't the forbidden one.
                             if "choices" in target_def:
-                                for valid_c in target_def["choices"]:
-                                    if valid_c != forbidden_choice:
-                                        if config.get(target_opt) != valid_c:
-                                            set_option(config, target_opt, valid_c)
-                                            changed = True
-                                        break
+                                valid_choices = [c for c in target_def["choices"] if c != forbidden_choice]
+                                if valid_choices:
+                                    new_val = random.choice(valid_choices)
+                                    if config.get(target_opt) != new_val:
+                                        set_option(config, target_opt, new_val)
+                                        changed = True
+                                        
                     elif operator == "==":
-                        # Force specific choice
                         if config.get(target_opt) != forbidden_choice:
                             set_option(config, target_opt, forbidden_choice)
                             changed = True
 
-                # Case B: Direct Assignment (e.g., target = True / False)
+                # Case B: Direct Assignment
                 elif "val" in consequence:
                     target_val = consequence["val"]
                     if config.get(target_opt) != target_val:
@@ -128,60 +140,65 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any]) -> bool:
 
     return changed
 
-
 def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
     """
     Generate configuration with all options enabled where possible.
     
     Strategy:
-    1. Initialize all Bools to True and Choices to default/first value.
-    2. Iteratively apply constraints until the configuration stabilizes.
-    
-    Args:
-        grammar: Grammar configuration dictionary
-        
-    Returns:
-        Configuration dictionary with options set based on constraints
+    1. Bools -> Set to True.
+    2. Choices -> Set to Random "Truthy" value (avoid False if possible).
     """
     config = {}
     
     # --- PASS 1: GREEDY INITIALIZATION ---
-    # Set everything to its "Maximum" or "Default" state ignoring constraints initially
     for opt in grammar["options"]:
         name = opt["name"]
         
-        # [UPDATED] Handle the new "minimum" exclusion logic if it exists
         if name == "minimum":
             set_option(config, name, False)
             continue
             
-        # [UPDATED] Logic for the new 'bool' vs 'choice' types
         if opt["type"] == "bool":
-            # Maximum strategy: Try to enable everything by default
-            # unless the default is strictly enforced (optional: usually we force True)
             set_option(config, name, True)
             
         elif opt["type"] == "choice":
-            # Maximum strategy: If a default exists, use it. 
-            # Otherwise, pick the first available choice.
-            if "default" in opt:
-                set_option(config, name, opt["default"])
-            elif "choices" in opt and len(opt["choices"]) > 0:
-                set_option(config, name, opt["choices"][0])
+            if "choices" in opt and len(opt["choices"]) > 0:
+                # [FIX] Filter out 'False' to ensure we start with a Maximum configuration.
+                # We want True, strings, numbers, etc. We do NOT want to randomly pick False.
+                truthy_choices = [c for c in opt["choices"] if c is not False]
+                
+                if truthy_choices:
+                    set_option(config, name, random.choice(truthy_choices))
+                else:
+                    # If the ONLY choices are False (rare), we must pick it.
+                    set_option(config, name, random.choice(opt["choices"]))
             else:
                 set_option(config, name, "")
-
-        elif opt["type"] == "depends":
-            # Maximum strategy: treat dependency flags like bools (enable by default)
-            set_option(config, name, True)
                 
-    # --- PASS 2: CONSTRAINT SOLVER LOOP ---
-    # [NEW] Instead of separate passes for conflicts/requires, we loop the constraints
-    # until the configuration stops changing. This handles chains (A->B->C).
-    max_iterations = 10  # Prevent infinite loops in case of cyclic constraints
+    # --- PASS 2: PRE-PROCESSING CONSTRAINTS (Done ONCE) ---
+    if "constraints" in grammar:
+        # 1. Annotate constraints with their calculated scores
+        scored_constraints = []
+        for rule in grammar["constraints"]:
+            score = calculate_constraint_score(rule)
+            scored_constraints.append((score, rule))
+        
+        # 2. Randomize first (to break ties randomly)
+        random.shuffle(scored_constraints)
+        
+        # 3. Sort by score ascending (Low score first -> High score last)
+        scored_constraints.sort(key=lambda x: x[0])
+        
+        # 4. Extract just the rules
+        final_constraint_list = [rule for score, rule in scored_constraints]
+    else:
+        final_constraint_list = []
+
+    # --- PASS 3: CONSTRAINT SOLVER LOOP ---
+    max_iterations = 10
     iteration = 0
     while iteration < max_iterations:
-        did_change = apply_constraints(grammar, config)
+        did_change = apply_constraints(grammar, config, final_constraint_list)
         if not did_change:
             break
         iteration += 1
@@ -189,48 +206,39 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
     return config
 
 
+
 def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     """
     Convert option and value to CLI argument string.
     
-    Args:
-        opt: Option configuration
-        val: Option value
-        
-    Returns:
-        CLI argument string, empty if not applicable
-    
-    [UPDATED] Handles the new format where CLI style (with/enable) is explicitly defined.
+    [UPDATED] 'depends' type is removed. 'choice' type handles everything.
+    - If val is boolean (True/False): outputs flag only (e.g., --with-zlib)
+    - If val is string/int: outputs flag=value (e.g., --with-zlib=/usr)
     """
     cli_style = opt.get("cli", "with") # default to 'with' if missing
     name = opt["name"]
 
-    if opt["type"] == "bool":
-        if val is True:
-            # e.g., --enable-foo or --with-foo
+    # Helper for boolean formatting logic
+    def format_bool(is_true: bool):
+        if is_true:
             return f"--{cli_style}-{name}"
         else:
-            # e.g., --disable-foo or --without-foo
             negation = "disable" if cli_style == "enable" else "without"
             return f"--{negation}-{name}"
-    elif opt["type"] == "depends":
-        if val is True:
-            return f"--{cli_style}-{name}"
-        if val is False:
-            negation = "disable" if cli_style == "enable" else "without"
-            return f"--{negation}-{name}"
-        if val is not None and val != "":
-            return f"--{cli_style}-{name}={val}"
+
+    if opt["type"] == "bool":
+        return format_bool(val is True)
             
     elif opt["type"] == "choice":
-        # e.g., --with-default-strip-size=8192
-        # Choices usually imply a value assignment, so we check if it's not empty/false
+        # [UPDATED] Check for boolean types first (e.g., zlib: true)
+        if isinstance(val, bool):
+            return format_bool(val)
+        
+        # Standard string/int choices (e.g., prefix: "/usr")
         if val is not None and val != "":
-             # For choices, we almost always use the positive form + value
              return f"--{cli_style}-{name}={val}"
              
     return ""
-
 
 def generate_cli_args(grammar: Dict[str, Any],
                      config: Optional[Dict[str, Any]] = None) -> List[str]:

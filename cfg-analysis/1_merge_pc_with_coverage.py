@@ -112,23 +112,17 @@ def merge_pc_with_coverage(pc_dir, covered_lines):
 def main():
     parser = argparse.ArgumentParser(description="Merge presence condition tree with LLVM coverage results")
     parser.add_argument("--pc-dir", required=True, help="Directory with sourceline_pc_outputs")
-    parser.add_argument("--cov", required=True, help="LLVM coverage JSON file (from llvm-cov export)")
+    parser.add_argument("--cov", nargs='+', required=True, help="Format = Name:path, LLVM coverage JSON file (from llvm-cov export)")
     parser.add_argument("--out", required=True, help="Output JSON file")
-    parser.add_argument(
-        "--multi", 
-        required=False, 
-        nargs='+',
-        metavar="NAME:PATH",
-        help="Provide multiple runs in format 'name:path' (e.g., runA:data_a.json runB:data_b.json)"
-    )
     args = parser.parse_args()
 
     # with open(args.cov) as f:
     #     cov_json = json.load(f)
     covered_lines = {}
     
-    if args.multi:
-        for run in args.multi:
+    
+    if len(args.cov) > 1:
+        for run in args.cov:
             name, path = run.split(":", 1)
             print(f"Run name: {name}, path: {path}")
             per_run_covered = extract_covered_lines(path)

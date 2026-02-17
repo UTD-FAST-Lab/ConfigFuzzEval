@@ -331,6 +331,17 @@
         }
       ],
       "desc": "History force enables readline."
+    },
+    {
+      "opt": "http",
+      "val": true,
+      "then": [
+        {
+          "opt": "output",
+          "val": true
+        }
+      ],
+      "desc": "Found bug."
     }
   ],
   "removed": [

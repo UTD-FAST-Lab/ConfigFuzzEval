@@ -339,10 +339,11 @@
       "then": [
         {
           "opt": "readline",
-          "val": true
+          "val": true,
+          "choice": "=="
         }
       ],
-      "desc": "History force enables readline."
+      "desc": "History force enables readline (any valid choice/true)."
     }
   ],
   "removed": [

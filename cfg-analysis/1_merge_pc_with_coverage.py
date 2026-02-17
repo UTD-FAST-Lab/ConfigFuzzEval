@@ -3,6 +3,7 @@ import os
 import json
 import argparse
 
+
 def extract_covered_lines_old(cov_json):
     covered = {}
     for data_entry in cov_json.get("data", []):
@@ -16,6 +17,7 @@ def extract_covered_lines_old(cov_json):
                     lines.add(line_no)
             covered[filename] = lines
     return covered
+
 
 def extract_covered_lines(cov_file):
     with open(cov_file) as f:
@@ -48,6 +50,7 @@ def load_pc_file(path):
     with open(path) as f:
         return json.load(f)
 
+
 def parse_pc_tree(node, results=None, parent_pc=""):
     if results is None:
         results = []
@@ -70,6 +73,7 @@ def parse_pc_tree(node, results=None, parent_pc=""):
             parse_pc_tree(sub, results, parent_pc)
     return results
 
+
 def merge_pc_with_coverage(pc_dir, covered_lines):
     merged = []
     for fname in os.listdir(pc_dir):
@@ -87,10 +91,6 @@ def merge_pc_with_coverage(pc_dir, covered_lines):
         if not covered:
             print(f"No coverage info for {base}")
         for entry in pcs:
-           # range_covered_lines = sum(
-           #     1 for line in covered
-           #     if entry["StartLine"] <= line <= entry["EndLine"]
-           # )
             line_numbers = set()
             range_covered_lines = 0
             for line in covered:
@@ -108,16 +108,38 @@ def merge_pc_with_coverage(pc_dir, covered_lines):
             merged.append(entry)
     return merged
 
+
 def main():
     parser = argparse.ArgumentParser(description="Merge presence condition tree with LLVM coverage results")
     parser.add_argument("--pc-dir", required=True, help="Directory with sourceline_pc_outputs")
     parser.add_argument("--cov", required=True, help="LLVM coverage JSON file (from llvm-cov export)")
     parser.add_argument("--out", required=True, help="Output JSON file")
+    parser.add_argument(
+        "--multi", 
+        required=False, 
+        nargs='+',
+        metavar="NAME:PATH",
+        help="Provide multiple runs in format 'name:path' (e.g., runA:data_a.json runB:data_b.json)"
+    )
     args = parser.parse_args()
 
     # with open(args.cov) as f:
     #     cov_json = json.load(f)
-    covered_lines = extract_covered_lines(args.cov)
+    covered_lines = {}
+    
+    if args.multi:
+        for run in args.multi:
+            name, path = run.split(":", 1)
+            print(f"Run name: {name}, path: {path}")
+            per_run_covered = extract_covered_lines(path)
+            
+            # Merge per-run coverage into overall covered_lines dict
+            for fname, lines in per_run_covered.items():
+                if fname not in covered_lines:
+                    covered_lines[fname] = set()
+                covered_lines[fname].update(lines)
+    else:
+        covered_lines = extract_covered_lines(args.cov)
     # print(covered_lines) # Dict(filename -> set of line numbers)
 
     merged = merge_pc_with_coverage(args.pc_dir, covered_lines)
@@ -126,6 +148,7 @@ def main():
         json.dump(merged, f, indent=2)
 
     print(f"[+] Merged {len(merged)} entries into {args.out}")
+
 
 if __name__ == "__main__":
     main()

@@ -476,13 +476,14 @@ if __name__ == "__main__":
 
     for strategy in experiment_state["compiletime"]:
         try:
-            new_benchmark_mapping, tot_cts = apply_ct_strategy(strategy,
+            new_benchmark_mapping, new_tot_cts = apply_ct_strategy(strategy,
                                     project_root,
                                     experiment_state["benchmarks"],
                                     experiment_state["random_seed"]         
                                 )
             if new_benchmark_mapping:
                 benchmark_mappings.update(new_benchmark_mapping)
+                tot_cts.update(new_tot_cts)
             else:
                 failed_strategies.append(strategy)
         except Exception as e:

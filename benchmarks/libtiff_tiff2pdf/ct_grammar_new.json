@@ -431,6 +431,7 @@
     {
       "opt": "zlib-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "zlib",
@@ -442,6 +443,7 @@
     {
       "opt": "libdeflate-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "libdeflate",
@@ -453,6 +455,7 @@
     {
       "opt": "jpeg-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "jpeg",
@@ -464,6 +467,7 @@
     {
       "opt": "jbig-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "jbig",
@@ -475,6 +479,7 @@
     {
       "opt": "lerc-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "lerc",
@@ -486,6 +491,7 @@
     {
       "opt": "lzma-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "lzma",
@@ -497,6 +503,7 @@
     {
       "opt": "zstd-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "zstd",
@@ -508,6 +515,7 @@
     {
       "opt": "webp-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "webp",

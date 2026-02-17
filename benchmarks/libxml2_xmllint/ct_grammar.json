@@ -116,12 +116,6 @@
       "cli": "with"
     },
     {
-      "name": "python",
-      "type": "bool",
-      "default": true,
-      "cli": "with"
-    },
-    {
       "name": "reader",
       "type": "bool",
       "default": true,
@@ -394,6 +388,13 @@
         "/usr/local/zlib",
         "/opt/zlib"
       ]
+    },
+    {
+      "name": "python",
+      "type": "bool",
+      "default": true,
+      "cli": "with"
     }
+
   ]
 }

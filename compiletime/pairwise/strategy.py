@@ -282,7 +282,15 @@ class PairwiseGenerator:
 
 def request_configurations(grammar_file):
     gen = PairwiseGenerator(grammar_file)
-    return gen.generate()    
+    res = gen.generate()
+    
+    configs = []
+    
+    for conf in res:
+        cli_args = gen.format_cli(conf)
+        configs.append(cli_args)
+    
+    return configs
 
 
 if __name__ == "__main__":

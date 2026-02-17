@@ -5,350 +5,544 @@
       "name": "deprecated",
       "type": "bool",
       "default": false,
-      "cli": "--enable-deprecated"
-    },
-    {
-      "name": "largefile",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-largefile"
+      "cli": "enable"
     },
     {
       "name": "ld-version-script",
       "type": "bool",
       "default": true,
-      "cli": "--enable-ld-version-script"
+      "cli": "enable"
     },
     {
       "name": "rpath",
       "type": "bool",
       "default": false,
-      "cli": "--enable-rpath"
+      "cli": "enable"
     },
     {
       "name": "tests",
       "type": "bool",
       "default": true,
-      "cli": "--enable-tests"
+      "cli": "enable"
     },
     {
       "name": "contrib",
       "type": "bool",
       "default": true,
-      "cli": "--enable-contrib"
-    },
-    {
-      "name": "docs",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-docs"
+      "cli": "enable"
     },
     {
       "name": "ccitt",
       "type": "bool",
       "default": true,
-      "cli": "--enable-ccitt"
+      "cli": "enable"
     },
     {
       "name": "packbits",
       "type": "bool",
       "default": true,
-      "cli": "--enable-packbits"
+      "cli": "enable"
     },
     {
       "name": "lzw",
       "type": "bool",
       "default": true,
-      "cli": "--enable-lzw"
+      "cli": "enable"
     },
     {
       "name": "thunder",
       "type": "bool",
       "default": true,
-      "cli": "--enable-thunder"
+      "cli": "enable"
     },
     {
       "name": "next",
       "type": "bool",
       "default": true,
-      "cli": "--enable-next"
+      "cli": "enable"
     },
     {
       "name": "logluv",
       "type": "bool",
       "default": true,
-      "cli": "--enable-logluv"
+      "cli": "enable"
     },
     {
       "name": "mdi",
       "type": "bool",
       "default": true,
-      "cli": "--enable-mdi"
+      "cli": "enable"
     },
     {
       "name": "zlib",
       "type": "bool",
       "default": true,
-      "cli": "--enable-zlib"
+      "cli": "enable"
     },
     {
       "name": "libdeflate",
       "type": "bool",
       "default": true,
-      "cli": "--enable-libdeflate"
+      "cli": "enable"
     },
     {
       "name": "pixarlog",
       "type": "bool",
       "default": true,
-      "cli": "--enable-pixarlog"
+      "cli": "enable"
     },
     {
       "name": "jpeg",
       "type": "bool",
       "default": true,
-      "cli": "--enable-jpeg"
+      "cli": "enable"
     },
     {
       "name": "old-jpeg",
       "type": "bool",
       "default": true,
-      "cli": "--enable-old-jpeg"
+      "cli": "enable"
     },
     {
       "name": "jbig",
       "type": "bool",
       "default": true,
-      "cli": "--enable-jbig"
+      "cli": "enable"
     },
     {
       "name": "lerc",
       "type": "bool",
       "default": true,
-      "cli": "--enable-lerc"
+      "cli": "enable"
     },
     {
       "name": "lzma",
       "type": "bool",
       "default": true,
-      "cli": "--enable-lzma"
+      "cli": "enable"
     },
     {
       "name": "zstd",
       "type": "bool",
       "default": true,
-      "cli": "--enable-zstd"
+      "cli": "enable"
     },
     {
       "name": "webp",
       "type": "bool",
       "default": true,
-      "cli": "--enable-webp"
+      "cli": "enable"
     },
     {
       "name": "cxx",
       "type": "bool",
       "default": true,
-      "cli": "--enable-cxx"
+      "cli": "enable"
     },
     {
       "name": "opengl",
       "type": "bool",
       "default": true,
-      "cli": "--enable-opengl"
+      "cli": "enable"
     },
     {
       "name": "win32-io",
       "type": "bool",
       "default": true,
-      "cli": "--enable-win32-io"
+      "cli": "enable"
     },
     {
       "name": "strip-chopping",
       "type": "bool",
       "default": true,
-      "cli": "--enable-strip-chopping"
+      "cli": "enable"
     },
     {
       "name": "defer-strile-load",
       "type": "bool",
       "default": false,
-      "cli": "--enable-defer-strile-load"
+      "cli": "enable"
     },
     {
       "name": "chunky-strip-read",
       "type": "bool",
       "default": false,
-      "cli": "--enable-chunky-strip-read"
+      "cli": "enable"
     },
     {
       "name": "extrasample-as-alpha",
       "type": "bool",
       "default": true,
-      "cli": "--enable-extrasample-as-alpha"
+      "cli": "enable"
     },
     {
       "name": "check-ycbcr-subsampling",
       "type": "bool",
       "default": true,
-      "cli": "--enable-check-ycbcr-subsampling"
+      "cli": "enable"
     },
     {
       "name": "sphinx",
       "type": "bool",
       "default": true,
-      "cli": "--enable-sphinx"
+      "cli": "enable"
+    },
+    {
+      "name": "largefile",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
     },
     {
       "name": "pic",
       "type": "bool",
       "default": true,
-      "cli": "--with-pic"
+      "cli": "with"
     },
     {
       "name": "fast-install",
       "type": "bool",
       "default": true,
-      "cli": "--enable-fast-install"
+      "cli": "enable"
     },
     {
       "name": "maintainer-mode",
       "type": "bool",
       "default": false,
-      "cli": "--enable-maintainer-mode"
+      "cli": "enable"
     },
     {
       "name": "dependency-tracking",
       "type": "bool",
       "default": true,
-      "cli": "--enable-dependency-tracking"
+      "cli": "enable"
     },
     {
       "name": "silent-rules",
       "type": "bool",
       "default": true,
-      "cli": "--enable-silent-rules"
-    },
-    {
-      "name": "zlib-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-zlib-include-dir"
-    },
-    {
-      "name": "zlib-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-zlib-lib-dir"
-    },
-    {
-      "name": "libdeflate-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-libdeflate-include-dir"
-    },
-    {
-      "name": "libdeflate-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-libdeflate-lib-dir"
-    },
-    {
-      "name": "jpeg-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jpeg-include-dir"
-    },
-    {
-      "name": "jpeg-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jpeg-lib-dir"
-    },
-    {
-      "name": "jbig-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jbig-include-dir"
-    },
-    {
-      "name": "jbig-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-jbig-lib-dir"
-    },
-    {
-      "name": "lerc-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-lerc-include-dir"
-    },
-    {
-      "name": "lerc-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-lerc-lib-dir"
-    },
-    {
-      "name": "lzma-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-lzma-include-dir"
-    },
-    {
-      "name": "lzma-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-lzma-lib-dir"
-    },
-    {
-      "name": "zstd-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-zstd-include-dir"
-    },
-    {
-      "name": "zstd-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-zstd-lib-dir"
-    },
-    {
-      "name": "webp-include-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-webp-include-dir"
-    },
-    {
-      "name": "webp-lib-dir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-webp-lib-dir"
-    },
-    {
-      "name": "docdir",
-      "type": "string",
-      "default": null,
-      "cli": "--with-docdir"
+      "cli": "enable"
     },
     {
       "name": "x",
       "type": "bool",
       "default": false,
-      "cli": "--with-x"
+      "cli": "with"
+    },
+    {
+      "name": "zlib-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include", "/opt/zlib/include"]
+    },
+    {
+      "name": "zlib-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib", "/opt/zlib/lib"]
+    },
+    {
+      "name": "libdeflate-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "libdeflate-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "jpeg-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "jpeg-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "jbig-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "jbig-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "lerc-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "lerc-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "lzma-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "lzma-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "webp-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "webp-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "docdir",
+      "type": "choice",
+      "default": "/usr/share/doc/tiff",
+      "cli": "with",
+      "choices": ["/usr/share/doc/tiff", "/usr/local/share/doc/tiff"]
     },
     {
       "name": "default-strip-size",
-      "type": "value",
+      "type": "choice",
       "default": 8192,
-      "cli": "--with-default-strip-size"
+      "cli": "with",
+      "choices": [4096, 8192, 16384, 32768]
     },
     {
       "name": "max-dir-count",
-      "type": "value",
+      "type": "choice",
       "default": 1048576,
-      "cli": "--with-max-dir-count"
+      "cli": "with",
+      "choices": [100000, 1048576, 2000000]
     }
   ],
-  "removed": ["tools","--disable-shared", "--enable-static","jpeg12","jpeg12-include-dir", "jpeg12-lib"]
+"constraints": [
+    {
+      "opt": "pixarlog",
+      "val": true,
+      "then": [
+        {
+          "opt": "zlib",
+          "val": true
+        }
+      ],
+      "desc": "pixarlog is force disabled if zlib is not true"
+    },
+    {
+      "opt": "libdeflate",
+      "val": true,
+      "then": [
+        {
+          "opt": "zlib",
+          "val": true
+        }
+      ],
+      "desc": "libdeflate is force disabled if zlib is not true"
+    },
+    {
+      "opt": "old-jpeg",
+      "val": true,
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "Old JPEG support requires standard JPEG support to be enabled."
+    },
+    {
+      "opt": "zlib-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "zlib",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "libdeflate-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "libdeflate",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "jpeg-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "jbig-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "jbig",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "lerc-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "lerc",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "lzma-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "lzma",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "webp-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "webp",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    }
+  ],
+  "removed": [
+    {
+      "name": "tools hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "shared hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "static hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "docs hardcoded in build scripts",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "jpeg12",
+      "type": "bool",
+      "default": false,
+      "cli": "enable",
+      "constraints": {
+      "opt": "jpeg12",
+      "val": true,
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "libtiff's architecture requires the base JPEG infrastructure (JPEG_SUPPORT) to be active for any JPEG-related functionality to work correctly."
+      }
+
+    },
+    {
+      "name": "zstd-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"],
+      "constraints": {
+      "opt": "zstd-include-dir",
+      "val": true,
+      "then": [
+        {
+          "opt": "zstd",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+      }
+    },
+    {
+      "name": "zstd-lib-dir",
+      "type": "choice",
+      "default": "/usr/lib",
+      "cli": "with",
+      "choices": ["/usr/lib", "/usr/local/lib"]
+    },
+    {
+      "name": "jpeg12-include-dir",
+      "type": "choice",
+      "default": "/usr/include",
+      "cli": "with",
+      "choices": ["/usr/include", "/usr/local/include"]
+    },
+    {
+      "name": "jpeg12-lib",
+      "type": "choice",
+      "default": "/usr/lib/libjpeg.so",
+      "cli": "with",
+      "choices": ["/usr/lib/libjpeg.so", "/usr/local/lib/libjpeg.a"]
+    }
+
+  ]
 }

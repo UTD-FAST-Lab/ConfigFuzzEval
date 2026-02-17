@@ -28,7 +28,7 @@ ARG CFLAGS=""
 
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev libjbig0 libjbig-dev
-
+RUN apt install -y liblerc-dev zstd libwebp-dev libjpeg-dev libjpeg-turbo8-dev
 RUN git clone https://gitlab.com/libtiff/libtiff.git /libtiff
 
 WORKDIR /libtiff

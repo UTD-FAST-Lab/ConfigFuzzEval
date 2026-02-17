@@ -1,0 +1,303 @@
+{
+  "name": "libxml2_xmllint",
+  "options": [
+    {
+      "name": "fast-install",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-fast-install"
+    },
+    {
+      "name": "silent-rules",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-silent-rules"
+    },
+    {
+      "name": "maintainer-mode",
+      "type": "bool",
+      "default": false,
+      "cli": "--enable-maintainer-mode"
+    },
+    {
+      "name": "dependency-tracking",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-dependency-tracking"
+    },
+    {
+      "name": "libtool-lock",
+      "type": "bool",
+      "default": true,
+      "cli": "--enable-libtool-lock"
+    },
+    {
+      "name": "pic",
+      "type": "bool",
+      "default": null,
+      "cli": "--with-pic"
+    },
+    {
+      "name": "aix-soname",
+      "type": "enum",
+      "values": [
+        "aix",
+        "svr4",
+        "both"
+      ],
+      "default": "aix",
+      "cli": "--with-aix-soname"
+    },
+    {
+      "name": "gnu-ld",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-gnu-ld"
+    },
+    {
+      "name": "sysroot",
+      "type": "str",
+      "default": null,
+      "cli": "--with-sysroot"
+    },
+    {
+      "name": "c14n",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-c14n"
+    },
+    {
+      "name": "catalog",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-catalog"
+    },
+    {
+      "name": "debug",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-debug"
+    },
+    {
+      "name": "history",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-history"
+    },
+    {
+      "name": "readline",
+      "type": "depends",
+      "default": false,
+      "cli": "--with-readline",
+      "desc": "Path or bool"
+    },
+    {
+      "name": "html",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-html"
+    },
+    {
+      "name": "http",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-http"
+    },
+    {
+      "name": "iconv",
+      "type": "depends",
+      "default": true,
+      "cli": "--with-iconv",
+      "desc": "Path or bool"
+    },
+    {
+      "name": "icu",
+      "type": "depends",
+      "default": false,
+      "cli": "--with-icu",
+      "desc": "Path or bool"
+    },
+    {
+      "name": "iso8859x",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-iso8859x",
+      "implies": [
+        "iconv=false"
+      ],
+      "pairwise_constraints": [
+        [
+          true,
+          [
+            [
+              "iconv",
+              true
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "modules",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-modules"
+    },
+    {
+      "name": "pattern",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-pattern"
+    },
+    {
+      "name": "push",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-push"
+    },
+    {
+      "name": "python",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-python"
+    },
+    {
+      "name": "reader",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-reader"
+    },
+    {
+      "name": "regexps",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-regexps"
+    },
+    {
+      "name": "relaxng",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-relaxng"
+    },
+    {
+      "name": "sax1",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-sax1"
+    },
+    {
+      "name": "schemas",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-schemas"
+    },
+    {
+      "name": "schematron",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-schematron"
+    },
+    {
+      "name": "threads",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-threads",
+      "implies": [
+        "thread_alloc"
+      ]
+    },
+    {
+      "name": "thread-alloc",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-thread-alloc",
+      "requires": [
+        "threads"
+      ]
+    },
+    {
+      "name": "valid",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-valid"
+    },
+    {
+      "name": "writer",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-writer"
+    },
+    {
+      "name": "xinclude",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xinclude"
+    },
+    {
+      "name": "xpath",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xpath"
+    },
+    {
+      "name": "xptr",
+      "type": "bool",
+      "default": true,
+      "cli": "--with-xptr"
+    },
+    {
+      "name": "zlib",
+      "type": "depends",
+      "default": false,
+      "cli": "--with-zlib",
+      "desc": "Path or bool"
+    },
+    {
+      "name": "minimum",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-minimum",
+      "implies": [
+        "debug=false",
+        "history=false",
+        "readline=false",
+        "html=false",
+        "http=false",
+        "iconv=false",
+        "icu=false",
+        "iso8859x=false",
+        "modules=false",
+        "output=false",
+        "pattern=false",
+        "python=false",
+        "reader=false",
+        "regexps=false",
+        "relaxng=false",
+        "sax1=false",
+        "schemas=false",
+        "schematron=false",
+        "threads=false",
+        "thread_alloc=false",
+        "valid=false",
+        "writer=false",
+        "xinclude=false",
+        "xpath=false",
+        "xptr=false",
+        "zlib=false"
+      ]
+    },
+    {
+      "name": "legacy",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-legacy"
+    },
+    {
+      "name": "tls",
+      "type": "bool",
+      "default": false,
+      "cli": "--with-tls"
+    }
+  ],
+  "removed": ["--with-output","--with-docs","--disable-shared", "--enable-static"]
+}

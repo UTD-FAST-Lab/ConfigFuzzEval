@@ -3,7 +3,7 @@ import os
 import json
 import argparse
 
-def extract_covered_lines(cov_json):
+def extract_covered_lines_old(cov_json):
     covered = {}
     for data_entry in cov_json.get("data", []):
         for file_entry in data_entry.get("files", []):
@@ -16,6 +16,33 @@ def extract_covered_lines(cov_json):
                     lines.add(line_no)
             covered[filename] = lines
     return covered
+
+def extract_covered_lines(cov_file):
+    with open(cov_file) as f:
+        covered = {}
+        lines = set()
+        filename = None
+        
+        for line in f:
+            if line.startswith("SF:"):
+                if filename is not None:
+                    covered[filename] = lines
+
+                filename = os.path.basename(line.strip().split(":", 1)[1])
+                lines = set()
+
+            elif line.startswith("DA:"):
+                line_no, exec_count = line.strip().split(":", 1)[1].split(",")
+                line_no = int(line_no)
+                exec_count = int(exec_count)
+                if exec_count > 0:
+                    lines.add(line_no)
+            
+        if filename is not None:
+            covered[filename] = lines
+    
+    return covered
+
 
 def load_pc_file(path):
     with open(path) as f:
@@ -88,9 +115,10 @@ def main():
     parser.add_argument("--out", required=True, help="Output JSON file")
     args = parser.parse_args()
 
-    with open(args.cov) as f:
-        cov_json = json.load(f)
-    covered_lines = extract_covered_lines(cov_json)
+    # with open(args.cov) as f:
+    #     cov_json = json.load(f)
+    covered_lines = extract_covered_lines(args.cov)
+    # print(covered_lines) # Dict(filename -> set of line numbers)
 
     merged = merge_pc_with_coverage(args.pc_dir, covered_lines)
 

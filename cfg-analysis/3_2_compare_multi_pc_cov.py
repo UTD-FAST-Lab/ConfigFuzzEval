@@ -9,37 +9,24 @@ def load_pc_stats(path):
       - number of regions per PC
       - whether any region is covered
       - total lines across all regions
-      - lines covered across all regions (using "Lines Covered" from entries)
+      - lines covered across all regions
     """
 
     with open(path) as f:
-        entries = json.load(f)
+        data = json.load(f)
 
-    pcs = defaultdict(lambda: {
-        "regions": 0,
-        "covered_regions": 0,
-        "total_lines": 0,
-        "covered_lines": 0
-    })
+    pcs = {}
 
-    for e in entries:
-        pc = e["PC"].strip()
-        start = e["StartLine"]
-        end = e["EndLine"]
-        covered = e.get("Covered", False)
-        covered_lines = e["Lines Covered"]
-
-        region_lines = max(0, end - start + 1)
-
-        pcs[pc]["regions"] += 1
-        pcs[pc]["total_lines"] += region_lines
-
-        if covered:
-            pcs[pc]["covered_regions"] += 1
-            pcs[pc]["covered_lines"] += covered_lines
+    # Iterate over each PC and its associated data
+    for pc_name, pc_data in data.items():
+        pcs[pc_name] = {
+            "regions": pc_data.get("regions", 0),
+            "covered_regions": pc_data.get("covered_regions", 0),
+            "total_lines": pc_data.get("total_lines", 0),
+            "covered_lines": pc_data.get("covered_lines", 0)
+        }
 
     return pcs
-
 
 def compare_coverage_multi(runs_dict):
     """

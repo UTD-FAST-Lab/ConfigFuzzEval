@@ -188,12 +188,6 @@
       "cli": "enable"
     },
     {
-      "name": "largefile",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
       "name": "pic",
       "type": "bool",
       "default": true,
@@ -224,132 +218,194 @@
       "cli": "enable"
     },
     {
-      "name": "x",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
-    },
-    {
       "name": "zlib-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include", "/opt/zlib/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include",
+        "/opt/zlib/include"
+      ]
     },
     {
       "name": "zlib-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib", "/opt/zlib/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib",
+        "/opt/zlib/lib"
+      ]
     },
     {
       "name": "libdeflate-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "libdeflate-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "jpeg-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "jpeg-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "jbig-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "jbig-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "lerc-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "lerc-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "lzma-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "lzma-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "webp-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "webp-lib-dir",
       "type": "choice",
       "default": "/usr/lib",
       "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "choices": [
+        "/usr/lib",
+        "/usr/local/lib"
+      ]
     },
     {
       "name": "docdir",
       "type": "choice",
       "default": "/usr/share/doc/tiff",
       "cli": "with",
-      "choices": ["/usr/share/doc/tiff", "/usr/local/share/doc/tiff"]
+      "choices": [
+        "/usr/share/doc/tiff",
+        "/usr/local/share/doc/tiff"
+      ]
     },
     {
       "name": "default-strip-size",
       "type": "choice",
       "default": 8192,
       "cli": "with",
-      "choices": [4096, 8192, 16384, 32768]
+      "choices": [
+        4096,
+        8192,
+        16384,
+        32768
+      ]
     },
     {
       "name": "max-dir-count",
       "type": "choice",
       "default": 1048576,
       "cli": "with",
-      "choices": [100000, 1048576, 2000000]
+      "choices": [
+        100000,
+        1048576,
+        2000000
+      ]
     }
   ],
-"constraints": [
+  "constraints": [
+    {
+      "opt": "default-strip-size",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "strip-chopping",
+          "val": true
+        }
+      ],
+      "desc": "Strip chopping must be enabled to set a default strip size."
+    },
     {
       "opt": "pixarlog",
       "val": true,
@@ -384,8 +440,33 @@
       "desc": "Old JPEG support requires standard JPEG support to be enabled."
     },
     {
+      "opt": "jpeg-include-dir",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "jpeg-lib-dir",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "jpeg",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
+    },
+    {
       "opt": "zlib-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "zlib",
@@ -397,6 +478,7 @@
     {
       "opt": "libdeflate-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "libdeflate",
@@ -406,19 +488,21 @@
       "desc": "Directory Options (*-include-dir) require the Library (*)"
     },
     {
-      "opt": "jpeg-include-dir",
+      "opt": "libdeflate-lib-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
-          "opt": "jpeg",
+          "opt": "libdeflate",
           "val": true
         }
       ],
-      "desc": "Directory Options (*-include-dir) require the Library (*)"
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
     },
     {
       "opt": "jbig-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "jbig",
@@ -430,6 +514,7 @@
     {
       "opt": "lerc-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "lerc",
@@ -439,8 +524,21 @@
       "desc": "Directory Options (*-include-dir) require the Library (*)"
     },
     {
+      "opt": "lerc-lib-dir",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "lerc",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
+    },
+    {
       "opt": "lzma-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "lzma",
@@ -450,8 +548,21 @@
       "desc": "Directory Options (*-include-dir) require the Library (*)"
     },
     {
+      "opt": "lzma-lib-dir",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "lzma",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
+    },
+    {
       "opt": "webp-include-dir",
       "val": true,
+      "choice": "==",
       "then": [
         {
           "opt": "webp",
@@ -459,29 +570,48 @@
         }
       ],
       "desc": "Directory Options (*-include-dir) require the Library (*)"
+    },
+    {
+      "opt": "webp-lib-dir",
+      "val": true,
+      "choice": "==",
+      "then": [
+        {
+          "opt": "webp",
+          "val": true
+        }
+      ],
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
+    },
+    {
+      "opt": "zlib-lib-dir",
+      "val": true,
+      "choice": "==",
+      "then": [{ "opt": "zlib", "val": true }],
+      "desc": "Directory Options (*-lib-dir) require the Library (*)"
     }
   ],
   "removed": [
     {
-      "name": "tools hardcoded in build scripts",
+      "name": "tools hardcoded in build scripts as its needed for the binary",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "shared hardcoded in build scripts",
+      "name": "shared hardcoded in build scripts as it needs to be disabled for the binary",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "static hardcoded in build scripts",
+      "name": "static hardcoded in build scripts as its needed for the binary",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "docs hardcoded in build scripts",
+      "name": "docs hardcoded in build scripts as it causes unnecessary errors",
       "type": "bool",
       "default": true,
       "cli": "enable"
@@ -529,20 +659,25 @@
       "cli": "with",
       "choices": ["/usr/lib", "/usr/local/lib"]
     },
-    {
+        {
       "name": "jpeg12-include-dir",
       "type": "choice",
       "default": "/usr/include",
       "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"]
+      "choices": [
+        "/usr/include",
+        "/usr/local/include"
+      ]
     },
     {
       "name": "jpeg12-lib",
       "type": "choice",
       "default": "/usr/lib/libjpeg.so",
       "cli": "with",
-      "choices": ["/usr/lib/libjpeg.so", "/usr/local/lib/libjpeg.a"]
+      "choices": [
+        "/usr/lib/libjpeg.so",
+        "/usr/local/lib/libjpeg.a"
+      ]
     }
-
   ]
 }

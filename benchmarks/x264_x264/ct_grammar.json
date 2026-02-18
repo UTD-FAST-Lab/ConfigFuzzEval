@@ -1,197 +1,371 @@
 {
-  "name": "X264_x264",
+  "name": "x264_x264",
   "options": [
+    {
+      "name": "prefix",
+      "type": "choice",
+      "default": "/usr/local",
+      "cli": "",
+      "choices": [
+        "/usr/local",
+        "/usr",
+        "/opt/x264",
+        "/home/user/x264"
+      ]
+    },
+    {
+      "name": "exec-prefix",
+      "type": "choice",
+      "default": "PREFIX",
+      "cli": "",
+      "choices": [
+        "PREFIX",
+        "/usr/local",
+        "/usr"
+      ]
+    },
+    {
+      "name": "bindir",
+      "type": "choice",
+      "default": "EPREFIX/bin",
+      "cli": "",
+      "choices": [
+        "EPREFIX/bin",
+        "/usr/local/bin",
+        "/bin"
+      ]
+    },
+    {
+      "name": "libdir",
+      "type": "choice",
+      "default": "EPREFIX/lib",
+      "cli": "",
+      "choices": [
+        "EPREFIX/lib",
+        "/usr/local/lib",
+        "/lib"
+      ]
+    },
+    {
+      "name": "includedir",
+      "type": "choice",
+      "default": "PREFIX/include",
+      "cli": "",
+      "choices": [
+        "PREFIX/include",
+        "/usr/local/include",
+        "/usr/include"
+      ]
+    },
     {
       "name": "system-libx264",
       "type": "bool",
       "default": false,
-      "cli": "--enable-system-libx264",
-      "desc": "Use system libx264 instead of internal"
+      "cli": ""
     },
     {
       "name": "shared",
       "type": "bool",
       "default": false,
-      "cli": "--enable-shared",
-      "desc": "Build shared library"
+      "cli": "enable"
     },
     {
       "name": "static",
       "type": "bool",
       "default": false,
-      "cli": "--enable-static",
-      "desc": "Build static library"
+      "cli": "enable"
     },
     {
       "name": "bashcompletion",
       "type": "bool",
       "default": true,
-      "cli": "--enable-bashcompletion",
-      "desc": "Install bash-completion script"
+      "cli": "disable"
     },
     {
       "name": "bashcompletionsdir",
-      "type": "enum",
-      "values": [
+      "type": "choice",
+      "default": "auto",
+      "cli": "",
+      "choices": [
+        "auto",
         "/usr/share/bash-completion/completions",
-        "/usr/local/share/bash-completion/completions",
+        "/etc/bash_completion.d",
         "none"
-      ],
-      "default": "none",
-      "cli": "--with-bashcompletionsdir",
-      "desc": "Install bash-completion script in DIR"
+      ]
     },
     {
       "name": "opencl",
       "type": "bool",
       "default": true,
-      "cli": "--enable-opencl",
-      "desc": "Enable OpenCL features"
+      "cli": "disable"
     },
     {
       "name": "gpl",
       "type": "bool",
       "default": true,
-      "cli": "--enable-gpl",
-      "desc": "Enable GPL-only features"
+      "cli": "disable"
     },
     {
       "name": "thread",
       "type": "bool",
       "default": true,
-      "cli": "--enable-thread",
-      "desc": "Enable multithreaded encoding"
+      "cli": "disable"
     },
     {
       "name": "win32thread",
       "type": "bool",
-      "default": false,
-      "cli": "--enable-win32thread",
-      "desc": "Enable win32threads (Set to false for Linux builds)"
+      "default": true,
+      "cli": "disable"
     },
     {
       "name": "interlaced",
       "type": "bool",
       "default": true,
-      "cli": "--enable-interlaced",
-      "desc": "Enable interlaced encoding support"
+      "cli": "disable"
     },
     {
       "name": "bit-depth",
-      "type": "enum",
-      "values": [
+      "type": "choice",
+      "default": "all",
+      "cli": "",
+      "choices": [
         "8",
         "10",
         "all"
-      ],
-      "default": "all",
-      "cli": "--with-bit-depth",
-      "desc": "Set output bit depth"
+      ]
     },
     {
       "name": "chroma-format",
-      "type": "enum",
-      "values": [
+      "type": "choice",
+      "default": "all",
+      "cli": "",
+      "choices": [
         "400",
         "420",
         "422",
         "444",
         "all"
-      ],
-      "default": "all",
-      "cli": "--with-chroma-format",
-      "desc": "Output chroma format"
+      ]
     },
     {
       "name": "asm",
       "type": "bool",
       "default": true,
-      "cli": "--enable-asm",
-      "desc": "Enable platform-specific assembly optimizations"
+      "cli": "disable"
     },
     {
       "name": "lto",
       "type": "bool",
       "default": false,
-      "cli": "--enable-lto",
-      "desc": "Enable link-time optimization"
+      "cli": "enable"
     },
     {
       "name": "debug",
       "type": "bool",
       "default": false,
-      "cli": "--enable-debug",
-      "desc": "Add -g"
+      "cli": "enable"
     },
     {
       "name": "gprof",
       "type": "bool",
       "default": false,
-      "cli": "--enable-gprof",
-      "desc": "Add -pg"
+      "cli": "enable"
     },
     {
       "name": "strip",
       "type": "bool",
       "default": false,
-      "cli": "--enable-strip",
-      "desc": "Add -s"
+      "cli": "enable"
     },
     {
       "name": "pic",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pic",
-      "desc": "Build position-independent code"
+      "cli": "enable"
+    },
+    {
+      "name": "host",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "x86_64-linux-gnu",
+        "i686-w64-mingw32",
+        "arm-linux-gnueabihf"
+      ]
+    },
+    {
+      "name": "cross-prefix",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "x86_64-linux-gnu-",
+        "arm-none-eabi-"
+      ]
+    },
+    {
+      "name": "sysroot",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "/opt/sysroot",
+        "/usr/lib/sysroot"
+      ]
     },
     {
       "name": "avs",
       "type": "bool",
       "default": true,
-      "cli": "--enable-avs",
-      "desc": "Enable avisynth support"
+      "cli": "disable"
     },
     {
       "name": "swscale",
       "type": "bool",
       "default": true,
-      "cli": "--enable-swscale",
-      "desc": "Enable swscale support"
+      "cli": "disable"
     },
     {
       "name": "lavf",
       "type": "bool",
       "default": true,
-      "cli": "--enable-lavf",
-      "desc": "Enable libavformat support"
+      "cli": "disable"
     },
     {
       "name": "ffms",
       "type": "bool",
       "default": true,
-      "cli": "--enable-ffms",
-      "desc": "Enable ffmpegsource support"
+      "cli": "disable"
     },
     {
       "name": "gpac",
       "type": "bool",
       "default": true,
-      "cli": "--enable-gpac",
-      "desc": "Enable gpac support"
+      "cli": "disable"
     },
     {
       "name": "lsmash",
       "type": "bool",
       "default": true,
-      "cli": "--enable-lsmash",
-      "desc": "Enable lsmash support"
+      "cli": "disable"
     },
     {
       "name": "vsx",
       "type": "bool",
       "default": true,
-      "cli": "--enable-vsx",
-      "desc": "Enable VSX optimizations (PowerPC)"
+      "cli": "disable"
+    },
+    {
+      "name": "extra-asflags",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "-fPIC",
+        "-g"
+      ]
+    },
+    {
+      "name": "extra-cflags",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "-O3",
+        "-march=native",
+        "-g"
+      ]
+    },
+    {
+      "name": "extra-ldflags",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "-static",
+        "-Wl,-z,defs"
+      ]
+    },
+    {
+      "name": "extra-rcflags",
+      "type": "choice",
+      "default": "",
+      "cli": "",
+      "choices": [
+        "",
+        "-DDEBUG"
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "opt": "system-libx264",
+      "val": true,
+      "then": [
+        { "opt": "static", "val": false }
+      ],
+      "desc": "System libx264 cannot be used with static build"
+    },
+    {
+      "opt": "shared",
+      "val": true,
+      "then": [
+        { "opt": "pic", "val": true }
+      ],
+      "desc": "Shared library build requires Position Independent Code (PIC)"
+    },
+    {
+      "opt": "lavf",
+      "val": true,
+      "then": [
+        { "opt": "swscale", "val": true }
+      ],
+      "desc": "libavformat (lavf) support requires swscale support"
+    },
+    {
+      "opt": "ffms",
+      "val": true,
+      "then": [
+        { "opt": "swscale", "val": true }
+      ],
+      "desc": "ffmpegsource (ffms) support requires swscale support"
+    },
+    {
+      "opt": "bit-depth",
+      "val": "10",
+      "choice": "==",
+      "then": [
+        { "opt": "opencl", "val": false }
+      ],
+      "desc": "OpenCL is not supported with 10-bit depth"
+    }
+  ],
+  "removed": [
+        {
+      "name": "cli hardcoded in build.sh because it is needed for command line use",
+      "type": "bool",
+      "default": true,
+      "cli": "disable"
+    },
+    {
+      "opt": "cli",
+      "val": false,
+      "then": [
+        { "opt": "avs", "val": false },
+        { "opt": "lavf", "val": false },
+        { "opt": "ffms", "val": false },
+        { "opt": "gpac", "val": false },
+        { "opt": "lsmash", "val": false },
+        { "opt": "swscale", "val": false }
+      ],
+      "desc": "Disabling CLI disables all video input/output libraries (avs, lavf, ffms, gpac, lsmash, swscale)"
     }
   ]
 }

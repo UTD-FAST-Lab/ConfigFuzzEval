@@ -21,20 +21,18 @@ def calculate_constraint_score(rule: Dict[str, Any]) -> int:
     """
     score = 0
     for consequence in rule.get("then", []):
-        # Check for explicit boolean assignments
-        if "val" in consequence:
+        if "choice" in consequence:
+            operator = consequence["choice"]
+            if operator == "==":
+                score += 1
+            elif operator == "!=":
+                score -= 1
+        elif "val" in consequence:
             val = consequence["val"]
             if val is True:
                 score += 1
             elif val is False:
                 score -= 1
-            # Handle Choice Operators
-            elif val == "==": 
-                 # Forces a specific value -> effectively "Enabling" a specific state (+1)
-                 score += 1
-            elif val == "!=":
-                 # Restricts a value -> effectively "Disabling" a specific state (-1)
-                 score -= 1
     return score
 
 
@@ -112,14 +110,14 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                 
                 # Case A: Comparison Constraint
                 if "choice" in consequence and "val" in consequence:
-                    operator = consequence["val"]
-                    forbidden_choice = consequence["choice"]
+                    operator = consequence["choice"]
+                    target_choice = consequence["val"]
                     current_val = config.get(target_opt)
 
                     if operator == "!=":
-                        if current_val == forbidden_choice:
+                        if current_val == target_choice:
                             if "choices" in target_def:
-                                valid_choices = [c for c in target_def["choices"] if c != forbidden_choice]
+                                valid_choices = [c for c in target_def["choices"] if c != target_choice]
                                 if valid_choices:
                                     new_val = random.choice(valid_choices)
                                     if config.get(target_opt) != new_val:
@@ -127,8 +125,8 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                                         changed = True
                                         
                     elif operator == "==":
-                        if config.get(target_opt) != forbidden_choice:
-                            set_option(config, target_opt, forbidden_choice)
+                        if config.get(target_opt) != target_choice:
+                            set_option(config, target_opt, target_choice)
                             changed = True
 
                 # Case B: Direct Assignment
@@ -182,7 +180,7 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
         for rule in grammar["constraints"]:
             score = calculate_constraint_score(rule)
             scored_constraints.append((score, rule))
-        
+
         # 2. Randomize first (to break ties randomly)
         random.shuffle(scored_constraints)
         
@@ -215,10 +213,9 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     - If val is boolean (True/False): outputs flag only (e.g., --with-zlib)
     - If val is string/int: outputs flag=value (e.g., --with-zlib=/usr)
     """
-    cli_style = opt.get("cli", "with") # default to 'with' if missing
+    cli_style = opt.get("cli", "with")
     name = opt["name"]
 
-    # Helper for boolean formatting logic
     def format_bool(is_true: bool):
         if is_true:
             return f"--{cli_style}-{name}"
@@ -230,11 +227,9 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
         return format_bool(val is True)
             
     elif opt["type"] == "choice":
-        # [UPDATED] Check for boolean types first (e.g., zlib: true)
         if isinstance(val, bool):
             return format_bool(val)
         
-        # Standard string/int choices (e.g., prefix: "/usr")
         if val is not None and val != "":
              return f"--{cli_style}-{name}={val}"
              

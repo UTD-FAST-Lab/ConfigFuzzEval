@@ -58,13 +58,13 @@ class PairwiseGenerator:
         """Translates JSON constraint objects into Z3 logical implications."""
         try:
             # Build the Trigger Expression (IF part)
-            trigger_expr = self.get_z3_expr(constr['opt'], constr['val'])
+            trigger_expr = self.get_z3_expr(constr['opt'], constr['val'], constr.get('choice'))
             
             # Build the Effect Expression (THEN part)
             # The JSON uses a list of effects
             effects = []
             for eff in constr['then']:
-                effects.append(self.get_z3_expr(eff['opt'], eff['val']))
+                effects.append(self.get_z3_expr(eff['opt'], eff['val'], eff.get('choice')))
             
             if effects:
                 # Logic: Trigger implies (Effect1 AND Effect2 ...)
@@ -73,7 +73,7 @@ class PairwiseGenerator:
         except KeyError as e:
             print(f"Warning: Skipping constraint due to missing option: {e}")
 
-    def get_z3_expr(self, opt_name, val):
+    def get_z3_expr(self, opt_name, val, choice_op=None):
         """Helper to create z3 expression (Var == Val)."""
         z3_var = self.z3_vars[opt_name]
         opt_type = self.option_map[opt_name]['type']
@@ -84,8 +84,8 @@ class PairwiseGenerator:
             else: return Not(z3_var)
             
         elif opt_type == 'choice':
-            # --- FIX: Handle "Presence" Checks ---
-            if isinstance(val, bool):
+            # --- Handle "Presence" Checks (val: true/false, no specific string value) ---
+            if choice_op is None and isinstance(val, bool):
                 if val is True:
                     # The constraint checks if the option is "present" (set to anything).
                     # Since your choice list doesn't have a "None" or "False" option,
@@ -97,7 +97,7 @@ class PairwiseGenerator:
                     return False
             # -------------------------------------
 
-            # Handle specific value checks (e.g., if opt == "/usr/include")
+            # Handle specific value checks with choice operator (e.g., choice: "==", val: "/usr/include")
             forward_map = self.choice_maps[opt_name][0]
             
             # Type correction: constraints might use int, grammar uses string, or vice versa
@@ -108,7 +108,10 @@ class PairwiseGenerator:
             
             if lookup_val in forward_map:
                 idx = forward_map[lookup_val]
-                return z3_var == idx
+                if choice_op == "!=":
+                    return z3_var != idx
+                else:  # "==" or default
+                    return z3_var == idx
             else:
                 # Value not found in grammar? Treat as impossible condition.
                 return False

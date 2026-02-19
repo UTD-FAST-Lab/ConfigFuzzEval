@@ -64,7 +64,15 @@ class PairwiseGenerator:
             # The JSON uses a list of effects
             effects = []
             for eff in constr['then']:
-                effects.append(self.get_z3_expr(eff['opt'], eff['val'], eff.get('choice')))
+                # Case OR: at least one of the listed sub-effects must hold
+                if 'or' in eff:
+                    or_exprs = [
+                        self.get_z3_expr(branch['opt'], branch['val'], branch.get('choice'))
+                        for branch in eff['or']
+                    ]
+                    effects.append(Or(*or_exprs))
+                else:
+                    effects.append(self.get_z3_expr(eff['opt'], eff['val'], eff.get('choice')))
             
             if effects:
                 # Logic: Trigger implies (Effect1 AND Effect2 ...)

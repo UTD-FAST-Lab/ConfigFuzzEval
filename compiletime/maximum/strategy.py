@@ -21,20 +21,21 @@ def calculate_constraint_score(rule: Dict[str, Any]) -> int:
     """
     score = 0
     for consequence in rule.get("then", []):
-        # Check for explicit boolean assignments
-        if "val" in consequence:
+        if "or" in consequence:
+            # OR blocks are neutral in score calculation
+            pass
+        elif "choice" in consequence:
+            operator = consequence["choice"]
+            if operator == "==":
+                score += 1
+            elif operator == "!=":
+                score -= 1
+        elif "val" in consequence:
             val = consequence["val"]
             if val is True:
                 score += 1
             elif val is False:
                 score -= 1
-            # Handle Choice Operators
-            elif val == "==": 
-                 # Forces a specific value -> effectively "Enabling" a specific state (+1)
-                 score += 1
-            elif val == "!=":
-                 # Restricts a value -> effectively "Disabling" a specific state (-1)
-                 score -= 1
     return score
 
 
@@ -80,6 +81,32 @@ def set_option(config: Dict[str, Any], name: str, value: Any) -> None:
     config[name] = value
 
 
+def is_consequence_satisfied(config: Dict[str, Any], consequence: Dict[str, Any]) -> bool:
+    """
+    Check if a single consequence is already satisfied in the current config.
+    
+    Args:
+        config: Current configuration state
+        consequence: A single consequence dict with opt/val/choice fields
+        
+    Returns:
+        True if the consequence is already satisfied
+    """
+    target_opt = consequence.get("opt")
+    current_val = config.get(target_opt)
+
+    if "choice" in consequence and "val" in consequence:
+        operator = consequence["choice"]
+        target_choice = consequence["val"]
+        if operator == "==":
+            return current_val == target_choice
+        elif operator == "!=":
+            return current_val != target_choice
+    elif "val" in consequence:
+        return current_val == consequence["val"]
+
+    return False
+
 
 def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_constraints: List[Any]) -> bool:
     """
@@ -104,6 +131,44 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
             
             # Apply the 'consequences' (then) part of the rule
             for consequence in rule.get("then", []):
+
+                # Case OR: at least one of the listed consequences must hold
+                if "or" in consequence:
+                    or_branches = consequence["or"]
+                    # Check if any branch is already satisfied
+                    already_satisfied = any(
+                        is_consequence_satisfied(config, branch)
+                        for branch in or_branches
+                    )
+                    if not already_satisfied:
+                        # Pick a random branch and enforce it
+                        chosen = random.choice(or_branches)
+                        target_opt = chosen.get("opt")
+                        target_def = get_option(grammar, target_opt)
+                        if not target_def:
+                            continue
+
+                        if "choice" in chosen and "val" in chosen:
+                            operator = chosen["choice"]
+                            target_choice = chosen["val"]
+                            if operator == "==":
+                                if config.get(target_opt) != target_choice:
+                                    set_option(config, target_opt, target_choice)
+                                    changed = True
+                            elif operator == "!=":
+                                if config.get(target_opt) == target_choice:
+                                    if "choices" in target_def:
+                                        valid_choices = [c for c in target_def["choices"] if c != target_choice]
+                                        if valid_choices:
+                                            set_option(config, target_opt, random.choice(valid_choices))
+                                            changed = True
+                        elif "val" in chosen:
+                            target_val = chosen["val"]
+                            if config.get(target_opt) != target_val:
+                                set_option(config, target_opt, target_val)
+                                changed = True
+                    continue
+
                 target_opt = consequence.get("opt")
                 
                 target_def = get_option(grammar, target_opt)
@@ -112,14 +177,14 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                 
                 # Case A: Comparison Constraint
                 if "choice" in consequence and "val" in consequence:
-                    operator = consequence["val"]
-                    forbidden_choice = consequence["choice"]
+                    operator = consequence["choice"]
+                    target_choice = consequence["val"]
                     current_val = config.get(target_opt)
 
                     if operator == "!=":
-                        if current_val == forbidden_choice:
+                        if current_val == target_choice:
                             if "choices" in target_def:
-                                valid_choices = [c for c in target_def["choices"] if c != forbidden_choice]
+                                valid_choices = [c for c in target_def["choices"] if c != target_choice]
                                 if valid_choices:
                                     new_val = random.choice(valid_choices)
                                     if config.get(target_opt) != new_val:
@@ -127,8 +192,8 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                                         changed = True
                                         
                     elif operator == "==":
-                        if config.get(target_opt) != forbidden_choice:
-                            set_option(config, target_opt, forbidden_choice)
+                        if config.get(target_opt) != target_choice:
+                            set_option(config, target_opt, target_choice)
                             changed = True
 
                 # Case B: Direct Assignment
@@ -182,7 +247,7 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
         for rule in grammar["constraints"]:
             score = calculate_constraint_score(rule)
             scored_constraints.append((score, rule))
-        
+
         # 2. Randomize first (to break ties randomly)
         random.shuffle(scored_constraints)
         
@@ -215,10 +280,9 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     - If val is boolean (True/False): outputs flag only (e.g., --with-zlib)
     - If val is string/int: outputs flag=value (e.g., --with-zlib=/usr)
     """
-    cli_style = opt.get("cli", "with") # default to 'with' if missing
+    cli_style = opt.get("cli", "with")
     name = opt["name"]
 
-    # Helper for boolean formatting logic
     def format_bool(is_true: bool):
         if is_true:
             return f"--{cli_style}-{name}"
@@ -230,11 +294,9 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
         return format_bool(val is True)
             
     elif opt["type"] == "choice":
-        # [UPDATED] Check for boolean types first (e.g., zlib: true)
         if isinstance(val, bool):
             return format_bool(val)
         
-        # Standard string/int choices (e.g., prefix: "/usr")
         if val is not None and val != "":
              return f"--{cli_style}-{name}={val}"
              

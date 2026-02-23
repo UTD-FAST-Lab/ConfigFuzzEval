@@ -209,12 +209,6 @@
       "type": "bool",
       "default": false,
       "cli": "with"
-    },
-    {
-      "name": "minimum",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
     }
   ],
   "constraints": [
@@ -321,10 +315,112 @@
       "then": [
         {
           "opt": "readline",
-          "val": true
+          "val": true,
+          "choice": "=="
         }
       ],
       "desc": "History force enables readline."
+    },
+    {
+      "opt": "thread-alloc",
+      "val": true,
+      "then": [
+        {
+          "opt": "threads",
+          "val": true
+        }
+      ],
+      "desc": "Thread-alloc requires threads."
+    },
+    {
+      "opt": "output",
+      "val": false,
+      "then": [
+        {
+          "opt": "c14n",
+          "val": false
+        },
+        {
+          "opt": "writer",
+          "val": false
+        }
+      ],
+      "desc": "Disabling output forces c14n and writer to be disabled."
+    },
+    {
+      "opt": "push",
+      "val": false,
+      "then": [
+        {
+          "opt": "reader",
+          "val": false
+        },
+        {
+          "opt": "writer",
+          "val": false
+        }
+      ],
+      "desc": "Disabling push forces reader and writer to be disabled."
+    },
+    {
+      "opt": "pattern",
+      "val": false,
+      "then": [
+        {
+          "opt": "schemas",
+          "val": false
+        },
+        {
+          "opt": "schematron",
+          "val": false
+        }
+      ],
+      "desc": "Disabling pattern forces schemas and schematron to be disabled."
+    },
+    {
+      "opt": "regexps",
+      "val": false,
+      "then": [
+        {
+          "opt": "relaxng",
+          "val": false
+        },
+        {
+          "opt": "schemas",
+          "val": false
+        }
+      ],
+      "desc": "Disabling regexps forces relaxng and schemas to be disabled."
+    },
+    {
+      "opt": "schemas",
+      "val": false,
+      "then": [
+        {
+          "opt": "relaxng",
+          "val": false
+        }
+      ],
+      "desc": "Disabling schemas forces relaxng to be disabled."
+    },
+    {
+      "opt": "xpath",
+      "val": false,
+      "then": [
+        {
+          "opt": "c14n",
+          "val": false
+        },
+        {
+          "opt": "schematron",
+          "val": false
+        },
+        {
+          "opt": "xptr",
+          "val": false
+        }
+      ],
+      "desc": "Disabling xpath forces c14n, schematron, and xptr to be disabled."
     },
     {
       "opt": "http",
@@ -339,6 +435,12 @@
     }
   ],
   "removed": [
+    {
+      "name": "minimum removed because it is a meta-flag that overrides all other options, making it incompatible with the grammar model",
+      "type": "bool",
+      "default": false,
+      "cli": "with"
+    },
     {
       "name": "legacy Legacy is removed because it just enables other flags and is hence misleading",
       "type": "bool",
@@ -355,7 +457,8 @@
         },
         {
           "opt": "zlib",
-          "val": true
+          "val": true,
+          "choice": "=="
         }
       ]
     },

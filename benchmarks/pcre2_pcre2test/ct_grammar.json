@@ -2,407 +2,455 @@
   "name": "pcre2_pcre2test",
   "options": [
     {
+      "name": "pcre2-8",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-16"
+      "cli": "enable"
     },
     {
       "name": "pcre2-32",
       "type": "bool",
       "default": false,
-      "cli": "--enable-pcre2-32"
-    },
-    {
-      "name": "fast-install",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-fast-install"
-    },
-    {
-      "name": "pic",
-      "type": "bool",
-      "default": true,
-      "cli": "--with-pic"
-    },
-    {
-      "name": "maintainer-mode",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-maintainer-mode"
-    },
-    {
-      "name": "dependency-tracking",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-dependency-tracking"
-    },
-    {
-      "name": "silent-rules",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-silent-rules"
+      "cli": "enable"
     },
     {
       "name": "debug",
       "type": "bool",
       "default": false,
-      "cli": "--enable-debug"
+      "cli": "enable"
     },
     {
       "name": "jit",
       "type": "bool",
       "default": false,
-      "cli": "--enable-jit"
+      "cli": "enable"
     },
     {
       "name": "jit-sealloc",
       "type": "bool",
       "default": false,
-      "cli": "--enable-jit-sealloc"
+      "cli": "enable"
     },
     {
       "name": "pcre2grep-jit",
       "type": "bool",
       "default": true,
-      "cli": "--enable-pcre2grep-jit"
+      "cli": "enable"
     },
     {
       "name": "pcre2grep-callout",
       "type": "bool",
       "default": true,
-      "cli": "--enable-pcre2grep-callout"
+      "cli": "enable"
     },
     {
       "name": "pcre2grep-callout-fork",
       "type": "bool",
       "default": true,
-      "cli": "--enable-pcre2grep-callout-fork"
+      "cli": "enable"
+    },
+    {
+      "name": "rebuild-chartables",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
     },
     {
       "name": "unicode",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unicode"
+      "cli": "enable"
     },
     {
       "name": "newline-is-cr",
       "type": "bool",
       "default": false,
-      "cli": "--enable-newline-is-cr"
+      "cli": "enable"
     },
     {
       "name": "newline-is-lf",
       "type": "bool",
       "default": true,
-      "cli": "--enable-newline-is-lf"
+      "cli": "enable"
     },
     {
       "name": "newline-is-crlf",
       "type": "bool",
       "default": false,
-      "cli": "--enable-newline-is-crlf"
+      "cli": "enable"
     },
     {
       "name": "newline-is-anycrlf",
       "type": "bool",
       "default": false,
-      "cli": "--enable-newline-is-anycrlf"
+      "cli": "enable"
     },
     {
       "name": "newline-is-any",
       "type": "bool",
       "default": false,
-      "cli": "--enable-newline-is-any"
+      "cli": "enable"
     },
     {
       "name": "newline-is-nul",
       "type": "bool",
       "default": false,
-      "cli": "--enable-newline-is-nul"
+      "cli": "enable"
     },
     {
       "name": "bsr-anycrlf",
       "type": "bool",
       "default": false,
-      "cli": "--enable-bsr-anycrlf"
+      "cli": "enable"
     },
     {
       "name": "never-backslash-C",
       "type": "bool",
       "default": false,
-      "cli": "--enable-never-backslash-C"
+      "cli": "enable"
     },
-    {
-      "name": "pcre2grep-libz",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-pcre2grep-libz"
-    },
-    {
-      "name": "pcre2grep-libbz2",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-pcre2grep-libbz2"
-    },
-    {
-      "name": "pcre2test-libedit",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-pcre2test-libedit",
-      "conflicts": [
-        "pcre2test-libreadline"
-      ],
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "pcre2test-libreadline",
-              false
-            ]
-          ]
-        ]
-      ]
-    },
-    {
-      "name": "pcre2test-libreadline",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-pcre2test-libreadline",
-      "conflicts": [
-        "pcre2test-libedit"
-      ],
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "pcre2test-libedit",
-              false
-            ]
-          ]
-        ]
-      ]
-    },
-    {
-      "name": "valgrind",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-valgrind"
-    },
-    {
-      "name": "fuzz-support",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-fuzz-support",
-      "implies": [
-        "pcre2-8=true"
-      ],
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "pcre2-8",
-              true
-            ]
-          ]
-        ]
-      ]
-    },
-    {
-      "name": "diff-fuzz-support",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-diff-fuzz-support",
-      "implies": [
-        "jit=true",
-        "fuzz-support=true"
-      ],
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "jit",
-              true
-            ],
-            [
-              "fuzz-support",
-              true
-            ]
-          ]
-        ]
-      ]
-    },
-    {
-      "name": "percent-zt",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-percent-zt"
-    },
-    {
-      "name": "Werror",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-Werror"
-    },
-    {
-      "name": "pcre2grep-bufsize",
-      "type": "value",
-      "default": 20480,
-      "cli": "--with-pcre2grep-bufsize"
-    },
-    {
-      "name": "pcre2grep-max-bufsize",
-      "type": "value",
-      "default": 1048576,
-      "cli": "--with-pcre2grep-max-bufsize"
-    },
-    {
-      "name": "link-size",
-      "type": "enum",
-      "values": [
-        2,
-        3,
-        4
-      ],
-      "default": 2,
-      "cli": "--with-link-size"
-    },
-    {
-      "name": "max-varlookbehind",
-      "type": "value",
-      "default": 255,
-      "cli": "--with-max-varlookbehind"
-    },
-    {
-      "name": "parens-nest-limit",
-      "type": "value",
-      "default": 250,
-      "cli": "--with-parens-nest-limit"
-    },
-    {
-      "name": "heap-limit",
-      "type": "value",
-      "default": 20000000,
-      "cli": "--with-heap-limit"
-    },
-    {
-      "name": "match-limit",
-      "type": "value",
-      "default": 10000000,
-      "cli": "--with-match-limit"
-    },
-    {
-      "name": "match-limit-depth",
-      "type": "value",
-      "default": "MATCH_LIMIT",
-      "cli": "--with-match-limit-depth"
-    }
-  ],
-  "meta_constraints": [],
-  "removed_options": [
     {
       "name": "ebcdic",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic",
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "unicode",
-              false
-            ],
-            [
-              "pcre2-8",
-              true
-            ],
-            [
-              "pcre2-16",
-              false
-            ],
-            [
-              "pcre2-32",
-              false
-            ]
-          ]
-        ]
-      ],
-      "conflicts": [
-        "unicode"
-      ],
-      "implies": [
-        "pcre2-8=true"
-      ]
+      "cli": "enable"
     },
     {
       "name": "ebcdic-nl25",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic-nl25",
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "ebcdic",
-              true
-            ]
-          ]
-        ]
-      ],
-      "conflicts": [
-        "unicode"
-      ],
-      "implies": [
-        "ebcdic=true"
-      ]
+      "cli": "enable"
     },
     {
       "name": "ebcdic-ignoring-compiler",
       "type": "bool",
       "default": false,
-      "cli": "--enable-ebcdic-ignoring-compiler",
-      "pairwise_constraints": [
-        [
-          true,
-          [
-            [
-              "ebcdic",
-              true
-            ]
-          ]
-        ]
-      ],
-      "conflicts": [
-        "unicode"
-      ],
-      "implies": [
-        "ebcdic=true"
-      ]
+      "cli": "enable"
     },
     {
-      "name": "errwarn",
+      "name": "pcre2grep-libz",
       "type": "bool",
       "default": false,
-      "cli": "--enable-errwarn"
+      "cli": "enable"
+    },
+    {
+      "name": "pcre2grep-libbz2",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "pcre2grep-bufsize",
+      "type": "choice",
+      "default": 20480,
+      "cli": "with",
+      "choices": [8192, 20480, 40960, 81920]
+    },
+    {
+      "name": "pcre2grep-max-bufsize",
+      "type": "choice",
+      "default": 1048576,
+      "cli": "with",
+      "choices": [1048576, 2097152, 5242880]
+    },
+    {
+      "name": "pcre2test-libedit",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "pcre2test-libreadline",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "link-size",
+      "type": "choice",
+      "default": 2,
+      "cli": "with",
+      "choices": [2, 3, 4]
+    },
+    {
+      "name": "max-varlookbehind",
+      "type": "choice",
+      "default": 255,
+      "cli": "with",
+      "choices": [255, 512, 1024, 65535]
+    },
+    {
+      "name": "parens-nest-limit",
+      "type": "choice",
+      "default": 250,
+      "cli": "with",
+      "choices": [250, 500, 1000, 2000]
+    },
+    {
+      "name": "heap-limit",
+      "type": "choice",
+      "default": 20000000,
+      "cli": "with",
+      "choices": [10000000, 20000000, 40000000]
+    },
+    {
+      "name": "match-limit",
+      "type": "choice",
+      "default": 10000000,
+      "cli": "with",
+      "choices": [1000000, 10000000, 20000000]
+    },
+    {
+      "name": "match-limit-depth",
+      "type": "choice",
+      "default": 10000000,
+      "cli": "with",
+      "choices": [1000000, 10000000, 20000000]
+    },
+    {
+      "name": "valgrind",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
     },
     {
       "name": "coverage",
       "type": "bool",
       "default": false,
-      "cli": "--enable-coverage"
+      "cli": "enable"
     },
+    {
+      "name": "fuzz-support",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "diff-fuzz-support",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "percent-zt",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "Werror",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "errwarn",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "static",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    }
+  ],
+  "constraints": [
+    {
+      "opt": "diff-fuzz-support",
+      "val": true,
+      "then": [
+        { "opt": "fuzz-support", "val": true },
+        { "opt": "jit", "val": true }
+      ],
+      "desc": "Differential fuzzing support requires fuzzing support and JIT"
+    },
+    {
+      "opt": "jit-sealloc",
+      "val": true,
+      "then": [
+        { "opt": "jit", "val": true }
+      ],
+      "desc": "JIT Sealloc requires JIT to be enabled"
+    },
+    {
+      "opt": "pcre2grep-jit",
+      "val": true,
+      "then": [
+        { "opt": "jit", "val": true }
+      ],
+      "desc": "pcre2grep JIT requires JIT to be enabled"
+    },
+    {
+      "opt": "pcre2grep-callout-fork",
+      "val": true,
+      "then": [
+        { "opt": "pcre2grep-callout", "val": true }
+      ],
+      "desc": "pcre2grep callout fork support requires callout support"
+    },
+    {
+      "opt": "fuzz-support",
+      "val": true,
+      "then": [
+        { "opt": "pcre2-8", "val": true }
+      ],
+      "desc": "Fuzzer support requires the 8-bit library"
+    },
+    {
+      "opt": "ebcdic",
+      "val": true,
+      "then": [
+        { "opt": "unicode", "val": false },
+        { "opt": "pcre2-16", "val": false },
+        { "opt": "pcre2-32", "val": false }
+      ],
+      "desc": "EBCDIC is incompatible with Unicode, 16-bit, and 32-bit libraries"
+    },
+    {
+      "opt": "ebcdic-nl25",
+      "val": true,
+      "then": [
+        { "opt": "ebcdic", "val": true }
+      ],
+      "desc": "Setting EBCDIC NL to 0x25 implies EBCDIC support"
+    },
+    {
+      "opt": "ebcdic-ignoring-compiler",
+      "val": true,
+      "then": [
+        { "opt": "ebcdic", "val": true }
+      ],
+      "desc": "Forcing EBCDIC 1047 implies EBCDIC support"
+    },
+    {
+      "opt": "pcre2test-libedit",
+      "val": true,
+      "then": [
+        { "opt": "pcre2test-libreadline", "val": false }
+      ],
+      "desc": "Cannot use both libedit and libreadline for pcre2test"
+    },
+    {
+      "opt": "pcre2test-libreadline",
+      "val": true,
+      "then": [
+        { "opt": "pcre2test-libedit", "val": false }
+      ],
+      "desc": "Cannot use both libedit and libreadline for pcre2test"
+    },
+    {
+      "opt": "newline-is-cr",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-lf", "val": false },
+        { "opt": "newline-is-crlf", "val": false },
+        { "opt": "newline-is-anycrlf", "val": false },
+        { "opt": "newline-is-any", "val": false },
+        { "opt": "newline-is-nul", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "newline-is-lf",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-cr", "val": false },
+        { "opt": "newline-is-crlf", "val": false },
+        { "opt": "newline-is-anycrlf", "val": false },
+        { "opt": "newline-is-any", "val": false },
+        { "opt": "newline-is-nul", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "newline-is-crlf",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-cr", "val": false },
+        { "opt": "newline-is-lf", "val": false },
+        { "opt": "newline-is-anycrlf", "val": false },
+        { "opt": "newline-is-any", "val": false },
+        { "opt": "newline-is-nul", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "newline-is-anycrlf",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-cr", "val": false },
+        { "opt": "newline-is-lf", "val": false },
+        { "opt": "newline-is-crlf", "val": false },
+        { "opt": "newline-is-any", "val": false },
+        { "opt": "newline-is-nul", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "newline-is-any",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-cr", "val": false },
+        { "opt": "newline-is-lf", "val": false },
+        { "opt": "newline-is-crlf", "val": false },
+        { "opt": "newline-is-anycrlf", "val": false },
+        { "opt": "newline-is-nul", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "newline-is-nul",
+      "val": true,
+      "then": [
+        { "opt": "newline-is-cr", "val": false },
+        { "opt": "newline-is-lf", "val": false },
+        { "opt": "newline-is-crlf", "val": false },
+        { "opt": "newline-is-anycrlf", "val": false },
+        { "opt": "newline-is-any", "val": false }
+      ],
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
+    },
+    {
+      "opt": "pcre2-8",
+      "val": false,
+      "then": [
+        {
+          "or": [
+            { "opt": "pcre2-16", "val": true },
+            { "opt": "pcre2-32", "val": true }
+          ]
+        }
+      ],
+      "desc": "If pcre2-8 is disabled, at least one of pcre2-16 or pcre2-32 must be enabled"
+    }
+  ],
+  "removed": [
     {
       "name": "stack-for-recursion",
       "type": "bool",
       "default": true,
-      "cli": "--enable-stack-for-recursion"
+      "cli": "enable"
+    },
+    {
+      "name": "match-limit-recursion",
+      "type": "choice",
+      "default": 10000000,
+      "cli": "with",
+      "choices": [1000000, 10000000, 20000000]
     }
-  ],
-  "removed": ["--enable-rebuild-chartables","--disable-shared", "--enable-static","--enable-pcre2-8"]
+  ]
 }

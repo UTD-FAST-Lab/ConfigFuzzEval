@@ -133,7 +133,7 @@ def main():
                     covered_lines[fname] = set()
                 covered_lines[fname].update(lines)
     else:
-        covered_lines = extract_covered_lines(args.cov)
+        covered_lines = extract_covered_lines(args.cov[0])
     # print(covered_lines) # Dict(filename -> set of line numbers)
 
     merged = merge_pc_with_coverage(args.pc_dir, covered_lines)

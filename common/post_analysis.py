@@ -46,7 +46,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reload the benchmark state and run post-analysis.")
     parser.add_argument("--state", type=str, required=True, help="Path to the experiment state")
     parser.add_argument("--cov", action="store_true", help="Calculate Coverage")
-    parser.add_argiument("--agg", action="store_true", help="Aggregate results")
+    parser.add_argument("--agg", action="store_true", help="Aggregate results")
     parser.add_argument("--superc", action="store_true", help="Run SuperC on results (assumes pre-processing complete)")
     parser.add_argument("--triage", action="store_true", help="Run selected bug triaging")
     parser.add_argument("--clean", action="store_true", help="Clean any artifacts")

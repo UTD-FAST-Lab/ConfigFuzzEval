@@ -1,1 +1,1 @@
-/benchmark/objdump -f @@
+/benchmark/objdump -d -S @@

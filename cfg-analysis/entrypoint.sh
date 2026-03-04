@@ -18,9 +18,16 @@ echo ""
 echo "=========================================="
 echo "Step 3: Merging PC with coverage..."
 echo "=========================================="
+cov_args=()
+for file in /fuzzer_output/lcov_results/*.json; do
+    # Extract the filename to use as the "Name"
+    name=$(basename "$file")
+    cov_args+=("$name:$file")
+done
+
 python3 1_merge_pc_with_coverage.py \
     --pc-dir /fuzzer_output/pc_analysis/sourceline_pc_outputs \
-    --cov /fuzzer_output/coverage/report.json \
+    --cov "${cov_args[@]}" \
     --out /fuzzer_output/pc_analysis/merged_pc_coverage.json
 
 echo ""

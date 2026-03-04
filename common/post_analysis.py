@@ -3,7 +3,7 @@ from color_logger import get_logger
 import pickle
 import argparse
 import os, subprocess
-from run_experiment import delete_cts_benchmarks, run_superc_on_experiments, triage_on_experiments
+from run_experiment import delete_cts_benchmarks, run_superc_on_experiments, triage_on_experiments, aggregate_results
 
 def calc_coverage(experiment_state):
     fuzzer_results_dir = f"{experiment_state['experiment_path']}/data"
@@ -46,6 +46,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reload the benchmark state and run post-analysis.")
     parser.add_argument("--state", type=str, required=True, help="Path to the experiment state")
     parser.add_argument("--cov", action="store_true", help="Calculate Coverage")
+    parser.add_argiument("--agg", action="store_true", help="Aggregate results")
     parser.add_argument("--superc", action="store_true", help="Run SuperC on results (assumes pre-processing complete)")
     parser.add_argument("--triage", action="store_true", help="Run selected bug triaging")
     parser.add_argument("--clean", action="store_true", help="Clean any artifacts")
@@ -61,6 +62,11 @@ if __name__ == "__main__":
     if experiment_state == None:
         logging.error("Experiment state failed to load")
         exit(1)
+
+    if args.agg:
+        logging.info("Starting result aggregation...")
+        aggregate_results(experiment_state)
+        logging.info("Result aggregation completed.")
 
     if args.cov:
         logging.info("Calculating coverage")

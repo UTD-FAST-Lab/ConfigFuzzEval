@@ -10,7 +10,29 @@ from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
-import pickle
+import pickle, shutil
+
+def aggregate_results(experiment_state):
+    experiment_path = experiment_state["experiment_path"]
+    data_storage = os.path.join(experiment_path, "data")
+    trials = experiment_state["trials"]
+    fuzzer_benchmark_pairs = experiment_state["fuzzer_benchmark_pairs"]
+    
+    for trail_num in range(trials):
+        # Get the result, put it in config id 0
+        for pair in fuzzer_benchmark_pairs:
+            result_file = os.path.join(data_storage, f"{pair}_trial_{trail_num}/coverage/report.json")
+            if not os.path.exists(result_file):
+                logging.error(f"Result file does not exist for {pair} trial {trail_num}: {result_file}")
+                exit(1)
+            
+            # slice the pair to get config id 0, the id is at the end
+            dest_dir_name = "_".join(pair.split("_")[:-1]) + "_0" + "_trial" + "_" + str(trail_num)
+            dest_data_loc = os.path.join(data_storage, dest_dir_name, "lcov_results")
+            os.makedirs(dest_data_loc, exist_ok=True)
+            
+            # copy the report json to the new location and rename it to according to the config id
+            shutil.copy(result_file, os.path.join(dest_data_loc, f"{pair}_report.json"))
 
 
 def delete_cts_benchmarks(experiment_state, project_root):
@@ -23,7 +45,6 @@ def delete_cts_benchmarks(experiment_state, project_root):
         if os.path.exists(benchmark_path):
             try:
                 # Remove the benchmark directory
-                import shutil
                 shutil.rmtree(benchmark_path)
                 logging.info(f"Removed benchmark directory: {benchmark_path}")
             except Exception as e:
@@ -141,11 +162,15 @@ def run_superc_on_experiments(experiment_state, logging=None):
     # --- Collect tasks ---
     tasks = []
     for benchmark in built_benchmarks:
+        if benchmark.split("_")[-1] != "0":
+            logging.warning(f"Skipping SuperC analysis for {benchmark} as it does not correspond to config id 0")
+            continue
         tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
         for fuzzer in built_benchmarks[benchmark]:
             for trial_id in range(experiment_state["trials"]):
                 tasks.append((fuzzer, benchmark, trial_id, tot_cts_count))
 
+    logging.debug(f"Collected SuperC analysis tasks: {pprint.pformat(tasks)}")
     # --- Initialize executor ---
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         core_cycle = itertools.cycle(cores)  # Round-robin assignment of cores
@@ -604,8 +629,11 @@ if __name__ == "__main__":
     logging.info("Ready to begin experiments!")
     run_experiments(experiment_state)
 
+    logging.info("Experiments completed. Starting result aggregation...")
+    aggregate_results(experiment_state)
+
     # Run SuperC CFG analysis on experiments
-    logging.info("Experiments completed. Starting SuperC CFG analysis...")
+    logging.info("Aggregation completed. Starting SuperC CFG analysis...")
     run_superc_on_experiments(experiment_state, logging)
     logging.info("SuperC CFG analysis completed.")
 

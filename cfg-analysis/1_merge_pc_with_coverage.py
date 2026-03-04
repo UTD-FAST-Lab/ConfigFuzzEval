@@ -121,20 +121,16 @@ def main():
     covered_lines = {}
     
     
-    if len(args.cov) > 1:
-        for run in args.cov:
-            name, path = run.split(":", 1)
-            print(f"Run name: {name}, path: {path}")
-            per_run_covered = extract_covered_lines(path)
-            
-            # Merge per-run coverage into overall covered_lines dict
-            for fname, lines in per_run_covered.items():
-                if fname not in covered_lines:
-                    covered_lines[fname] = set()
-                covered_lines[fname].update(lines)
-    else:
-        covered_lines = extract_covered_lines(args.cov[0])
-    # print(covered_lines) # Dict(filename -> set of line numbers)
+    for run in args.cov:
+        name, path = run.split(":", 1)
+        print(f"Run name: {name}, path: {path}")
+        per_run_covered = extract_covered_lines(path)
+        
+        # Merge per-run coverage into overall covered_lines dict
+        for fname, lines in per_run_covered.items():
+            if fname not in covered_lines:
+                covered_lines[fname] = set()
+            covered_lines[fname].update(lines)
 
     merged = merge_pc_with_coverage(args.pc_dir, covered_lines)
 

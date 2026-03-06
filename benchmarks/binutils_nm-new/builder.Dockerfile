@@ -24,7 +24,7 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
-RUN  wget https://ftp.gnu.org/gnu/binutils/binutils-2.37.tar.xz
+RUN  wget https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz
 RUN tar -xf binutils-2.37.tar.xz
 WORKDIR /binutils-2.37
 COPY build.sh .

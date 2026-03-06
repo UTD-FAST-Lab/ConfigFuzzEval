@@ -4,7 +4,7 @@
 
 set -e
 
-BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/binutils-2.37.tar.xz"
+BINUTILS_URL="https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz"
 DOWNLOAD_DIR="/src_dir"
 
 echo "Downloading binutils source code..."

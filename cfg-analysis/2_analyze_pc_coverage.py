@@ -17,7 +17,7 @@ def analyze_pc_coverage(merged_entries):
         pc = e["PC"].strip()
         start, end = e["StartLine"], e["EndLine"]
         covered = e.get("Covered", False)
-        tot_lines = max(0, end - start + 1)
+        tot_lines = e.get("ExclusiveLines", 0)
         covered_lines = e["Lines Covered"]
         line_numbers = e["LineNumbers"]
         src = e["SourceFile"]

@@ -4,6 +4,7 @@ import pickle
 import argparse
 import os, subprocess
 from run_experiment import delete_cts_benchmarks, run_superc_on_experiments, triage_on_experiments, aggregate_results
+from docker_image_builder import build_superc
 
 def calc_coverage(experiment_state):
     fuzzer_results_dir = f"{experiment_state['experiment_path']}/data"
@@ -73,6 +74,17 @@ if __name__ == "__main__":
         calc_coverage(experiment_state)
 
     if args.superc:
+        logging.info("Building SuperC container...")
+        
+        experiment_path = experiment_state["experiment_path"]
+        project_root = experiment_state["project_root"]
+        if build_superc("cfg-analysis", experiment_path, project_root):
+            logging.success("SuperC container built successfully.")
+        else:
+            logging.error("Failed to build SuperC container.")
+            sys.exit(1)
+
+                
         logging.info("Running SuperC CFG analysis")
     
         # Run SuperC CFG analysis on experiments

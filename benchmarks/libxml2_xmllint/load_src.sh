@@ -4,17 +4,17 @@
 
 set -e
 
-LIBXML2_URL="https://github.com/GNOME/libxml2.git"
-DOWNLOAD_DIR="/src_dir"
+# LIBXML2_URL="https://github.com/GNOME/libxml2.git"
+DOWNLOAD_DIR="/benchmark/source"
 
-echo "Cloning libxml2 from git as src_dir..."
-git clone "${LIBXML2_URL}" "${DOWNLOAD_DIR}"
+# echo "Cloning libxml2 from git as src_dir..."
+# git clone "${LIBXML2_URL}" "${DOWNLOAD_DIR}"
 
 echo "Creating include directories file..."
 cat > "${DOWNLOAD_DIR}/include_dirs.txt" << EOF
--I src_dir
--I src_dir/libxml
--I src_dir/private
+-I ${DOWNLOAD_DIR}
+-I ${DOWNLOAD_DIR}/libxml
+-I ${DOWNLOAD_DIR}/private
 EOF
 
 echo "Libxml2 source code cloned to ${DOWNLOAD_DIR}"

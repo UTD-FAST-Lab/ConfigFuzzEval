@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Root directory containing source files
-SRC_DIR="/src_dir"
+SRC_DIR="/benchmark/source"
 
 # Output directory for sourcelinePC files
 OUT_DIR="/fuzzer_output/pc_analysis/sourceline_pc_outputs"

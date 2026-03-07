@@ -350,7 +350,8 @@ if __name__ == "__main__":
         "cores_to_use": config["cores_to_use"],
         "allow_serial_execution": config["allow_serial_execution"],
         "experiment_memory": config["experiment_memory"],
-        "random_seed": config["random_seed"] 
+        "random_seed": config["random_seed"] ,
+        "serialize_multi_conf": config["serialize_multi_conf"]
     }
     
     logging.info("Running experiments with the following parameters:")

@@ -25,7 +25,7 @@ def aggregate_results(experiment_state):
             result_file = os.path.join(data_storage, f"{pair}_trial_{trail_num}/coverage/report.json")
             if not os.path.exists(result_file):
                 logging.error(f"Result file does not exist for {pair} trial {trail_num}: {result_file}")
-                exit(1)
+                continue
             
             # slice the pair to get config id 0, the id is at the end
             dest_dir_name = "_".join(pair.split("_")[:-1]) + "_0" + "_trial" + "_" + str(trail_num)

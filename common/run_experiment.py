@@ -13,6 +13,7 @@ import itertools
 import pickle, shutil
 
 def aggregate_results(experiment_state):
+    logging = get_logger(__name__)
     experiment_path = experiment_state["experiment_path"]
     data_storage = os.path.join(experiment_path, "data")
     trials = experiment_state["trials"]

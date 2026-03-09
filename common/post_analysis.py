@@ -64,14 +64,14 @@ if __name__ == "__main__":
         logging.error("Experiment state failed to load")
         exit(1)
 
+    if args.cov:
+        logging.info("Calculating coverage")
+        calc_coverage(experiment_state)
+
     if args.agg:
         logging.info("Starting result aggregation...")
         aggregate_results(experiment_state)
         logging.info("Result aggregation completed.")
-
-    if args.cov:
-        logging.info("Calculating coverage")
-        calc_coverage(experiment_state)
 
     if args.superc:
         logging.info("Building SuperC container...")

@@ -2,12 +2,6 @@
   "name": "pcre2_pcre2test",
   "options": [
     {
-      "name": "pcre2-8",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
@@ -53,12 +47,6 @@
       "name": "pcre2grep-callout-fork",
       "type": "bool",
       "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "rebuild-chartables",
-      "type": "bool",
-      "default": false,
       "cli": "enable"
     },
     {
@@ -111,24 +99,6 @@
     },
     {
       "name": "never-backslash-C",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "ebcdic",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "ebcdic-nl25",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "ebcdic-ignoring-compiler",
       "type": "bool",
       "default": false,
       "cli": "enable"
@@ -220,12 +190,6 @@
       "cli": "enable"
     },
     {
-      "name": "coverage",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
       "name": "fuzz-support",
       "type": "bool",
       "default": false,
@@ -241,18 +205,6 @@
       "name": "percent-zt",
       "type": "bool",
       "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "Werror",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "errwarn",
-      "type": "bool",
-      "default": false,
       "cli": "enable"
     },
     {
@@ -310,32 +262,8 @@
       ],
       "desc": "Fuzzer support requires the 8-bit library"
     },
-    {
-      "opt": "ebcdic",
-      "val": true,
-      "then": [
-        { "opt": "unicode", "val": false },
-        { "opt": "pcre2-16", "val": false },
-        { "opt": "pcre2-32", "val": false }
-      ],
-      "desc": "EBCDIC is incompatible with Unicode, 16-bit, and 32-bit libraries"
-    },
-    {
-      "opt": "ebcdic-nl25",
-      "val": true,
-      "then": [
-        { "opt": "ebcdic", "val": true }
-      ],
-      "desc": "Setting EBCDIC NL to 0x25 implies EBCDIC support"
-    },
-    {
-      "opt": "ebcdic-ignoring-compiler",
-      "val": true,
-      "then": [
-        { "opt": "ebcdic", "val": true }
-      ],
-      "desc": "Forcing EBCDIC 1047 implies EBCDIC support"
-    },
+    
+
     {
       "opt": "pcre2test-libedit",
       "val": true,
@@ -451,6 +379,48 @@
       "default": 10000000,
       "cli": "with",
       "choices": [1000000, 10000000, 20000000]
+    },
+    {
+      "name": "Werror",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "errwarn",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "coverage",
+      "type": "bool",
+      "default": false,
+      "cli": "enable",
+      "desc": "Using afl-clang-fast (LLVM-based), but the system also has GCC 11 installed. When both coverage runtimes get linked together, the symbols collide. The coverage feature is unnecessary for fuzzing anyway — AFL instruments the binary its own way."
+    },
+    {
+      "name": "ebcdic",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "ebcdic-nl25",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "ebcdic-ignoring-compiler",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },    {
+      "name": "pcre2-8",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
     }
   ]
 }

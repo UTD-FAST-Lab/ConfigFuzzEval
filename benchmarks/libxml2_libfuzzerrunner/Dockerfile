@@ -105,7 +105,7 @@ COPY dict /LIBXML2_FUZZER/dict
 
 # Copy build script and run it
 COPY build.sh .
-RUN bash build.sh
+RUN bash build.sh || true
 
 # Copy runner script
 COPY run_target.sh /

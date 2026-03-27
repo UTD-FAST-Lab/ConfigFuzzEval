@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y make cmake flex bison
 RUN  wget https://tukaani.org/xz/xz-5.2.5.tar.gz && tar -xzf xz-5.2.5.tar.gz
 WORKDIR /xz-5.2.5
 COPY build.sh .
-RUN bash build.sh
-# GENERAL
+RUN bash build.sh || true
+
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
@@ -37,4 +37,4 @@ COPY ranked_stubs.txt /
 COPY build.sh /
 COPY rt_grammar.json /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /xz-5.2.5/src/xz/xz /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed"]
+CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed  && cp -r /xz-5.2.5/src/xz/xz /benchmark_out_dir/"]

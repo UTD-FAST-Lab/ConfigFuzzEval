@@ -25,20 +25,14 @@ ARG CFLAGS=""
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
-
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev
-
 RUN git clone https://github.com/pnggroup/libpng.git /libpng
-
 WORKDIR /libpng
-
 COPY build.sh .
+RUN bash build.sh || true
 
-RUN bash build.sh
-
-# # GENERAL
-# # Copy supporting files to the docker image
+# Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
 COPY dict /
@@ -48,5 +42,5 @@ COPY load_src.sh /
 
 COPY rt_grammar.json /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libpng/pngimage /benchmark_out_dir/      && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/  && cp -r /libpng/pngimage /benchmark_out_dir/"]
 

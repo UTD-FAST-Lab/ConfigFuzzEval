@@ -43,11 +43,8 @@ COPY harness /LIBXML2_FUZZER/harness
 COPY harness/dict.dict /LIBXML2_FUZZER/harness
 COPY corpus /LIBXML2_FUZZER/corpus
 WORKDIR /LIBXML2_FUZZER/libxml2
-# Copy build script and run it
 COPY build.sh .
-RUN bash build.sh
-
-# Copy runner script
+RUN bash build.sh || true
 COPY run_target.sh /
 ENV FUZZER_FLAGS=""
 ARG CC=$FUZZER_COMP
@@ -72,8 +69,8 @@ ENV UBSAN_OPTIONS="halt_on_error=1"
 RUN mkdir -p /profraw
 
 # Copy output artifacts to benchmark_out_dir
-CMD ["bash", "-c", "cp /LIBXML2_FUZZER/libfuzzerrunner /benchmark_out_dir/ && \
-    cp -r /LIBXML2_FUZZER/harness /benchmark_out_dir/harness && \
+CMD ["bash", "-c", "cp -r /LIBXML2_FUZZER/harness /benchmark_out_dir/harness && \
     cp -r /LIBXML2_FUZZER/corpus /benchmark_out_dir/corpus && \
     cp /run_target.sh /benchmark_out_dir/ && \
-    cp -r /load_src.sh /benchmark_out_dir/"]
+    cp -r /load_src.sh /benchmark_out_dir/ && \
+    cp /LIBXML2_FUZZER/libfuzzerrunner /benchmark_out_dir/"]

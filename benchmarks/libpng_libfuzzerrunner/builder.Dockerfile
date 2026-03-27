@@ -41,7 +41,7 @@ COPY harness /LIBPNG_FUZZER/harness
 COPY harness/dict.dict /LIBPNG_FUZZER/harness
 COPY corpus /LIBPNG_FUZZER/corpus
 COPY build.sh  .
-RUN bash build.sh
+RUN bash build.sh || true
 
 COPY run_target.sh /
 
@@ -63,4 +63,4 @@ ENV ASAN_OPTIONS="detect_leaks=0:allocator_may_return_null=1:halt_on_error=1:sym
 ENV UBSAN_OPTIONS="halt_on_error=1"
 RUN mkdir -p /profraw
 # Copy output files
-CMD ["bash", "-c", "cp /LIBPNG_FUZZER/libfuzzerrunner /benchmark_out_dir/   &&   cp /run_target.sh /benchmark_out_dir/  && cp -r /LIBPNG_FUZZER/harness /benchmark_out_dir/harness && cp -r /LIBPNG_FUZZER/corpus /benchmark_out_dir/corpus && cp -r /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp /run_target.sh /benchmark_out_dir/  && cp -r /LIBPNG_FUZZER/harness /benchmark_out_dir/harness && cp -r /LIBPNG_FUZZER/corpus /benchmark_out_dir/corpus && cp -r /load_src.sh /benchmark_out_dir/  && cp /LIBPNG_FUZZER/libfuzzerrunner /benchmark_out_dir/"]

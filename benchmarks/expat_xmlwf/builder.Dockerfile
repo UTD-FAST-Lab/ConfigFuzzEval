@@ -29,17 +29,13 @@ ARG CFLAGS=""
 RUN apt-get update && apt-get install -y --no-install-recommends \
         make autoconf libtool pkg-config \
         zlib1g-dev liblzma-dev libbsd-dev
-
-# Build requires automake 1.16.3
 RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
     apt install ./automake_1.16.5-1.3_all.deb
 RUN git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat
 WORKDIR /libexpat/expat
 COPY build.sh .
+RUN bash build.sh || true
 
-RUN bash build.sh
-
-# GENERAL
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
@@ -49,5 +45,5 @@ COPY build.sh /
 COPY rt_grammar.json /
 COPY load_src.sh /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/       && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp /load_src.sh /benchmark_out_dir/  && cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/"]
 

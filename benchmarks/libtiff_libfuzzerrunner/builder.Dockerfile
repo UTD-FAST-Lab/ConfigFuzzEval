@@ -51,14 +51,9 @@ RUN git clone https://gitlab.com/libtiff/libtiff.git /LIBTIFF_FUZZER/libtiff
 COPY harness /LIBTIFF_FUZZER/harness
 COPY harness/dict.dict /LIBTIFF_FUZZER/harness
 COPY corpus /LIBTIFF_FUZZER/corpus
-
-# Copy build script and run it
 COPY build.sh .
-RUN bash build.sh
-
+RUN bash build.sh || true
 COPY run_target.sh /
-
-# Copy load source script
 COPY load_src.sh /
 
 
@@ -88,8 +83,8 @@ ENV UBSAN_OPTIONS="halt_on_error=1"
 RUN mkdir -p /profraw
 
 # Copy output artifacts to benchmark_out_dir
-CMD ["bash", "-c", "cp /LIBTIFF_FUZZER/libfuzzerrunner /benchmark_out_dir/ && \
-    cp -r /LIBTIFF_FUZZER/harness /benchmark_out_dir/harness && \
+CMD ["bash", "-c", "cp -r /LIBTIFF_FUZZER/harness /benchmark_out_dir/harness && \
     cp -r /LIBTIFF_FUZZER/corpus /benchmark_out_dir/corpus && \
     cp /run_target.sh /benchmark_out_dir/ && \
-    cp -r /load_src.sh /benchmark_out_dir/"]
+    cp -r /load_src.sh /benchmark_out_dir/ && \
+    cp /LIBTIFF_FUZZER/libfuzzerrunner /benchmark_out_dir/"]

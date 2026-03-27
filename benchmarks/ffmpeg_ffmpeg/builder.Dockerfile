@@ -35,13 +35,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
-# RUN  git clone --depth 1 https://github.com/FFmpeg/FFmpeg.git /ffmpeg-4.7
-# WORKDIR /ffmpeg-4.7
 RUN  git clone --depth 1 https://github.com/FFmpeg/FFmpeg.git /ffmpeg-4.7
 WORKDIR /ffmpeg-4.7
 COPY build.sh .
 RUN bash build.sh || true
-# GENERAL
+
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed

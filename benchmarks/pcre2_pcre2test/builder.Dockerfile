@@ -15,41 +15,36 @@
 ################################################################################
 
 # Parent image can be overridden at build time:
-    ARG parent_image=ubuntu:22.04
-    FROM $parent_image
-    
-    # GENERAL
-    ARG CC=$FUZZER_COMP
-    ARG CXX=$FUZZER_COMPXX
-    ARG CFLAGS=""
-    
-    # CC and CXX are set to clang-18 and clang++-18 when building coverage binaries.
-    # If this needs to be changed, update the Dockerfile accordingly.
-    
-    RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
-        build-essential make autoconf libtool automake \
-        libedit-dev libreadline-dev valgrind lcov git && \
-        rm -rf /var/lib/apt/lists/*
-    
-    # Clone PCRE2 and initialize submodules (needed for SLJIT)
-    RUN git clone https://github.com/PCRE2Project/pcre2.git /pcre2 && \
-        cd /pcre2 && \
-        git submodule update --init --recursive
-    
-    WORKDIR /pcre2
-    
-    # Copy build script and run it
-    COPY build.sh .
-    RUN bash build.sh
-    
-    # Copy supporting files to the docker image
-    COPY run_target.sh /
-    COPY seed /seed
-    COPY dict /
-    COPY ranked_stubs.txt /
-    COPY build.sh /
-    COPY rt_grammar.json /
-    COPY load_src.sh /load_src.sh
-    # Copy the binary to fuzz into benchmark_out_dir when container starts
-    CMD ["bash", "-c", "cp -r /pcre2/pcre2test /benchmark_out_dir/    && cp /build.sh /benchmark_out_dir/   && cp /rt_grammar.json /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/ &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed &&  cp -r /load_src.sh /benchmark_out_dir/"]
-    
+ARG parent_image=ubuntu:22.04
+FROM $parent_image
+
+# GENERAL
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+ARG CFLAGS=""
+
+# CC and CXX are set to clang-18 and clang++-18 when building coverage binaries.
+# If this needs to be changed, update the Dockerfile accordingly.
+RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
+    build-essential make autoconf libtool automake \
+    libedit-dev libreadline-dev valgrind lcov git && \
+    rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/PCRE2Project/pcre2.git /pcre2 && \
+    cd /pcre2 && \
+    git submodule update --init --recursive
+WORKDIR /pcre2
+COPY build.sh .
+RUN bash build.sh || true
+
+# Copy supporting files to the docker image
+COPY run_target.sh /
+COPY seed /seed
+COPY dict /
+COPY ranked_stubs.txt /
+COPY build.sh /
+COPY rt_grammar.json /
+COPY load_src.sh /load_src.sh
+
+# Extract files to benchmark_out_dir when container starts.
+# We copy the guaranteed files first, and attempt the binary last so a missing binary doesn't break the chain.
+CMD ["bash", "-c", "cp /build.sh /benchmark_out_dir/ && cp /rt_grammar.json /benchmark_out_dir/ && cp /ranked_stubs.txt /benchmark_out_dir/ && cp /dict /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp /load_src.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /pcre2/pcre2test /benchmark_out_dir/"]

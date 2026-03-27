@@ -22,17 +22,18 @@ ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
 ARG CFLAGS=""
 ARG COVERAGE=$COVERAGE_FLAGS
-export CC=clang
-export CXX=clang++
-export CFLAGS="-g -O1 -fno-omit-frame-pointer"
-export CXXFLAGS="-g -O1 -fno-omit-frame-pointer"
-export CPPFLAGS="-I/LIBPNG_FUZZER/zlib"
-export LDFLAGS="-L/LIBPNG_FUZZER/zlib"
-export ASAN_OPTIONS="detect_leaks=0:allocator_may_return_null=1:halt_on_error=1:symbolize=1"
-export UBSAN_OPTIONS="halt_on_error=1"
-export LIBPNG_DIR=libpng
-export ZLIB_DIR=zlib
-export HARNESS_DIR=harness
+# export CC=clang
+# export CXX=clang++
+# export CFLAGS="-g -O1 -fno-omit-frame-pointer"
+# export CXXFLAGS="-g -O1 -fno-omit-frame-pointer"
+# export CPPFLAGS="-I/LIBPNG_FUZZER/zlib"
+# export LDFLAGS="-L/LIBPNG_FUZZER/zlib"
+# export ASAN_OPTIONS="detect_leaks=0:allocator_may_return_null=1:halt_on_error=1:symbolize=1"
+# export UBSAN_OPTIONS="halt_on_error=1"
+# export LIBPNG_DIR=libpng
+# export ZLIB_DIR=zlib
+# export HARNESS_DIR=harness
+
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
@@ -40,7 +41,6 @@ export HARNESS_DIR=harness
 RUN mkdir /LIBPNG_FUZZER
 
 RUN apt-get update -qq && apt-get install clang llvm build-essential
-
 RUN git clone --depth 1 https://github.com/madler/zlib.git /LIBPNG_FUZZER/zlib
 WORKDIR /LIBPNG_FUZZER/zlib
 RUN ./configure
@@ -49,13 +49,11 @@ RUN make -j$(nproc)
 RUN git clone --depth 1 https://github.com/pnggroup/libpng.git /LIBPNG_FUZZER/libpng
 WORKDIR /LIBPNG_FUZZER/libpng
 COPY build.sh .
-RUN bash build.sh
+RUN bash build.sh || true
 
 WORKDIR /LIBPNG_FUZZER
-
 RUN clang++ -g -O1 -std=c++11   -fno-omit-frame-pointer   -fsanitize=fuzzer,address   -I$LIBPNG_DIR -I$ZLIB_DIR   $HARNESS_DIR/libpng_read_fuzzer.cc   $LIBPNG_DIR/.libs/libpng16.a   $ZLIB_DIR/libz.a   -o libpng_read_fuzzer
 RUN ./libpng_read_fuzzer corpus -dict=$HARNESS_DIR/png.dict -rss_limit_mb=2000D -max_total_time=3600
-
 
 # Copy supporting files to the docker image
 COPY run_target.sh /

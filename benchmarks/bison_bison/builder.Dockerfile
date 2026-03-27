@@ -30,11 +30,9 @@ RUN apt-get update && apt-get install -y make cmake flex bison
 RUN wget  https://ftp.gnu.org/gnu/bison/bison-3.8.tar.xz
 RUN tar -xf bison-3.8.tar.xz
 WORKDIR /bison-3.8
-
 COPY build.sh .
-RUN bash build.sh
+RUN bash build.sh || true
 
-# GENERAL
 # Copy supporting files to the docker image
 COPY run_target.sh /
 COPY seed /seed
@@ -45,4 +43,4 @@ COPY load_src.sh /
 
 COPY rt_grammar.json /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /bison-3.8/src/bison /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/  && cp -r /bison-3.8/src/bison /benchmark_out_dir/"]

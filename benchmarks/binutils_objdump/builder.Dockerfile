@@ -24,10 +24,13 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
-RUN  wget https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz
-RUN tar -xf binutils-2.37.tar.xz
-WORKDIR /binutils-2.37
-COPY build.sh .
+# RUN  wget https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz
+# RUN tar -xf binutils-2.37.tar.xz
+# WORKDIR /binutils-2.37
+RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz
+RUN tar -xf binutils-2.45.tar.xz
+WORKDIR /binutils-2.45
+COPY build.sh . 
 RUN bash build.sh || true
 # GENERAL
 # Copy supporting files to the docker image
@@ -40,4 +43,4 @@ COPY load_src.sh /
 
 COPY rt_grammar.json /
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp /load_src.sh /benchmark_out_dir/  && cp -r /binutils-2.37 /benchmark_out_dir/source/  && cp -r /binutils-2.37/binutils/objdump /benchmark_out_dir/ || true"]
+CMD ["bash", "-c", "cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp /load_src.sh /benchmark_out_dir/  && cp -r /binutils-2.45 /benchmark_out_dir/source/ && cp -r /binutils-2.45/binutils/objdump /benchmark_out_dir/"]

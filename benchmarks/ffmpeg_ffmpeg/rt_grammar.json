@@ -1,0 +1,166 @@
+{
+    "cmdline":  "$inopts -i $INPUTFILE",
+    "connector": " ",
+    "strmax": 19,
+    "options":  [{"opt":     "-f",
+                   "type":    "choice",
+                   "choices": ["3dostr", "4xm", "aa", "aac", "aax", "ac3", "ace", "acm", "act", "adf", "adp", "ads", "adx", "aea", "afc", "aiff", "aix", "alaw", "alias_pix", "alp", "amr", "amrnb", "amrwb", "anm", "apc", "ape", "apm", "apng", "aptx", "aptx_hd", "aqtitle", "argo_asf", "argo_brp", "asf", "asf_o", "ass", "ast", "au", "av1", "avi", "avr", "avs", "avs2", "avs3", "bethsoftvid", "bfi", "bfstm", "bin", "bink", "bit", "bmp_pipe", "bmv", "boa", "brender_pix", "brstm", "c93", "caf", "cavsvideo", "cdg", "cdxl", "cine", "codec2", "codec2raw", "concat", "cri_pipe", "data", "daud", "dcstr", "dds_pipe", "derf", "dfa", "dhav", "dirac", "dnxhd", "dpx_pipe", "dsf", "dsicin", "dss", "dts", "dtshd", "dv", "dvbsub", "dvbtxt", "dxa", "ea", "ea_cdata", "eac3", "epaf", "exr_pipe", "f32be", "f32le", "f64be", "f64le", "fbdev", "ffmetadata", "film_cpk", "filmstrip", "fits", "flac", "flic", "flv", "frm", "fsb", "fwse", "g722", "g723_1", "g726", "g726le", "g729", "gdv", "genh", "gif", "gif_pipe", "gsm", "gxf", "h261", "h263", "h264", "hca", "hcom", "hevc", "hls", "hnm", "ico", "idcin", "idf", "iff", "ifv", "ilbc", "image2", "image2pipe", "ingenient", "ipmovie", "ipu", "ircam", "iss", "iv8", "ivf", "ivr", "j2k_pipe", "jacosub", "jpeg_pipe", "jpegls_pipe", "jv", "kux", "kvag", "lavfi", "live_flv", "lmlm4", "loas", "lrc", "luodat", "lvf", "lxf", "m4v", "mca", "mcc", "mgsts", "microdvd", "mjpeg", "mjpeg_2000", "mlp", "mlv", "mm", "mmf", "mods", "moflex", "mp3", "mp4", "mpc", "mpc8", "mpeg", "mpegts", "mpegtsraw", "mpegvideo", "mpjpeg", "mpl2", "mpsub", "msf", "msnwctcp", "msp", "mtaf", "mtv", "mulaw", "musx", "mv", "mvi", "mxf", "mxg", "nc", "nistsphere", "nsp", "nsv", "nut", "nuv", "obu", "ogg", "oma", "oss", "paf", "pam_pipe", "pbm_pipe", "pcx_pipe", "pgm_pipe", "pgmyuv_pipe", "pgx_pipe", "photocd_pipe", "pictor_pipe", "pjs", "pmp", "png_pipe", "pp_bnk", "ppm_pipe", "psd_pipe", "psxstr", "pva", "pvf", "qcp", "qdraw_pipe", "r3d", "rawvideo", "realtext", "redspark", "rl2", "rm", "roq", "rpl", "rsd", "rso", "rtp", "rtsp", "s16be", "s16le", "s24be", "s24le", "s32be", "s32le", "s337m", "s8", "sami", "sap", "sbc", "sbg", "scc", "sdp", "sdr2", "sds", "sdx", "ser", "sgi_pipe", "shn", "siff", "sln", "smjpeg", "smk", "smush", "sol", "sox", "spdif", "srt", "stl", "subviewer", "subviewer1", "sunrast_pipe", "sup", "svag", "svg_pipe", "svs", "swf", "tak", "tedcaptions", "thp", "tiertexseq", "tiff_pipe", "tmv", "truehd", "tta", "tty", "txd", "ty", "u16be", "u16le", "u24be", "u24le", "u32be", "u32le", "u8", "v210", "v210x", "vag", "vc1", "vc1test", "vidc", "video4linux2", "vividas", "vivo", "vmd", "vobsub", "voc", "vpk", "vplayer", "vqf", "w64", "wav", "wc3movie", "webm", "webm_dash_manifest", "webp_pipe", "webvtt", "wsaud", "wsd", "wsvqa", "wtv", "wv", "wve", "xa", "xbin", "xmv", "xpm_pipe", "xvag", "xwd_pipe", "xwma", "yop", "yuv4mpegpipe"],
+                "connector": " "
+                  },
+                  {"opt":     "-t",
+                   "type":    "realnum",
+                   "range":  [0,7200],
+                "connector": " "
+                  },
+                  {"opt":     "-to",
+                   "type":    "realnum",
+                   "range":  [0,7200],
+                "connector": " "
+                  },
+                  {
+                   "opt":     "-fs",
+                   "type":    "intnum",
+                   "range":  [0,104857600],
+                "connector": " "
+                  },
+                  {"opt":     "-ss",
+                   "type":    "realnum",
+                   "range":  [0,7200],
+                "connector": " "
+                  },
+                  {"opt":     "-sseof",
+                   "type":    "realnum",
+                   "range":  [-7200,7200],
+                "connector": " "
+                  },
+                  {"opt":     "-target",
+                   "type":    "choice",
+                   "choices": ["vcd", "pal-vcd", "ntsc-vcd", "film-vcd", "svcd", "pal-svcd", "ntsc-svcd", "film-svcd", "dvd", "pal-dvd", "ntsc-dvd", "film-dvd", "dv", "pal-dv", "ntsc-dv", "film-dv", "dv50", "pal-dv50", "ntsc-dv50", "film-dv50"]
+                  ,
+                "connector": " "},
+                  {"opt":     "-apad",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-frames",
+                   "type":    "intnum",
+                   "range":  [0,432000],
+                "connector": " "
+                  },
+                  {"opt":     "-reinit_filter",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-discard",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-disposition",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-vframes",
+                   "type":    "intnum",
+                   "range":  [0,432000],
+                "connector": " "
+                  },
+                  {"opt":     "-r",
+                   "type":    "intnum",
+                   "range":  [0,60],
+                "connector": " "
+                  },
+                  {"opt":     "-aspect",
+                   "type":    "choice",
+                   "choices": ["4:3", "16:9"],
+                "connector": " "
+                  },
+                  {"opt":     "-bits_per_raw_sample",
+                   "type":    "intnum",
+                   "range":  [0,32],
+                "connector": " "
+                  },
+                  {"opt":     "-vn",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-vcodec",
+                   "type":    "choice",
+                   "choices": ["012v", "4xm", "8bps", "aasc", "agm", "aic", "alias_pix", "amv", "anm", "ansi", "arbc", "argo", "asv1", "asv2", "aura", "aura2", "av1", "avrn", "avrp", "avs", "avui", "ayuv", "bethsoftvid", "bfi", "binkvideo", "bintext", "bitpacked", "bmp", "bmv_video", "brender_pix", "c93", "cavs", "cdgraphics", "cdtoons", "cdxl", "cfhd", "cinepak", "clearvideo", "cljr", "cllc", "cmv", "cpia", "cri", "cscd", "cyuv", "dds", "dfa", "dirac", "dnxhd", "dpx", "dsicinvideo", "dvvideo", "dxtory", "dxv", "escape124", "escape130", "ffv1", "ffvhuff", "fic", "fits", "flic", "flv1", "fmvc", "fraps", "frwu", "gdv", "gif", "h261", "h263", "h263i", "h263p", "h264", "hap", "hevc", "hnm4video", "hq_hqa", "hqx", "huffyuv", "hymt", "idcin", "idf", "iff_ilbm", "imm4", "imm5", "indeo2", "indeo3", "indeo4", "indeo5", "interplayvideo", "ipu", "jpeg2000", "jpegls", "jv", "kgv1", "kmvc", "lagarith", "loco", "m101", "mad", "magicyuv", "mdec", "mimic", "mjpeg", "mjpegb", "mmvideo", "mobiclip", "motionpixels", "mpeg1video", "mpeg2video", "mpeg4", "msa1", "msmpeg4v1", "msmpeg4v2", "msmpeg4v3", "msp2", "msrle", "mss1", "mss2", "msvideo1", "mszh", "mts2", "mv30", "mvc1", "mvc2", "mvdv", "mxpeg", "notchlc", "nuv", "paf_video", "pam", "pbm", "pcx", "pfm", "pgm", "pgmyuv", "pgx", "photocd", "pictor", "pixlet", "ppm", "prores", "prosumer", "psd", "ptx", "qdraw", "qpeg", "qtrle", "r10k", "r210", "rawvideo", "rl2", "roq", "rpza", "rv10", "rv20", "rv30", "rv40", "sanm", "scpr", "sgi", "sgirle", "sheervideo", "smackvideo", "smc", "smvjpeg", "snow", "sp5x", "speedhq", "sunrast", "svq1", "svq3", "targa", "targa_y216", "tgq", "tgv", "theora", "thp", "tiertexseqvideo", "tiff", "tmv", "tqi", "truemotion1", "truemotion2", "truemotion2rt", "tscc2", "txd", "ulti", "utvideo", "v210", "v210x", "v308", "v408", "v410", "vb", "vble", "vc1", "vc1image", "vcr1", "vixl", "vmdvideo", "vmnc", "vp3", "vp4", "vp5", "vp6", "vp6a", "vp6f", "vp7", "vp8", "vp9", "webp", "wmv1", "wmv2", "wmv3", "wmv3image", "wnv1", "wrapped_avframe", "ws_vqa", "xan_wc3", "xan_wc4", "xbin", "xbm", "xface", "xpm", "xwd", "y41p", "ylc", "yop", "yuv4", "copy"]
+                  ,
+                "connector": " "},
+                  {"opt":     "-pass",
+                   "type":    "intnum",
+                   "range":  [1,3],
+                "connector": " "
+                  },
+                  {"opt":     "-b:v",
+                   "type":    "intnum",
+                   "range":  [307200,89128960],
+                "connector": " "
+                  },
+                  {"opt":     "-b:a",
+                   "type":    "intnum",
+                   "range":  [131072,327680],
+                "connector": " "
+                  },
+                  {"opt":     "-dn",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-aframes",
+                   "type":    "intnum",
+                   "range":  [0,353894400],
+                "connector": " "
+                  },
+
+                  {"opt":     "-ar",
+                   "type":    "intnum",
+                   "range":  [0,49152],
+                "connector": " "
+                  },
+                  {"opt":     "-ac",
+                   "type":    "intnum",
+                   "range":  [0,10],
+                "connector": " "
+                  },
+                  {"opt":     "-an",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-acodec",
+                   "type":    "choice",
+                   "choices": ["8svx_exp", "8svx_fib", "aac", "aac_latm", "ac3", "acelp.kelvin", "adpcm_4xm", "adpcm_adx", "adpcm_afc", "adpcm_agm", "adpcm_aica", "adpcm_argo", "adpcm_ct", "adpcm_dtk", "adpcm_ea", "adpcm_ea_maxis_xa", "adpcm_ea_r1", "adpcm_ea_r2", "adpcm_ea_r3", "adpcm_ea_xas", "adpcm_g722", "adpcm_g726", "adpcm_g726le", "adpcm_ima_alp", "adpcm_ima_amv", "adpcm_ima_apc", "adpcm_ima_apm", "adpcm_ima_cunning", "adpcm_ima_dat4", "adpcm_ima_dk3", "adpcm_ima_dk4", "adpcm_ima_ea_eacs", "adpcm_ima_ea_sead", "adpcm_ima_iss", "adpcm_ima_moflex", "adpcm_ima_mtf", "adpcm_ima_oki", "adpcm_ima_qt", "adpcm_ima_rad", "adpcm_ima_smjpeg", "adpcm_ima_ssi", "adpcm_ima_wav", "adpcm_ima_ws", "adpcm_ms", "adpcm_mtaf", "adpcm_psx", "adpcm_sbpro_2", "adpcm_sbpro_3", "adpcm_sbpro_4", "adpcm_swf", "adpcm_thp", "adpcm_thp_le", "adpcm_vima", "adpcm_xa", "adpcm_yamaha", "adpcm_zork", "alac", "amr_nb", "amr_wb", "ape", "aptx", "aptx_hd", "atrac1", "atrac3", "atrac3al", "atrac3p", "atrac3pal", "atrac9", "avc", "binkaudio_dct", "binkaudio_rdft", "bmv_audio", "comfortnoise", "cook", "derf_dpcm", "dolby_e", "dsd_lsbf", "dsd_lsbf_planar", "dsd_msbf", "dsd_msbf_planar", "dsicinaudio", "dss_sp", "dst", "dts", "dvaudio", "eac3", "evrc", "fastaudio", "flac", "g723_1", "g729", "gremlin_dpcm", "gsm", "gsm_ms", "hca", "hcom", "iac", "ilbc", "imc", "interplay_dpcm", "interplayacm", "mace3", "mace6", "metasound", "mlp", "mp1", "mp2", "mp3", "mp3adu", "mp3on4", "mp4als", "musepack7", "musepack8", "nellymoser", "opus", "paf_audio", "pcm_alaw", "pcm_bluray", "pcm_dvd", "pcm_f16le", "pcm_f24le", "pcm_f32be", "pcm_f32le", "pcm_f64be", "pcm_f64le", "pcm_lxf", "pcm_mulaw", "pcm_s16be", "pcm_s16be_planar", "pcm_s16le", "pcm_s16le_planar", "pcm_s24be", "pcm_s24daud", "pcm_s24le", "pcm_s24le_planar", "pcm_s32be", "pcm_s32le", "pcm_s32le_planar", "pcm_s64be", "pcm_s64le", "pcm_s8", "pcm_s8_planar", "pcm_u16be", "pcm_u16le", "pcm_u24be", "pcm_u24le", "pcm_u32be", "pcm_u32le", "pcm_u8", "pcm_vidc", "qcelp", "qdm2", "qdmc", "ra_144", "ra_288", "ralf", "roq_dpcm", "s302m", "sbc", "sdx2_dpcm", "shorten", "sipr", "siren", "smackaudio", "sol_dpcm", "sonic", "tak", "truehd", "truespeech", "tta", "twinvq", "vmdaudio", "vorbis", "wavesynth", "wavpack", "westwood_snd1", "wmalossless", "wmapro", "wmav1", "wmav2", "wmavoice", "xan_dpcm", "xma1", "xma2", "copy"]
+                  ,
+                "connector": " "},
+                  {"opt":     "-vol",
+                   "type":    "intnum",
+                   "range":  [0,512],
+                "connector": " "
+                  },
+                  {"opt":     "-sn",
+                   "type":    "bool"
+                  },
+                  {"opt":     "-scodec",
+                   "type":    "choice",
+                   "choices": ["012v", "8bps", "aasc", "alias_pix", "avrp", "avui", "ayuv", "bitpacked", "bmp", "bmv_video", "brender_pix", "cdtoons", "cllc", "cri", "cscd", "dds", "dirac", "dpx", "dxtory", "ffv1", "ffvhuff", "fits", "flic", "fmvc", "fraps", "frwu", "gif", "h264", "huffyuv", "hymt", "jpeg2000", "jpegls", "lagarith", "loco", "m101", "magicyuv", "msp2", "msrle", "mszh", "pam", "pbm", "pcx", "pfm", "pgm", "pgmyuv", "pgx", "ppm", "psd", "qdraw", "qtrle", "r10k", "r210", "rawvideo", "scpr", "sgi", "sgirle", "sheervideo", "snow", "sunrast", "targa", "targa_y216", "tiff", "utvideo", "v210", "v210x", "v308", "v408", "v410", "vble", "vmnc", "webp", "wrapped_avframe", "xbm", "xpm", "xwd", "y41p", "ylc", "yuv4", "alac", "ape", "atrac3al", "atrac3pal", "dst", "dts", "flac", "mlp", "mp4als", "pcm_bluray", "pcm_dvd", "pcm_f16le", "pcm_f24le", "pcm_f32be", "pcm_f32le", "pcm_f64be", "pcm_f64le", "pcm_lxf", "pcm_s16be", "pcm_s16be_planar", "pcm_s16le", "pcm_s16le_planar", "pcm_s24be", "pcm_s24daud", "pcm_s24le", "pcm_s24le_planar", "pcm_s32be", "pcm_s32le", "pcm_s32le_planar", "pcm_s64be", "pcm_s64le", "pcm_s8", "pcm_s8_planar", "pcm_u16be", "pcm_u16le", "pcm_u24be", "pcm_u24le", "pcm_u32be", "pcm_u32le", "pcm_u8", "ralf", "s302m", "shorten", "tak", "truehd", "tta", "wavpack", "wmalossless", "ass", "dvb_subtitle", "dvd_subtitle", "eia_608", "hdmv_pgs_subtitle", "jacosub", "microdvd", "mov_text", "mpl2", "pjs", "realtext", "sami", "stl", "subrip", "subviewer", "subviewer1", "text", "vplayer", "webvtt", "xsub", "copy"]
+                  ,
+                "connector": " "},
+                  {"opt":     "-fix_sub_duration",
+                   "type":    "bool"
+                  }
+                
+                 ],
+     "depend":   [
+                 ],
+     "conflict": [["-vn", "-vframes"],
+                  ["-vn", "-r"],
+                  ["-vn", "-aspect"],
+                  ["-vn", "-bits_per_raw_sample"],
+                  ["-vn", "-vcodec"],
+                  ["-vn", "-pass"],
+                  ["-vn", "-b:v"],
+                  ["-vn", "-b:a"],
+                  ["-vn", "-dn"],
+                  ["-an", "-aframes"],
+                  ["-an", "-ar"],
+                  ["-an", "-ac"],
+                  ["-an", "-acodec"],
+                  ["-an", "-vol"],
+                  ["-sn", "-scodec"],
+                  ["-sn", "-fix_sub_duration"]
+                 ],
+     "maxcombs": 3
+}

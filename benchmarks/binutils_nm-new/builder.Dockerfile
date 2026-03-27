@@ -31,7 +31,7 @@ RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.45.tar.xz
 RUN tar -xf binutils-2.45.tar.xz
 WORKDIR /binutils-2.45
 COPY build.sh . 
-RUN bash build.sh || true
+RUN bash build.sh
 # GENERAL
 # Copy supporting files to the docker image
 COPY run_target.sh /

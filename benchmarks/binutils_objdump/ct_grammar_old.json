@@ -1,5 +1,5 @@
 {
-  "name": "binutils_objdump",
+  "name": "binutils_nm-new",
   "options": [
     {
       "name": "checking",
@@ -96,7 +96,7 @@
       "type": "bool",
       "default": false,
       "cli": "--with-windmc"
-    }    
+    }
   ],
   "removed": ["--disable-werror", "--enable-static"]
 

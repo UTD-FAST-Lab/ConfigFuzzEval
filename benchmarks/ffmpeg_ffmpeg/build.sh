@@ -1,0 +1,2 @@
+./configure --cc="$CC" --cxx="$CXX" --enable-static --disable-shared --disable-asm --enable-cross-compile --disable-doc --pkg-config-flags="--static" --extra-ldexeflags="-static" {{CT_CONFIGURATION}}
+make CC=$CC CXX=$CXX

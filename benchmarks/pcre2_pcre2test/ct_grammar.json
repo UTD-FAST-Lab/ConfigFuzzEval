@@ -206,18 +206,6 @@
       "type": "bool",
       "default": true,
       "cli": "enable"
-    },
-    {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
     }
   ],
   "constraints": [
@@ -418,6 +406,18 @@
       "cli": "enable"
     },    {
       "name": "pcre2-8",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "shared",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "static",
       "type": "bool",
       "default": true,
       "cli": "enable"

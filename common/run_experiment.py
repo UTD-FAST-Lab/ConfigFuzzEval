@@ -325,7 +325,8 @@ if __name__ == "__main__":
     parser.add_argument("--benchmarks", type=str, nargs='+', required=True, help="List of benchmarks to run.")
     parser.add_argument("--compiletime", type=str, nargs='+', required=False, default=["default"], help="Compile time strategies to use.")
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
-    
+    parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
+
     args = parser.parse_args()
     
     # Read configuration
@@ -352,7 +353,8 @@ if __name__ == "__main__":
         "allow_serial_execution": config["allow_serial_execution"],
         "experiment_memory": config["experiment_memory"],
         "random_seed": config["random_seed"] ,
-        "serialize_multi_conf": config["serialize_multi_conf"]
+        "serialize_multi_conf": config["serialize_multi_conf"],
+        "no_superc": args.no_superc
     }
     
     logging.info("Running experiments with the following parameters:")
@@ -361,6 +363,7 @@ if __name__ == "__main__":
     logging.info(f"Benchmarks: {args.benchmarks}")
     logging.info(f"Compile time strategies: {args.compiletime}")
     logging.info(f"Experiment name: {args.experiment_name}")
+    logging.info(f"SuperC analysis: {'disabled' if args.no_superc else 'enabled'}")
     logging.info(f"Trials: {experiment_state['trials']}")
     logging.info(f"Runtime per trial (seconds): {experiment_state['max_total_time']}")
 
@@ -477,13 +480,16 @@ if __name__ == "__main__":
         experiment_state["triager_failures"] = triager_failures
 
     # Build SuperC CFG analysis container
-    logging.info("Building SuperC CFG analysis container...")
-    superc_path = "cfg-analysis"
-    if build_superc(superc_path, experiment_path, project_root):
-        logging.success("SuperC container built successfully.")
+    if experiment_state["no_superc"]:
+        logging.info("SuperC disabled (--no-superc). Skipping SuperC container build.")
     else:
-        logging.error("Failed to build SuperC container.")
-        sys.exit(1)
+        logging.info("Building SuperC CFG analysis container...")
+        superc_path = "cfg-analysis"
+        if build_superc(superc_path, experiment_path, project_root):
+            logging.success("SuperC container built successfully.")
+        else:
+            logging.error("Failed to build SuperC container.")
+            sys.exit(1)
 
     # validate selected benchmarks
     logging.info("Validating benchmarks...")
@@ -635,9 +641,12 @@ if __name__ == "__main__":
     aggregate_results(experiment_state)
 
     # Run SuperC CFG analysis on experiments
-    logging.info("Aggregation completed. Starting SuperC CFG analysis...")
-    run_superc_on_experiments(experiment_state, logging)
-    logging.info("SuperC CFG analysis completed.")
+    if experiment_state["no_superc"]:
+        logging.info("Aggregation completed. SuperC disabled (--no-superc), skipping SuperC CFG analysis.")
+    else:
+        logging.info("Aggregation completed. Starting SuperC CFG analysis...")
+        run_superc_on_experiments(experiment_state, logging)
+        logging.info("SuperC CFG analysis completed.")
 
     if experiment_state.get("built_triagers"):
         logging.info("Starting triaging...")

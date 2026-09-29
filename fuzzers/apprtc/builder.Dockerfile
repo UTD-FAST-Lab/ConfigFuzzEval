@@ -21,22 +21,22 @@ RUN apt-get update && \
         libstdc++-$(gcc --version|head -n1|sed 's/\..*//'|sed 's/.* //')-dev
 
 # Download afl++.
-RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /aflplusplus && \
-    cd /aflplusplus && \
+RUN git clone -b dev https://github.com/AFLplusplus/AFLplusplus /apprtc && \
+    cd /apprtc && \
     git checkout 56d5aa3101945e81519a3fac8783d0d8fad82779 || \
     true
 
 # Build without Python support as we don't need it.
 # Set AFL_NO_X86 to skip flaky tests.
-RUN cd /aflplusplus && \
+RUN cd /apprtc && \
     unset CFLAGS CXXFLAGS && \
     export CC=clang AFL_NO_X86=1 && \
     PYTHON_INCLUDE=/ make
 
 # GENERAL
-ENV FUZZER_COMP=/aflplusplus/afl-clang-fast
-ENV FUZZER_COMPXX=/aflplusplus/afl-clang-fast++
-COPY run.sh /aflplusplus
-COPY coverage.py /aflplusplus
+ENV FUZZER_COMP=/apprtc/afl-clang-fast
+ENV FUZZER_COMPXX=/apprtc/afl-clang-fast++
+COPY run.sh /apprtc
+COPY coverage.py /apprtc
 
-CMD ["bash", "-c", "cp -r /aflplusplus /fuzzer_output/", "&&", "cp /aflplusplus/run.sh /fuzzer_output/ ", "&&", "cp /aflplusplus/coverage.py /fuzzer_output/"]
+CMD ["bash", "-c", "cp -r /apprtc /fuzzer_output/", "&&", "cp /apprtc/run.sh /fuzzer_output/ ", "&&", "cp /apprtc/coverage.py /fuzzer_output/"]

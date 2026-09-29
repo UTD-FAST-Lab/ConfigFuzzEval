@@ -23,7 +23,7 @@ tail -n +2 "$CONFIGS_FILE" | while IFS= read -r config; do
     # Insert configs before the @@ inside RUN_TARGET
     CMD=$(echo "$RUN_TARGET" | sed "s/@@/$config @@/")
 
-     /fuzzer/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-fuzz \
+     /fuzzer/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-fuzz \
         -i "$PREV_INPUT" \
         -o "$OUTPUT_DIR" \
         -V $TIMEOUT \

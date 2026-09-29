@@ -25,20 +25,20 @@ RUN apt install -y gettext libgpgmepp-dev libfontconfig-dev libfreetype-dev   li
 
 
 # setup LibAFL
-RUN git clone https://github.com/AFLplusplus/LibAFL.git /libafl
-WORKDIR /libafl
+RUN git clone https://github.com/AFLplusplus/LibAFL.git /alrtc
+WORKDIR /alrtc
 RUN cargo build --release
-WORKDIR /libafl/fuzzers/forkserver/libafl-fuzz/
+WORKDIR /alrtc/fuzzers/forkserver/libafl-fuzz/
 RUN cargo build 
-WORKDIR /libafl/fuzzers/forkserver/libafl-fuzz/test
+WORKDIR /alrtc/fuzzers/forkserver/libafl-fuzz/test
 RUN ./test.sh || true
 WORKDIR /
 
 # GENERAL
-ENV FUZZER_COMP=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast
-ENV FUZZER_COMPXX=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast++
-COPY run.sh /libafl
-COPY coverage.py /libafl
-RUN chmod +x /libafl/run.sh
+ENV FUZZER_COMP=/alrtc/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-clang-fast
+ENV FUZZER_COMPXX=/alrtc/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-clang-fast++
+COPY run.sh /alrtc
+COPY coverage.py /alrtc
+RUN chmod +x /alrtc/run.sh
 
-CMD ["bash", "-c", "cp -r /libafl /fuzzer_output/", "&&", "cp /libafl/run.sh /fuzzer_output/", "&&", "cp /libafl/coverage.py /fuzzer_output/"]
+CMD ["bash", "-c", "cp -r /alrtc /fuzzer_output/", "&&", "cp /alrtc/run.sh /fuzzer_output/", "&&", "cp /alrtc/coverage.py /fuzzer_output/"]

@@ -1,1 +1,1 @@
-/fuzzer/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-fuzz -i /benchmark/seed -o $OUT   -V $RUNTIME $RUN_TARGET 
+/fuzzer/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-fuzz -i /benchmark/seed -o $OUT   -V $RUNTIME $RUN_TARGET 

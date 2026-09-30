@@ -21,21 +21,21 @@ FROM $parent_image
 ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
 ARG CFLAGS=""
-
+ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+ENV AFL_SKIP_CPUFREQ=1
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
-
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
-    build-essential make autoconf libtool automake zlib1g zlib1g-dev libjbig0 libjbig-dev
-RUN apt install -y liblerc-dev zstd libwebp-dev libjpeg-dev libjpeg-turbo8-dev
+    build-essential make autoconf libtool automake \
+    zlib1g zlib1g-dev libjbig0 libjbig-dev \
+    zlib1g-dev libdeflate-dev liblerc-dev liblzma-dev \
+    libjbig-dev libwebp-dev libjpeg-dev libzstd-dev && \
+    rm -rf /var/lib/apt/lists/*
 RUN git clone https://gitlab.com/libtiff/libtiff.git /libtiff
-
 WORKDIR /libtiff
-
 COPY build.sh .
-
-RUN bash build.sh
+RUN bash build.sh || true
 
 # GENERAL
 # Copy supporting files to the docker image
@@ -47,6 +47,19 @@ COPY build.sh /
 COPY rt_grammar.json /
 COPY load_src.sh /
 
-# Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libtiff/tools/tiff2pdf /benchmark_out_dir/     && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/"]
-
+CMD ["bash", "-c", "mkdir -p /benchmark_out_dir/lib && \
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libzstd*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/liblzma*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libdeflate*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libjbig*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libLerc*.so* /benchmark_out_dir/lib/ || true && \
+    cp /rt_grammar.json /benchmark_out_dir/ && \
+    cp /build.sh /benchmark_out_dir/ && \
+    cp /ranked_stubs.txt /benchmark_out_dir/ && \
+    cp /dict /benchmark_out_dir/ && \
+    cp /run_target.sh /benchmark_out_dir/ && \
+    cp -r /seed /benchmark_out_dir/seed && \
+    cp -r /load_src.sh /benchmark_out_dir/ && \
+    cp -r /libtiff/tools/tiff2pdf /benchmark_out_dir/"]

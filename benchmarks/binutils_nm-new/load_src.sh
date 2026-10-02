@@ -4,13 +4,13 @@
 
 set -e
 
-# BINUTILS_URL="https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz"
+# BINUTILS_URL="https://ftpmirror.gnu.org/binutils/binutils-2.47.tar.xz"
 DOWNLOAD_DIR="/benchmark/source"
 
 # echo "Downloading binutils source code..."
 # wget $BINUTILS_URL 
-# tar -xf binutils-2.37.tar.xz -C /tmp
-# cp -r /tmp/binutils-2.37/. $DOWNLOAD_DIR
+# tar -xf binutils-2.47.tar.xz -C /tmp
+# cp -r /tmp/binutils-2.47/. $DOWNLOAD_DIR
 
 echo "Creating include directories file..."
 cat > "${DOWNLOAD_DIR}/include_dirs.txt" << EOF

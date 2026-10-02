@@ -1,0 +1,33 @@
+-a
+-A
+-B
+-C gnu-v3
+--no-demangle
+--recurse-limit
+--no-recurse-limit
+-D
+--defined-only
+-e
+-f bsd
+-g
+--ifunc-chars=[]
+-j
+-l
+-n
+-o
+-p
+-P
+-r
+-S
+-s
+--quiet
+--size-sort
+--special-syms
+--synthetic
+-t o
+--target=tekhex
+-u
+--with-symbol-versions
+-X 32_64
+-h
+-V

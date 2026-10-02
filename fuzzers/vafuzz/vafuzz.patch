@@ -1,0 +1,205 @@
+diff --git a/GNUmakefile b/GNUmakefile
+index 83316f5d..1b9beb23 100644
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -254,7 +254,7 @@ else
+ endif
+ 
+ ifneq "$(filter Linux GNU%,$(SYS))" ""
+-  override LDFLAGS += -ldl -lrt -lm -ljson-c -lgsl -lgslcblas -lm -I/usr/include/python3.11 -lpython3.11
++  override LDFLAGS += -ldl -lrt -lm -ljson-c -lgsl -lgslcblas -lm -I/usr/include/python3.10 -lpython3.10
+ endif
+ 
+ ifneq "$(findstring FreeBSD, $(SYS))" ""
+@@ -450,31 +450,31 @@ afl-as: src/afl-as.c include/afl-as.h $(COMM_HDR) | test_x86
+ 	@ln -sf afl-as as
+ 
+ src/afl-performance.o : $(COMM_HDR) src/afl-performance.c include/hash.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-performance.c -o src/afl-performance.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-performance.c -o src/afl-performance.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-hashmap.o : $(COMM_HDR) src/afl-hashmap.c include/afl-hashmap.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-hashmap.c -o src/afl-hashmap.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-hashmap.c -o src/afl-hashmap.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-z3.o : $(COMM_HDR) src/afl-z3.c include/afl-z3.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-z3.c -o src/afl-z3.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-z3.c -o src/afl-z3.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-presence-condition.o : $(COMM_HDR) src/afl-presence-condition.c include/afl-presence-condition.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-presence-condition.c -o src/afl-presence-condition.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-presence-condition.c -o src/afl-presence-condition.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-regression.o : $(COMM_HDR) src/afl-regression.c include/afl-regression.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-regression.c -o src/afl-regression.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-regression.c -o src/afl-regression.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-variability.o : $(COMM_HDR) src/afl-variability.c include/afl-variability.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-variability.c -o src/afl-variability.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-variability.c -o src/afl-variability.o -I/usr/include/python3.10 -lpython3.10
+ 	
+ src/afl-common.o : $(COMM_HDR) src/afl-common.c include/common.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-common.c -o src/afl-common.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-common.c -o src/afl-common.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-forkserver.o : $(COMM_HDR) src/afl-forkserver.c include/forkserver.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-forkserver.c -o src/afl-forkserver.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-forkserver.c -o src/afl-forkserver.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-sharedmem.o : $(COMM_HDR) src/afl-sharedmem.c include/sharedmem.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-sharedmem.c -o src/afl-sharedmem.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-sharedmem.c -o src/afl-sharedmem.o -I/usr/include/python3.10 -lpython3.10
+ 
+ afl-fuzz: $(COMM_HDR) include/afl-fuzz.h $(AFL_FUZZ_FILES) src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o src/afl-hashmap.o src/afl-z3.o src/afl-variability.o src/afl-presence-condition.o src/afl-regression.o | test_x86
+ 	$(CC) $(CFLAGS) $(COMPILE_STATIC) $(CFLAGS_FLTO) $(AFL_FUZZ_FILES) src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o src/afl-hashmap.o src/afl-z3.o src/afl-variability.o src/afl-presence-condition.o src/afl-regression.o -o $@ $(PYFLAGS) $(LDFLAGS) -lm
+diff --git a/py-src/z3-solver-generator.py b/py-src/z3-solver-generator.py
+index 31b982d9..4735c568 100644
+--- a/py-src/z3-solver-generator.py
++++ b/py-src/z3-solver-generator.py
+@@ -1,6 +1,20 @@
+ import json
++import keyword
++import re
+ import sys
+ 
++
++def py_ref(name):
++    if name.isidentifier() and not keyword.iskeyword(name):
++        return name
++    return f"globals()[{name!r}]"
++
++
++def choices_name(name):
++    if name.isidentifier() and not keyword.iskeyword(name):
++        return f"{name.capitalize()}Choices"
++    return "Opt" + re.sub(r"\W", "_", name) + "Choices"
++
+ def generate_z3_solver(grammar, output_filename):
+     """
+     Generates a Python file with Z3 declarations and constraints based on the input grammar.
+@@ -38,35 +52,35 @@ choice_dict = {} # <<<<<< Fill this manually
+ 
+             if opt_type == "bool":
+                 variables[opt_name] = f"Bool('{opt_name}')"
+-                declarations.append(f"{opt_name} = Bool('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Bool('{opt_name}')")
+ 
+             elif opt_type == "intnum":
+                 variables[opt_name] = f"Int('{opt_name}')"
+-                declarations.append(f"{opt_name} = Int('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Int('{opt_name}')")
+                 if "range" in option:
+                     low, high = option["range"]
+-                    constraints.append(f"    solver.add(And({opt_name} >= {low}, {opt_name} <= {high}))")
++                    constraints.append(f"    solver.add(And({py_ref(opt_name)} >= {low}, {py_ref(opt_name)} <= {high}))")
+                     lows[opt_name] = low
+                     highs[opt_name] = high
+ 
+             elif opt_type == "realnum":
+                 variables[opt_name] = f"Real('{opt_name}')"
+-                declarations.append(f"{opt_name} = Real('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Real('{opt_name}')")
+                 if "range" in option:
+                     low, high = option["range"]
+-                    constraints.append(f"    solver.add(And({opt_name} >= {low}, {opt_name} <= {high}))")
++                    constraints.append(f"    solver.add(And({py_ref(opt_name)} >= {low}, {py_ref(opt_name)} <= {high}))")
+                     lows[opt_name] = low
+                     highs[opt_name] = high
+ 
+             elif opt_type == "string":
+                 variables[opt_name] = f"String('{opt_name}')"
+-                declarations.append(f"{opt_name} = String('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = String('{opt_name}')")
+                 
+ 
+             elif opt_type == "choice":
+                 choices = option.get("choices", [])
+                 if choices:
+-                    datatype_name = f"{opt_name.capitalize()}Choices"
++                    datatype_name = choices_name(opt_name)
+                     datatype = f"Datatype('{datatype_name}')"
+                     declarations.append(f"{datatype_name} = {datatype}")
+                     for choice in choices:
+@@ -75,7 +89,8 @@ choice_dict = {} # <<<<<< Fill this manually
+                         declarations.append(f"{datatype_name}.declare('opt{choice}')")
+                     declarations.append(f"{datatype_name} = {datatype_name}.create()")
+                     variables[opt_name] = f"Const('{opt_name}', {datatype_name})"
+-                    declarations.append(f"{opt_name} = Const('{opt_name}', {datatype_name})")
++                    declarations.append(f"{py_ref(opt_name)} = Const('{opt_name}', {datatype_name})")
++                    declarations.append(f"choice_dict['{opt_name}'] = '{datatype_name}'")
+ 
+         # Handle conflict constraints
+         if "conflict" in grammar:
+@@ -83,7 +98,7 @@ choice_dict = {} # <<<<<< Fill this manually
+                 opt1 = conflict_pair[0].replace('--', '').replace('-', '')
+                 opt2 = conflict_pair[1].replace('--', '').replace('-', '')
+                 if opt1 in variables and opt2 in variables:
+-                    constraints.append(f"    solver.add(Or(Not({opt1}), Not({opt2})))")
++                    constraints.append(f"    solver.add(Or(Not({py_ref(opt1)}), Not({py_ref(opt2)})))")
+ 
+         # Handle depend constraints
+         if "depend" in grammar:
+@@ -93,7 +108,7 @@ choice_dict = {} # <<<<<< Fill this manually
+                 if opt in variables:
+                     depend_constraints = [variables[d.replace('--', '').replace('-', '')] for d in dependent_opts if d.replace('--', '').replace('-', '') in variables]
+                     if depend_constraints:
+-                        constraints.append(f"    solver.add(Implies({opt}, And({', '.join(depend_constraints)})))")
++                        constraints.append(f"    solver.add(Implies({py_ref(opt)}, And({', '.join(depend_constraints)})))")
+ 
+         # Write variable declarations
+         solver_file.write("# Variable declarations\n")
+@@ -941,6 +956,8 @@ def save_presence_condition(analyzed_feedback, is_negated=False, pc_vars={}, use
+                                                 is_negated=is_negated,
+                                                 pc_vars=pc_vars,
+                                                 use_pc_vars=use_pc_vars)
++    if pres_cond_str is None:
++        return
+     # pres_cond = Preseonce_Condition(energy, "somefilepath", pres_cond_str)
+     # print("Retrieved PC: " + pres_cond_str + " with energy: " + str(energy))
+     pres_cond = None
+@@ -1070,6 +1087,19 @@ def generate_presence_condition(config, is_negated=False, pc_vars={}, use_pc_var
+     # # print("BEFORE RET: " + pres_conds_str)
+     return pres_conds_str
+ 
++_generate_presence_condition_unchecked = generate_presence_condition
++
++
++def generate_presence_condition(config, *args, **kwargs):
++    # None when the config cannot be expressed as a z3 term.
++    try:
++        pres_conds_str = _generate_presence_condition_unchecked(config, *args, **kwargs)
++        if pres_conds_str is not None and pres_conds_str != "default_settings_for_all":
++            eval(pres_conds_str)
++        return pres_conds_str
++    except Exception:
++        return None
++
+ 
+ def save_presence_condition_data_info(analyzed_feedback, 
+                                       is_negated=False, 
+@@ -1083,6 +1113,8 @@ def save_presence_condition_data_info(analyzed_feedback,
+                                                 is_negated=is_negated,
+                                                 pc_vars=pc_vars,
+                                                 use_pc_vars=use_pc_vars)
++    if pres_cond_str is None:
++        return
+     # pres_cond = Preseonce_Condition(energy, "somefilepath", pres_cond_str)
+     # print("Retrieved PC: " + pres_cond_str + " with list: " + str(favoured_ls))
+     pres_cond = None
+@@ -1157,7 +1189,7 @@ def read_pq():
+             for idx, bit in enumerate(trace):
+                 if bit != 0:
+                     print("Bit: " + str(idx), end=" ")
+-            print("\n")
++            print("\\n")
+ 
+ 
+ def clear_pq():
+@@ -1179,6 +1211,7 @@ def main():
+     # configs_to_generate = int(sys.argv[2])
+     # save_presence_condition(("-a -b", 10))
+     clear_pq()
++    clear_data_info()
+     # save_pq()
+     # save_pq_2()
+     # read_pq()

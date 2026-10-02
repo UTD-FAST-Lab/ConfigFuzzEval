@@ -1,5 +1,5 @@
 {
-    "cmdline":  "$inopts",
+    "cmdline":  "$inopts $INPUTFILE",
     "connector": "=",
     "strmax":   3,
     "options":  [

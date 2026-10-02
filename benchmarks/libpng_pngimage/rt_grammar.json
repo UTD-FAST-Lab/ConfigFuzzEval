@@ -3,9 +3,88 @@
     "connector": "=",
     "strmax": 3,
     "options": [
+        {
+            "opt": "--verbose",
+            "type": "bool"
+        },
+        {
+            "opt": "--warnings",
+            "type": "bool"
+        },
+        {
+            "opt": "--errors",
+            "type": "bool"
+        },
+        {
+            "opt": "--quiet",
+            "type": "bool"
+        },
+        {
+            "opt": "--exhaustive",
+            "type": "bool"
+        },
+        {
+            "opt": "--fast",
+            "type": "bool"
+        },
+        {
+            "opt": "--strict",
+            "type": "bool"
+        },
+        {
+            "opt": "--relaxed",
+            "type": "bool"
+        },
+        {
+            "opt": "--log",
+            "type": "bool"
+        },
+        {
+            "opt": "--nolog",
+            "type": "bool"
+        },
+        {
+            "opt": "--continue",
+            "type": "bool"
+        },
+        {
+            "opt": "--stop",
+            "type": "bool"
+        },
+        {
+            "opt": "--skip-bugs",
+            "type": "bool"
+        },
+        {
+            "opt": "--test-all",
+            "type": "bool"
+        },
+        {
+            "opt": "--log-skipped",
+            "type": "bool"
+        },
+        {
+            "opt": "--nolog-skipped",
+            "type": "bool"
+        },
+        {
+            "opt": "--find-bad-combos",
+            "type": "bool"
+        },
+        {
+            "opt": "--nofind-bad-combos",
+            "type": "bool"
+        },
+        {
+            "opt": "--list-combos",
+            "type": "bool"
+        },
+        {
+            "opt": "--nolist-combos",
+            "type": "bool"
+        }
     ],
     "depend": [],
-    "conflict": [
-    ],
+    "conflict": [],
     "maxcombs": 3
 }

@@ -1,1 +1,1 @@
-/benchmark/file -m /usr/share/misc/magic @@
+/benchmark/file -m /benchmark/magic.mgc @@

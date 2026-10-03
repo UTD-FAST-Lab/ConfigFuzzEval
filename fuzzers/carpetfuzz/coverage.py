@@ -30,10 +30,11 @@ def main():
     if not ranked_stubs_file.is_file():
         raise RuntimeError(f"{ranked_stubs_file} not found")
 
-    argv_lines = []
+    # First line is the number of commands; afl-fuzz numbers the commands that
+    # follow from 0 (argv:000000 is the first command, not the count line).
     with open(ranked_stubs_file, "r") as f:
-        for line in f:
-            argv_lines.append(line.strip())
+        lines = [line.strip() for line in f]
+    argv_lines = [line for line in lines[1:int(lines[0]) + 1] if line]
 
     # -------------------------------
     # Process each queue file
@@ -46,10 +47,8 @@ def main():
 
         # Extract argv number from filename
         match = re.search(r'argv:(\d+)', seed.name)
-        if not match:
-            print(f"[!] Cannot parse argv from {seed.name}, skipping...")
-            continue
-        argv_num = int(match.group(1))
+        # Initial seeds have no argv tag; afl-fuzz runs them with the first command.
+        argv_num = int(match.group(1)) if match else 0
 
         if argv_num >= len(argv_lines):
             print(f"[!] argv {argv_num} out of range, skipping {seed.name}...")
@@ -107,7 +106,10 @@ def main():
     try:
         with open(report_json, "w") as f:
             subprocess.run(
-                ["llvm-cov", "export", run_target.split()[0], f"-instr-profile={merged_profdata}"],
+                ["llvm-cov", "export", run_target.split()[0], f"-instr-profile={merged_profdata}",
+                 # Only per-file line data is used (common/report_generation.py); without
+                 # these, the export can need tens of GB of RAM (pcre2: ~56 GB).
+                 "-skip-expansions", "-skip-functions"],
                 check=True,
                 stdout=f
             )

@@ -1,0 +1,20 @@
+#!/bin/bash
+# Compiler wrapper for ConfigFuzz: afl-clang-fast, plus the main hook (cf_hook.o)
+# when linking an executable. Installed as configfuzz-cc and configfuzz-c++.
+case "$(basename "$0")" in
+    *++) COMPILER=/configfuzz/afl/afl-clang-fast++ ;;
+    *)   COMPILER=/configfuzz/afl/afl-clang-fast ;;
+esac
+
+link=1
+[ $# -eq 0 ] && link=0
+for arg in "$@"; do
+    case "$arg" in
+        -c|-S|-E|-M|-MM|-shared|-r|--version|-v|-V|-qversion|-print-*|--print-*|-dumpversion|-dumpmachine) link=0 ;;
+    esac
+done
+
+if [ $link -eq 1 ]; then
+    exec "$COMPILER" "$@" -Wl,--wrap=main -Wl,/configfuzz/cf_hook.o
+fi
+exec "$COMPILER" "$@"

@@ -1,11 +1,11 @@
 10
-ffmpeg -vcodec hevc -b:v 45000000 -acodec flac -ar 44100 -ac 2 -scodec ass -aspect 16:9 -r 30 -t 3600 -f @@
-ffmpeg -vcodec vp9 -acodec opus -scodec webvtt -aspect 16:9 -fs 52428800 -f @@
-ffmpeg -vcodec h264 -acodec aac -scodec subrip -b:a 200000 -pass 2 -apad -f @@
-ffmpeg -an -sn -vcodec mpeg4 -vframes 216000 -bits_per_raw_sample 16 -dn -f @@
-ffmpeg -vn -sn -acodec mp3 -vol 256 -aframes 176947200 -f @@
-ffmpeg -target svcd -r 30 -fix_sub_duration -ss 3600 -f @@
-ffmpeg -target pal-vcd -reinit_filter -discard -f @@
-ffmpeg -vcodec copy -acodec copy -scodec copy -dn -to 3600 -f @@
-ffmpeg -target ntsc-vcd -sseof 3600 -f @@
-ffmpeg -target film-vcd -f @@
+ffmpeg -i @@ -vcodec hevc -b:v 45000000 -acodec flac -ar 44100 -ac 2 -scodec ass -aspect 16:9 -r 30 -t 3600 -f null -
+ffmpeg -i @@ -vcodec vp9 -acodec opus -scodec webvtt -aspect 16:9 -fs 52428800 -f null -
+ffmpeg -i @@ -vcodec h264 -acodec aac -scodec subrip -b:a 200000 -pass 2 -apad -f null -
+ffmpeg -i @@ -an -sn -vcodec mpeg4 -vframes 216000 -bits_per_raw_sample 16 -dn -f null -
+ffmpeg -i @@ -vn -sn -acodec mp3 -vol 256 -aframes 176947200 -f null -
+ffmpeg -i @@ -target svcd -r 30 -fix_sub_duration -ss 3600 -f null -
+ffmpeg -i @@ -target pal-vcd -reinit_filter -discard -f null -
+ffmpeg -i @@ -vcodec copy -acodec copy -scodec copy -dn -to 3600 -f null -
+ffmpeg -i @@ -target ntsc-vcd -sseof 3600 -f null -
+ffmpeg -i @@ -target film-vcd -f null -

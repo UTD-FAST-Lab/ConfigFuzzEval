@@ -37,8 +37,16 @@ RUN git clone https://github.com/UTD-FAST-Lab/VAFuzz /vafuzz
 # VAFuzz is based on AFL++ 4.09a, whose LLVM passes do not compile against the
 # base image's LLVM 18 (and afl-cc passes -fexperimental-new-pass-manager,
 # which clang 18 rejects), so build it against LLVM 15 instead.
-# vafuzz.patch: fixes in VAFuzz's z3 solver generator, and links afl-fuzz
-# against python3.10, which (unlike python3.11) exists in the fbpp/runner image.
+# vafuzz.patch:
+#  - links afl-fuzz against python3.10, which (unlike python3.11) exists in
+#    the fbpp/runner image;
+#  - fixes crashes in the z3 solver generator and its config generation
+#    (generated scripts that did not parse, option names that are not Python
+#    identifiers, non-Boolean constraints, exit(1) on a short queue, KMeans
+#    on a single trace);
+#  - fixes the target runtime crashing on an empty options file (config.seed);
+#  - fixes heap corruption in argv_havoc (resizing mutations on the fixed-size
+#    options bitmap, and clobbering the interrupted stage's counters).
 COPY vafuzz.patch /tmp/vafuzz.patch
 RUN cd /vafuzz && git checkout f222b77a769100b2d86c9c20ef1f1858b76d5523 && \
     git apply /tmp/vafuzz.patch && \

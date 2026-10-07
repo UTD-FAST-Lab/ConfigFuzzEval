@@ -13,6 +13,9 @@ Section 5.1.2), also used for the sampling baselines of VAFuzz (ICSE 2026):
   - every non-bool option can also be absent.
 Choice values that are empty or contain whitespace are left out: the runner passes a
 configuration to the fuzzer as one RUN_TARGET string, which would split them.
+Options listed in the grammar's "exit_options" are never sampled: with them the
+target exits (help, version, listings, ...) without processing its input, so a
+configuration containing one cannot be fuzzed.
 """
 
 import random
@@ -60,7 +63,10 @@ class Grammar:
         self.rng = rng
         self.options = []
         self.values = []
+        exit_options = set(grammar.get("exit_options", []))
         for opt in grammar["options"]:
+            if opt["opt"] in exit_options:
+                continue
             vals = option_values(opt, rng)
             if vals is not None:
                 self.options.append(opt)
@@ -107,11 +113,16 @@ class Grammar:
             if opt["type"] == "bool":
                 opts.append(opt["opt"])
             elif self.grammar["connector"] == " ":
-                opts += [opt["opt"], str(value)]
+                if opt.get("connector", " ") == " ":
+                    opts += [opt["opt"], str(value)]
+                else:  # e.g. pcre2test's "--color=always"
+                    opts.append(f'{opt["opt"]}{opt["connector"]}{value}')
             elif re.fullmatch(r"-[A-Za-z0-9]", opt["opt"]):
                 # Single-letter option: getopt takes its value attached ("-T2", "-WU");
                 # "-T=2" would pass "=2" as the value, and an optional value must be attached.
                 opts.append(f'{opt["opt"]}{value}')
+            elif opt.get("connector") == " ":
+                opts += [opt["opt"], str(value)]
             else:
                 opts.append(f'{opt["opt"]}{self.grammar["connector"]}{value}')
         args = []

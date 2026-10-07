@@ -1,5 +1,6 @@
 {
     "cmdline": "$inopts -m /benchmark/magic.mgc $INPUTFILE",
+    "exit_options": ["-v"],
     "connector": " ",
     "strmax": 3,
     "options": [

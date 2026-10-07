@@ -134,6 +134,10 @@ How a run works:
 Results are stored as `<fuzzer>_rts_<strategy>_<benchmark>_trial_<k>` (default runs keep their
 usual names) and are reported as `<fuzzer>[<strategy>]`.
 
+Options listed in a grammar's `exit_options` are never used by the strategies: with them the
+target exits without processing its input (help, version, listings, or a schema/DTD file that
+does not exist), so every configuration containing one would fuzz nothing.
+
 To add a strategy, add `runtime/<name>/strategy.py` with a `request_configurations(grammar, rng)`
 function that returns a list of argument lists (see `runtime/rt_common.py`). To support another
 fuzzer, add it to `runtime/supported_fuzzers.json` with the folder its corpus is written to, and

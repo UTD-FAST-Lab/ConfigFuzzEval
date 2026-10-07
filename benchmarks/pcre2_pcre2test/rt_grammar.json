@@ -1,5 +1,6 @@
 {
     "cmdline": "$inopts $INPUTFILE",
+    "exit_options": ["-help", "-v", "-unittest", "-C", "-error", "-LM", "-LP", "-LS"],
     "connector": " ",
     "strmax": 3,
     "options": [
@@ -116,13 +117,13 @@
         {
             "opt": "-t",
             "type": "intnum",
-            "range": [0, 10000],
+            "range": [1, 10000],
             "connector": " "
         },
         {
             "opt": "-tm",
             "type": "intnum",
-            "range": [0, 10000],
+            "range": [1, 10000],
             "connector": " "
         },
         {

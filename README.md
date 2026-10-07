@@ -76,7 +76,7 @@ Flags:
 
 - `--config`: path to the configuration file from step 1.
 - `--experiment-name`: name of this run. Results are stored under `<experiment_filestore>/EXP_NAME`. Use a new name for every run; the run stops if a folder with that name already exists.
-- `--fuzzers`: list of fuzzers to run. Each name must match a folder name in `fuzzers/` (aflplusplus, carpetfuzz, configfuzz, libafl, libfuzzer, libfuzzer_aflpp, libfuzzer_libafl, prophetfuzz, vafuzz, zigzagfuzz).
+- `--fuzzers`: list of fuzzers to run. Each name must match a folder name in `fuzzers/` (aflplusplus, carpetfuzz, configfuzz, libafl, prophetfuzz, vafuzz, zigzagfuzz).
 - `--benchmarks`: list of benchmarks to run. Each name must match a folder name in `benchmarks/` (for example `libxml2_xmllint`).
 - `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, manual, maximum, minimum, pairwise, randomsmart). Optional; if left out, only `default` is used.
 - `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, pairwise, random, mostenabled, mostdisabled, diversity). Optional; if left out, only `default` is used. See "Runtime strategies" below.
@@ -92,8 +92,8 @@ Example that runs every fuzzer on every benchmark with every compile-time strate
 python3 common/run_experiment.py \
   --config config.yaml \
   --experiment-name EXP_NAME \
-  --fuzzers aflplusplus carpetfuzz libafl libfuzzer libfuzzer_aflpp libfuzzer_libafl zigzagfuzz \
-  --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_libfuzzerrunner libpng_pngimage libtiff_libfuzzerrunner libtiff_tiff2pdf libxml2_libfuzzerrunner libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
+  --fuzzers aflplusplus carpetfuzz configfuzz libafl prophetfuzz vafuzz zigzagfuzz \
+  --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_pngimage libtiff_tiff2pdf libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
   --compiletime default manual maximum minimum pairwise randomsmart \
   --runtime-strategy default pairwise random mostenabled mostdisabled diversity \
   --bug-triaging afl-collect \

@@ -2,133 +2,83 @@
   "name": "libpng_pngimage",
   "options": [
     {
-      "name": "tests",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-tests",
-      "conflicts": []
-    },
-    {
       "name": "tools",
       "type": "bool",
       "default": true,
-      "cli": "--enable-tools",
-      "conflicts": []
-    },
-    {
-      "name": "werror",
-      "type": "value",
-      "default": null,
-      "cli": "--enable-werror",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "unversioned-links",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-links",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "unversioned-libpng-pc",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-libpng-pc",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "unversioned-libpng-config",
       "type": "bool",
       "default": true,
-      "cli": "--enable-unversioned-libpng-config",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "hardware-optimizations",
       "type": "bool",
       "default": false,
-      "cli": "--enable-hardware-optimizations",
-      "conflicts": []
-    },
-    {
-      "name": "zlib-prefix",
-      "type": "value",
-      "default": null,
-      "cli": "--with-zlib-prefix",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "pkgconfigdir",
-      "type": "value",
+      "type": "choice",
       "default": "libdir/pkgconfig",
-      "cli": "--with-pkgconfigdir",
-      "conflicts": []
+      "cli": "with",
+      "choices": [
+        "libdir/pkgconfig"
+      ]
     },
     {
       "name": "binconfigs",
-      "type": "value",
-      "default": "yes",
-      "cli": "--with-binconfigs",
-      "conflicts": []
-    },
-    {
-      "name": "libpng-prefix",
-      "type": "value",
-      "default": null,
-      "cli": "--with-libpng-prefix",
-      "conflicts": []
-    },
-    {
-      "name": "shared",
       "type": "bool",
       "default": true,
-      "cli": "--enable-shared",
-      "conflicts": []
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-static",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "fast-install",
-      "type": "value",
-      "default": "yes",
-      "cli": "--enable-fast-install",
-      "conflicts": []
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
     },
     {
       "name": "libtool-lock",
       "type": "bool",
       "default": true,
-      "cli": "--enable-libtool-lock",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "pic",
       "type": "bool",
       "default": true,
-      "cli": "--with-pic",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "dependency-tracking",
       "type": "bool",
       "default": true,
-      "cli": "--enable-dependency-tracking",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "silent-rules",
       "type": "bool",
       "default": true,
-      "cli": "--enable-silent-rules",
-      "conflicts": []
+      "cli": "enable"
     }
   ],
-  "removed_options": [
+  "constraints": [],
+  "removed": [
     {
       "name": "intel-sse",
       "type": "bool",
@@ -139,7 +89,11 @@
     {
       "name": "aix-soname",
       "type": "enum",
-      "values": ["aix","svr4","both"],
+      "values": [
+        "aix",
+        "svr4",
+        "both"
+      ],
       "default": "aix",
       "cli": "--enable-aix-soname",
       "conflicts": []
@@ -185,6 +139,71 @@
       "default": false,
       "cli": "--enable-riscv-rvv",
       "conflicts": []
+    },
+    {
+      "name": "werror",
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "werror",
+        "type": "value",
+        "default": null,
+        "cli": "--enable-werror",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "zlib-prefix",
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "zlib-prefix",
+        "type": "value",
+        "default": null,
+        "cli": "--with-zlib-prefix",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "libpng-prefix",
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "libpng-prefix",
+        "type": "value",
+        "default": null,
+        "cli": "--with-libpng-prefix",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "shared",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "shared",
+        "type": "bool",
+        "default": true,
+        "cli": "--enable-shared",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "static",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "static",
+        "type": "bool",
+        "default": true,
+        "cli": "--enable-static",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "tests",
+      "reason": "pngimage is one of libpng's test programs: --disable-tests leaves the benchmark target without its sources",
+      "old": {
+        "name": "tests",
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     }
   ]
 }

@@ -46,3 +46,7 @@ def request_configurations(grammar_file):
         return [""]
     elif benchmark_name == "x264_x264":
         return [""]
+    elif benchmark_name == "ffmpeg_ffmpeg":
+        return [""]
+    # No manual configuration for this benchmark: build with build.sh's own flags only.
+    return [""]

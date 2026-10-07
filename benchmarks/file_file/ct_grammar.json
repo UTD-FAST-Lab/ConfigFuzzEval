@@ -5,65 +5,71 @@
       "name": "elf",
       "type": "bool",
       "default": true,
-      "cli": "--enable-elf",
+      "cli": "enable",
       "desc": "disable builtin ELF support"
     },
     {
       "name": "zlib",
       "type": "bool",
       "default": true,
-      "cli": "--enable-zlib",
+      "cli": "enable",
       "desc": "disable zlib compression support"
     },
     {
       "name": "bzlib",
       "type": "bool",
       "default": true,
-      "cli": "--enable-bzlib",
+      "cli": "enable",
       "desc": "disable bz2lib compression support"
     },
     {
       "name": "xzlib",
       "type": "bool",
       "default": true,
-      "cli": "--enable-xzlib",
+      "cli": "enable",
       "desc": "disable liblzma/xz compression support"
     },
     {
       "name": "fsect-man5",
       "type": "bool",
       "default": false,
-      "cli": "--enable-fsect-man5",
+      "cli": "enable",
       "desc": "enable file formats in man section 5"
     },
     {
       "name": "warnings",
       "type": "bool",
       "default": true,
-      "cli": "--enable-warnings",
+      "cli": "enable",
       "desc": "enable compiler warnings"
     },
     {
       "name": "silent-rules",
       "type": "bool",
       "default": true,
-      "cli": "--enable-silent-rules",
+      "cli": "enable",
       "desc": "less verbose build output (undo: \"make V=1\")"
     },
     {
       "name": "dependency-tracking",
       "type": "bool",
       "default": true,
-      "cli": "--enable-dependency-tracking",
+      "cli": "enable",
       "desc": "do not reject slow dependency extractors"
     },
     {
       "name": "fast-install",
       "type": "bool",
       "default": true,
-      "cli": "--enable-fast-install",
+      "cli": "enable",
       "desc": "optimize for fast installation"
     }
   ],
-  "removed": ["--enable-elf-core","--enable-zstdlib,lzlib,lrziplib,libseccomp","--disable-shared", "--enable-static", "--enable-year2038"]
+  "removed": [
+    "--enable-elf-core",
+    "--enable-zstdlib,lzlib,lrziplib,libseccomp",
+    "--disable-shared",
+    "--enable-static",
+    "--enable-year2038"
+  ]
 }

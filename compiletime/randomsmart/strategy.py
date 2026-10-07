@@ -214,10 +214,48 @@ def generate_random_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
             config[opt["name"]] = random.choice([True, False])
         elif opt["type"] == "str":
             config[opt["name"]] = "/usr"  # default string value
+        elif opt["type"] == "choice":  # current grammar format
+            config[opt["name"]] = random.choice(opt["choices"])
         else:
             config[opt["name"]] = None  # unknown type fallback
 
     return config
+
+
+# --- Current grammar format -------------------------------------------------
+# Options have type bool/choice and "cli" is a prefix ("enable"/"with"); rules are in
+# a top-level "constraints" list. Flags are formatted like compiletime/maximum and
+# constraints are interpreted like compiletime/pairwise.
+
+def is_prefix_cli(opt: Dict[str, Any]) -> bool:
+    return opt.get("cli") in ("enable", "with")
+
+
+def constraint_holds(config: Dict[str, Any], grammar: Dict[str, Any], rule: Dict[str, Any]) -> bool:
+    """Whether one condition {"opt", "val", optional "choice": "=="/"!="} holds."""
+    opt = next((o for o in grammar["options"] if o["name"] == rule["opt"]), None)
+    if opt is None:
+        return True  # rule about an option that is not in the grammar
+    val, op, cur = rule.get("val"), rule.get("choice"), config.get(rule["opt"])
+    if opt["type"] == "bool":
+        return (cur is True) == (val is True)
+    if op is None and isinstance(val, bool):
+        return val  # presence check: a choice option is always set
+    same = str(cur) == str(val)
+    return not same if op == "!=" else same
+
+
+def check_grammar_constraints(config: Dict[str, Any], grammar: Dict[str, Any]) -> bool:
+    for rule in grammar.get("constraints", []):
+        if not constraint_holds(config, grammar, rule):
+            continue
+        for then in rule.get("then", []):
+            if "or" in then:
+                if not any(constraint_holds(config, grammar, alt) for alt in then["or"]):
+                    return False
+            elif not constraint_holds(config, grammar, then):
+                return False
+    return True
 
 
 def generate_n_valid_random_configs(grammar: Dict[str, Any], n: int = 10) -> List[Dict[str, Any]]:
@@ -225,7 +263,8 @@ def generate_n_valid_random_configs(grammar: Dict[str, Any], n: int = 10) -> Lis
     random_valid_configs = []
     for i in range(VERY_LARGE_LIMIT):
         config = generate_random_config(grammar)
-        if check_valid_config(config, grammar) and check_meta_constraints(config, grammar):
+        if check_valid_config(config, grammar) and check_meta_constraints(config, grammar) \
+                and check_grammar_constraints(config, grammar):
             random_valid_configs.append(config)
             if len(random_valid_configs) >= n:
                 break
@@ -233,6 +272,11 @@ def generate_n_valid_random_configs(grammar: Dict[str, Any], n: int = 10) -> Lis
 
 
 def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
+    if is_prefix_cli(opt):  # current grammar format, formatted like compiletime/maximum
+        style, name = opt["cli"], opt["name"]
+        if isinstance(val, bool):
+            return f"--{style}-{name}" if val else f"--{'disable' if style == 'enable' else 'without'}-{name}"
+        return f"--{style}-{name}={val}" if val not in (None, "") else ""
     if opt["type"] == "bool":
         if val:
             return opt["cli"]

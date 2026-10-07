@@ -60,3 +60,6 @@ configuration.yaml
 config.yaml
 # Local run logs and analysis reports
 logs-reports/
+
+# Local work kept out of git (e.g. the original aflplusplus_2w prototype)
+uncommitted/

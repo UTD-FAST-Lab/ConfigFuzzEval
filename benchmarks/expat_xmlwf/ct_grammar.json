@@ -2,136 +2,156 @@
   "name": "expat_xmlwf",
   "options": [
     {
-      "name": "static",
-      "type": "value",
-      "default": "yes",
-      "cli": "--enable-static",
-      "conflicts": []
-    },
-    {
-      "name": "shared",
-      "type": "value",
-      "default": "yes",
-      "cli": "--enable-shared",
-      "conflicts": []
-    },
-    {
       "name": "fast-install",
-      "type": "value",
-      "default": "yes",
-      "cli": "--enable-fast-install",
-      "conflicts": []
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
     },
     {
       "name": "libtool-lock",
       "type": "bool",
       "default": true,
-      "cli": "--enable-libtool-lock",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "maintainer-mode",
       "type": "bool",
       "default": true,
-      "cli": "--enable-maintainer-mode",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "dependency-tracking",
       "type": "bool",
       "default": true,
-      "cli": "--enable-dependency-tracking",
-      "conflicts": []
+      "cli": "enable"
     },
     {
       "name": "examples",
       "type": "bool",
       "default": true,
-      "cli": "--with-examples",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "tests",
       "type": "bool",
       "default": true,
-      "cli": "--with-tests",
-      "conflicts": []
-    },
-    {
-      "name": "xml-attr-info",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-xml-attr-info",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "xml-context",
-      "type": "value",
+      "type": "choice",
       "default": "1024",
-      "cli": "--enable-xml-context",
-      "conflicts": []
+      "cli": "enable",
+      "choices": [
+        "1024"
+      ]
     },
     {
       "name": "pic",
-      "type": "value",
+      "type": "choice",
       "default": "both",
-      "cli": "--with-pic",
-      "conflicts": []
+      "cli": "with",
+      "choices": [
+        "both"
+      ]
     },
     {
       "name": "aix-soname",
-      "type": "enum",
-      "values": [
+      "type": "choice",
+      "default": "aix",
+      "cli": "with",
+      "choices": [
         "aix",
         "svr4",
         "both"
-      ],
-      "default": "aix",
-      "cli": "--with-aix-soname",
-      "conflicts": []
+      ]
     },
     {
       "name": "gnu-ld",
       "type": "bool",
       "default": false,
-      "cli": "--with-gnu-ld",
-      "conflicts": []
-    },
-    {
-      "name": "sysroot",
-      "type": "value",
-      "default": null,
-      "cli": "--with-sysroot",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "libbsd",
       "type": "bool",
       "default": false,
-      "cli": "--with-libbsd",
-      "conflicts": []
+      "cli": "with"
     },
     {
       "name": "getrandom",
-      "type": "value",
+      "type": "choice",
       "default": "check",
-      "cli": "--with-getrandom",
-      "conflicts": []
+      "cli": "with",
+      "choices": [
+        "check"
+      ]
     },
     {
       "name": "sys-getrandom",
-      "type": "value",
+      "type": "choice",
       "default": "check",
-      "cli": "--with-sys-getrandom",
-      "conflicts": []
+      "cli": "with",
+      "choices": [
+        "check"
+      ]
+    }
+  ],
+  "constraints": [],
+  "removed": [
+    {
+      "name": "static",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "static",
+        "type": "value",
+        "default": "yes",
+        "cli": "--enable-static",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "shared",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "shared",
+        "type": "value",
+        "default": "yes",
+        "cli": "--enable-shared",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "sysroot",
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "sysroot",
+        "type": "value",
+        "default": null,
+        "cli": "--with-sysroot",
+        "conflicts": []
+      }
     },
     {
       "name": "docbook",
-      "type": "value",
-      "default": "check",
-      "cli": "--with-docbook",
-      "conflicts": []
+      "reason": "set by build.sh",
+      "old": {
+        "name": "docbook",
+        "type": "value",
+        "default": "check",
+        "cli": "--with-docbook",
+        "conflicts": []
+      }
+    },
+    {
+      "name": "xml-attr-info",
+      "reason": "configure: error: Feature --enable-xml-attr-info has been removed (this expat version)",
+      "old": {
+        "name": "xml-attr-info",
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     }
-  ],
-  "removed_options": []
+  ]
 }

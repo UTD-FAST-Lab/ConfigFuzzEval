@@ -1,0 +1,5 @@
+{
+  "_comment": "Fuzzers that can run with a non-default --runtime-strategy, and the folder (relative to $OUT) where each writes its corpus; runtime/multi_config_run.sh carries it from one configuration to the next. Their run.sh must take seeds from ${SEED_DIR:-/benchmark/seed}.",
+  "aflplusplus": {"corpus_dir": "default/queue"},
+  "libafl": {"corpus_dir": "default/queue"}
+}

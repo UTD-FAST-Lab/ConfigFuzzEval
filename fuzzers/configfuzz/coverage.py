@@ -117,9 +117,10 @@ def main():
         with open(report_json, "w") as f:
             subprocess.run(
                 ["llvm-cov", "export", target_binary, f"-instr-profile={merged_profdata}",
-                 # Only per-file line data is used (common/report_generation.py); without
-                 # these, the export can need tens of GB of RAM (pcre2: ~56 GB).
-                 "-skip-expansions", "-skip-functions"],
+                 # LCOV, like every fuzzer: read by common/report_generation.py and the
+                 # SuperC analysis (cfg-analysis/). Unlike the JSON export it stays small
+                 # (pcre2: 71 MB of RAM instead of ~56 GB).
+                 "-format=lcov"],
                 check=True,
                 stdout=f
             )

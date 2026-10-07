@@ -58,7 +58,7 @@ def allocate_cpu_resources(experiment_state):
     
     # Check if serial execution is necessary
     serial_execs = needs_serial_execution(
-                        len(experiment_state["fuzzer_benchmark_pairs"]) * 
+                        len(experiment_state.get("run_pairs", experiment_state["fuzzer_benchmark_pairs"])) * 
                         experiment_state["trials"],
                         experiment_state["cores_to_use"]
                         )
@@ -83,7 +83,7 @@ def allocate_cpu_resources(experiment_state):
         experiment_state["estimated_tot_time_hours"] = \
             experiment_state["max_total_time"] / 3600
         experiment_state["cores_used_at_a_time"] = \
-            len(experiment_state["fuzzer_benchmark_pairs"]) * experiment_state["trials"]
+            len(experiment_state.get("run_pairs", experiment_state["fuzzer_benchmark_pairs"])) * experiment_state["trials"]
 
     experiment_state["serial_executions"] = serial_execs
     experiment_state["cores_range"] = (core_start, os.cpu_count() - 1)

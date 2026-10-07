@@ -2,22 +2,40 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_superc
+from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_superc, run_label
 from color_logger import get_logger
 from resource_allocation import allocate_resources
-from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers
+from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies
+from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
 import pickle, shutil
 
+def run_strategies(experiment_state, fuzzer):
+    """Runtime strategies a fuzzer runs with: default, plus the others if it supports them."""
+    if fuzzer not in experiment_state["rt_supported_fuzzers"]:
+        return ["default"]
+    return experiment_state["runtime_strategies"]
+
+
+def run_pairs(experiment_state):
+    """Result names "<run label>_<benchmark>" of every fuzzer x runtime strategy x benchmark."""
+    pairs = []
+    for benchmark, fuzzers in experiment_state["built_benchmarks"].items():
+        for fuzzer in fuzzers:
+            for rts in run_strategies(experiment_state, fuzzer):
+                pairs.append(f"{run_label(fuzzer, rts)}_{benchmark}")
+    return pairs
+
+
 def aggregate_results(experiment_state):
     logging = get_logger(__name__)
     experiment_path = experiment_state["experiment_path"]
     data_storage = os.path.join(experiment_path, "data")
     trials = experiment_state["trials"]
-    fuzzer_benchmark_pairs = experiment_state["fuzzer_benchmark_pairs"]
+    fuzzer_benchmark_pairs = experiment_state["run_pairs"]
     
     for trail_num in range(trials):
         # Get the result, put it in config id 0
@@ -75,12 +93,40 @@ def run_experiments(experiment_state):
     logging.info(f"Core range: {core_range}, using up to {max_workers} workers")
 
     # --- Collect tasks ---
+    # Every fuzzer runs with the default runtime strategy; fuzzers listed in
+    # runtime/supported_fuzzers.json also run once per other runtime strategy,
+    # reusing the same benchmark build.
     tasks = []
     for benchmark in built_benchmarks:
         tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
+        base_benchmark = experiment_state["base_benchmarks"].get(benchmark, benchmark)
         for fuzzer in built_benchmarks[benchmark]:
-            for trial_id in range(experiment_state["trials"]):
-                tasks.append((fuzzer, benchmark, trial_id, tot_cts_count))
+            for rts in run_strategies(experiment_state, fuzzer):
+                for trial_id in range(experiment_state["trials"]):
+                    rt_config_file = experiment_state["rt_configs"].get((rts, base_benchmark, trial_id))
+                    tasks.append((fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file))
+
+    def submit(executor, task, core_id):
+        fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file = task
+        logging.info(f"[START] {run_label(fuzzer, rts)} on {benchmark}, trial {trial_id}, core {core_id}")
+        return executor.submit(
+            run_benchmark,
+            fuzzer,
+            benchmark,
+            coverage_binaries[benchmark],
+            experiment_state["report_path"],
+            experiment_state["max_total_time"],
+            experiment_state["trials"],
+            trial_id,
+            experiment_state["experiment_path"],
+            core_id,
+            data_storage,
+            experiment_state["total_memory_needed_gb"],
+            tot_cts_count,
+            rts,
+            rt_config_file,
+            experiment_state["min_config_time"],
+        )
 
     # --- Initialize executor ---
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -89,59 +135,29 @@ def run_experiments(experiment_state):
 
         # Start initial batch
         for _ in range(min(max_workers, len(tasks))):
-            fuzzer, benchmark, trial_id, tot_cts_count = tasks.pop(0)
+            task = tasks.pop(0)
             core_id = next(core_cycle)
-            future = executor.submit(
-                run_benchmark,
-                fuzzer,
-                benchmark,
-                coverage_binaries[benchmark],
-                experiment_state["report_path"],
-                experiment_state["max_total_time"],
-                experiment_state["trials"],
-                trial_id,
-                experiment_state["experiment_path"],
-                core_id,
-                data_storage,
-                experiment_state["total_memory_needed_gb"],
-                tot_cts_count
-            )
-            running[future] = (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
-            logging.info(f"[START] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+            running[submit(executor, task, core_id)] = (task, core_id)
 
         # As tasks finish, schedule new ones on the freed core
         while running:
             for finished_future in as_completed(list(running.keys()), timeout=None):
-                fuzzer, benchmark, trial_id, core_id, tot_cts_count = running.pop(finished_future)
+                task, core_id = running.pop(finished_future)
+                fuzzer, rts, benchmark, trial_id = task[:4]
+                label = run_label(fuzzer, rts)
                 try:
                     success = finished_future.result()
                     if success:
-                        logging.info(f"[SUCCESS] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                        logging.info(f"[SUCCESS] {label} on {benchmark}, trial {trial_id}, core {core_id}")
                     else:
-                        logging.error(f"[FAILURE] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
+                        logging.error(f"[FAILURE] {label} on {benchmark}, trial {trial_id}, core {core_id}")
                 except Exception as e:
-                    logging.error(f"[EXCEPTION] {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
+                    logging.error(f"[EXCEPTION] {label} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
 
                 # Launch next task (reuse freed core)
                 if tasks:
-                    next_fuzzer, next_bench, next_trial, next_tot_cts = tasks.pop(0)
-                    new_future = executor.submit(
-                        run_benchmark,
-                        next_fuzzer,
-                        next_bench,
-                        coverage_binaries[next_bench],
-                        experiment_state["report_path"],
-                        experiment_state["max_total_time"],
-                        experiment_state["trials"],
-                        next_trial,
-                        experiment_state["experiment_path"],
-                        core_id,  # reuse same core
-                        data_storage,
-                        experiment_state["total_memory_needed_gb"],
-                        next_tot_cts
-                    )
-                    running[new_future] = (next_fuzzer, next_bench, next_trial, core_id, next_tot_cts)
-                    logging.info(f"[START] {next_fuzzer} on {next_bench}, trial {next_trial}, core {core_id}")
+                    task = tasks.pop(0)
+                    running[submit(executor, task, core_id)] = (task, core_id)
 
                 # Break after processing one finished future
                 break
@@ -324,6 +340,9 @@ if __name__ == "__main__":
     parser.add_argument("--bug-triaging", type=str, nargs='+', required=False, default=[], help="List of Triaging Tools to run.")
     parser.add_argument("--benchmarks", type=str, nargs='+', required=True, help="List of benchmarks to run.")
     parser.add_argument("--compiletime", type=str, nargs='+', required=False, default=["default"], help="Compile time strategies to use.")
+    parser.add_argument("--runtime-strategy", type=str, nargs='+', required=False, default=["default"],
+                        help="Run-time configuration strategies (runtime/<strategy>). Non-default strategies apply "
+                             "to the fuzzers in runtime/supported_fuzzers.json; other fuzzers run default only.")
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
     parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
 
@@ -342,6 +361,9 @@ if __name__ == "__main__":
         "benchmarks": args.benchmarks,
         "bug_triaging": args.bug_triaging,
         "compiletime": args.compiletime,
+        "runtime_strategies": args.runtime_strategy,
+        # Minimum fuzzing time per configuration under a runtime strategy, in seconds.
+        "min_config_time": config.get("min_config_time", 60),
         "trials": config["trials"],
         "max_total_time": config["max_total_time"],
         "base_image_path": config["base_image_path"],
@@ -362,6 +384,7 @@ if __name__ == "__main__":
     logging.info(f"Fuzzers: {args.fuzzers}")
     logging.info(f"Benchmarks: {args.benchmarks}")
     logging.info(f"Compile time strategies: {args.compiletime}")
+    logging.info(f"Runtime strategies: {args.runtime_strategy}")
     logging.info(f"Experiment name: {args.experiment_name}")
     logging.info(f"SuperC analysis: {'disabled' if args.no_superc else 'enabled'}")
     logging.info(f"Trials: {experiment_state['trials']}")
@@ -415,6 +438,9 @@ if __name__ == "__main__":
     # Validate and build selected fuzzers
     logging.info("Validating fuzzers...")
     validate_fuzzers(experiment_state["fuzzers"], project_root)
+    validate_rt_strategies(experiment_state["runtime_strategies"], experiment_state["fuzzers"],
+                           experiment_state["benchmarks"], project_root)
+    experiment_state["rt_supported_fuzzers"] = load_supported_fuzzers(project_root)
     logging.info("Fuzzers validated successfully.")
     logging.info("Building selected fuzzers...")
     built_fuzzers = []
@@ -623,6 +649,24 @@ if __name__ == "__main__":
 
     experiment_state["coverage_binaries"] = coverage_binaries
     experiment_state["failed_coverage_binaries"] = failed_coverage_binaries
+
+    # Runtime strategies: copy the sampling code into the experiment (so editing
+    # runtime/ cannot change a running experiment) and generate the configurations.
+    base_benchmarks = {}
+    for (_, benchmark), cts_benchmarks in benchmark_mappings.items():
+        for cts_benchmark in cts_benchmarks:
+            base_benchmarks[cts_benchmark] = benchmark
+    experiment_state["base_benchmarks"] = base_benchmarks
+    experiment_state["rt_configs"] = {}
+    if any(s != "default" for s in experiment_state["runtime_strategies"]) and \
+            any(f in experiment_state["rt_supported_fuzzers"] for f in built_fuzzers):
+        logging.info("Generating runtime strategy configurations...")
+        shutil.copytree(os.path.join(project_root, "runtime"), os.path.join(experiment_path, "runtime"),
+                        ignore=shutil.ignore_patterns("__pycache__"), dirs_exist_ok=True)
+        experiment_state["rt_configs"] = generate_rt_configs(
+            experiment_state["runtime_strategies"], experiment_state["benchmarks"],
+            experiment_state["trials"], experiment_path, project_root, experiment_state["random_seed"])
+    experiment_state["run_pairs"] = run_pairs(experiment_state)
 
     # Resource allocation
     logging.info("Allocating resources for the experiment...")

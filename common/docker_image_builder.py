@@ -1,4 +1,5 @@
 import os
+import json
 import subprocess
 import sys
 from shutil import copytree, copyfile
@@ -355,12 +356,36 @@ def build_superc(superc_path, experiment_path, project_root):
 
 
 
+def run_label(fuzzer, rts="default"):
+    """Name of a fuzzer's runs under a runtime strategy (the fuzzer itself for default)."""
+    return fuzzer if rts == "default" else f"{fuzzer}_rts_{rts}"
+
+
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                   runtime, trials, trial_id, experiment_path, core_id, 
-                  data_storage, memory_limit, tot_cts_count):
+                  data_storage, memory_limit, tot_cts_count,
+                  rts="default", rt_config_file=None, min_config_time=60):
     # setup
-    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
+    # Results go under the run label (fuzzer + runtime strategy); the benchmark build
+    # and fuzzer folder below are the fuzzer's own, shared by all runtime strategies.
+    label = run_label(fuzzer, rts)
+    individual_data_storage = os.path.join(data_storage, f"{label}_{benchmark}_trial_{trial_id}")
     os.makedirs(individual_data_storage, exist_ok=True)
+    with open(os.path.join(individual_data_storage, "trial_info.json"), "w") as f:
+        json.dump({"fuzzer": fuzzer, "runtime_strategy": rts, "benchmark": benchmark,
+                   "trial": trial_id}, f)
+
+    # Runtime strategies: mount the shared sampling code and this trial's configurations,
+    # and set the flag that makes the runner use runtime/multi_config_*.sh.
+    multi_config_args = []
+    if rts != "default":
+        multi_config_args = [
+            "-e", "MULTI_CONFIG=1",
+            "-e", f"FUZZER_NAME={fuzzer}",
+            "-e", f"MIN_CONFIG_TIME={min_config_time}",
+            "-v", f"{os.path.join(experiment_path, 'runtime')}:/runtime:ro",
+            "-v", f"{rt_config_file}:/rt_configs.json:ro",
+        ]
     
     actual_runtime = runtime // tot_cts_count if tot_cts_count > 0 else runtime
     print(f"Total CTs: {tot_cts_count}, Adjusted runtime per CT: {actual_runtime}")
@@ -370,12 +395,12 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
     coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
 
     # log file
-    log_file = os.path.join(individual_data_storage, f"{fuzzer}_{benchmark}_trial{trial_id}.log")
+    log_file = os.path.join(individual_data_storage, f"{label}_{benchmark}_trial{trial_id}.log")
 
     with open(log_file, "w") as lf:
         try:
-            lf.write(f"[INFO] Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}\n")
-            logging.info(f"Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}")
+            lf.write(f"[INFO] Running benchmark: {benchmark} with fuzzer: {label}, trial {trial_id}\n")
+            logging.info(f"Running benchmark: {benchmark} with fuzzer: {label}, trial {trial_id}")
 
             # Run the benchmark
             subprocess.run([
@@ -387,6 +412,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
                 "-v", f"{benchmark_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",
+                *multi_config_args,
                 "fbpp/runner"
             ], check=True, stdout=lf, stderr=lf, timeout=(actual_runtime + 600))
             
@@ -402,25 +428,26 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
                 "-v", f"{coverage_binary_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",
+                *multi_config_args,
                 "fbpp/runner-coverage"
             ], check=True, stdout=lf, stderr=lf)
 
         except subprocess.CalledProcessError as e:
-            lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id}\n")
+            lf.write(f"[ERROR] Failed while running {label} on {benchmark}, trial {trial_id}\n")
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
-            logging.error(f"Failed: {fuzzer} on {benchmark}, trial {trial_id}. See {log_file} for details.")
+            logging.error(f"Failed: {label} on {benchmark}, trial {trial_id}. See {log_file} for details.")
             return False
         except subprocess.TimeoutExpired as e:
-            lf.write(f"[ERROR] Timeout expired for {fuzzer} on {benchmark}, trial {trial_id}\n")
-            logging.error(f"Timeout: {fuzzer} on {benchmark}, trial {trial_id}")
+            lf.write(f"[ERROR] Timeout expired for {label} on {benchmark}, trial {trial_id}\n")
+            logging.error(f"Timeout: {label} on {benchmark}, trial {trial_id}")
             return False
         finally:
             lf.flush()
             os.fsync(lf.fileno())
 
 
-    logging.success(f"Finished {fuzzer} on {benchmark}, trial {trial_id} (logs: {log_file})")
+    logging.success(f"Finished {label} on {benchmark}, trial {trial_id} (logs: {log_file})")
     return True
 
 

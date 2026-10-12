@@ -29,6 +29,11 @@ report_filestore: /path/to/FuzzBenchPlusPlus/results/report-data
 # Use at most (number of CPU cores - 1).
 cores_to_use: 40
 
+# Optional: use cores_to_use cores starting at this core instead of the last ones,
+# e.g. to run next to another experiment. A trial on core c runs on CPUs c-1 and c,
+# so it must be at least 1.
+# first_core: 1
+
 # true: if there are more trials than cores, queue the extra trials and run them
 # as cores free up. false: stop if there are more trials than cores.
 allow_serial_execution: true
@@ -37,6 +42,10 @@ allow_serial_execution: true
 # Optional (default 60). A trial fuzzes at most max_total_time / min_config_time
 # of the strategy's configurations.
 min_config_time: 60
+
+# Optional (default 16, at most cores_to_use). Docker images built at the same time.
+# Too many parallel builds on a slow disk make Docker time out (DeadlineExceeded).
+build_parallelism: 16
 
 # Memory per trial, in MB.
 experiment_memory: 4096
@@ -83,6 +92,40 @@ Flags:
 - `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (afl-collect). Optional; if left out, no triage is run.
 - `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment.
 - `> logs-reports/EXP_NAME.log 2>&1`: saves the full output of the run, including errors, to a log file in `logs-reports/` (see the `mkdir` step above).
+
+### Groups: different strategies for different fuzzers or benchmarks
+
+The flags above run every fuzzer on every benchmark with every strategy. To give
+fuzzers or benchmarks their own strategies, describe the runs in a YAML file and pass
+it with `--groups` instead of `--fuzzers`, `--benchmarks`, `--compiletime` and
+`--runtime-strategy`:
+
+```yaml
+groups:
+  # Every fuzzer of a group runs on every benchmark of the group.
+  - fuzzers: [aflplusplus]
+    benchmarks: [binutils_objdump, xz_xz, bison_bison]
+    runtime-strategy: [default, pairwise, random]
+  # compiletime and runtime-strategy are [default] when left out.
+  - fuzzers: [vafuzz, zigzagfuzz]
+    benchmarks: [xz_xz, pcre2_pcre2test]
+
+# Optional: strategies for a benchmark in every group it is in. A key given here
+# overrides the group's; a key left out keeps the group's.
+benchmarks:
+  xz_xz:
+    compiletime: [default, maximum]
+```
+
+```bash
+python3 common/run_experiment.py --config config.yaml --experiment-name EXP_NAME \
+  --groups groups.yaml --no-superc > logs-reports/EXP_NAME.log 2>&1
+```
+
+As with the flags, fuzzers not in `runtime/supported_fuzzers.json` run the `default`
+runtime strategy only. A run listed by more than one group runs once. The log lists
+every run as (fuzzer, benchmark, compile-time strategy, runtime strategy) before
+anything is built, and only the benchmark builds those runs need are made.
 
 ### Full command
 

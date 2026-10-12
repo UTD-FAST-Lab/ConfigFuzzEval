@@ -51,10 +51,21 @@ def allocate_cpu_resources(experiment_state):
 
     check_core_allocation_feasibility(experiment_state["cores_to_use"])
     
-    # Set core start counter. We will use the last n cores
-    core_start = os.cpu_count() - experiment_state["cores_to_use"]
+    # Set core start counter. We use the last n cores, or n cores from first_core when
+    # it is set (e.g. to run next to another experiment that uses the last cores).
+    # A trial on core c runs on CPUs c-1 and c, so the first core must be at least 1.
+    first_core = experiment_state.get("first_core")
+    if first_core is None:
+        core_start = os.cpu_count() - experiment_state["cores_to_use"]
+    else:
+        core_start = first_core
+        if core_start < 1 or core_start + experiment_state["cores_to_use"] > os.cpu_count():
+            logging.error(f"first_core {first_core} with cores_to_use {experiment_state['cores_to_use']} "
+                          f"does not fit cores 1 to {os.cpu_count() - 1}.")
+            sys.exit(1)
+    core_end = core_start + experiment_state["cores_to_use"] - 1
     
-    logging.info(f"Allocating cores {core_start} to {os.cpu_count() - 1} for experiments")
+    logging.info(f"Allocating cores {core_start} to {core_end} for experiments")
     
     # Check if serial execution is necessary
     serial_execs = needs_serial_execution(
@@ -86,7 +97,7 @@ def allocate_cpu_resources(experiment_state):
             len(experiment_state.get("run_pairs", experiment_state["fuzzer_benchmark_pairs"])) * experiment_state["trials"]
 
     experiment_state["serial_executions"] = serial_execs
-    experiment_state["cores_range"] = (core_start, os.cpu_count() - 1)
+    experiment_state["cores_range"] = (core_start, core_end)
 
     return experiment_state
 

@@ -8,26 +8,27 @@ from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies
 from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy
+from experiment_plan import load_groups, resolve_runs, unique
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
 import pickle, shutil
 
-def run_strategies(experiment_state, fuzzer):
-    """Runtime strategies a fuzzer runs with: default, plus the others if it supports them."""
-    if fuzzer not in experiment_state["rt_supported_fuzzers"]:
-        return ["default"]
-    return experiment_state["runtime_strategies"]
+def built_runs(experiment_state):
+    """(fuzzer, compile-time variant of the benchmark, runtime strategy) of every run
+    whose benchmark build and coverage build succeeded."""
+    out = []
+    for fuzzer, benchmark, cts, rts in experiment_state["runs"]:
+        for cts_benchmark in experiment_state["benchmark_mappings"].get((cts, benchmark), []):
+            if fuzzer in experiment_state["built_benchmarks"].get(cts_benchmark, []) and \
+                    cts_benchmark in experiment_state["coverage_binaries"]:
+                out.append((fuzzer, cts_benchmark, rts))
+    return out
 
 
 def run_pairs(experiment_state):
-    """Result names "<run label>_<benchmark>" of every fuzzer x runtime strategy x benchmark."""
-    pairs = []
-    for benchmark, fuzzers in experiment_state["built_benchmarks"].items():
-        for fuzzer in fuzzers:
-            for rts in run_strategies(experiment_state, fuzzer):
-                pairs.append(f"{run_label(fuzzer, rts)}_{benchmark}")
-    return pairs
+    """Result names "<run label>_<benchmark>" of every run."""
+    return [f"{run_label(fuzzer, rts)}_{benchmark}" for fuzzer, benchmark, rts in built_runs(experiment_state)]
 
 
 def aggregate_results(experiment_state):
@@ -93,18 +94,15 @@ def run_experiments(experiment_state):
     logging.info(f"Core range: {core_range}, using up to {max_workers} workers")
 
     # --- Collect tasks ---
-    # Every fuzzer runs with the default runtime strategy; fuzzers listed in
-    # runtime/supported_fuzzers.json also run once per other runtime strategy,
-    # reusing the same benchmark build.
+    # One task per run and trial, in the order of the runs; runs of a benchmark under
+    # different runtime strategies reuse the same benchmark build.
     tasks = []
-    for benchmark in built_benchmarks:
+    for fuzzer, benchmark, rts in built_runs(experiment_state):
         tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
         base_benchmark = experiment_state["base_benchmarks"].get(benchmark, benchmark)
-        for fuzzer in built_benchmarks[benchmark]:
-            for rts in run_strategies(experiment_state, fuzzer):
-                for trial_id in range(experiment_state["trials"]):
-                    rt_config_file = experiment_state["rt_configs"].get((rts, base_benchmark, trial_id))
-                    tasks.append((fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file))
+        for trial_id in range(experiment_state["trials"]):
+            rt_config_file = experiment_state["rt_configs"].get((rts, base_benchmark, trial_id))
+            tasks.append((fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file))
 
     def submit(executor, task, core_id):
         fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file = task
@@ -336,17 +334,36 @@ if __name__ == "__main__":
     # Process arguments
     parser = argparse.ArgumentParser(description="Run experiments.")
     parser.add_argument("--config", type=str, required=True, help="Path to the configuration file.")
-    parser.add_argument("--fuzzers", type=str, nargs='+', required=True, help="List of fuzzers to run.")
+    parser.add_argument("--groups", type=str, required=False,
+                        help="YAML file of groups of fuzzers and benchmarks, each with its own compile-time and "
+                             "runtime strategies (see common/experiment_plan.py). Replaces --fuzzers, --benchmarks, "
+                             "--compiletime and --runtime-strategy.")
+    parser.add_argument("--fuzzers", type=str, nargs='+', required=False, help="List of fuzzers to run.")
     parser.add_argument("--bug-triaging", type=str, nargs='+', required=False, default=[], help="List of Triaging Tools to run.")
-    parser.add_argument("--benchmarks", type=str, nargs='+', required=True, help="List of benchmarks to run.")
-    parser.add_argument("--compiletime", type=str, nargs='+', required=False, default=["default"], help="Compile time strategies to use.")
-    parser.add_argument("--runtime-strategy", type=str, nargs='+', required=False, default=["default"],
+    parser.add_argument("--benchmarks", type=str, nargs='+', required=False, help="List of benchmarks to run.")
+    parser.add_argument("--compiletime", type=str, nargs='+', required=False, help="Compile time strategies to use.")
+    parser.add_argument("--runtime-strategy", type=str, nargs='+', required=False,
                         help="Run-time configuration strategies (runtime/<strategy>). Non-default strategies apply "
                              "to the fuzzers in runtime/supported_fuzzers.json; other fuzzers run default only.")
     parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment.")
     parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
 
     args = parser.parse_args()
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Runs: from the groups file, or one group made of the command-line flags.
+    if args.groups:
+        if args.fuzzers or args.benchmarks or args.compiletime or args.runtime_strategy:
+            parser.error("--groups replaces --fuzzers, --benchmarks, --compiletime and --runtime-strategy")
+        groups, benchmark_overrides = load_groups(args.groups)
+    else:
+        if not (args.fuzzers and args.benchmarks):
+            parser.error("--fuzzers and --benchmarks are required without --groups")
+        groups = [{"fuzzers": args.fuzzers, "benchmarks": args.benchmarks,
+                   "compiletime": args.compiletime or ["default"],
+                   "runtime-strategy": args.runtime_strategy or ["default"]}]
+        benchmark_overrides = {}
+    runs = resolve_runs(groups, benchmark_overrides, load_supported_fuzzers(project_root))
     
     # Read configuration
     with open(args.config, "r") as f:
@@ -357,21 +374,26 @@ if __name__ == "__main__":
     
     # Save all to a state
     experiment_state = {
-        "fuzzers": args.fuzzers,
-        "benchmarks": args.benchmarks,
+        "runs": runs,
+        "fuzzers": unique(run[0] for run in runs),
+        "benchmarks": unique(run[1] for run in runs),
         "bug_triaging": args.bug_triaging,
-        "compiletime": args.compiletime,
-        "runtime_strategies": args.runtime_strategy,
+        "compiletime": unique(run[2] for run in runs),
+        "runtime_strategies": unique(run[3] for run in runs),
         # Minimum fuzzing time per configuration under a runtime strategy, in seconds.
         "min_config_time": config.get("min_config_time", 60),
+        # Docker images built at the same time. Many parallel builds on a slow disk make
+        # Docker time out (DeadlineExceeded), so this is capped separately from cores_to_use.
+        "build_parallelism": min(config.get("build_parallelism", 16), config["cores_to_use"]),
         "trials": config["trials"],
         "max_total_time": config["max_total_time"],
         "base_image_path": config["base_image_path"],
         "runner_image_path": config["runner_image_path"],
         "experiment_filestore": config["experiment_filestore"],
         "report_filestore": config["report_filestore"],
-        "project_root": os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "project_root": project_root,
         "cores_to_use": config["cores_to_use"],
+        "first_core": config.get("first_core"),
         "allow_serial_execution": config["allow_serial_execution"],
         "experiment_memory": config["experiment_memory"],
         "random_seed": config["random_seed"] ,
@@ -381,14 +403,19 @@ if __name__ == "__main__":
     
     logging.info("Running experiments with the following parameters:")
     logging.info(f"Configuration file: {args.config}")
-    logging.info(f"Fuzzers: {args.fuzzers}")
-    logging.info(f"Benchmarks: {args.benchmarks}")
-    logging.info(f"Compile time strategies: {args.compiletime}")
-    logging.info(f"Runtime strategies: {args.runtime_strategy}")
+    logging.info(f"Groups file: {args.groups}")
+    logging.info(f"Fuzzers: {experiment_state['fuzzers']}")
+    logging.info(f"Benchmarks: {experiment_state['benchmarks']}")
+    logging.info(f"Compile time strategies: {experiment_state['compiletime']}")
+    logging.info(f"Runtime strategies: {experiment_state['runtime_strategies']}")
+    logging.info(f"Runs (fuzzer, benchmark, compile-time strategy, runtime strategy), {len(runs)}:")
+    for run in runs:
+        logging.info(f"  {run}")
     logging.info(f"Experiment name: {args.experiment_name}")
     logging.info(f"SuperC analysis: {'disabled' if args.no_superc else 'enabled'}")
     logging.info(f"Trials: {experiment_state['trials']}")
     logging.info(f"Runtime per trial (seconds): {experiment_state['max_total_time']}")
+    logging.info(f"Parallel image builds: {experiment_state['build_parallelism']}")
 
     # build experiment in filestore
     experiment_filestore = experiment_state["experiment_filestore"]
@@ -419,7 +446,6 @@ if __name__ == "__main__":
     # Build base image
     logging.info("Building base image...")
     base_image = experiment_state["base_image_path"]
-    project_root = experiment_state["project_root"]
     if(build_base_image(base_image, project_root)):
         logging.error("Failed to build base image.")
         sys.exit(1)
@@ -438,14 +464,19 @@ if __name__ == "__main__":
     # Validate and build selected fuzzers
     logging.info("Validating fuzzers...")
     validate_fuzzers(experiment_state["fuzzers"], project_root)
-    validate_rt_strategies(experiment_state["runtime_strategies"], experiment_state["fuzzers"],
-                           experiment_state["benchmarks"], project_root)
+    rt_runs = {}
+    for fuzzer, benchmark, _, rts in runs:
+        if rts != "default":
+            rt_runs.setdefault((fuzzer, benchmark), []).append(rts)
+    validate_rt_strategies(experiment_state["runtime_strategies"], unique(f for f, _ in rt_runs), [], project_root)
+    for (fuzzer, benchmark), strategies in rt_runs.items():
+        validate_rt_strategies(strategies, [fuzzer], [benchmark], project_root)
     experiment_state["rt_supported_fuzzers"] = load_supported_fuzzers(project_root)
     logging.info("Fuzzers validated successfully.")
     logging.info("Building selected fuzzers...")
     built_fuzzers = []
     fuzzer_failures = []
-    with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:  # adjust max_workers as needed
+    with ThreadPoolExecutor(max_workers=experiment_state["build_parallelism"]) as executor:
         future_to_fuzzer = {
             executor.submit(build_fuzzer, fuzzer, experiment_path, project_root): fuzzer
             for fuzzer in experiment_state["fuzzers"]
@@ -479,7 +510,7 @@ if __name__ == "__main__":
         logging.info("Building selected Triagers...")
         built_triagers = []
         triager_failures = []
-        with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:  # adjust max_workers as needed
+        with ThreadPoolExecutor(max_workers=experiment_state["build_parallelism"]) as executor:
             future_to_triagers = {
                 executor.submit(build_bug_triager, bug_triager, experiment_path, project_root): bug_triager
                 for bug_triager in experiment_state['bug_triaging']
@@ -537,7 +568,7 @@ if __name__ == "__main__":
         try:
             new_benchmark_mapping, new_tot_cts = apply_ct_strategy(strategy,
                                     project_root,
-                                    experiment_state["benchmarks"],
+                                    unique(b for _, b, cts, _ in runs if cts == strategy),
                                     experiment_state["random_seed"]         
                                 )
             if new_benchmark_mapping:
@@ -559,17 +590,16 @@ if __name__ == "__main__":
     benchmark_failures = {}
     fuzzer_benchmark_pairs = []
 
-    benchmarks_to_build = []
-    for pair in benchmark_mappings:
-        benchmarks_to_build.extend(benchmark_mappings[pair])
+    # Only the fuzzer x benchmark variant pairs some run needs
+    pairs_to_build = unique((fuzzer, cts_benchmark)
+                            for fuzzer, benchmark, cts, _ in runs if fuzzer in built_fuzzers
+                            for cts_benchmark in benchmark_mappings.get((cts, benchmark), []))
 
     # Run benchmark builds in parallel
-    cores_available = experiment_state["cores_to_use"]
-    with ThreadPoolExecutor(max_workers=cores_available) as executor:  # adjust max_workers as needed
+    with ThreadPoolExecutor(max_workers=experiment_state["build_parallelism"]) as executor:
         future_to_pair = {
             executor.submit(build_benchmark, fuzzer, benchmark, experiment_path, project_root): (fuzzer, benchmark)
-            for fuzzer in built_fuzzers
-            for benchmark in benchmarks_to_build
+            for fuzzer, benchmark in pairs_to_build
         }
 
         for future in as_completed(future_to_pair):
@@ -618,7 +648,7 @@ if __name__ == "__main__":
     coverage_binaries = {}
     failed_coverage_binaries = []
 
-    with ThreadPoolExecutor(max_workers=experiment_state["cores_to_use"]) as executor:
+    with ThreadPoolExecutor(max_workers=experiment_state["build_parallelism"]) as executor:
         future_to_benchmark = {
             executor.submit(build_benchmark, "coverage", benchmark, experiment_path, project_root): benchmark
             for benchmark in built_benchmarks
@@ -658,14 +688,18 @@ if __name__ == "__main__":
             base_benchmarks[cts_benchmark] = benchmark
     experiment_state["base_benchmarks"] = base_benchmarks
     experiment_state["rt_configs"] = {}
-    if any(s != "default" for s in experiment_state["runtime_strategies"]) and \
-            any(f in experiment_state["rt_supported_fuzzers"] for f in built_fuzzers):
+    rt_benchmarks = {}
+    for fuzzer, benchmark, _, rts in runs:
+        if rts != "default" and fuzzer in built_fuzzers:
+            rt_benchmarks.setdefault(rts, []).append(benchmark)
+    if rt_benchmarks:
         logging.info("Generating runtime strategy configurations...")
         shutil.copytree(os.path.join(project_root, "runtime"), os.path.join(experiment_path, "runtime"),
                         ignore=shutil.ignore_patterns("__pycache__"), dirs_exist_ok=True)
-        experiment_state["rt_configs"] = generate_rt_configs(
-            experiment_state["runtime_strategies"], experiment_state["benchmarks"],
-            experiment_state["trials"], experiment_path, project_root, experiment_state["random_seed"])
+        for rts, benchmarks in rt_benchmarks.items():
+            experiment_state["rt_configs"].update(generate_rt_configs(
+                [rts], unique(benchmarks),
+                experiment_state["trials"], experiment_path, project_root, experiment_state["random_seed"]))
     experiment_state["run_pairs"] = run_pairs(experiment_state)
 
     # Resource allocation

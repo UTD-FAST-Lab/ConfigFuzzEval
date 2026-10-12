@@ -61,12 +61,6 @@
       "cli": "enable"
     },
     {
-      "name": "gcc-warnings",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
       "name": "silent-rules",
       "type": "bool",
       "default": true,
@@ -129,6 +123,15 @@
         "type": "string",
         "default": null,
         "cli": "--with-libintl-prefix"
+      }
+    },
+    {
+      "name": "gcc-warnings",
+      "reason": "turns compiler warnings into errors (-Werror): clang warns about bison's own code, so the build fails",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
       }
     }
   ]

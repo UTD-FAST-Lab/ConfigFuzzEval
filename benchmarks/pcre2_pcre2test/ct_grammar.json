@@ -480,75 +480,112 @@
   "removed": [
     {
       "name": "stack-for-recursion",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "not an option of this pcre2 version's configure",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "match-limit-recursion",
-      "type": "choice",
-      "default": 10000000,
-      "cli": "with",
-      "choices": [
-        1000000,
-        10000000,
-        20000000
-      ]
+      "reason": "not an option of this pcre2 version's configure",
+      "old": {
+        "type": "choice",
+        "default": 10000000,
+        "cli": "with",
+        "choices": [
+          1000000,
+          10000000,
+          20000000
+        ]
+      }
     },
     {
       "name": "Werror",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "adds -Werror to CFLAGS: compiler warnings would fail the build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
       "name": "errwarn",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "adds -errwarn=%all to CFLAGS (Sun cc): not for clang",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
       "name": "coverage",
-      "type": "bool",
-      "default": false,
-      "cli": "enable",
-      "desc": "Using afl-clang-fast (LLVM-based), but the system also has GCC 11 installed. When both coverage runtimes get linked together, the symbols collide. The coverage feature is unnecessary for fuzzing anyway \u2014 AFL instruments the binary its own way."
+      "reason": "gcov code coverage reports, separate from the framework's own coverage build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable",
+        "desc": "Using afl-clang-fast (LLVM-based), but the system also has GCC 11 installed. When both coverage runtimes get linked together, the symbols collide. The coverage feature is unnecessary for fuzzing anyway — AFL instruments the binary its own way."
+      }
     },
     {
       "name": "ebcdic",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "EBCDIC instead of ASCII (configure: use only in EBCDIC environments); incompatible with --enable-unicode",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
       "name": "ebcdic-nl25",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "implies --enable-ebcdic",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
       "name": "ebcdic-ignoring-compiler",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "implies --enable-ebcdic",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
       "name": "pcre2-8",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "set by build.sh (--enable-pcre2-8): pcre2test needs the 8-bit library",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "set by build.sh",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "set by build.sh",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "rebuild-chartables",
+      "reason": "set by build.sh (--disable-rebuild-chartables)"
     }
   ]
 }

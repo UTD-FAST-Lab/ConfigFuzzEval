@@ -66,10 +66,37 @@
     }
   ],
   "removed": [
-    "--enable-elf-core",
-    "--enable-zstdlib,lzlib,lrziplib,libseccomp",
-    "--disable-shared",
-    "--enable-static",
-    "--enable-year2038"
+    {
+      "name": "elf-core",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "zstdlib",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "lzlib",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "lrziplib",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "libseccomp",
+      "reason": "set by build.sh (--disable-libseccomp): file's sandbox blocks the coverage runtime from writing its .profraw file"
+    },
+    {
+      "name": "shared",
+      "reason": "set by build.sh"
+    },
+    {
+      "name": "static",
+      "reason": "set by build.sh"
+    },
+    {
+      "name": "year2038",
+      "reason": "reason not recorded"
+    }
   ]
 }

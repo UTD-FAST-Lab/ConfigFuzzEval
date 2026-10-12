@@ -90,296 +90,434 @@
   "removed": [
     {
       "name": "ffmpeg",
-      "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffmpeg."
+      "reason": "Enabled by default. FFmpeg script does not recognize --enable-ffmpeg.",
+      "old": {
+        "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffmpeg."
+      }
     },
     {
       "name": "ffplay",
-      "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffplay."
+      "reason": "Enabled by default. FFmpeg script does not recognize --enable-ffplay.",
+      "old": {
+        "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffplay."
+      }
     },
     {
       "name": "ffprobe",
-      "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffprobe."
+      "reason": "Enabled by default. FFmpeg script does not recognize --enable-ffprobe.",
+      "old": {
+        "desc": "Enabled by default. FFmpeg script does not recognize --enable-ffprobe."
+      }
     },
     {
       "name": "doc",
-      "desc": "Enabled by default. FFmpeg script does not recognize --enable-doc."
+      "reason": "Enabled by default. FFmpeg script does not recognize --enable-doc.",
+      "old": {
+        "desc": "Enabled by default. FFmpeg script does not recognize --enable-doc."
+      }
     },
     {
       "name": "libx264",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libx265",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libvpx",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libopus",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libfdk-aac",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "gnutls",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "openssl",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "mbedtls",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libxevd",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libxevdb",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libxeve",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libxeveb",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libmfx",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libvpl",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "libshaderc",
-      "desc": "Requires external library not present in Docker."
+      "reason": "Requires external library not present in Docker.",
+      "old": {
+        "desc": "Requires external library not present in Docker."
+      }
     },
     {
       "name": "vaapi",
-      "desc": "Hardware acceleration incompatible with FuzzBench Docker."
+      "reason": "Hardware acceleration incompatible with FuzzBench Docker.",
+      "old": {
+        "desc": "Hardware acceleration incompatible with FuzzBench Docker."
+      }
     },
     {
       "name": "vdpau",
-      "desc": "Hardware acceleration incompatible with FuzzBench Docker."
+      "reason": "Hardware acceleration incompatible with FuzzBench Docker.",
+      "old": {
+        "desc": "Hardware acceleration incompatible with FuzzBench Docker."
+      }
     },
     {
       "name": "cuda",
-      "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      "reason": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths.",
+      "old": {
+        "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      }
     },
     {
       "name": "cuvid",
-      "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      "reason": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths.",
+      "old": {
+        "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      }
     },
     {
       "name": "nvenc",
-      "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      "reason": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths.",
+      "old": {
+        "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      }
     },
     {
       "name": "nvdec",
-      "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      "reason": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths.",
+      "old": {
+        "desc": "Requires NVIDIA nvcc compiler which is not present in Docker. Cannot fuzz GPU paths."
+      }
     },
     {
       "name": "prefix",
-      "type": "choice",
-      "default": "/usr/local",
-      "cli": "",
-      "choices": [
-        "/usr/local",
-        "/usr",
-        "/opt/ffmpeg"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "/usr/local",
+        "cli": "",
+        "choices": [
+          "/usr/local",
+          "/usr",
+          "/opt/ffmpeg"
+        ]
+      }
     },
     {
       "name": "bindir",
-      "type": "choice",
-      "default": "PREFIX/bin",
-      "cli": "",
-      "choices": [
-        "PREFIX/bin",
-        "/usr/local/bin",
-        "/bin"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "PREFIX/bin",
+        "cli": "",
+        "choices": [
+          "PREFIX/bin",
+          "/usr/local/bin",
+          "/bin"
+        ]
+      }
     },
     {
       "name": "libdir",
-      "type": "choice",
-      "default": "PREFIX/lib",
-      "cli": "",
-      "choices": [
-        "PREFIX/lib",
-        "/usr/local/lib",
-        "/lib"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "PREFIX/lib",
+        "cli": "",
+        "choices": [
+          "PREFIX/lib",
+          "/usr/local/lib",
+          "/lib"
+        ]
+      }
     },
     {
       "name": "incdir",
-      "type": "choice",
-      "default": "PREFIX/include",
-      "cli": "",
-      "choices": [
-        "PREFIX/include",
-        "/usr/local/include",
-        "/usr/include"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "PREFIX/include",
+        "cli": "",
+        "choices": [
+          "PREFIX/include",
+          "/usr/local/include",
+          "/usr/include"
+        ]
+      }
     },
     {
       "name": "arch",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "x86",
-        "x86_32",
-        "x86_64",
-        "arm",
-        "aarch64",
-        "mips",
-        "ppc",
-        "riscv"
-      ]
+      "reason": "target architecture: the benchmark is built for the host (x86_64)",
+      "old": {
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "x86",
+          "x86_32",
+          "x86_64",
+          "arm",
+          "aarch64",
+          "mips",
+          "ppc",
+          "riscv"
+        ]
+      }
     },
     {
       "name": "cpu",
-      "type": "choice",
-      "default": "generic",
-      "cli": "",
-      "choices": [
-        "generic",
-        "host",
-        "core2",
-        "corei7",
-        "armv7-a",
-        "cortex-a8"
-      ]
+      "reason": "target CPU: the benchmark is built for the host (x86_64)",
+      "old": {
+        "type": "choice",
+        "default": "generic",
+        "cli": "",
+        "choices": [
+          "generic",
+          "host",
+          "core2",
+          "corei7",
+          "armv7-a",
+          "cortex-a8"
+        ]
+      }
     },
     {
       "name": "cross-prefix",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "x86_64-linux-gnu-",
-        "arm-linux-gnueabihf-"
-      ]
+      "reason": "cross-compilation: the benchmark is built for the host (x86_64)",
+      "old": {
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "x86_64-linux-gnu-",
+          "arm-linux-gnueabihf-"
+        ]
+      }
     },
     {
       "name": "extra-cflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-O3",
-        "-march=native",
-        "-g"
-      ]
+      "reason": "compiler flags come from the fuzzer's build (build.sh passes --extra-cflags)",
+      "old": {
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-O3",
+          "-march=native",
+          "-g"
+        ]
+      }
     },
     {
       "name": "extra-ldflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-static",
-        "-Wl,-z,defs"
-      ]
+      "reason": "linker flags come from the fuzzer's build (build.sh passes --extra-ldexeflags)",
+      "old": {
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-static",
+          "-Wl,-z,defs"
+        ]
+      }
     },
     {
       "name": "libglslang",
-      "type": "bool",
-      "default": false,
-      "cli": "enable",
-      "desc": "Requires glslang-dev dependency. Compiling shaders for Vulkan/OpenGL is out of scope for CPU fuzzing."
+      "reason": "Requires glslang-dev dependency. Compiling shaders for Vulkan/OpenGL is out of scope for CPU fuzzing.",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable",
+        "desc": "Requires glslang-dev dependency. Compiling shaders for Vulkan/OpenGL is out of scope for CPU fuzzing."
+      }
     },
     {
       "name": "alsa",
-      "desc": "Hardware soundcard I/O. Incompatible with Docker/AFL++ execution environments.",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "Hardware soundcard I/O. Incompatible with Docker/AFL++ execution environments.",
+      "old": {
+        "desc": "Hardware soundcard I/O. Incompatible with Docker/AFL++ execution environments.",
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "sdl2",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Desktop GUI rendering library. Incompatible with headless Docker fuzzing environments."
+      "reason": "Desktop GUI rendering library. Incompatible with headless Docker fuzzing environments.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Desktop GUI rendering library. Incompatible with headless Docker fuzzing environments."
+      }
     },
     {
       "name": "avcodec",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Core audio/video codec library. Disabling this completely prevents the ffmpeg CLI executable from being built."
+      "reason": "Core audio/video codec library. Disabling this completely prevents the ffmpeg CLI executable from being built.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Core audio/video codec library. Disabling this completely prevents the ffmpeg CLI executable from being built."
+      }
     },
     {
       "name": "avfilter",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Audio and video filtering framework. The ffmpeg CLI tool relies heavily on this to process streams and will fail to generate without it."
+      "reason": "Audio and video filtering framework. The ffmpeg CLI tool relies heavily on this to process streams and will fail to generate without it.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Audio and video filtering framework. The ffmpeg CLI tool relies heavily on this to process streams and will fail to generate without it."
+      }
     },
     {
       "name": "swresample",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Software audio resampling library. Required by avfilter for handling audio conversions, making it an essential dependency for the CLI tool."
+      "reason": "Software audio resampling library. Required by avfilter for handling audio conversions, making it an essential dependency for the CLI tool.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Software audio resampling library. Required by avfilter for handling audio conversions, making it an essential dependency for the CLI tool."
+      }
     },
     {
       "name": "avformat",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Core muxing/demuxing library. The ffmpeg CLI tool will not build without it."
+      "reason": "Core muxing/demuxing library. The ffmpeg CLI tool will not build without it.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Core muxing/demuxing library. The ffmpeg CLI tool will not build without it."
+      }
     },
     {
       "name": "avdevice",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Device handling library. The ffmpeg CLI tool relies on this and will silently fail to build if disabled."
+      "reason": "Device handling library. The ffmpeg CLI tool relies on this and will silently fail to build if disabled.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Device handling library. The ffmpeg CLI tool relies on this and will silently fail to build if disabled."
+      }
     },
     {
       "name": "swscale",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Video scaling and pixel format conversion library. Essential for the ffmpeg CLI tool."
+      "reason": "Video scaling and pixel format conversion library. Essential for the ffmpeg CLI tool.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Video scaling and pixel format conversion library. Essential for the ffmpeg CLI tool."
+      }
     },
     {
       "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Must remain enabled. The build.sh script explicitly passes static linking flags to the linker (-static). Disabling this causes linker failures."
+      "reason": "Must remain enabled. The build.sh script explicitly passes static linking flags to the linker (-static). Disabling this causes linker failures.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Must remain enabled. The build.sh script explicitly passes static linking flags to the linker (-static). Disabling this causes linker failures."
+      }
     },
     {
       "name": "shared",
-      "type": "bool",
-      "default": false,
-      "cli": "enable",
-      "desc": "Should remain disabled to prevent conflicts with the static linking requirements of the fuzzing harness."
+      "reason": "Should remain disabled to prevent conflicts with the static linking requirements of the fuzzing harness.",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable",
+        "desc": "Should remain disabled to prevent conflicts with the static linking requirements of the fuzzing harness."
+      }
     },
     {
       "name": "pthreads",
-      "type": "bool",
-      "default": true,
-      "cli": "enable",
-      "desc": "Must remain enabled. The ffmpeg CLI tool relies heavily on threading and will silently skip building if pthreads are disabled."
+      "reason": "Must remain enabled. The ffmpeg CLI tool relies heavily on threading and will silently skip building if pthreads are disabled.",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable",
+        "desc": "Must remain enabled. The ffmpeg CLI tool relies heavily on threading and will silently skip building if pthreads are disabled."
+      }
     }
   ]
 }

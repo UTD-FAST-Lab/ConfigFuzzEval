@@ -174,12 +174,30 @@
   ],
   "constraints": [],
   "removed": [
-    "enable-small",
-    "--enable-xz",
-    "--enable-werror",
-    "external-sha256",
-    "--disable-shared",
-    "--enable-static",
+    {
+      "name": "small",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "xz",
+      "reason": "set by build.sh: xz is the benchmark target"
+    },
+    {
+      "name": "werror",
+      "reason": "set by build.sh (--disable-werror): compiler warnings would fail the build"
+    },
+    {
+      "name": "external-sha256",
+      "reason": "reason not recorded"
+    },
+    {
+      "name": "shared",
+      "reason": "set by build.sh"
+    },
+    {
+      "name": "static",
+      "reason": "set by build.sh"
+    },
     {
       "name": "path-for-scripts",
       "reason": "no default value (install path)",

@@ -593,91 +593,123 @@
   ],
   "removed": [
     {
-      "name": "tools hardcoded in build scripts as its needed for the binary",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "name": "tools",
+      "reason": "hardcoded in build scripts as its needed for the binary",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
-      "name": "shared hardcoded in build scripts as it needs to be disabled for the binary",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "name": "shared",
+      "reason": "hardcoded in build scripts as it needs to be disabled for the binary",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
-      "name": "static hardcoded in build scripts as its needed for the binary",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "name": "static",
+      "reason": "hardcoded in build scripts as its needed for the binary",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
-      "name": "docs hardcoded in build scripts as it causes unnecessary errors",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "name": "docs",
+      "reason": "hardcoded in build scripts as it causes unnecessary errors",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "jpeg12",
-      "type": "bool",
-      "default": false,
-      "cli": "enable",
-      "constraints": {
-      "opt": "jpeg12",
-      "val": true,
-      "then": [
-        {
-          "opt": "jpeg",
-          "val": true
+      "reason": "reason not recorded",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable",
+        "constraints": {
+          "opt": "jpeg12",
+          "val": true,
+          "then": [
+            {
+              "opt": "jpeg",
+              "val": true
+            }
+          ],
+          "desc": "libtiff's architecture requires the base JPEG infrastructure (JPEG_SUPPORT) to be active for any JPEG-related functionality to work correctly."
         }
-      ],
-      "desc": "libtiff's architecture requires the base JPEG infrastructure (JPEG_SUPPORT) to be active for any JPEG-related functionality to work correctly."
       }
-
     },
     {
       "name": "zstd-include-dir",
-      "type": "choice",
-      "default": "/usr/include",
-      "cli": "with",
-      "choices": ["/usr/include", "/usr/local/include"],
-      "constraints": {
-      "opt": "zstd-include-dir",
-      "val": true,
-      "then": [
-        {
-          "opt": "zstd",
-          "val": true
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "/usr/include",
+        "cli": "with",
+        "choices": [
+          "/usr/include",
+          "/usr/local/include"
+        ],
+        "constraints": {
+          "opt": "zstd-include-dir",
+          "val": true,
+          "then": [
+            {
+              "opt": "zstd",
+              "val": true
+            }
+          ],
+          "desc": "Directory Options (*-include-dir) require the Library (*)"
         }
-      ],
-      "desc": "Directory Options (*-include-dir) require the Library (*)"
       }
     },
     {
       "name": "zstd-lib-dir",
-      "type": "choice",
-      "default": "/usr/lib",
-      "cli": "with",
-      "choices": ["/usr/lib", "/usr/local/lib"]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "/usr/lib",
+        "cli": "with",
+        "choices": [
+          "/usr/lib",
+          "/usr/local/lib"
+        ]
+      }
     },
-        {
+    {
       "name": "jpeg12-include-dir",
-      "type": "choice",
-      "default": "/usr/include",
-      "cli": "with",
-      "choices": [
-        "/usr/include",
-        "/usr/local/include"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "/usr/include",
+        "cli": "with",
+        "choices": [
+          "/usr/include",
+          "/usr/local/include"
+        ]
+      }
     },
     {
       "name": "jpeg12-lib",
-      "type": "choice",
-      "default": "/usr/lib/libjpeg.so",
-      "cli": "with",
-      "choices": [
-        "/usr/lib/libjpeg.so",
-        "/usr/local/lib/libjpeg.a"
-      ]
+      "reason": "install path or library location: no effect on the fuzzed program",
+      "old": {
+        "type": "choice",
+        "default": "/usr/lib/libjpeg.so",
+        "cli": "with",
+        "choices": [
+          "/usr/lib/libjpeg.so",
+          "/usr/local/lib/libjpeg.a"
+        ]
+      }
     }
   ]
 }

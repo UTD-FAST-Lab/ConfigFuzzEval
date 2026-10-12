@@ -120,12 +120,6 @@
       "type": "bool",
       "default": true,
       "cli": "enable"
-    },
-    {
-      "name": "vsx",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
     }
   ],
   "constraints": [
@@ -165,41 +159,48 @@
   ],
   "removed": [
     {
-      "name": "cli hardcoded in build.sh because it is needed for command line use",
-      "type": "bool",
-      "default": true,
-      "cli": "disable"
+      "name": "cli",
+      "reason": "hardcoded in build.sh because it is needed for command line use",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "disable"
+      }
     },
     {
-      "opt": "cli",
-      "val": false,
-      "then": [
-        {
-          "opt": "avs",
-          "val": false
-        },
-        {
-          "opt": "lavf",
-          "val": false
-        },
-        {
-          "opt": "ffms",
-          "val": false
-        },
-        {
-          "opt": "gpac",
-          "val": false
-        },
-        {
-          "opt": "lsmash",
-          "val": false
-        },
-        {
-          "opt": "swscale",
-          "val": false
-        }
-      ],
-      "desc": "Disabling CLI disables all video input/output libraries (avs, lavf, ffms, gpac, lsmash, swscale)"
+      "name": "constraint: if cli=false then avs=false, lavf=false, ffms=false, gpac=false, lsmash=false, swscale=false",
+      "reason": "refers to the removed option cli",
+      "old": {
+        "opt": "cli",
+        "val": false,
+        "then": [
+          {
+            "opt": "avs",
+            "val": false
+          },
+          {
+            "opt": "lavf",
+            "val": false
+          },
+          {
+            "opt": "ffms",
+            "val": false
+          },
+          {
+            "opt": "gpac",
+            "val": false
+          },
+          {
+            "opt": "lsmash",
+            "val": false
+          },
+          {
+            "opt": "swscale",
+            "val": false
+          }
+        ],
+        "desc": "Disabling CLI disables all video input/output libraries (avs, lavf, ffms, gpac, lsmash, swscale)"
+      }
     },
     {
       "name": "prefix",
@@ -439,6 +440,15 @@
           "",
           "-DDEBUG"
         ]
+      }
+    },
+    {
+      "name": "vsx",
+      "reason": "PowerPC VSX instructions: no effect on an x86_64 build, and x264's configure only has an undocumented --disable-vsx (--enable-vsx is ignored)",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
       }
     }
   ]

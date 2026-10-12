@@ -81,64 +81,88 @@
   "removed": [
     {
       "name": "intel-sse",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-intel-sse",
-      "conflicts": []
+      "reason": "reason not recorded",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-intel-sse",
+        "conflicts": []
+      }
     },
     {
       "name": "aix-soname",
-      "type": "enum",
-      "values": [
-        "aix",
-        "svr4",
-        "both"
-      ],
-      "default": "aix",
-      "cli": "--enable-aix-soname",
-      "conflicts": []
+      "reason": "AIX-only shared library naming; no effect on Linux",
+      "old": {
+        "type": "enum",
+        "values": [
+          "aix",
+          "svr4",
+          "both"
+        ],
+        "default": "aix",
+        "cli": "--enable-aix-soname",
+        "conflicts": []
+      }
     },
     {
       "name": "arm-neon",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-arm-neon",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-arm-neon",
+        "conflicts": []
+      }
     },
     {
       "name": "mips-msa",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-mips-msa",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-mips-msa",
+        "conflicts": []
+      }
     },
     {
       "name": "mips-mmi",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-mips-mmi",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-mips-mmi",
+        "conflicts": []
+      }
     },
     {
       "name": "powerpc-vsx",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-powerpc-vsx",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-powerpc-vsx",
+        "conflicts": []
+      }
     },
     {
       "name": "loongarch-lsx",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-loongarch-lsx",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-loongarch-lsx",
+        "conflicts": []
+      }
     },
     {
       "name": "riscv-rvv",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-riscv-rvv",
-      "conflicts": []
+      "reason": "SIMD code for another CPU architecture; no effect on an x86_64 build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "--enable-riscv-rvv",
+        "conflicts": []
+      }
     },
     {
       "name": "werror",

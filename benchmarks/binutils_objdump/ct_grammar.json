@@ -177,8 +177,16 @@
       "reason": "install path"
     },
     {
-      "name": "debuginfod=yes / zstd=yes / msgpack=yes",
-      "reason": "need libraries that may not be installed; only auto/no kept"
+      "name": "debuginfod=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
+    },
+    {
+      "name": "zstd=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
+    },
+    {
+      "name": "msgpack=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
     }
   ],
   "note": "options of binutils/configure (2.47), which build.sh runs with {{CT_CONFIGURATION}}; the previous grammar listed the top-level (gcc) configure options, 60 of 63 unrecognized by binutils/configure"

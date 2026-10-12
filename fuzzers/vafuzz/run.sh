@@ -14,6 +14,9 @@ TARGET_DIR=/tmp/vafuzz-target
 mkdir -p $TARGET_DIR
 read -r BINARY ARGS <<< "$RUN_TARGET"
 cp "$BINARY" $TARGET_DIR/
+# afl-fuzz rewrites config.seed before every execution; keep it in RAM, since
+# on a busy disk each rewrite waits for a write to disk.
+ln -sf /dev/shm/config.seed $TARGET_DIR/config.seed
 TARGET="$TARGET_DIR/$(basename $BINARY) $TARGET_DIR/config.seed $ARGS"
 # -q: executions per option config. -u 0.33: when switching configs, use z3
 # generator 3 or 1 a third of the time each (argv havoc otherwise). -j 0.1:

@@ -1,25 +1,32 @@
-"""Which runs an experiment does: every (fuzzer, benchmark, compile-time strategy,
-runtime strategy) combination, from --groups or from the command-line flags.
+"""What an experiment runs: a list of runs, read from an experiment file or the command line.
 
-A groups file (YAML) lists groups of fuzzers and benchmarks. A group's
-compile-time and runtime strategies default to [default]. The optional top-level
-"benchmarks" section sets strategies for a benchmark in every group it appears
-in, overriding the group's:
+A run is one fuzzer on one benchmark under one compile-time strategy and one
+runtime strategy, repeated `trials` times for `max_total_time` seconds each.
 
+An experiment file (run_experiment.py --experiment FILE, YAML or JSON) lists
+groups; within a group every fuzzer x benchmark x compile-time strategy x
+runtime strategy runs, and the experiment is the union of its groups:
+
+    experiment_name: my_experiment       # optional if --experiment-name is given
+    no_superc: true                      # optional, default false
+    bug_triaging: [afl-collect]          # optional, default none
     groups:
-      - fuzzers: [aflplusplus]
+      - fuzzers: [vafuzz]
         benchmarks: [xz_xz, bison_bison]
-        runtime-strategy: [default, pairwise, random]
-      - fuzzers: [vafuzz, zigzagfuzz]
-        benchmarks: [xz_xz, pcre2_pcre2test]
-    benchmarks:
-      xz_xz:
+        compiletime: [default]           # optional, default [default]
+        runtime_strategy: [default]      # optional, default [default]
+        trials: 3                        # optional, default: trials in --config
+        max_total_time: 86400            # optional, default: max_total_time in --config
+    benchmarks:                          # optional: strategies for a benchmark in every
+      xz_xz:                             # group it is in, replacing the group's
         compiletime: [default, maximum]
 
-Runtime strategies other than default only apply to the fuzzers in
-runtime/supported_fuzzers.json; other fuzzers run default only.
+runtime-strategy is accepted for runtime_strategy, and --groups for --experiment.
+The --fuzzers/--benchmarks/--compiletime/--runtime-strategy flags make a single
+group with the --config file's trials and max_total_time.
 """
 
+import json
 import sys
 
 import yaml
@@ -28,84 +35,145 @@ from color_logger import get_logger
 
 logging = get_logger(__name__)
 
-GROUP_KEYS = {"fuzzers", "benchmarks", "compiletime", "runtime-strategy"}
-STRATEGY_KEYS = {"compiletime", "runtime-strategy"}
+TOP_KEYS = {"experiment_name", "no_superc", "bug_triaging", "groups", "benchmarks"}
+GROUP_KEYS = {"fuzzers", "benchmarks", "compiletime", "runtime_strategy", "trials", "max_total_time"}
+STRATEGY_KEYS = {"compiletime", "runtime_strategy"}
 
 
-def as_list(value, where):
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list) and value and all(isinstance(v, str) for v in value):
-        return value
-    logging.error(f"{where} must be a name or a non-empty list of names, got {value!r}")
+def fail(message):
+    logging.error(message)
     sys.exit(1)
 
 
-def check_keys(entry, allowed, where):
-    if not isinstance(entry, dict):
-        logging.error(f"{where} must be a mapping, got {entry!r}")
-        sys.exit(1)
-    unknown = set(entry) - allowed
+def load_experiment_file(path):
+    """Read and check the top level of an experiment file (.json as JSON, anything else as YAML)."""
+    try:
+        with open(path) as f:
+            text = f.read()
+    except OSError as e:
+        fail(f"Cannot read experiment file {path}: {e}")
+    try:
+        data = json.loads(text) if path.endswith(".json") else yaml.safe_load(text)
+    except (json.JSONDecodeError, yaml.YAMLError) as e:
+        fail(f"Cannot parse experiment file {path}: {e}")
+
+    if not isinstance(data, dict):
+        fail(f"Experiment file {path} must contain a mapping with a 'groups' list.")
+    unknown = sorted(set(data) - TOP_KEYS)
     if unknown:
-        logging.error(f"{where}: unknown key(s) {sorted(unknown)}; allowed: {sorted(allowed)}")
-        sys.exit(1)
+        fail(f"Experiment file {path}: unknown key(s) {unknown}; allowed: {sorted(TOP_KEYS)}.")
+    if not isinstance(data.get("groups"), list) or not data["groups"]:
+        fail(f"Experiment file {path} needs a non-empty 'groups' list.")
+    if not isinstance(data.get("no_superc", False), bool):
+        fail(f"Experiment file {path}: 'no_superc' must be true or false.")
+    data["bug_triaging"] = _names(data, "bug_triaging", "the experiment file", default=[], allow_empty=True)
+
+    benchmarks = data.get("benchmarks") or {}
+    if not isinstance(benchmarks, dict):
+        fail(f"Experiment file {path}: 'benchmarks' must map benchmark names to their strategies.")
+    data["benchmarks"] = {}
+    for benchmark, entry in benchmarks.items():
+        where = f"Experiment file {path}: benchmarks: {benchmark}"
+        entry = _accept_runtime_strategy_alias(entry, where)
+        unknown = sorted(set(entry) - STRATEGY_KEYS)
+        if unknown:
+            fail(f"{where}: unknown key(s) {unknown}; allowed: {sorted(STRATEGY_KEYS)}.")
+        data["benchmarks"][benchmark] = {key: _names(entry, key, where) for key in entry}
+    return data
 
 
-def load_groups(path):
-    """Groups and per-benchmark overrides from a groups file."""
-    with open(path) as f:
-        plan = yaml.safe_load(f) or {}
-    check_keys(plan, {"groups", "benchmarks"}, path)
-    if not isinstance(plan.get("groups"), list) or not plan["groups"]:
-        logging.error(f"{path}: 'groups' must be a non-empty list")
-        sys.exit(1)
-
-    groups = []
-    for i, entry in enumerate(plan["groups"]):
-        where = f"{path}: group {i + 1}"
-        check_keys(entry, GROUP_KEYS, where)
-        for key in ("fuzzers", "benchmarks"):
-            if key not in entry:
-                logging.error(f"{where} has no '{key}'")
-                sys.exit(1)
-        groups.append({key: as_list(entry.get(key, ["default"]), f"{where} '{key}'") for key in GROUP_KEYS})
-
-    overrides = {}
-    for benchmark, entry in (plan.get("benchmarks") or {}).items():
-        where = f"{path}: benchmarks: {benchmark}"
-        check_keys(entry, STRATEGY_KEYS, where)
-        overrides[benchmark] = {key: as_list(value, f"{where} '{key}'") for key, value in entry.items()}
-    return groups, overrides
+def _accept_runtime_strategy_alias(entry, where):
+    """entry with runtime-strategy renamed to runtime_strategy."""
+    if not isinstance(entry, dict):
+        fail(f"{where} must be a mapping.")
+    if "runtime-strategy" not in entry:
+        return entry
+    if "runtime_strategy" in entry:
+        fail(f"{where}: give runtime_strategy or runtime-strategy, not both.")
+    entry = dict(entry)
+    entry["runtime_strategy"] = entry.pop("runtime-strategy")
+    return entry
 
 
-def resolve_runs(groups, overrides, rt_supported_fuzzers):
-    """Every run as (fuzzer, benchmark, compile-time strategy, runtime strategy), in order."""
-    unused = set(overrides) - {b for group in groups for b in group["benchmarks"]}
+def _names(mapping, key, where, default=None, allow_empty=False):
+    """A list of names (a single name is accepted too), without duplicates."""
+    value = mapping.get(key, default)
+    if isinstance(value, str):
+        value = [value]
+    if not isinstance(value, list) or not all(isinstance(v, str) and v for v in value) \
+            or (not value and not allow_empty):
+        fail(f"{where}: '{key}' must be a {'' if allow_empty else 'non-empty '}list of names (got {value!r}).")
+    return list(dict.fromkeys(value))
+
+
+def _positive_int(mapping, key, where, default):
+    value = mapping.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        fail(f"{where}: '{key}' must be a positive integer (got {value!r}).")
+    return value
+
+
+def expand_groups(groups, defaults, rt_supported, strict, overrides=None):
+    """Groups -> runs: one dict per fuzzer/benchmark/compiletime/runtime_strategy, without duplicates.
+
+    defaults: {"trials", "max_total_time"} from the --config file.
+    overrides: {benchmark: {"compiletime"/"runtime_strategy": [...]}}, replacing the
+        group's strategies for that benchmark in every group (the file's "benchmarks").
+    rt_supported: fuzzers that support non-default runtime strategies.
+    strict: a non-default runtime strategy for a fuzzer that does not support one is an
+        error (experiment files); otherwise the fuzzer runs the default strategy only, as
+        the command line has always done.
+    """
+    overrides = overrides or {}
+    unused = sorted(set(overrides) - {b for g in groups if isinstance(g, dict)
+                                      for b in ([g["benchmarks"]] if isinstance(g.get("benchmarks"), str)
+                                                else g.get("benchmarks") or [])})
     if unused:
-        logging.warning(f"Benchmark settings for {sorted(unused)} are not used: no group includes them.")
+        logging.warning(f"Benchmark settings for {unused} are not used: no group includes them.")
 
-    runs, warned = [], set()
-    for group in groups:
-        for benchmark in group["benchmarks"]:
-            settings = {**group, **overrides.get(benchmark, {})}
-            for fuzzer in group["fuzzers"]:
-                rts_list = settings["runtime-strategy"]
-                if fuzzer not in rt_supported_fuzzers and any(s != "default" for s in rts_list):
-                    if fuzzer not in warned:
-                        logging.warning(f"{fuzzer} does not support runtime strategies "
-                                        f"(runtime/supported_fuzzers.json); it runs default only.")
-                        warned.add(fuzzer)
-                    rts_list = ["default"]
-                for cts in settings["compiletime"]:
-                    for rts in rts_list:
-                        run = (fuzzer, benchmark, cts, rts)
-                        if run in runs:
-                            logging.warning(f"Run {run} is listed more than once; running it once.")
-                        else:
-                            runs.append(run)
-    return runs
+    runs = {}
+    for index, group in enumerate(groups, 1):
+        where = f"Group {index}"
+        if not isinstance(group, dict):
+            fail(f"{where} must be a mapping with at least 'fuzzers' and 'benchmarks'.")
+        group = _accept_runtime_strategy_alias(group, where)
+        unknown = sorted(set(group) - GROUP_KEYS)
+        if unknown:
+            fail(f"{where}: unknown key(s) {unknown}; allowed: {sorted(GROUP_KEYS)}.")
+
+        fuzzers = _names(group, "fuzzers", where)
+        benchmarks = _names(group, "benchmarks", where)
+        compiletime = _names(group, "compiletime", where, default=["default"])
+        runtime_strategies = _names(group, "runtime_strategy", where, default=["default"])
+        trials = _positive_int(group, "trials", where, defaults["trials"])
+        max_total_time = _positive_int(group, "max_total_time", where, defaults["max_total_time"])
+
+        for fuzzer in fuzzers:
+            for benchmark in benchmarks:
+                benchmark_ct = overrides.get(benchmark, {}).get("compiletime", compiletime)
+                fuzzer_rts = overrides.get(benchmark, {}).get("runtime_strategy", runtime_strategies)
+                if fuzzer not in rt_supported and any(s != "default" for s in fuzzer_rts):
+                    if strict:
+                        fail(f"{where}: {fuzzer} does not support runtime strategies "
+                             f"(runtime/supported_fuzzers.json: {sorted(rt_supported)}); "
+                             f"use runtime_strategy: [default] for it.")
+                    fuzzer_rts = ["default"]
+                for ct in benchmark_ct:
+                    for rts in fuzzer_rts:
+                        key = (fuzzer, benchmark, ct, rts)
+                        if key in runs:
+                            prev = runs[key]
+                            if (prev["trials"], prev["max_total_time"]) != (trials, max_total_time):
+                                fail(f"{fuzzer} on {benchmark} (compiletime {ct}, runtime strategy {rts}) is in "
+                                     f"group {prev['group']} with trials={prev['trials']}, "
+                                     f"max_total_time={prev['max_total_time']} and in {where.lower()} with "
+                                     f"trials={trials}, max_total_time={max_total_time}; list it once.")
+                            continue
+                        runs[key] = {"fuzzer": fuzzer, "benchmark": benchmark, "compiletime": ct,
+                                     "runtime_strategy": rts, "trials": trials,
+                                     "max_total_time": max_total_time, "group": index}
+    return list(runs.values())
 
 
-def unique(items):
-    """Items without duplicates, in order."""
-    return list(dict.fromkeys(items))
+def unique(values):
+    return list(dict.fromkeys(values))

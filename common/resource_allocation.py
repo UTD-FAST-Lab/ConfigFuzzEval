@@ -67,20 +67,23 @@ def allocate_cpu_resources(experiment_state):
     
     logging.info(f"Allocating cores {core_start} to {core_end} for experiments")
     
+    # Trials and their fuzzing times (each run can set its own trials and max_total_time;
+    # a trial on one of N compile-time copies fuzzes for max_total_time / N).
+    tasks = experiment_state["trial_tasks"]
+    trial_times = [max_total_time // max(tot_cts_count, 1)
+                   for _, _, _, _, tot_cts_count, _, max_total_time in tasks]
+    total_trials = len(tasks)
+
     # Check if serial execution is necessary
-    serial_execs = needs_serial_execution(
-                        len(experiment_state.get("run_pairs", experiment_state["fuzzer_benchmark_pairs"])) * 
-                        experiment_state["trials"],
-                        experiment_state["cores_to_use"]
-                        )
-    
+    serial_execs = needs_serial_execution(total_trials, experiment_state["cores_to_use"])
+
     if serial_execs:
         logging.warning("Number of experiments exceeds available cores.")
-        
+
         if experiment_state["allow_serial_execution"]:
             logging.warning("Proceeding with serial execution as allowed by configuration.")
-            time_required_hours = serial_execs * experiment_state["max_total_time"] / 3600
-            logging.info(f"Experiments will require roughly {time_required_hours} hours in total.")
+            time_required_hours = max(sum(trial_times) / experiment_state["cores_to_use"], max(trial_times)) / 3600
+            logging.info(f"Experiments will require roughly {time_required_hours:.1f} hours of fuzzing in total.")
 
             experiment_state["estimated_tot_time_hours"] = time_required_hours
             experiment_state["cores_used_at_a_time"] = experiment_state["cores_to_use"]
@@ -88,13 +91,11 @@ def allocate_cpu_resources(experiment_state):
         else:
             logging.error("Set 'allow_serial_execution' to True in configuration to allow this, or reduce experiments.")
             sys.exit(1)
-    
+
     else:
         logging.info("No serial execution required.")
-        experiment_state["estimated_tot_time_hours"] = \
-            experiment_state["max_total_time"] / 3600
-        experiment_state["cores_used_at_a_time"] = \
-            len(experiment_state.get("run_pairs", experiment_state["fuzzer_benchmark_pairs"])) * experiment_state["trials"]
+        experiment_state["estimated_tot_time_hours"] = max(trial_times, default=0) / 3600
+        experiment_state["cores_used_at_a_time"] = total_trials
 
     experiment_state["serial_executions"] = serial_execs
     experiment_state["cores_range"] = (core_start, core_end)

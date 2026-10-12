@@ -4,11 +4,14 @@ Grammar Configuration Module - Maximum Strategy (New Format)
 This module provides functionality to load grammar configurations from the new
 JSON format and generate CLI arguments. It implements a "Maximum" strategy,
 attempting to enable all features unless explicitly constrained.
+
+Deterministic, like compiletime/minimum and the runtime mostenabled strategy: a
+choice option takes its first non-False choice, an "or" rule its first branch, a
+"!=" rule the first other choice, and rules of equal priority apply in grammar order.
 """
 
 import json
 from typing import Dict, List, Any, Optional
-import random
 
 
 def calculate_constraint_score(rule: Dict[str, Any]) -> int:
@@ -141,8 +144,8 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                         for branch in or_branches
                     )
                     if not already_satisfied:
-                        # Pick a random branch and enforce it
-                        chosen = random.choice(or_branches)
+                        # Enforce the first branch
+                        chosen = or_branches[0]
                         target_opt = chosen.get("opt")
                         target_def = get_option(grammar, target_opt)
                         if not target_def:
@@ -160,7 +163,7 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                                     if "choices" in target_def:
                                         valid_choices = [c for c in target_def["choices"] if c != target_choice]
                                         if valid_choices:
-                                            set_option(config, target_opt, random.choice(valid_choices))
+                                            set_option(config, target_opt, valid_choices[0])
                                             changed = True
                         elif "val" in chosen:
                             target_val = chosen["val"]
@@ -186,7 +189,7 @@ def apply_constraints(grammar: Dict[str, Any], config: Dict[str, Any], sorted_co
                             if "choices" in target_def:
                                 valid_choices = [c for c in target_def["choices"] if c != target_choice]
                                 if valid_choices:
-                                    new_val = random.choice(valid_choices)
+                                    new_val = valid_choices[0]
                                     if config.get(target_opt) != new_val:
                                         set_option(config, target_opt, new_val)
                                         changed = True
@@ -211,7 +214,7 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
     
     Strategy:
     1. Bools -> Set to True.
-    2. Choices -> Set to Random "Truthy" value (avoid False if possible).
+    2. Choices -> Set to the first "Truthy" value (avoid False if possible).
     """
     config = {}
     
@@ -233,10 +236,10 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
                 truthy_choices = [c for c in opt["choices"] if c is not False]
                 
                 if truthy_choices:
-                    set_option(config, name, random.choice(truthy_choices))
+                    set_option(config, name, truthy_choices[0])
                 else:
                     # If the ONLY choices are False (rare), we must pick it.
-                    set_option(config, name, random.choice(opt["choices"]))
+                    set_option(config, name, opt["choices"][0])
             else:
                 set_option(config, name, "")
                 
@@ -248,13 +251,11 @@ def generate_all_enabled_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
             score = calculate_constraint_score(rule)
             scored_constraints.append((score, rule))
 
-        # 2. Randomize first (to break ties randomly)
-        random.shuffle(scored_constraints)
-        
-        # 3. Sort by score ascending (Low score first -> High score last)
+        # 2. Sort by score ascending (Low score first -> High score last); the sort is
+        #    stable, so rules with the same score keep their grammar order
         scored_constraints.sort(key=lambda x: x[0])
         
-        # 4. Extract just the rules
+        # 3. Extract just the rules
         final_constraint_list = [rule for score, rule in scored_constraints]
     else:
         final_constraint_list = []
@@ -280,7 +281,7 @@ def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
     - If val is boolean (True/False): outputs flag only (e.g., --with-zlib)
     - If val is string/int: outputs flag=value (e.g., --with-zlib=/usr)
     """
-    cli_style = opt.get("cli", "with")
+    cli_style = opt.get("cli", "enable")
     name = opt["name"]
 
     def format_bool(is_true: bool):
@@ -341,8 +342,9 @@ def generate_cli_string(grammar: Dict[str, Any],
     return " ".join(generate_cli_args(grammar, config))
 
 
-def request_configurations(grammar_file):
-    """Main function that replicates the original script behavior."""
+def request_configurations(grammar_file, random_seed=None):
+    """Main function that replicates the original script behavior. Deterministic:
+    random_seed is accepted like every strategy's, but not needed."""
     grammar = load_grammar(grammar_file)
     cli_string = generate_cli_string(grammar)
     return [cli_string]

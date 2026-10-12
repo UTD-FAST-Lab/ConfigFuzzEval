@@ -9,12 +9,7 @@ logging = get_logger(__name__)
 
 def retrieve_configs(benchmark_grammar, strategy_module, random_seed=None):
     try:
-        if strategy_module.__name__ == "randomsmart":
-            return strategy_module.request_configurations(
-                benchmark_grammar, random_seed=random_seed
-            )
-        else:
-            return strategy_module.request_configurations(benchmark_grammar)
+        return strategy_module.request_configurations(benchmark_grammar, random_seed=random_seed)
     except Exception as e:
         print(f"[ERROR] Failed retrieving configurations from {strategy_module}: {e}")
         return []

@@ -1,6 +1,6 @@
 {
     "cmdline": "$inopts $INPUTFILE",
-    "exit_options": ["-help", "-v", "-unittest", "-C", "-error", "-LM", "-LP", "-LS"],
+    "exit_options": ["-help", "-v", "-unittest", "-C", "-error", "-LM", "-LP", "-LS", "-E"],
     "connector": " ",
     "strmax": 3,
     "options": [

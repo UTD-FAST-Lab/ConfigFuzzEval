@@ -69,7 +69,7 @@ mkdir -p logs-reports
 There are two ways to say what to run:
 
 - **Command-line flags** (below): every fuzzer runs on every benchmark with every listed strategy, all with the `trials` and `max_total_time` from `config.yaml`.
-- **An experiment file** (`--experiment`, see "Experiment files" below): groups of fuzzers and benchmarks, so specific fuzzers run on specific benchmarks, each group optionally with its own `trials` and `max_total_time`.
+- **An experiment file** (`--experiment` or `--groups`, see "Experiment files" below): groups of fuzzers and benchmarks, so specific fuzzers run on specific benchmarks, each group with its own strategies and optionally its own `trials` and `max_total_time`, plus optional per-benchmark strategies.
 
 Run from the root of the project:
 
@@ -118,7 +118,12 @@ python3 common/run_experiment.py \
 
 ### Experiment files
 
-With command-line flags, every fuzzer runs on every benchmark. An experiment file instead lists **groups**: each group runs its own fuzzers on its own benchmarks, so you choose exactly which fuzzer runs on which benchmark, and each group can set its own number of trials and fuzzing time. The machine settings (cores, memory, result folders, `random_seed`, ...) still come from `config.yaml`.
+With command-line flags, every fuzzer runs on every benchmark with every listed strategy. An experiment file (`--experiment FILE`, or `--groups FILE`; both names do the same) says exactly what to run instead:
+
+- **groups** choose which fuzzers run on which benchmarks, each group with its own strategies, number of trials and fuzzing time;
+- an optional **`benchmarks` section** sets the strategies of a benchmark once, for every group that runs it.
+
+The machine settings (cores, memory, result folders, `random_seed`, ...) and the default `trials` and `max_total_time` still come from `config.yaml`.
 
 ```bash
 python3 common/run_experiment.py \
@@ -127,7 +132,7 @@ python3 common/run_experiment.py \
   > logs-reports/EXP_NAME.log 2>&1
 ```
 
-The file is YAML, or JSON if its name ends in `.json` (same keys). A commented example:
+The file is YAML, or JSON if its name ends in `.json` (same keys). Experiment files are your own and are not tracked: `experiment.yaml` in the project root is in `.gitignore`, so copy the example below into it and edit it. A commented example:
 
 ```yaml
 # Name of the experiment (results go to <experiment_filestore>/<experiment_name>).
@@ -143,7 +148,7 @@ bug_triaging: [afl-collect]
 
 # Required: one or more groups. Within a group, every fuzzer runs on every benchmark
 # with every compile-time and runtime strategy of that group. The experiment is all
-# groups together; groups do not combine with each other.
+# groups together; fuzzers and benchmarks of different groups are not combined.
 groups:
   # vafuzz on six benchmarks, with trials and max_total_time from config.yaml.
   - fuzzers: [vafuzz]                      # required: folder names in fuzzers/
@@ -153,47 +158,71 @@ groups:
   # zigzagfuzz on two of them only, with its own trials and fuzzing time.
   - fuzzers: [zigzagfuzz]
     benchmarks: [binutils_objdump, libxml2_xmllint]
-    trials: 1                              # optional: overrides trials in config.yaml for this group
-    max_total_time: 3600                   # optional: overrides max_total_time (seconds) for this group
+    trials: 1                              # optional: replaces trials from config.yaml for this group
+    max_total_time: 3600                   # optional: replaces max_total_time (seconds) for this group
 
-  # aflplusplus with two compile-time and two runtime strategies:
-  # 2 benchmarks x 2 compile-time x 2 runtime = 8 runs, each with `trials` trials.
+  # aflplusplus with two compile-time and two runtime strategies.
   - fuzzers: [aflplusplus]
     benchmarks: [xz_xz, pcre2_pcre2test]
     compiletime: [default, minimum]        # optional, default [default]: folder names in compiletime/
     runtime_strategy: [default, pairwise]  # optional, default [default]: folder names in runtime/
 
-# Optional: strategies for a benchmark in every group it is in. A key given here
-# replaces the group's for that benchmark; a key left out keeps the group's.
+# Optional: strategies of a benchmark in every group that runs it. A key given here
+# replaces that group key for this benchmark only; a key left out keeps the group's.
 benchmarks:
-  xz_xz:
+  pcre2_pcre2test:
     compiletime: [default, maximum]
 ```
 
+What this example runs (with `trials: 3` in `config.yaml`):
+
+| Group | Runs | Trials |
+|---|---|---|
+| vafuzz | 5 benchmarks with `default`, plus pcre2 with `default` and `maximum` (from the `benchmarks` section): 7 runs | 3 each, from `config.yaml` |
+| zigzagfuzz | objdump and xmllint with `default`: 2 runs | 1 each, of 3600 s |
+| aflplusplus | xz: `default`, `minimum` x runtime `default`, `pairwise` = 4 runs; pcre2: `default`, `maximum` (the `benchmarks` section replaces the group's `minimum`) x 2 runtime = 4 runs | 3 each, from `config.yaml` |
+
+`--dry-run` prints this list for any file (see below), so you can check a file before starting it.
+
+#### Keys
+
 | Key | Where | Required | Default | Meaning |
 |---|---|---|---|---|
-| `experiment_name` | top level | unless `--experiment-name` is given | — | Name of the experiment. `--experiment-name` overrides it. |
+| `experiment_name` | top level | unless `--experiment-name` is given | none | Name of the experiment. `--experiment-name` overrides it. |
 | `no_superc` | top level | no | `false` | `true` turns off SuperC, like `--no-superc`. |
 | `bug_triaging` | top level | no | `[]` | Crash triage tools. `--bug-triaging` overrides it. |
-| `groups` | top level | yes | — | List of groups (at least one). |
-| `benchmarks` | top level | no | — | Per benchmark, `compiletime` and/or `runtime_strategy` that replace the group's in every group with that benchmark. |
-| `fuzzers` | group | yes | — | Fuzzers of this group. |
-| `benchmarks` | group | yes | — | Benchmarks of this group. |
+| `groups` | top level | yes | none | List of groups (at least one). |
+| `fuzzers` | group | yes | none | Fuzzers of this group. |
+| `benchmarks` | group | yes | none | Benchmarks of this group (a list of names). |
 | `compiletime` | group | no | `[default]` | Compile-time strategies of this group. |
 | `runtime_strategy` | group | no | `[default]` | Runtime strategies of this group (see "Runtime strategies"). |
 | `trials` | group | no | `trials` in `config.yaml` | Trials of each run in this group. |
 | `max_total_time` | group | no | `max_total_time` in `config.yaml` | Fuzzing time per trial in seconds; split over the compile-time copies of a benchmark, as in `config.yaml`. |
+| `benchmarks` | top level | no | none | A mapping from benchmark name to its settings (below). Not to be confused with a group's `benchmarks` list. |
+| `benchmarks.<name>.compiletime` | top level | no | the group's | Compile-time strategies of this benchmark in every group that runs it. |
+| `benchmarks.<name>.runtime_strategy` | top level | no | the group's | Runtime strategies of this benchmark in every group that runs it. |
 
-A list with one name can also be written as a plain name (`fuzzers: vafuzz`). `runtime-strategy` is accepted for `runtime_strategy`.
+A list with one name can also be written as a plain name (`fuzzers: vafuzz`). `runtime-strategy` is accepted for `runtime_strategy` (not both in one place).
 
-How a file becomes runs:
+#### Which setting wins
+
+- **Strategies** of a run: the `benchmarks` section if it sets that key for the benchmark, else the group's key, else `[default]`.
+- **Trials and fuzzing time** of a run: the group's `trials`/`max_total_time`, else `config.yaml`. The `benchmarks` section cannot set them.
+- **Name, SuperC and triage**: the command-line flag, else the file.
+
+#### How a file becomes runs
 
 - A **run** is one fuzzer on one benchmark with one compile-time and one runtime strategy. Each group adds fuzzers x benchmarks x compile-time strategies x runtime strategies runs, and each run has `trials` trials of `max_total_time` seconds.
 - The same run listed in two groups runs once if both give it the same `trials` and `max_total_time`; if they differ, the experiment stops with an error naming both groups.
-- Only what the runs need is built: each fuzzer is built only against the benchmarks it runs on, and compile-time strategies and runtime configurations are generated only for the benchmarks that use them.
-- A group may only ask for a non-default `runtime_strategy` with fuzzers listed in `runtime/supported_fuzzers.json`; otherwise the experiment stops with an error. (With `--runtime-strategy` on the command line, such fuzzers keep running the default strategy only, as before.)
-- Every name, key and value is checked before anything is built: a misspelled key, an unknown fuzzer or benchmark, or a `trials`/`max_total_time` that is not a positive integer stops the experiment with an error.
-- Trials are queued on the cores from `config.yaml` (`cores_to_use`, `allow_serial_execution`) whatever group they come from.
+- **Nothing that cannot run is run, skipped or replaced.** Every run is checked before anything is built, and if any run cannot run, the experiment stops and lists every such run with the reason and where it came from (its group, or the `benchmarks` section). This applies the same way to experiment files and to command-line flags. A run cannot run when:
+  - it asks for a non-default runtime strategy with a fuzzer that does not support one. Only the fuzzers in `runtime/supported_fuzzers.json` (aflplusplus, libafl) do, so put other fuzzers in a group with `runtime_strategy: [default]`, and do not set a `benchmarks` runtime strategy for a benchmark that such a fuzzer runs;
+  - it asks for a non-default runtime strategy on a benchmark without `rt_grammar.json`;
+  - its benchmark has no `ct_grammar.json`, which every compile-time strategy needs;
+  - its fuzzer needs a benchmark file that is missing, as listed in `fuzzers/benchmark_requirements.json` (for example `dict` for zigzagfuzz, `rt_grammar.json` for vafuzz, the CarpetFuzz analysis for carpetfuzz).
+- A `benchmarks` entry for a benchmark that no group runs is an error, since its settings would not be used.
+- Only what the runs need is built: each fuzzer is built only against the benchmark copies it runs on, and compile-time strategies and runtime configurations are generated only for the benchmarks that use them.
+- Every name, key and value is checked before anything is built: a misspelled key, an unknown fuzzer, benchmark, strategy or triage tool, or a `trials`/`max_total_time` that is not a positive integer stops the experiment with an error.
+- Trials are queued on the cores from `config.yaml` (`cores_to_use`, `first_core`, `allow_serial_execution`) whatever group they come from.
 - A copy of the experiment file is saved in the experiment folder as `experiment.yaml` (or `.json`). Runs started with flags save their single group there in the same format, so every experiment records what it ran.
 - Result folders are named as before (`<fuzzer>[_rts_<strategy>]_cts_<strategy>_<benchmark>_<n>_trial_<k>`), so `common/post_analysis.py` and the report scripts work the same.
 
@@ -219,8 +248,9 @@ Do not run two experiments at the same time from one checkout: they share the be
 A runtime strategy fuzzes a benchmark under several run-time configurations
 (command-line options) instead of the single command in its `run_target.sh`. It
 applies to the fuzzers listed in `runtime/supported_fuzzers.json` (aflplusplus,
-libafl); other fuzzers run with `default` only. Each strategy reuses the fuzzer's
-normal benchmark build, so it only adds trials, not builds.
+libafl); asking for one with any other fuzzer stops the experiment with an error.
+Each strategy reuses the fuzzer's normal benchmark build, so it only adds trials,
+not builds.
 
 | Strategy | Configurations, built from the benchmark's `rt_grammar.json` |
 |---|---|

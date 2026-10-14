@@ -5,7 +5,7 @@ import argparse
 from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_superc, run_label
 from color_logger import get_logger
 from resource_allocation import allocate_resources
-from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies
+from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies, validate_runs
 from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy, count_ct_configurations
 from experiment_plan import load_experiment_file, expand_groups, unique
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     parser.add_argument("--compiletime", type=str, nargs='+', help="Compile time strategies to use (without --experiment; default: default).")
     parser.add_argument("--runtime-strategy", type=str, nargs='+',
                         help="Run-time configuration strategies (runtime/<strategy>; without --experiment; default: default). "
-                             "Non-default strategies apply to the fuzzers in runtime/supported_fuzzers.json; other fuzzers run default only.")
+                             "Non-default strategies need every fuzzer to be in runtime/supported_fuzzers.json; otherwise the experiment stops with an error.")
     parser.add_argument("--experiment-name", type=str, help="Name of the experiment (overrides the experiment file's experiment_name).")
     parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
     parser.add_argument("--dry-run", action="store_true", help="Validate everything and print the planned runs and trials, then exit without building or running anything.")
@@ -397,15 +397,14 @@ if __name__ == "__main__":
                                           ("--compiletime", args.compiletime),
                                           ("--runtime-strategy", args.runtime_strategy)] if value]
         if given:
-            logging.error(f"--experiment replaces {', '.join(given)}; put them in the experiment file's groups.")
+            logging.error(f"--experiment (--groups) replaces {', '.join(given)}; put them in the experiment file's groups.")
             sys.exit(1)
         experiment_file = load_experiment_file(args.experiment)
         groups = experiment_file["groups"]
         experiment_name = args.experiment_name or experiment_file.get("experiment_name")
         no_superc = args.no_superc or experiment_file.get("no_superc", False)
         bug_triaging = args.bug_triaging if args.bug_triaging is not None else experiment_file["bug_triaging"]
-        runs = expand_groups(groups, defaults, rt_supported_fuzzers, strict=True,
-                             overrides=experiment_file["benchmarks"])
+        runs = expand_groups(groups, defaults, overrides=experiment_file["benchmarks"])
     else:
         if not args.fuzzers or not args.benchmarks:
             logging.error("Give --experiment FILE, or --fuzzers and --benchmarks.")
@@ -416,7 +415,7 @@ if __name__ == "__main__":
         experiment_name = args.experiment_name
         no_superc = args.no_superc
         bug_triaging = args.bug_triaging or []
-        runs = expand_groups(groups, defaults, rt_supported_fuzzers, strict=False)
+        runs = expand_groups(groups, defaults)
     if not experiment_name:
         logging.error("No experiment name: give --experiment-name, or experiment_name in the experiment file.")
         sys.exit(1)
@@ -426,14 +425,15 @@ if __name__ == "__main__":
     benchmarks = unique(r["benchmark"] for r in runs)
     compiletime = unique(r["compiletime"] for r in runs)
     runtime_strategies = unique(r["runtime_strategy"] for r in runs)
-    rt_runs = [r for r in runs if r["runtime_strategy"] != "default"]
     validate_fuzzers(fuzzers, project_root)
     validate_benchmarks(benchmarks, project_root)
     validate_ct_strategies(compiletime, project_root)
-    validate_rt_strategies(runtime_strategies, unique(r["fuzzer"] for r in rt_runs),
-                           unique(r["benchmark"] for r in rt_runs), project_root)
+    validate_rt_strategies(runtime_strategies, project_root)
     if bug_triaging:
         validate_triagers(bug_triaging, project_root)
+    # Then every fuzzer x benchmark x strategy combination: one that cannot run is an
+    # error, listed with all the others, before anything is built.
+    validate_runs(runs, project_root)
 
     if args.dry_run:
         logging.info(f"Dry run of experiment {experiment_name} (nothing is built, copied or run).")

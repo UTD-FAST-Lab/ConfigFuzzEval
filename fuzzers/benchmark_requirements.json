@@ -1,0 +1,8 @@
+{
+  "_comment": "Files (relative to benchmarks/<name>/) that a fuzzer's run.sh needs from every benchmark it runs on. run_experiment.py stops before building anything if a run's benchmark lacks one. Fuzzers not listed need only what every benchmark has (the seeds).",
+  "carpetfuzz": ["carpetfuzz/combinations.txt", "carpetfuzz/dict.json"],
+  "configfuzz": ["rt_grammar.json"],
+  "prophetfuzz": ["ranked_stubs.txt"],
+  "vafuzz": ["rt_grammar.json"],
+  "zigzagfuzz": ["dict"]
+}

@@ -63,3 +63,6 @@ logs-reports/
 
 # Local work kept out of git (e.g. the original aflplusplus_2w prototype)
 uncommitted/
+
+# Your experiment file (see "Experiment files" in README.md); the README has an example.
+/experiment.yaml

@@ -21,6 +21,15 @@ runtime strategy runs, and the experiment is the union of its groups:
       xz_xz:                             # group it is in, replacing the group's
         compiletime: [default, maximum]
 
+A benchmarks entry replaces the group's compiletime/runtime_strategy for that
+benchmark in every group that runs it; trials and max_total_time come only from the
+group or --config.
+
+Every run is checked before anything is built (validation.validate_runs): a run
+that cannot run, such as a non-default runtime strategy for a fuzzer that does not
+support one, stops the experiment with an error. Nothing is skipped or replaced by
+a default.
+
 runtime-strategy is accepted for runtime_strategy, and --groups for --experiment.
 The --fuzzers/--benchmarks/--compiletime/--runtime-strategy flags make a single
 group with the --config file's trials and max_total_time.
@@ -113,23 +122,22 @@ def _positive_int(mapping, key, where, default):
     return value
 
 
-def expand_groups(groups, defaults, rt_supported, strict, overrides=None):
+def expand_groups(groups, defaults, overrides=None):
     """Groups -> runs: one dict per fuzzer/benchmark/compiletime/runtime_strategy, without duplicates.
 
     defaults: {"trials", "max_total_time"} from the --config file.
     overrides: {benchmark: {"compiletime"/"runtime_strategy": [...]}}, replacing the
         group's strategies for that benchmark in every group (the file's "benchmarks").
-    rt_supported: fuzzers that support non-default runtime strategies.
-    strict: a non-default runtime strategy for a fuzzer that does not support one is an
-        error (experiment files); otherwise the fuzzer runs the default strategy only, as
-        the command line has always done.
+    Each run records where it came from ("origin"), for error messages.
     """
     overrides = overrides or {}
     unused = sorted(set(overrides) - {b for g in groups if isinstance(g, dict)
                                       for b in ([g["benchmarks"]] if isinstance(g.get("benchmarks"), str)
                                                 else g.get("benchmarks") or [])})
     if unused:
-        logging.warning(f"Benchmark settings for {unused} are not used: no group includes them.")
+        fail(f"benchmarks: settings for {', '.join(unused)} would not be used, as no group runs "
+             f"{'it' if len(unused) == 1 else 'them'}; add {'it' if len(unused) == 1 else 'them'} "
+             f"to a group or remove the settings.")
 
     runs = {}
     for index, group in enumerate(groups, 1):
@@ -150,16 +158,12 @@ def expand_groups(groups, defaults, rt_supported, strict, overrides=None):
 
         for fuzzer in fuzzers:
             for benchmark in benchmarks:
-                benchmark_ct = overrides.get(benchmark, {}).get("compiletime", compiletime)
-                fuzzer_rts = overrides.get(benchmark, {}).get("runtime_strategy", runtime_strategies)
-                if fuzzer not in rt_supported and any(s != "default" for s in fuzzer_rts):
-                    if strict:
-                        fail(f"{where}: {fuzzer} does not support runtime strategies "
-                             f"(runtime/supported_fuzzers.json: {sorted(rt_supported)}); "
-                             f"use runtime_strategy: [default] for it.")
-                    fuzzer_rts = ["default"]
-                for ct in benchmark_ct:
-                    for rts in fuzzer_rts:
+                override = overrides.get(benchmark, {})
+                origin = f"group {index}"
+                if override:
+                    origin += f", with {' and '.join(sorted(override))} from benchmarks: {benchmark}"
+                for ct in override.get("compiletime", compiletime):
+                    for rts in override.get("runtime_strategy", runtime_strategies):
                         key = (fuzzer, benchmark, ct, rts)
                         if key in runs:
                             prev = runs[key]
@@ -171,7 +175,7 @@ def expand_groups(groups, defaults, rt_supported, strict, overrides=None):
                             continue
                         runs[key] = {"fuzzer": fuzzer, "benchmark": benchmark, "compiletime": ct,
                                      "runtime_strategy": rts, "trials": trials,
-                                     "max_total_time": max_total_time, "group": index}
+                                     "max_total_time": max_total_time, "group": index, "origin": origin}
     return list(runs.values())
 
 

@@ -1,0 +1,15 @@
+diff --git a/scripts/utils/nlp_util.py b/scripts/utils/nlp_util.py
+index e028bd2..ecb825a 100755
+--- a/scripts/utils/nlp_util.py
++++ b/scripts/utils/nlp_util.py
+@@ -24,6 +24,10 @@ class NLPUtil:
+             return False
+         len_relation_tree_1 = len(relation_tree_1)
+         len_relation_tree_2 = len(relation_tree_2)
++        # A one-node tree has no [:-1][-1] element below (IndexError); it can
++        # only match through the equality check above.
++        if min(len_relation_tree_1, len_relation_tree_2) < 2:
++            return False
+         if len_relation_tree_1>len_relation_tree_2:
+             if relation_tree_2[:len_relation_tree_2-1][:-1] == relation_tree_2[:-1][:-1] and relation_tree_2[:-1][-1] in relation_tree_1[:len_relation_tree_2-1][-1]:
+                 return True

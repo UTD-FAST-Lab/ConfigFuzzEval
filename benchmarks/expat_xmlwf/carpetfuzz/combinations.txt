@@ -1,0 +1,403 @@
+-k -e -w -h -q -t -n -s -x 
+-k -m -g -N -d -v -r 
+-e -m -h -N -q -a -p -v -b -s 
+-c -w -m -h -g -N -q -a -d -b 
+-e -c -g -N -a -t -p -d -s 
+-k -h -g -q -a -v -b -x -r 
+-k -c -m -q -t -p -d -v -b 
+-k -e -N -q -a -t -n -p -b -r 
+-e -c -w -h -g -q -p -d -v -b -s -r 
+-w -a -n -d -b -s -x -r 
+-k -e -w -m -h -g -t -n -p -d -b 
+-e -w -m -q -n -v -r 
+-k -c -w -g -a -p -r 
+-m -h -g -N -a -t -n -p -d -v -b -s -r 
+-k -e -c -w -m -N -b -s -x 
+-w -m -g -N -q -t -s -x -r 
+-c -h -N -t -x 
+-e -c -w -q -a -t -d -v -b -x 
+-k -w -m -h -a -t -p -v -s -r 
+-w -m -N -t -n -p -b 
+-k -e -n -p -d -v -s 
+-k -e -c -w -h -g -N -q -a -t -v -x -r 
+-w -m -g -a -t -n -v -x 
+-c -h -q -a -p -d -s -r 
+-k -e -w -h -g -N -q -a -n -d -s -r 
+-k -w -h -N -q -n -p -d -v -b 
+-e -c -h -g -a -b -s 
+-e -m -g -q -t -n -d -b -s -r 
+-e -w -g -N -a -d -x 
+-N -q -a -n -d -v -x 
+-k -e -c -g -q -p 
+-k -e -c -w -m -g -q -v -b -x -r 
+-k -c -g -N -q -t -v -b -s -x 
+-e -h -N -a -t -d -v -b -s -x -r 
+-k -w -m -g -N -q -a -n -p -v -s 
+-c -w -h -N -q -a -v -s -x 
+-e -c -w -m -h -N -a -t -p -d -r 
+-k -c -m -h -a -d -v -s -x 
+-e -h -g -N -n -p -r 
+-h -g -t -p -b -s 
+-k -e -w -a -t -n -p -d -v -r 
+-k -e -m -h -g -N -q -t -n -d -v -x 
+-c -w -h -g -N -q -a -t -p -b -s -r 
+-k -e -c -h -N -a -p -v -b -r 
+-k -m -N -a -t -b -x 
+-e -c -m -N -q -t -p -v -s -r 
+-k -c -w -m -g -N -a -t -d -v -b -s -x -r 
+-c -w -m -q -t -p -d -s 
+-c -w -h -g -t -d -v -r 
+-e -w -m -h -q -a -t -n -p -d -v -b -s 
+-k -e -c -h -t -d -v -b -x 
+-k -g -q -a -n -p -d -b -s 
+-k -e -w -m -g -p -d -v -s 
+-e -c -m -h -g -a -t -p -v 
+-k -e -m -a -n -s -x -r 
+-m -h -a -n -p 
+-k -w -h -N -t -d -b -s 
+-k -e -g -N -n -d -b -x -r 
+-k -w -m -h -q -a -b -r 
+-e -c -m -g -N -q -d -v -s -x 
+-e -c -w -m -a -d -v -b -s -r 
+-k -c -w -m -h -g -N -p -v -b 
+-k -c -m -h -g -N -q -p -d -s -r 
+-k -e -c -h -N -q -t -d -r 
+-w -g -N -t -n -p -d -s -r 
+-k -e -w -g -N -a -t -n -v -b -s 
+-k -h -N -q -a -t -n -p -d -s 
+-k -c -h -g -v -s -r 
+-k -e -c -w -m -h -q -a -p -v 
+-k -e -w -m -h -g -N -n -b -s -r 
+-e -w -N -q -p 
+-e -h -q -n -d -b -x -r 
+-c -w -m -N -q -p -d -b -r 
+-e -c -m -h -g -a -t -d -b -x -r 
+-e -w -m -h -v -b -x 
+-m -h -N -q -t -n -v -b -s -x -r 
+-c -m -g -q -a -t -p -v -b -r 
+-k -e -c -m -h -q -t -p -b -s -r 
+-e -w -t -p -v -b -s -r 
+-k -w -m -q -t -n -v -b -s -x -r 
+-w -h -g -q -a -t -n -d -x -r 
+-m -t -n -d -x -r 
+-e -w -h -g -a -n -p -v -b 
+-k -h -t -n -p -d -v -b -r 
+-c -w -m -h -g -d -s -x 
+-c -w -m -q -a -p -v -b -s 
+-e -g -q -a -s -x -r 
+-k -c -w -t -s -x -r 
+-N -a -n -v -s -r 
+-k -c -m -h -N -q -a -x -r 
+-k -e -w -m -h -N -a -n -p -d -s 
+-e -c -w -m -h -g -N -q -t -p -d -v -b 
+-c -w -g -N -q -d -v -b -x -r 
+-e -c -h -N -b -s -x -r 
+-k -m -h -g -q -a -t -n -s -x 
+-k -m -N -n -p -d -v -b -s -r 
+-k -e -m -h -g -n -d -v -b -s -x 
+-w -h -g -q -n -v -s 
+-e -m -g -q -n -p -d -v -r 
+-k -w -m -q -n -d -x 
+-k -c -w -N -a -t -p -d -v -s 
+-k -e -c -w -m -h -t -d -s -x -r 
+-k -e -c -m -N -q -a -t -d 
+-c -b 
+-k -e -c -g -N -q -a -p -d -v -b -s -r 
+-k -e -w -m -h -N -a -t -n -d -v -x -r 
+-k -e -m -h -q -a -p -d -b -r 
+-c -m -g -N -a -p -b -s 
+-k -e -w -m -g -N -a -t -p -r 
+-q -t -n -p -v -s 
+-w -m -h -g -N -a -p -d -v -r 
+-k -w -h -g -a -t -n -b -x 
+-k -e -c -g -a -t -d -v -x -r 
+-e -m -g -N -q -a -t -n -b -x 
+-k -e -w -g -N -q -n -v -b -s -x -r 
+-k -e -h -g -q -t -n -p -v -r 
+-e -c -m -q -a -t -s -x 
+-k -w -g -N -a -n -d -v -b -x 
+-k -c -m -g -q -t -d -b -s -x 
+-c -h -g -N -q -a -t -p -d -v 
+-e -c -h -N -q -a -d -b -s -x 
+-k -w -m -h -g -q -a -n -p -b -s -r 
+-k -c -h -N -a -t -p -b -s 
+-k -e -w -h -N -q -t -p -d -v -s -r 
+-k -c -w -m -h -N -t -v -x 
+-g -t -d -v -x 
+-e -c -w -N -p -d -v 
+-e -h -g -N -q -t -n -p -d -b -s 
+-m -g -N -n -s -x 
+-e -w -N -t -n -d -v -s -x 
+-k -h -g -N -n -x -r 
+-w -g -q -a -t -p -d -b 
+-e -m -N -a -t -n -p -d -b 
+-e -w -m -h -g -N -q -a -t -n -p -s -r 
+-w -h -N -a -n -v -b -x -r 
+-k -e -c -m -h -N -p -d -b 
+-k -e -c -m -N -a -v -x -r 
+-e -w -m -h -g -N -a -n -v -s -x -r 
+-k -e -c -w -h -g -a -d -x 
+-k -c -N -q -v -b -s -r 
+-m -h -N -q -d -s -x -r 
+-k -e -c -a -t -p -d -b -s -r 
+-e -c -w -m -h -N -a -t -b -s -x 
+-k -w -h -g -N -q -t -d -b -x -r 
+-c -g -p -d -v -b -r 
+-e -c -w -h -q -x -r 
+-e -c -w -h -g -N -t -v -b -s 
+-k -m -g -t -n -p -v -b 
+-k -m -g -N -q -t -n -p -d -r 
+-k -w -N -n -p -s -r 
+-k -e -h -a -t -p -v -s 
+-m -h -g -q -a -n -v -b 
+-k -e -c -w -m -h -g -q -t -p -v -s 
+-k -c -w -m -h -q -a -t -d -b -x -r 
+-k -c -w -h -g -t -p -d -b -s -r 
+-c -m -N -a -d -v -b -x -r 
+-w -m -N -q -a -t -n -p -d -v -r 
+-c -m -h -g -v -b -x -r 
+-c -N -q -t -p -d -b -s -r 
+-k -h -q -a -n -d -v -s -x -r 
+-e -w -m -h -g -q -a -d -b -s -x 
+-e -c -w -m -g -t -p -v -b -s 
+-k -e -m -g -N -t -n -p -v -s 
+-k -N -a -p -d 
+-k -e -w -m -g -q -a -t -d -v -b -s -x 
+-k -c -w -m -N -q -a -t -p -s 
+-e -g -a -n -p -d 
+-k -w -q -a -t -n -d -v -b 
+-c -g -q -a -b -x 
+-k -e -w -m -h -N -q -n -p -v -b -r 
+-k -e -c -w -g -N -t -p -b 
+-k -e -h -q -d -v 
+-e -c -w -m -h -g -N -q -p -b -r 
+-w -m -h -g -n -p -d -b -s -r 
+-k -e -m -t -n 
+-k -m -g -q -a -n -d -v -b -s -x -r 
+-k -e -w -m -h -g -N -q -a -n -b -x 
+-k -w -g -q -t -n -p -v -r 
+-k -e -c -w -h -q -p -b -s 
+-k -e -c -h -g -a -t -v -b -s -x -r 
+-e -w -a -t -n -b -r 
+-e -c -v -s -x 
+-c -m -h -g -N -a -t -d -s -r 
+-e -m -h -N -q -a -t -n -v 
+-c -w -m -h -t -v -s -r 
+-e -h -q -a -t -n -d -v -s -r 
+-k -e -h -g -N -t -s -x 
+-w -h -t -n -d -v -b -s -x 
+-k -e -c -w -g -q -a -t -s -r 
+-k -e -w -m -h -g -a -t -d 
+-e -w -g -q -n -v -b -x 
+-k -N -q -a -t -n -b -s -x 
+-k -e -c -m -g -p -d -r 
+-k -w -N -q -t -v -x -r 
+-e -c -w -h -a -p -d -s 
+-k -e -w -N -q -a -n -d -v -b -s -x -r 
+-m -a -t -d -v -b -s 
+-e -h -n -p -b -s -r 
+-c -g -N -q -a -r 
+-k -c -h -q -t -d -v -s -x -r 
+-k -c -w -m -h -N -q -t -d -v -b -s 
+-w -g -q -n -s 
+-k -w -g -d -v -s -x -r 
+-k -h -g -N -a -t -n -p -v -b -r 
+-e -c -m -h -N -q -t -d -v -b -x -r 
+-k -w -m -a -n -p -b -r 
+-c -w -h -g -N -p -d -v -s 
+-e -m -g -N -q -d -v -b -x -r 
+-w -m -g -N -q -a -n -p -d -b -s 
+-e -w -m -h -N -n -d 
+-e -c -w -N -t -b -x -r 
+-w -m -h -g -N -t -d -v -b -x 
+-h -a -t -n -v -x -r 
+-k -m -h -N -q -v -b -s -x 
+-e -c -m -g -N -t -p -v -b -r 
+-e -w -g -N -q -a -t -n -p -d -b -r 
+-k -c -w -m -g -N -q -a -d -s -x -r 
+-e -c -w -m -q -a -p -d -b 
+-k -e -h -N -a -n -v -b -x 
+-e -c -w -g -q -a -t -p -d -v -s -r 
+-k -m -h -N -a -t -n -d -b -s -r 
+-k -c -m -h -g -N -t -p -r 
+-k -e -c -a -p -v -b -s 
+-e -w -m -g -t -n -d -b -s -x -r 
+-m -h -q -n -b -x 
+-k -e -m -h -q -t -n -p -d -s -r 
+-e -c -m -g -N -a -v 
+-h -g -N -q -t -v -b -r 
+-c -h -a -t -d -b -x 
+-k -e -c -d -b -s -x 
+-e -w -m -N -q -t -n -d -x -r 
+-k -q -t -n -b -x -r 
+-c -m -g -N -t -s -x -r 
+-h -g -N -q -a -t -n -d -v -s -x 
+-k -m -g -N -q -a -t -p -d -v -b -s -r 
+-e -m -N -q -n -p -s 
+-k -w -h -N -t -n -p -d -v 
+-k -c -w -N -d 
+-k -c -w -m -a -t -v -b 
+-e -m -h -g -a -t -n -p -s -r 
+-e -g -N -d -b -s -r 
+-k -c -m -g -a -p -d -v -s 
+-m -h -N -q -t -p -v 
+-k -c -w -q -a -v -x 
+-k -w -m -h -g -t -n -d -v -s -r 
+-w -h -N -q -a -t -n -p 
+-e -c -m -h -q -a -t -p -d -v -b -r 
+-k -e -w -m -g -n -x -r 
+-e -c -w -h -g -N -d -v -s -x -r 
+-k -w -h -g -N -a -p -d -b -s 
+-k -e -c -w -h -g -N -q -t -d -b -s -x 
+-k -e -w -g -N -q -a -t -n -p -d -v 
+-k -e -w -m -q -p -d -b -s -r 
+-c -w -m -g -q -a -t -d -v -x 
+-k -c -g -N -q -a -t -p -d -b -r 
+-k -c -w -h -p -v -b -r 
+-e -w -m -h -g -q -a -t -v -x -r 
+-m -h -g -q -a -n -p -d -v 
+-e -c -w -N -q -a -t -v -s -x -r 
+-c -m -q -t -d -r 
+-c -w -h -g -q -t -b -s -x 
+-k -e -c -h -N -a -d -s -x -r 
+-k -e -c -w -m -h -g -N -q -a -d -v -b -r 
+-e -m -g -a -t -n -d -v -b -x -r 
+-c -w -m -h -g -a -p -s -r 
+-w -m -a -s -x 
+-h -g -N -a -n -d -s -x 
+-k -c -w -m -g -N -q -b 
+-e -w -g -N -a -t -n -x -r 
+-k -w -g -q -p -v -b 
+-k -g -N -t -n -d -b 
+-k -e -w -q -n -d -b -s 
+-k -e -m -h -g -N -q -a -n -p -v -b -r 
+-k -e -c -w -m -N -a -p -d -v -b 
+-e -c -h -g -q -t -v -b 
+-k -h -g -a -n -d -v -r 
+-c -h -N -p -v -b -s 
+-e -N -q -t -p -d -b -r 
+-k -w -g -a -t -n -d -s -x 
+-k -e -c -m -q -a -v -b -s -x -r 
+-k -e -q -t -d -x -r 
+-w -m -h -N -q -a -n -d -v -b -x -r 
+-w -h -g -N -t -n -v -x -r 
+-k -e -m -N -q -a -n -d -v -s -x 
+-e -g -N -a -t -n -p -v -b -s -r 
+-e -c -m -h -N -q -b -s 
+-w -h -q -a -p -d -v -b -s -r 
+-k -e -m -g -q -a -b -s 
+-m -h -p -d -r 
+-e -c -w -q -a -p -r 
+-k -c -g -N -v -x 
+-k -c -w -m -h -g -N -q -a -d -v -b -s -x 
+-k -e -w -h -q -a -n -p -v -s -r 
+-m -N -v -b -s -x -r 
+-k -e -c -m -h -g -N -q -x 
+-w -m -h -n -p -d -v -b -s 
+-e -c -w -m -h -g -q -v -s -x -r 
+-k -h -g -q -a -n -p -b 
+-k -g -N -a -p -v -s -r 
+-e -w -m -a -n -v -b -s -x 
+-k -e -c -w -h -N -a -t -p -d -v -b -s -r 
+-w -m -g -N -q -t -n -d -v -b -s -r 
+-e -w -m -h -g -q -t -n -b -x -r 
+-k -N -q -n -d -v -x -r 
+-e -c -w -m -g -N -p 
+-k -e -w -m -g -N -q -a -t -n -r 
+-k -w -m -h -N -q -n -p -s 
+-k -e -c -m -g -N -a -t -p -d -b -s 
+-k -e -h -N -q -a -t -n -d -b -s -x -r 
+-k -e -h -g -N -p -d -v -b -r 
+-q -a -n -p -d -v -b -s -r 
+-c -w -m -g -N -a -b -s -x -r 
+-e -g -q -n -d -v -s -x 
+-e -w -h -q -a -t -d -x 
+-k -c -w -m -h -N -p -d -v -s -r 
+-k -c -w -h -q -p -d -v -r 
+-c -w -g -N -q -t -p -v -r 
+-w -m -N -q -a -n -s -x -r 
+-k -e -w -t -n -p -b -s 
+-k -c -m -h -g -q -t -d -b -x -r 
+-k -m -h -N -t -n -d -b -x 
+-k -c -w -h -g -q -a -p -d -b 
+-c -N -a -t -p -d -v -r 
+-k -e -m -q -a -t -p 
+-w -h -q -t -n -p -r 
+-k -e -c -w -g -q -a -d -b -x -r 
+-e -c -N -t -p -d -v -b -s 
+-k -h -N -q -a -t -n -s 
+-k -e -c -w -h -g -a -v -b -s -x 
+-k -e -N -q -t -n -v -x 
+-e -w -h -N -n -d -b -r 
+-e -w -h -g -t -n -s 
+-k -c -h -g -N -a -t -d -v -x -r 
+-m -h -g -t -n -v -b -s -x 
+-k -w -h -g -q -a -t -p -s 
+-k -e -c -m -g -t -d -v -s 
+-k -e -w -m -h -N -t -n -v -b -s -x -r 
+-e -w -m -N -t -p -d -b -s -r 
+-e -c -q -p -v -b -r 
+-k -c -m -h -t -p -r 
+-k -e -g -q -a -t -n -p -d -v -b -s -r 
+-e -w -m -g -q -a -n -p -d -s 
+-c -m -g -N -p -d 
+-k -e -m -N -q -a -d -s -x -r 
+-c -h -q -a -d -v -b -s 
+-k -e -w -h -a -n -x -r 
+-k -w -m -h -g -q -a -d -v -s -r 
+-e -c -w -m -N -a -p -v -r 
+-w -h -g -N -b -s -x -r 
+-e -w -g -N -q -a -p -v -b -s 
+-c -w -m -h -q -d -v -x 
+-k -e -c -w -m -g -N -a -t -d -x 
+-k -e -c -m -h -g -q -a -t -b -x 
+-m -h -g -p -v -s -r 
+-e -w -N -a -t -v -r 
+-e -c -g -N -q -p -s 
+-k -e -m -h -g -q -a -n -d -x 
+-w -m -g -N -q -t -n -d -b -s -x 
+-k -e -m -g -N -a -n -b -r 
+-c -w -g -N -q -d -v -s 
+-e -m -h -n -p -v 
+-k -e -c -w -h -g -N -v -s -x 
+-m -N -q -n -v -b -s 
+-e -w -h -N -n -s -x 
+-k -e -c -w -h -g -N -q -a -p -d -r 
+-h -N -q -a -p -v 
+-k -m -g -q -a -t -n -d 
+-w -m -h -q -a -t -n -p -b 
+-c -w -N -q -t -d -b -s -x 
+-e -m -h -g -t -x 
+-k -c -m -g -N -a -t -p -v -s -r 
+-e -c -h -g -N -q -p -d -b 
+-k -c -q -t -p 
+-k -c -w -h -g -a -t -b -r 
+-k -c -w -m -g -q -t -p -v -b -r 
+-c -m -N -a -t -v -b -x 
+-k -c -w -m -g -a -t -v -s -x 
+-k -e -w -g -N -n -p 
+-k -m -N -q -t -p -d -v -s 
+-k -e -c -m -h -g -N -a -d -b -x -r 
+-k -e -w -g -q -a -t -n -v -s -x -r 
+-h -N -n -s 
+-e -w -g -N -n -p -d -v -b -s 
+-c -w -m -h -N -q -p -d -v -b -s -r 
+-k -c -N -q -d -s -x -r 
+-g -q -n -p -b -r 
+-k -a -d -b -x 
+-k -w -m -h -a -t -n -v -x -r 
+-k -c -m -N -a -t -d -b -s -x 
+-k -e -c -w -m -g -N -p -d -v -b -s 
+-k -w -h -g -n -p -d -v -s 
+-k -e -m -g -N -a -t -n -p -d -s -r 
+-c -w -m -a -t -v -s -x -r 
+-k -e -w -h -g -N -a -n -p -b -s 
+-e -w -t -n -d -s -x -r 
+-e -h -g -a -t -n -d -b -x 
+-e -a -t -p -d -v -b -r 
+-k -e -w -g -N -t -p -d 
+-e -c -m -h -g -d -v 
+-w -m -g -q -t -p -v -r 
+-e -c -w -m -N -q -a -t -d -v -b -s -x -r 
+-c -w -h -p -s -r 
+-h -g -N -a -x -r 

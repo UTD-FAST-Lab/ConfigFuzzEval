@@ -20,12 +20,9 @@ def main():
     # -------------------------------
     # Load ranked_stubs.txt into an array
     # -------------------------------
-    # Determine directory of coverage binary
-    binary_path = Path(shlex.split(run_target)[0])
-    binary_dir = binary_path.parent  # directory containing the binary
-
-    # ranked_stubs.txt is in the same directory as the coverage binary
-    ranked_stubs_file = binary_dir / "ranked_stubs.txt"
+    # run.sh ranks the combinations at the start of each trial and writes the
+    # stub file it fuzzed with into the trial's output directory.
+    ranked_stubs_file = out_dir / "ranked_stubs.txt"
 
     if not ranked_stubs_file.is_file():
         raise RuntimeError(f"{ranked_stubs_file} not found")

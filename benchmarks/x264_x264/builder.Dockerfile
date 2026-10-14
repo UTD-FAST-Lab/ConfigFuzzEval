@@ -36,6 +36,10 @@ COPY dict /
 COPY ranked_stubs.txt /
 COPY build.sh /
 COPY rt_grammar.json /
+# CarpetFuzz/ProphetFuzz inputs: the target's man page and CarpetFuzz's
+# analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
+COPY manpage.1 /
+COPY carpetfuzz /carpetfuzz_analysis
 COPY load_src.sh /  
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /x264/x264  /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp -r /x264 /benchmark_out_dir/source/ && cp /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp -r /x264/x264  /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/ && cp /manpage.1 /benchmark_out_dir/ && cp -r /carpetfuzz_analysis /benchmark_out_dir/carpetfuzz  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp -r /x264 /benchmark_out_dir/source/ && cp /load_src.sh /benchmark_out_dir/"]

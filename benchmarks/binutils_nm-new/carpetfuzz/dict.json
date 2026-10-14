@@ -1,0 +1,77 @@
+{
+ "synopsis": "nm-new OPTIONS @@",
+ "options": {
+  "-C": {
+   "connector": " ",
+   "values": [
+    "auto",
+    "gnu",
+    "lucid",
+    "arm",
+    "hp",
+    "edg",
+    "gnu-v3",
+    "java",
+    "gnat"
+   ]
+  },
+  "-f": {
+   "connector": " ",
+   "values": [
+    "bsd",
+    "sysv",
+    "posix",
+    "just-symbols"
+   ]
+  },
+  "--ifunc-chars": {
+   "connector": "=",
+   "values": [
+    "<>",
+    "[]",
+    "{}",
+    "()",
+    "@@",
+    "##"
+   ]
+  },
+  "-t": {
+   "connector": " ",
+   "values": [
+    "x",
+    "d",
+    "o"
+   ]
+  },
+  "--target": {
+   "connector": "=",
+   "values": [
+    "elf64-x86-64",
+    "elf32-i386",
+    "elf32-iamcu",
+    "elf32-x86-64",
+    "pei-i386",
+    "pe-x86-64",
+    "pei-x86-64",
+    "elf64-l1om",
+    "elf64-k1om",
+    "elf64-little",
+    "elf64-big",
+    "elf32-little",
+    "elf32-big",
+    "srec",
+    "symbolsrec",
+    "verilog",
+    "tekhex",
+    "binary",
+    "ihex"
+   ]
+  },
+  "-X": {
+   "connector": " ",
+   "values": [
+    "32_64"
+   ]
+  }
+ }
+}

@@ -1,0 +1,128 @@
+{
+ "synopsis": "xmllint OPTIONS @@",
+ "options": {
+  "--maxmem": {
+   "connector": " ",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  },
+  "--pattern": {
+   "connector": " ",
+   "values": [
+    "//element",
+    "/root/*",
+    "//node[@attr]",
+    "pattern"
+   ]
+  },
+  "--xpath": {
+   "connector": " ",
+   "values": [
+    "//element",
+    "/root/child",
+    "//node[@id]",
+    "//*"
+   ]
+  },
+  "--output": {
+   "connector": " ",
+   "values": [
+    "output.xml",
+    "result.xml",
+    "out.xml",
+    "file.xml"
+   ]
+  },
+  "--encode": {
+   "connector": " ",
+   "values": [
+    "UTF-8",
+    "UTF-16",
+    "ISO-8859-1",
+    "US-ASCII"
+   ]
+  },
+  "--path": {
+   "connector": " ",
+   "values": [
+    "/usr/share/xml",
+    "/etc/xml",
+    "./xml",
+    ".",
+    ".."
+   ]
+  },
+  "--dtdvalid": {
+   "connector": " ",
+   "values": [
+    "http://example.com/dtd.dtd",
+    "file:///path/to/dtd.dtd",
+    "./dtd.dtd",
+    "dtd.dtd"
+   ]
+  },
+  "--dtdvalidfpi": {
+   "connector": " ",
+   "values": [
+    "-//W3C//DTD XHTML 1.0//EN",
+    "-//OASIS//DTD DocBook XML V4.5//EN",
+    "FPI"
+   ]
+  },
+  "-o": {
+   "connector": " ",
+   "values": [
+    "output.xml",
+    "result.xml",
+    "out.xml",
+    "file.xml"
+   ]
+  },
+  "--pretty": {
+   "connector": " ",
+   "values": [
+    "0",
+    "1",
+    "2"
+   ]
+  },
+  "--relaxng": {
+   "connector": " ",
+   "values": [
+    "schema.rng",
+    "relaxng.rng",
+    "validation.rng",
+    "schema.xml"
+   ]
+  },
+  "--schema": {
+   "connector": " ",
+   "values": [
+    "schema.xsd",
+    "validation.xsd",
+    "wsdl.xsd",
+    "schema.xml"
+   ]
+  },
+  "--xpath0": {
+   "connector": " ",
+   "values": [
+    "//element",
+    "/root/child",
+    "//node[@id]",
+    "//*"
+   ]
+  },
+  "--max-ampl": {
+   "connector": " ",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  }
+ }
+}

@@ -1,0 +1,525 @@
+-y -e -w -j -m -s -t -h 
+-i -r -d -c -p -o -n -F -l -k -b -a 
+-i -r -e -d -w -o -x -u -f -m -l -k -h 
+-r -e -c -o -x -j -u -n -m -F -b -t -q 
+-d -p -x -j -u -f -F -l -k -s -t -a -q 
+-i -e -c -p -w -x -n -m -l -b -s -q 
+-y -i -o -j -f -n -k -h -a -q 
+-y -r -z -c -p -w -o -f -m -F -s -a -q 
+-i -r -d -w -j -u -n -m -F -b -s -t -h -a -q 
+-y -e -d -c -p -w -o -j -f -n -F -l -t -h 
+-r -e -d -c -p -w -x -u -t -h -a 
+-i -r -p -x -j -f -m -k -s 
+-i -z -d -p -o -x -m -F -b -t -h 
+-y -i -r -e -o -F -l -k -b -s -t -q 
+-r -p -w -f -n -l -t -q 
+-y -i -c -w -j -u -f -F -l -k -s 
+-y -i -r -e -d -c -p -w -j -u -m -k -b -a -q 
+-i -e -z -d -c -x -u -l -k -b -s -t -a 
+-y -e -z -d -u -f -n -m -F -k 
+-y -i -z -d -c -p -w -u -n -s -h -q 
+-z -d -c -w -f -m -l -k -t -h -a 
+-e -z -c -w -o -x -u -f -n -F -k -s -t -h -a -q 
+-r -e -d -c -o -j -f -k -s -q 
+-y -r -e -z -d -p -w -o -u -n -l -k -b -s -h -a 
+-y -d -p -o -u -m -l -b -h -a -q 
+-i -e -c -p -o -j -u -f -m -F -l -s -t -h -a 
+-r -c -x -n -m -l -k -s -h -a -q 
+-z -c -o -x -f -F -l 
+-i -e -z -p -w -o -x -f -l -k -t -a -q 
+-i -r -e -d -x -j -f -F -h -a -q 
+-y -e -d -c -j -n -F -l -b -s -a 
+-y -e -z -c -p -u -f -n -m -t -a -q 
+-i -r -z -d -w -x -u -n -F -l -b 
+-r -z -u -k -b -t -h -q 
+-p -w -o -x -n -F -k -b -s -h 
+-y -i -r -z -d -c -o -u -f -n -m -l -s -t 
+-i -r -e -z -c -p -o -u -m -F -k -h -q 
+-i -w -o -x -j -u -l -b -s -t -h -q 
+-r -z -d -c -w -o -x -u -n -m -k -b -s -t -a 
+-y -r -e -c -p -o -f -n -m -l -k -t -h 
+-r -c -p -w -o -x -j -u -m -F -l -k -b -t -h -a 
+-y -r -p -j -u -n -F -b -s 
+-y -i -d -w -o -f -n -m -F -k -s -t -a -q 
+-i -z -p -w -x -u -f -m -F -s -h -a 
+-i -d -c -w -o -x -j -m -F -l -k -q 
+-y -i -r -e -z -w -f -n -m -l -h -a -q 
+-i -r -e -z -d -p -x -f -n -m -F -l -k -s -t -h -q 
+-e -w -j -u -f -m -F -l -a -q 
+-e -z -d -c -p -o -x -n -b -h -a -q 
+-r -z -o -x -n -m -F -l -s -t -h -a 
+-d -c -w -o -x -j -u -f -n -m -l -s -h 
+-i -e -p -w -o -x -j -u -f -n -F 
+-i -r -c -p -w -x -u -f -n -k -h -a 
+-y -i -r -d -c -j -m -l -b -t -h 
+-y -i -e -z -d -c -w -o -F -b -t -a 
+-r -e -p -x -j -l -k -b -a 
+-y -r -z -d -c -w -u -f -F -k -s -t -h -q 
+-r -e -d -w -x -j -f -n -l -k -s -t 
+-y -i -c -p -F -k -b -t -h -a -q 
+-y -z -d -p -w -k -b -s -a -q 
+-i -e -z -x -f -n -s -t 
+-r -z -c -p -w -n -m -F -k -b -t 
+-r -z -d -c -x -u -f -n -F -l -h -a -q 
+-i -r -e -z -d -p -w -o -x -u -F -s -q 
+-y -i -r -z -c -m -b -s -a 
+-i -r -e -z -c -w -x -u -n -m -F -l -k -t -a -q 
+-i -e -d -c -o -x -u -f -n -m -k -t -h -q 
+-e -p -o -u -f -n -m -s -a 
+-y -r -e -z -p -w -o -u -f -F -l -t 
+-e -d -p -o -x -j -u -n -m -l -k -b -s -t -h -q 
+-y -i -r -z -p -o -u -n -l -b -t -h -a -q 
+-i -z -d -o -x -f -k -s -h -a 
+-i -r -e -c -x -j -f -n -F -l -s -t -h -q 
+-y -i -r -d -p -w -o -j -u -l -k -s -t -a 
+-d -c -j -u -n -m -k -b -q 
+-y -i -e -z -d -c -p -o -f -F -l -k -s -h -q 
+-r -d -o -x -j -m -t -a -q 
+-y -e -z -o -u -m -F -l -k -b -s -h 
+-y -c -p -o -j -u -t 
+-y -i -e -d -p -w -j -u -n -m -F -l -k -b -t -h 
+-i -p -x -j -f -n -m -l -t -a 
+-y -i -z -c -w -o -n -m -l -k -b -q 
+-y -i -e -z -d -w -u -m -l -s -t -a -q 
+-r -e -z -w -o -x -m -b -q 
+-i -r -e -c -o -x -j -u -n -k -s -a 
+-r -c -p -o -x -j -u -f -l -s -h -a -q 
+-y -i -r -d -w -o -j -F -b -h 
+-e -z -d -c -w -o -u -F -l -s -h -a -q 
+-y -r -w -o -j -u -f -n -m -F -l -k -h -q 
+-i -z -d -p -x -u -f -n -F -k -t -q 
+-r -d -c -p -w -o -x -j -f -n -m -F -s -t -q 
+-e -z -w -x -n -F -l -k -b -t -h -a -q 
+-i -z -c -p -w -o -x -f -n -m -t -h 
+-i -r -z -d -p -x -u -m -l -k -b -s -h -q 
+-y -r -d -c -o -u -f -F -s -t -h -a 
+-i -e -z -d -c -n -m -F -b -s -t -h 
+-i -e -z -c -p -w -u -l -b -h 
+-e -z -c -p -x -u -m -F -k -b -s -t -q 
+-r -e -z -d -o -f -m -F -k -t -a 
+-y -r -e -d -o -j -u -f -n -s -t -h -a -q 
+-y -r -e -d -c -w -n -k -b -h -q 
+-y -i -e -j -n -m -F -k -s -h -a 
+-y -e -c -w -o -j -u -f -m -k -s -q 
+-i -r -d -c -p -o -x -j -u -n -F -l -k -b -s -t -h 
+-y -z -w -u -n -F -l -t -a 
+-i -r -z -w -o -f -F -s -t -h -q 
+-y -i -r -e -c -p -w -o -j -n -m -b -s -t -a 
+-y -e -p -j -F -l -b -t -h -q 
+-y -r -z -d -p -n -m -F -l -b -s -q 
+-i -e -d -w -x -m -F -k -b -s -t -a -q 
+-i -e -d -p -o -j -m -b -s -q 
+-r -e -d -c -p -x -j -u -f -m -F -l 
+-i -r -e -d -c -p -w -j -f -n -l -k -t -a -q 
+-i -d -c -p -w -o -x -j -u -n -F -b -h -a -q 
+-z -d -w -o -x -u -f -m -l -t -q 
+-r -e -z -p -x -u -n -m -b -s -t -h -a 
+-p -w -x -j -n -m -k -h -a -q 
+-r -d -w -x -j -m -F -k -b -s -h -a 
+-i -z -d -x -n -l -b -a -q 
+-y -r -z -c -p -o -l -k -b -s -h 
+-e -z -d -p -w -f -n -F -s -h -a 
+-y -d -p -u -f -m -k -s -t -h 
+-y -i -r -e -z -u -f -k -q 
+-y -i -r -c -w -j -u -f -n -F -t -a -q 
+-i -r -e -c -w -o -x -j -F -l -k -b -s -h -a -q 
+-e -d -o -x -j -u -k -b -t -h -a 
+-i -z -c -p -f -m -F -l -k -s -a 
+-i -r -z -d -c -p -w -o -x -l -s -t -h -a -q 
+-i -c -x -j -u -m -F -b -h -a 
+-r -e -z -d -o -n -l 
+-r -d -p -o -x -f -n -h 
+-i -e -o -x -u -n -F -l -b -t -a 
+-e -c -p -w -x -j -u -n -F -l -k -s -q 
+-i -r -e -c -p -w -j -u -f -m -s -t -h -q 
+-y -r -e -d -p -w -o -j -f -m -F -k -t -h -a -q 
+-y -i -r -z -d -c -p -n -F -l -k -t -a 
+-e -z -p -w -o -x -u -n -k -b 
+-i -d -p -w -o -x -j -f -F -l -s -h -a 
+-y -e -z -d -c -p -w -o -u -m -b -s -t -h -q 
+-z -c -w -x -l -b -s -t 
+-i -r -p -o -x -j -u -f -n -m -F -l -h -a -q 
+-y -i -r -e -z -d -p -u -f -n -F -s -a -q 
+-i -e -c -f -l -h -q 
+-y -i -r -e -c -p -j -u -f -l -k -s -t -h -a 
+-e -z -d -c -p -w -o -x -f -n -m -F -l -k -s -a 
+-i -e -d -c -x -j -n -m -s -t -a 
+-r -d -x -u -f -m -F -l -k -t -a 
+-y -i -e -z -p -w -f -m -F -l -h 
+-y -i -z -d -o -u -f -n -m -F -l -h -a 
+-y -e -d -p -w -o -j -n -m -F -l -s -a -q 
+-r -e -z -d -c -p -o -x -f -m -l -s -t -a -q 
+-r -c -w -o -u -n -l -b -s -t -a -q 
+-y -i -z -w -u -n -m -k -b -s -t -h 
+-y -c -o -j -n -m -F -l -k -s -t -a -q 
+-y -r -z -c -w -u -m -F -l -b -h -a 
+-d -c -x -j -F -k -t -h 
+-d -c -p -w -j -f -a 
+-r -z -d -p -w -o -x -u -f -n -F -k -a -q 
+-y -i -r -z -d -c -p -w -f -m -l -k -q 
+-y -r -e -z -d -c -f -m -F -l -s -t -h 
+-i -r -e -z -c -p -o -x -f -n -F -a 
+-z -c -p -o -x -u -n -F -l -k -b -t -q 
+-y -z -d -c -o -f -n -l -k -s -t -a -q 
+-i -e -z -p -x -u -l -s -h 
+-y -i -e -z -d -p -w -o -f -n -k -s -t -h 
+-y -p -w -j -u -f -n -m -l -k -s -t -h -a -q 
+-y -i -e -z -p -n -k -b -t 
+-e -c -w -x -u -f -m -F -l -s -t -h -q 
+-i -r -z -c -o -x -f -m -F -k -t -h -a -q 
+-y -r -e -c -w -j -u -l -b -s -h -q 
+-w -o -j -n -m -F -l -b -a 
+-i -r -e -z -d -p -w -x -u -m -b -t 
+-i -r -e -z -d -c -p -w -o -x -n -m -F -l -b -s -h -a 
+-r -w -o -x -j -u -F -k -s -t 
+-y -i -r -d -p -j -u -m -F -q 
+-i -r -p -w -x -m -F -l -k -b -t -q 
+-y -i -r -o -j -f -m -l -s -a 
+-y -i -e -d -c -p -j -f -n -m -F -k -s -t -q 
+-i -e -z -w -o -x -u -n -m -k -h -a 
+-i -r -c -w -o -j -n -k -b -t -h 
+-y -r -e -p -w -u -n -m -F -k -b -s -a -q 
+-r -d -p -w -o -x -j -n -l -b -t -a -q 
+-y -r -e -z -c -w -f -n -k -s -h -a 
+-i -z -d -p -o -u -f -n -l -k -s -t -h -q 
+-y -d -j -f -l -k -h -q 
+-i -r -e -z -c -o -x -u -m -l -b -h -a -q 
+-y -i -e -d -c -o -j -u -f -m -l -k -t -a 
+-i -z -c -p -w -u -f -n -F -k -s -t -a 
+-y -c -p -w -o -j -u -m -F -l -b -s -t 
+-i -e -z -d -c -p -x -u -f -m -k -h -a -q 
+-r -e -z -c -w -o -x -f -m -k -s -t 
+-y -i -e -d -w -j -u -f -n 
+-i -p -o -x -j -u -m -k -b -s -t -a -q 
+-i -r -d -c -p -x -u -f -n -s -q 
+-y -r -e -z -d -u -n -F -b -t -h -a -q 
+-y -e -z -p -o -f -F -k -h -a 
+-e -x -j -f -F -s -a -q 
+-i -d -p -w -x -j -n -b -s -t -h -q 
+-i -e -z -o -x -n -m -F -s -q 
+-i -r -e -p -w -o -j -f -n -F -l -k -s -h 
+-y -i -c -o -j -u -f -m -F -h -q 
+-r -e -d -c -p -x -j -F -k -b -s -h 
+-y -r -e -z -d -c -p -o -u -n -m -F -k -h -a 
+-y -i -r -e -z -c -w -o -u -n -F -k -b -s -q 
+-i -r -z -c -p -x -n -b -s -t -a -q 
+-y -r -c -p -w -j -f -n -m -h 
+-y -i -e -d -c -p -o -u -n -l -k -b -s 
+-r -d -w -o -f -m -s -h -q 
+-d -c -w -x -j -n -m -F -l -k -b -t -h -a -q 
+-y -i -r -z -d -o -m -F -k -b -s -t -h -a -q 
+-r -z -c -p -x -u -n -m -l -k -h 
+-i -e -p -w -x -j -u -F -k -b -t -a 
+-r -e -o -x -j -n -m -l -k -b -h 
+-z -d -c -o -x -u -F -b -s -q 
+-i -c -w -o -x -f -s -t -h -a 
+-i -r -e -w -x -j -u -f -n -m -F -k -t -h 
+-y -d -c -w -n -m -l -b -t 
+-y -i -d -c -p -o -j -f -n -l -s -q 
+-r -z -p -x -u -f -t -h -a 
+-y -z -o -f -n -m -s -t -h -q 
+-y -o -j -u -n -k -b -s -t -a 
+-i -r -e -z -w -x -F -l -k -b -s -a 
+-r -d -p -w -o -j -u -f -l -k 
+-r -e -d -w -u -n -m -F -l -k -s -h 
+-i -r -e -z -x -u -n -m -F -l -k -b -s -a -q 
+-i -r -z -u -f -n -m -l -k -s -a -q 
+-i -d -x -u -f -n -F -l -k -s -h -q 
+-y -i -z -p -w -o -u -f -m -l -k -s -h -a 
+-r -e -d -c -w -o -x -j -u -l -b -t -q 
+-r -e -z -d -c -p -u -F -l -b -s -t -a 
+-y -i -z -p -w -o -u -n -m -F -b -a -q 
+-d -c -p -x -j -f -m -t -h -a -q 
+-y -r -e -d -w -o -j -m -F -l -k -b -t -a -q 
+-y -i -e -p -w -f -F -s -t -a 
+-r -z -x -u -n -m -b -s 
+-y -i -r -e -u -m -b -h -a 
+-y -i -z -d -c -u -f -n -l -t -h -q 
+-c -p -j -m -l -k -b -s -t -h -a -q 
+-i -r -e -c -x -f -m 
+-y -i -e -c -p -w -o -m -F -l -t -h -a -q 
+-y -r -e -z -d -f -m -l -k -s -a 
+-r -z -d -p -x -m -F -k -s -t 
+-i -r -z -d -w -x -f -n -m -F -q 
+-e -d -c -p -o -x -m -F -b -t 
+-r -e -z -p -o -x -F -l -k -t -h -q 
+-i -r -z -w -k -a -q 
+-e -d -c -w -x -u -f -F -k -a -q 
+-y -i -r -c -p -o -j -n -F -l -b -h -a -q 
+-i -z -c -p -o -u -n -F -t -h -a -q 
+-y -r -e -d -c -p -j -u -n -F -k -t -h -q 
+-y -i -d -c -w -j -u -F -k -b -s -h -a -q 
+-i -r -d -c -x -j -u -n -l -k -b -q 
+-i -e -d -c -w -x -j -u -f -k -s -t -h 
+-r -e -z -c -p -w -x -f -m -F -k -h -q 
+-i -e -j -u -n -F -l -k -b -s -t -q 
+-y -p -w -j -f -F -l -k -a 
+-y -i -r -w -o -u -l -q 
+-z -d -p -m -F -l -b -t -h -a -q 
+-i -z -d -o -x -n -m -l -k -t -h 
+-e -z -d -c -w -x -u -n -m -l -b -s -h -a 
+-y -i -r -d -c -p -w -j -n -m -F -k -b -s -h 
+-r -z -c -p -w -o -x -f -n -F -l -k -s -t -h 
+-i -r -d -p -x -j -F -l -b -s -t -a 
+-e -z -c -o -k -b -t -h -a 
+-i -r -e -d -p -x -j -u -f -n -m -l -h -q 
+-y -e -c -p -w -o -j -f -k -t -q 
+-y -i -d -c -p -o -j -u -f -n -m -F -k -a 
+-r -e -z -c -o -x -u -f -n -m -F -l -k -s -q 
+-y -r -e -z -c -o -n -s -q 
+-r -e -p -j -f -n -m -F -t -h -a 
+-y -i -r -z -d -c -w -o -u -f -n -h -a 
+-e -d -w -o -x -j -n -m -F -l -b -s -h -q 
+-y -i -r -e -z -c -p -o -u -f -m -F -l -t -q 
+-y -i -r -e -d -c -w -o -u -f -n -m -F -l -s -h -a -q 
+-i -e -z -d -c -w -o -x -u -f -F -l -t 
+-i -r -e -z -d -o -x -n -k -b -s -h -q 
+-y -r -z -d -o -f -n -F -l -k -t 
+-i -c -o -u -f -n -m -F -l -k -t 
+-z -d -c -p -w -x -u -n -m -l -k -b -h -q 
+-r -e -z -d -p -w -o -x -u -n -m -s -t -a 
+-i -x -j -f -m -F -l -k -t -h -q 
+-y -i -r -p -w -j -f -F -l -s -t -h -q 
+-e -c -x -j -u -f -n -l -k -h -a 
+-i -d -c -p -w -o -u -m -k -b -s 
+-y -d -c -p -w -o -n -F -k 
+-y -r -d -p -o -j -u -F -k -b -q 
+-e -d -p -o -x -u -f -n -m -F -l -s -t -h -a 
+-y -r -e -c -j -f -m -l -k -t -a -q 
+-y -i -e -d -c -p -w -o -j -l -b -h -a 
+-r -d -c -w -o -x -f -n -F -l -h -a -q 
+-i -e -d -w -o -x -j -n -m -k -b -a 
+-r -e -z -c -w -u -f -n -m -l -s 
+-i -p -w -j -u -n -l -b -h -a 
+-i -r -e -p -w -x -j -n -l -t -h 
+-r -e -p -o -x -u -F -k -s -h -a -q 
+-y -e -c -o -n -m -F -b -h -q 
+-i -e -d -o -x -j -f -m -F -k -s -t 
+-y -e -d -f -F -l -a -q 
+-i -e -z -d -w -o -u -f -n -m -k -t -h -a -q 
+-y -e -z -c -w -u -F -k -h 
+-y -r -e -d -w -o -j -u -f -m -k -s -t 
+-y -z -d -c -u -l -k -b -t -q 
+-z -d -c -p -o -x -u -m -l -k -s -a 
+-r -d -p -x -u -n -F -b -s -t -h -q 
+-i -e -c -p -o -x -j -f -n -m -k -s -h -a -q 
+-r -c -x -j -n -F -k -b -s -t -a -q 
+-i -r -e -z -d -p -w -o -u -F -l -k -b -t -h -q 
+-y -i -r -e -z -d -c -p -n -m -l -k -b -t -a 
+-y -r -p -w -u -f -m -t -a 
+-y -r -z -d -w -f -m -l -s -t -h -a 
+-r -d -x -j -u -f -n -F -k -s -a 
+-y -i -r -e -w -o -j -u -f -n -F -l -k -s -t -a 
+-i -r -c -p -o -x -j -m -F -l -s -h 
+-y -z -c -w -o -u -f -l -s -t -h -a -q 
+-y -r -e -d -c -o -j -u -f -n -m -F -s -h 
+-y -z -d -c -p -n -F -b -s -t -h -a 
+-i -r -z -d -p -w -o -x -k -b -h -a 
+-i -r -c -p -o -j -u -f -t 
+-i -r -e -z -p -w -o -x -u -f -s -h -q 
+-i -r -e -z -d -w -u -f -F -l -s 
+-y -r -z -p -w -n -m -k -t -h -a -q 
+-y -i -e -c -o -j -u -m -F -k -b -s -t -h -q 
+-r -e -d -w -u -F -k -b -t -h 
+-i -e -z -d -p -o -n -m -l -b -t -q 
+-y -r -e -d -p -o -j -u -l -k -h -a -q 
+-i -d -x -l -s -t -q 
+-y -i -r -d -w -j -u -n -m -l -b -s -a -q 
+-d -c -o -j -f -n -F -k -s -t -h -a 
+-e -z -c -p -w -x -F -l -s -t -a -q 
+-e -d -c -w -j -u -m -F -l -s -t 
+-y -i -r -e -z -d -c -p -o -f -m -h 
+-i -r -e -w -o -x -j -u -f -n -t -a -q 
+-d -c -p -w -x -j -u -n -m -l -k -b -s -a 
+-i -r -e -d -c -o -x -j -u -f -m -F -l -k -s -t -a 
+-e -c -p -o -j -u -n -F -b -s -h -a -q 
+-y -i -r -z -p -o -u -f -n -m -F -k -t 
+-w -x -u -b -a -q 
+-i -r -e -d -p -w -n -m -s -t -h -a 
+-i -e -z -c -w -x -f -m -F -l -t -h -a 
+-e -z -d -p -w -x -u -m -F -b -h -q 
+-y -r -e -z -p -u -f -n -l -k -s -h -q 
+-d -o -j -u -F -s -h 
+-r -e -p -w -x -j -m -b -h -a -q 
+-y -d -c -p -w -o -j -u -n -m -k -b -t -h -a 
+-i -r -e -z -d -c -w -x -n -k -s -t -h -q 
+-y -i -z -d -p -w -o -f -m -F -l -k -t 
+-y -i -e -z -d -w -o -f -n -F -l -s -h -q 
+-i -r -e -c -p -w -o -j -u -f -n -m -F -l -k -a -q 
+-i -z -c -w -x -f -n -m -l -k -s -a -q 
+-r -e -z -p -w -o -x -m -F -l -b -s -t -a 
+-z -o -x -n -m -F -l -k -b -h -a 
+-y -i -e -z -p -w -u -F -l -b -s -t -h -a 
+-i -r -d -c -p -w -j -u -m -F -l -h -a 
+-i -d -p -w -o -x -u -f -m -F -l -t -a -q 
+-y -i -r -d -w -l -k -b -s -t 
+-y -i -r -e -c -p -w -u -f -F -l -k -s -a -q 
+-r -e -d -c -w -o -x -j -u -n -m -b -s -t -h 
+-y -z -c -w -m -F -a -q 
+-y -e -w -j -n -l -k -b -t -q 
+-i -e -c -p -x -j -u -n -m -F -l -k -b 
+-y -o -j -m -b -s -a -q 
+-y -i -r -d -c -p -u -f -n -m -F -l -a 
+-r -p -w -o -x -j -f -m -l -k -t -h -q 
+-i -r -e -z -d -c -x -u -m -F -l -k -h -a 
+-y -i -r -e -d -o -j -n -l -k -t -h -q 
+-y -r -c -w -j -f -k -t -h -a 
+-i -r -e -c -w -x -j -f -m -l -s -a -q 
+-y -i -r -e -p -o -j -m -F -k -b 
+-z -p -o -u -m -l -b -s 
+-e -c -p -w -x -j -f -n -s -t 
+-y -z -c -p -w -o -u -n -m -l -k -s -t 
+-r -e -z -d -c -p -w -o -n -m -k -b -s -a -q 
+-y -r -e -z -d -c -o -u -l -b 
+-y -i -r -c -j -u -n -m -b -s -t -h -a -q 
+-i -o -x -j -n -l -b -s -h 
+-r -d -p -w -x -j -u -b -s -t 
+-i -r -e -d -c -o -x -m -k -b -t -h -a -q 
+-y -e -f -n -l -k -s -t -h -a 
+-y -i -c -p -w -f -F -s -h -q 
+-y -e -z -c -w -o -n -F -b -s -t -h -q 
+-i -c -w -x -u -n -m -F -l -b -s -t -h 
+-d -w -o -j -f -n -m -F -k -s -q 
+-y -i -d -p -o -j -u -n -m -b -t -q 
+-i -e -z -c -x -n -m -F -l -k -b -s -h 
+-i -r -z -d -c -w -x -F -h 
+-i -r -z -d -c -x -u -f -n -k -s -t -h -a 
+-y -i -o -u -F -l -s -h -a 
+-r -e -z -d -c -p -w -x -u -f -n -F -l -k -t -h -a 
+-e -z -d -p -o -x -f -m -l -q 
+-y -e -d -p -j -u -f -m -F -l -s -t -a 
+-i -r -e -z -d -c -w -o -m -F -l -b -s -h -q 
+-i -e -c -p -w -o -x -j -F -s -t -a -q 
+-y -i -e -z -c -p -m -l -b -h -q 
+-y -r -z -p -F -l -s -h -a -q 
+-r -c -p -w -o -x -j -n -m -F -b -s -q 
+-i -r -z -c -p -w -x -u -F -k -b -s -h -q 
+-y -e -d -p -w -j -u -f -n -m -F -t -a -q 
+-y -z -d -w -o -u -F -l -k -b -a 
+-e -c -p -j -F -l -k -q 
+-y -r -d -c -p -w -o -j -f -m -F -l -k -s -t -h -a -q 
+-r -e -o -x -f -n -m -F -k -t 
+-r -e -z -c -w -x -u -k -b -s -t -a -q 
+-y -i -z -d -c -o -u -F -l -k -t -h -a -q 
+-y -i -r -e -j -u -n -m -l 
+-y -r -e -d -p -o -f -n -m -k -s -t -a -q 
+-y -i -e -d -p -w -o -j -m -k -t -q 
+-c -w -o -x -j -u -f -F -l -k -a 
+-r -e -z -p -x -u -f -l -s -t -q 
+-y -i -e -z -d -c -o -f -l -s -t -a 
+-y -r -e -z -c -p -w -u -m -F -l -k -b -t -a -q 
+-y -i -z -c -w -f -F -k -t -q 
+-i -r -d -j -u -f -m -F -l -k -s -t -h -a 
+-y -r -e -d -p -w -o -n -b -s -t -h 
+-z -d -c -p -x -f -n -l -k -t 
+-i -e -z -d -p -o -x -F -l -k -b -s -a -q 
+-y -e -c -p -w -f -m -l -k -s 
+-e -z -w -u -f -m -F -k -h -q 
+-i -r -e -z -d -f -n -t -a 
+-y -i -e -d -c -w -n -m -F -b -t -h -a -q 
+-i -z -d -c -o -x -u -n -F -a 
+-y -i -r -z -d -c -w -o -u -m -F -s -t 
+-r -p -x -j -u -f -F -t -h -q 
+-r -z -d -c -w -x -u -f -n -m -F -s -t -a 
+-r -e -z -d -o -u -m -b -a -q 
+-i -e -d -o -x -j -u -f -n -m -F -t -h -a -q 
+-r -z -d -p -w -o -u -f -n -m -s -h 
+-i -r -e -d -p -o -x -j -u -n -F -b -s -a 
+-i -w -o -j -f -n -m -l -s -t -a 
+-y -i -e -c -p -w -o -j -u -n -h -a 
+-i -r -d -c -p -w -o -x -j -u -n -m -l -s -t -h -a -q 
+-e -d -c -p -w -o -x -u -f -l -k -s -t -q 
+-i -r -e -c -p -x -l -k -b -h -a 
+-i -r -e -z -c -x -u -n -k -b -t -h 
+-y -r -z -d -u -n -m -F -l -k -b -s -t -h -a 
+-e -d -c -x -j -m -l -k -b 
+-r -e -z -d -x -n -F -l -b -s -t -h -a -q 
+-i -c -w -o -x -j -f -t -q 
+-r -p -j -u -n -k -s -t -a -q 
+-i -z -d -p -o -n -F -k -b -s -a -q 
+-r -e -c -w -j -F -l -k -b -h -a 
+-y -i -r -c -w -o -u -f -n -m -F -s -t -h 
+-p -o -x -j -u -k -b -h -q 
+-r -d -c -p -w -x -j -u -f -l -k -a -q 
+-y -i -e -d -o -j -u -n -m -l -k -b -s -h -a -q 
+-y -i -r -e -c -w -j -f -n -F -s 
+-y -p -j -u -f -F -s -t -h -a 
+-y -u -n -m -F -l -k -b 
+-i -e -z -c -p -w -x -u -n -F -b -t -q 
+-y -e -z -p -w -o -l -k -s -t -a 
+-y -z -c -w -o -b -t -h -a -q 
+-y -r -z -d -c -p -o -u -f -n -m -F -l -h -a -q 
+-y -e -c -j -u -n -m -b -t -a -q 
+-z -d -c -p -w -o -u -f -n -F -l -t -h -q 
+-y -r -e -d -c -w -j -f -l -k -s -h -a -q 
+-i -z -d -c -w -o -u -f -m -F -t -a -q 
+-y -i -r -e -z -d -p -w -o -u -n -m -F -b -s -t 
+-y -d -w -j -u -l -s -h -a 
+-y -r -c -p -o -j -n -m -F -l -k -b -s -t -h -a 
+-y -i -e -z -d -c -o -u -n -F -l -k -b -t -h 
+-y -i -r -e -d -c -p -f -n -k -a 
+-i -r -e -z -o -m -l -b -t -h -a 
+-i -e -c -p -o -x -j -u -f -F -l -k -t -q 
+-d -c -p -w -o -x -j -F -k -b -t 
+-e -d -c -w -x -j -u -n -m -h -q 
+-i -e -d -p -x -u -n -m -k -t -h 
+-y -i -z -d -p -m -F -b -s 
+-y -r -d -p -w -j -b -t -a 
+-i -c -w -o -x -j -u -l -b -s 
+-r -z -d -p -o -u -f -m -F -k -s -h -a -q 
+-e -d -p -w -o -x -j -u -f -n -m -l -k -a 
+-r -w -x -j -u -F -b -t -h 
+-y -e -w -u -l -k -b -s -t -h -a -q 
+-y -e -d -c -n -m -l -k -s -a -q 
+-y -i -r -d -p -o -j -u -f -l -s -h 
+-i -r -e -d -c -p -j -l -b -s -h 
+-i -r -p -o -x -u -m -F -l -b -s -a 
+-r -e -z -d -c -w -x -u -m -F -l -k -b -t -h 
+-y -i -r -e -z -c -o -u -n -F -l -b -s -t -h -q 
+-i -r -e -d -p -w -x -j -n -m -k -b -s -t -h -a -q 
+-r -z -o -x -u -m -l -b -s -t -h -a -q 
+-y -i -c -p -o -j -u -n -l -b -s -t -q 
+-e -w -o -m -l -k -b -s -t -h -a -q 
+-c -w -o -j -n -t -h 
+-e -z -d -o -x -u -f -n -l -s -h 
+-y -j -u -m -l -k -b -h -q 
+-z -w -x -n -m -b -t -a 
+-i -r -e -z -p -w -o -x -F -k -t -a 
+-y -i -e -z -w -u -f -n -F -s -h -a -q 
+-e -c -p -w -o -x -u -n -m -F -l -k -b -t -a 
+-r -e -c -w -o -x -j -f -n -m -F -a 
+-i -r -e -d -p -w -x -j -u -n -F -l -q 
+-y -i -e -w -o -j -n -F -b 
+-y -i -r -e -z -d -p -w -o -f -n -t -a -q 
+-i -r -z -d -c -w -u -n -m -k -b -s -h -q 
+-r -z -o -x -f -n -k -s -a -q 
+-y -r -e -c -p -w -u -n -m -l -b -s -h 
+-y -i -r -d -w -j -u -n -m -l -k -a 
+-i -r -e -w -o -x -j -u -f -m -l -s -h -a -q 
+-i -r -e -w -o -f -n -F -h -a -q 
+-i -r -e -d -w -x -u -m -k -s -h -a -q 
+-i -c -w -j -u -f -m -F -k -h -q 
+-i -d -c -w -o -x -u -m -F -l -k -b -s -a -q 
+-i -r -z -d -c -w -o -x -f -F -t -a 
+-y -i -r -z -d -c -p -o -F -b -q 
+-i -r -e -z -p -x -f -m -F -a 
+-y -i -r -e -d -p -w -o -j -f -n -m -a -q 
+-y -z -d -c -w -o -m -k -t -q 
+-i -r -d -w -o -j -f -m -F -k -s -t -h -a -q 
+-y -i -r -e -z -p -w -o -u -k -h 
+-d -p -j -n -k -s 
+-y -z -c -p -o -f -n -F -s -t -h -a 
+-y -i -r -e -c -p -o -j -u -f -m -F -l -k -h 
+-e -d -c -p -o -j -u -f -F -l -k -t -a -q 
+-y -i -r -z -d -p -n -b -h -a 
+-y -i -r -e -z -d -c -o -u -f -h -a 
+-y -i -r -c -w -j -n -l -k -b -t 
+-y -r -z -c -p -u -f -F -l -k -s -q 
+-y -r -d -c -o -j -F -l -k -b -s -t -a -q 
+-y -i -r -z -d -w -o -n -k -b -s -t -h -q 
+-r -e -z -d -c -p -u -n -m -l -k -b -s -h -a -q 
+-y -e -d -c -u -f -m -k -s -a -q 
+-i -r -e -d -c -p -j -u -m -F -k -b -s -a -q 
+-i -z -p -x -n -m -F -b -h -a -q 
+-r -c -p -w -o -x -u -f -n -m -s 
+-y -i -r -e -d -p -w -o -j -F -l -k 

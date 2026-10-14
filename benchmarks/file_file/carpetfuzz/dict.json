@@ -1,0 +1,86 @@
+{
+ "synopsis": "file OPTIONS -m /benchmark/magic.mgc @@",
+ "options": {
+  "-m": {
+   "connector": " ",
+   "values": [
+    "/benchmark/magic.mgc",
+    "/etc/magic",
+    "./magic",
+    "magic.mgc",
+    "~/.magic"
+   ]
+  },
+  "-e": {
+   "connector": " ",
+   "values": [
+    "apptype",
+    "ascii",
+    "cdf",
+    "compress",
+    "csv",
+    "elf",
+    "encoding",
+    "soft",
+    "tar",
+    "json",
+    "simh",
+    "text",
+    "tokens"
+   ]
+  },
+  "--exclude-quiet": {
+   "connector": " ",
+   "values": [
+    "apptype",
+    "ascii",
+    "cdf",
+    "compress",
+    "csv",
+    "elf",
+    "encoding",
+    "soft",
+    "tar",
+    "json",
+    "simh",
+    "text",
+    "tokens"
+   ]
+  },
+  "-f": {
+   "connector": " ",
+   "values": [
+    "filelist.txt",
+    "files.txt",
+    "input.txt",
+    "list.txt"
+   ]
+  },
+  "-F": {
+   "connector": " ",
+   "values": [
+    ":",
+    ",",
+    "|",
+    ";",
+    " "
+   ]
+  },
+  "-P": {
+   "connector": " ",
+   "values": [
+    "bytes=1000000",
+    "bytes=7340032",
+    "elf_notes=256",
+    "elf_phnum=2048",
+    "elf_shnum=32768",
+    "elf_shsize=134217728",
+    "encoding=65536",
+    "indir=50",
+    "name=150",
+    "regex=8192",
+    "magwarn=64"
+   ]
+  }
+ }
+}

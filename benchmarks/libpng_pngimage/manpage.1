@@ -1,0 +1,72 @@
+.\" pngimage has no man page or --help. Written from the option parsing in
+.\" libpng contrib/libtests/pngimage.c (main) and the comments on its flags.
+.TH PNGIMAGE "1" "" "libpng" "User Commands"
+.SH NAME
+pngimage \- read PNG files with combinations of libpng transforms and check the results
+.SH SYNOPSIS
+.B pngimage
+[\fIOPTIONS\fR] \fIFILE\fR...
+.SH DESCRIPTION
+For each file on the command line, pngimage reads it with a range of libpng
+transforms and checks the results. Later options override earlier ones.
+.SH OPTIONS
+.TP
+\fB\-\-verbose\fR
+Set the reporting level to verbose. Overrides \fB\-\-warnings\fR, \fB\-\-errors\fR and \fB\-\-quiet\fR.
+.TP
+\fB\-\-warnings\fR
+Set the reporting level to report warnings. Overrides \fB\-\-verbose\fR, \fB\-\-errors\fR and \fB\-\-quiet\fR.
+.TP
+\fB\-\-errors\fR
+Set the reporting level to report errors only. Overrides \fB\-\-verbose\fR, \fB\-\-warnings\fR and \fB\-\-quiet\fR.
+.TP
+\fB\-\-quiet\fR
+Set the reporting level to quiet. Overrides \fB\-\-verbose\fR, \fB\-\-warnings\fR and \fB\-\-errors\fR.
+.TP
+\fB\-\-exhaustive\fR
+Test all combinations of active transforms. Cannot be used with \fB\-\-fast\fR.
+.TP
+\fB\-\-fast\fR
+Do not test all combinations of active transforms. Cannot be used with \fB\-\-exhaustive\fR.
+.TP
+\fB\-\-strict\fR
+Fail on warnings as well as errors. Cannot be used with \fB\-\-relaxed\fR.
+.TP
+\fB\-\-relaxed\fR
+Fail on errors only. Cannot be used with \fB\-\-strict\fR.
+.TP
+\fB\-\-log\fR
+Log pass/fail to stdout. Cannot be used with \fB\-\-nolog\fR.
+.TP
+\fB\-\-nolog\fR
+Do not log pass/fail. Cannot be used with \fB\-\-log\fR.
+.TP
+\fB\-\-continue\fR
+Continue with the next file after a failure. Cannot be used with \fB\-\-stop\fR.
+.TP
+\fB\-\-stop\fR
+Stop at the first failure. Cannot be used with \fB\-\-continue\fR.
+.TP
+\fB\-\-skip\-bugs\fR
+Skip over known bugs. Cannot be used with \fB\-\-test\-all\fR.
+.TP
+\fB\-\-test\-all\fR
+Do not skip over known bugs. Cannot be used with \fB\-\-skip\-bugs\fR.
+.TP
+\fB\-\-log\-skipped\fR
+Log skipped bugs; only has an effect together with \fB\-\-skip\-bugs\fR. Cannot be used with \fB\-\-nolog\-skipped\fR.
+.TP
+\fB\-\-nolog\-skipped\fR
+Do not log skipped bugs. Cannot be used with \fB\-\-log\-skipped\fR.
+.TP
+\fB\-\-find\-bad\-combos\fR
+Attempt to deduce bad combinations of transforms. Cannot be used with \fB\-\-nofind\-bad\-combos\fR.
+.TP
+\fB\-\-nofind\-bad\-combos\fR
+Do not attempt to deduce bad combinations of transforms. Cannot be used with \fB\-\-find\-bad\-combos\fR.
+.TP
+\fB\-\-list\-combos\fR
+List combinations of transforms by name. Cannot be used with \fB\-\-nolist\-combos\fR.
+.TP
+\fB\-\-nolist\-combos\fR
+Do not list combinations of transforms by name. Cannot be used with \fB\-\-list\-combos\fR.

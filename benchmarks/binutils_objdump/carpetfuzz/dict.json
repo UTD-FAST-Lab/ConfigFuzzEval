@@ -1,0 +1,325 @@
+{
+ "synopsis": "objdump OPTIONS -d -S @@",
+ "options": {
+  "--adjust-vma": {
+   "connector": "=",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  },
+  "-b": {
+   "connector": " ",
+   "values": [
+    "elf64-x86-64",
+    "elf32-i386",
+    "elf32-iamcu",
+    "elf32-x86-64",
+    "pei-i386",
+    "pe-x86-64",
+    "pei-x86-64",
+    "elf64-l1om",
+    "elf64-k1om",
+    "elf64-little",
+    "elf64-big",
+    "elf32-little",
+    "elf32-big",
+    "srec",
+    "symbolsrec",
+    "verilog",
+    "tekhex",
+    "binary",
+    "ihex",
+    "plugin"
+   ]
+  },
+  "-d": {
+   "connector": " ",
+   "values": [
+    "main"
+   ]
+  },
+  "--source-comment": {
+   "connector": "=",
+   "values": [
+    "//",
+    "#",
+    ";",
+    "/*",
+    "--"
+   ]
+  },
+  "--prefix": {
+   "connector": "=",
+   "values": [
+    "/usr",
+    "/usr/local",
+    "/opt",
+    ".",
+    "..",
+    "/home"
+   ]
+  },
+  "--prefix-strip": {
+   "connector": "=",
+   "values": [
+    "0",
+    "5",
+    "10"
+   ]
+  },
+  "--insn-width": {
+   "connector": "=",
+   "values": [
+    "1",
+    "16",
+    "32"
+   ]
+  },
+  "--dwarf-depth": {
+   "connector": "=",
+   "values": [
+    "0",
+    "50",
+    "100"
+   ]
+  },
+  "--dwarf-start": {
+   "connector": "=",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  },
+  "--start-address": {
+   "connector": "=",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  },
+  "--stop-address": {
+   "connector": "=",
+   "values": [
+    "0",
+    "1073741823",
+    "2147483647"
+   ]
+  },
+  "-j": {
+   "connector": " ",
+   "values": [
+    ".text",
+    ".data",
+    ".rodata",
+    ".bss",
+    ".debug",
+    ".symtab",
+    ".strtab",
+    ".init",
+    ".fini"
+   ]
+  },
+  "-m": {
+   "connector": " ",
+   "values": [
+    "i386",
+    "i386:x86-64",
+    "i386:x64-32",
+    "i8086",
+    "i386:intel",
+    "i386:x86-64:intel",
+    "i386:x64-32:intel",
+    "iamcu",
+    "iamcu:intel",
+    "l1om",
+    "l1om:intel",
+    "k1om",
+    "k1om:intel"
+   ]
+  },
+  "-M": {
+   "connector": " ",
+   "values": [
+    "x86-64",
+    "i386",
+    "i8086",
+    "att",
+    "intel",
+    "att-mnemonic",
+    "intel-mnemonic",
+    "addr64",
+    "addr32",
+    "addr16",
+    "data32",
+    "data16",
+    "suffix",
+    "amd64",
+    "intel64"
+   ]
+  },
+  "-P": {
+   "connector": "=",
+   "values": [
+    "header",
+    "aout",
+    "sections",
+    "syms",
+    "relocs",
+    "lineno",
+    "loader",
+    "except",
+    "typchk",
+    "traceback",
+    "toc",
+    "ldinfo"
+   ]
+  },
+  "-W": {
+   "connector": "",
+   "values": [
+    "a",
+    "abbrev",
+    "A",
+    "addr",
+    "r",
+    "aranges",
+    "c",
+    "cu_index",
+    "L",
+    "decodedline",
+    "f",
+    "frames",
+    "F",
+    "frames-interp",
+    "g",
+    "gdb_index",
+    "i",
+    "info",
+    "o",
+    "loc",
+    "m",
+    "macro",
+    "p",
+    "pubnames",
+    "t",
+    "pubtypes",
+    "R",
+    "Ranges",
+    "l",
+    "rawline",
+    "s",
+    "str",
+    "O",
+    "str-offsets",
+    "u",
+    "trace_abbrev",
+    "T",
+    "trace_aranges",
+    "U",
+    "trace_info"
+   ]
+  },
+  "--ctf": {
+   "connector": "=",
+   "values": [
+    ".ctf",
+    ".debug_ctf",
+    "ctf_section",
+    "CTF"
+   ]
+  },
+  "--ctf-parent": {
+   "connector": "=",
+   "values": [
+    ".ctf",
+    ".debug_ctf",
+    "parent_section",
+    "CTF"
+   ]
+  },
+  "--disassemble": {
+   "connector": "=",
+   "values": [
+    "main",
+    "function",
+    "_start",
+    "init",
+    "entry"
+   ]
+  },
+  "--dwarf": {
+   "connector": "=",
+   "values": [
+    "rawline",
+    "decodedline",
+    "info",
+    "abbrev",
+    "aranges",
+    "macro",
+    "frames",
+    "frames-interp",
+    "str",
+    "loc",
+    "Ranges",
+    "pubtypes",
+    "trace_info",
+    "trace_abbrev",
+    "trace_aranges",
+    "gdb_index",
+    "addr",
+    "cu_index",
+    "links",
+    "follow-links",
+    "no-follow-links",
+    "str-offsets",
+    "pubnames"
+   ]
+  },
+  "--endian": {
+   "connector": "=",
+   "values": [
+    "big",
+    "little"
+   ]
+  },
+  "-I": {
+   "connector": " ",
+   "values": [
+    "/usr/include",
+    "/usr/local/include",
+    "./include",
+    "../include",
+    ".",
+    "..",
+    "/opt/include"
+   ]
+  },
+  "-C": {
+   "connector": " ",
+   "values": [
+    "auto",
+    "gnu",
+    "lucid",
+    "arm",
+    "hp",
+    "edg",
+    "gnu-v3",
+    "java",
+    "gnat"
+   ]
+  },
+  "--visualize-jumps": {
+   "connector": "=",
+   "values": [
+    "",
+    "color",
+    "extended-color",
+    "off"
+   ]
+  }
+ }
+}

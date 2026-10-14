@@ -21,20 +21,20 @@ RUN apt install -y \
     libomp-12-dev
 
 
-RUN git clone https://github.com/waugustus/CarpetFuzz-fuzzer /carpetfuzz
+# CarpetFuzz-fuzzer, pinned to the commit CarpetFuzz/ProphetFuzz use as a submodule.
+RUN git clone https://github.com/waugustus/CarpetFuzz-fuzzer /carpetfuzz && \
+    cd /carpetfuzz && \
+    git checkout 4e07d2a16c058f298af86fb9f10c3e5135f0acec
 
 WORKDIR /carpetfuzz
 
 RUN make CC=clang-12 LLVM_CONFIG=llvm-config-12
 
-
-
-
-
 # GENERAL
 ENV FUZZER_COMP=/carpetfuzz/afl-clang-fast
 ENV FUZZER_COMPXX=/carpetfuzz/afl-clang-fast++
 COPY run.sh /carpetfuzz
+COPY rank.py /carpetfuzz
 COPY coverage.py /carpetfuzz
 RUN chmod +x /carpetfuzz/run.sh
-CMD ["bash", "-c", "cp -r /carpetfuzz /fuzzer_output/", "&&", "cp /carpetfuzz/run.sh /fuzzer_output/"]
+CMD ["bash", "-c", "cp -r /carpetfuzz /fuzzer_output/"]

@@ -1,0 +1,141 @@
+{
+ "synopsis": "tiff2pdf OPTIONS @@",
+ "options": {
+  "-q": {
+   "connector": " ",
+   "values": [
+    "1",
+    "50",
+    "100"
+   ]
+  },
+  "-w": {
+   "connector": " ",
+   "values": [
+    "1",
+    "5000",
+    "10000"
+   ]
+  },
+  "-l": {
+   "connector": " ",
+   "values": [
+    "1",
+    "5000",
+    "10000"
+   ]
+  },
+  "-x": {
+   "connector": " ",
+   "values": [
+    "1",
+    "5000",
+    "10000"
+   ]
+  },
+  "-y": {
+   "connector": " ",
+   "values": [
+    "1",
+    "5000",
+    "10000"
+   ]
+  },
+  "-e": {
+   "connector": " ",
+   "values": [
+    "20240101120000",
+    "20231231235959",
+    "20250101000000"
+   ]
+  },
+  "-c": {
+   "connector": " ",
+   "values": [
+    "Creator",
+    "Software",
+    "Application",
+    "Tool"
+   ]
+  },
+  "-a": {
+   "connector": " ",
+   "values": [
+    "Author",
+    "Artist",
+    "User",
+    "Name"
+   ]
+  },
+  "-t": {
+   "connector": " ",
+   "values": [
+    "Title",
+    "Document",
+    "Image",
+    "File"
+   ]
+  },
+  "-s": {
+   "connector": " ",
+   "values": [
+    "Subject",
+    "Description",
+    "Topic",
+    "Content"
+   ]
+  },
+  "-k": {
+   "connector": " ",
+   "values": [
+    "keywords",
+    "tags",
+    "metadata",
+    "index"
+   ]
+  },
+  "-m": {
+   "connector": " ",
+   "values": [
+    "0",
+    "8192",
+    "16384"
+   ]
+  },
+  "-p": {
+   "connector": " ",
+   "values": [
+    "letter",
+    "legal",
+    "A4",
+    "A3",
+    "A5",
+    "B4",
+    "B5"
+   ]
+  },
+  "-u": {
+   "connector": " ",
+   "values": [
+    "i",
+    "m"
+   ]
+  },
+  "-r": {
+   "connector": " ",
+   "values": [
+    "d",
+    "o"
+   ]
+  },
+  "-o": {
+   "connector": " ",
+   "values": [
+    "output.pdf",
+    "out.pdf",
+    "result.pdf",
+    "document.pdf"
+   ]
+  }
+ }
+}

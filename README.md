@@ -243,6 +243,25 @@ setsid nohup python3 common/run_experiment.py \
 
 Do not run two experiments at the same time from one checkout: they share the benchmark copies in `benchmarks/cts_*`, the coverage images and, unless `first_core` in `config.yaml` keeps them apart, the cores. Put everything in one experiment file instead, or start the second when the first has finished.
 
+### Redoing the coverage of a finished experiment
+
+`common/rerun_coverage.py` runs the coverage step again on the fuzzer output of a finished experiment, with this repository's current `fuzzers/<fuzzer>/coverage.py` (for example after fixing it). The experiment's own copy of the fuzzer is not changed. Each trial's `coverage/` is renamed to `coverage_previous/` first (an existing `coverage_previous/` is kept), trials run in parallel on the given cores, and the `lcov_results` copies are refreshed at the end:
+
+```bash
+setsid nohup python3 common/rerun_coverage.py \
+  --experiment-path /path/to/experiment-data/EXP_NAME \
+  --fuzzer vafuzz --cores 54 \
+  > logs-reports/EXP_NAME_coverage_rerun.log 2>&1 < /dev/null &
+```
+
+`--match REGEX` limits it to trial folders whose name matches, and `--first-core` chooses the cores (default: the last `--cores` cores). Each trial's coverage output is in its `coverage_rerun.log`.
+
+A new experiment takes `coverage.py` and `run.sh` from the fuzzer's Docker image, so after changing them remove the image (`docker rmi fbpp/fuzzer:<fuzzer>`) to have it rebuilt.
+
+### vafuzz coverage
+
+VAFuzz runs every input under a batch of command-line option configurations and saves, for each queue entry, the configurations it ran it with (`default/queue_argvs/id:<N>_<k>`, `+cov` on those that found new edges). Its `coverage.py` replays each queue entry once per saved configuration, with the options placed between the program and its own arguments as the fuzzer's target does; entries without saved configurations (the seeds) run without options. `VAFUZZ_COVERAGE_ARGVS=cov` replays only the `+cov` configurations, which gives the same coverage much faster. `VAFUZZ_COVERAGE_TIMEOUT` (seconds, default 30) limits each execution. Set them in the environment of `run_experiment.py` or `rerun_coverage.py`; they are passed on to the coverage container.
+
 ## Runtime strategies
 
 A runtime strategy fuzzes a benchmark under several run-time configurations

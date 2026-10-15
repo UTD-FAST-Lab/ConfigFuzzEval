@@ -361,6 +361,32 @@ def run_label(fuzzer, rts="default"):
     return fuzzer if rts == "default" else f"{fuzzer}_rts_{rts}"
 
 
+def run_coverage(fuzzer, benchmark, experiment_path, core_id, individual_data_storage,
+                 log_file, multi_config_args=(), coverage_script=None):
+    """Runs the fuzzer's coverage.py on a trial's output, in the coverage runner image.
+
+    coverage_script replaces the coverage.py copied into the experiment, e.g. to redo
+    the coverage of a finished trial with a fixed script (common/rerun_coverage.py).
+    """
+    fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
+    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
+    script_args = ["-v", f"{coverage_script}:/fuzzer/coverage.py:ro"] if coverage_script else []
+    # Settings of a fuzzer's coverage.py, e.g. VAFUZZ_COVERAGE_ARGVS, are passed on from this environment
+    for name in sorted(os.environ):
+        if name.startswith("VAFUZZ_COVERAGE_"):
+            script_args += ["-e", name]
+    subprocess.run([
+        "docker", "run", "--rm",
+        f"--cpuset-cpus={core_id-1}-{core_id}",
+        "-v", f"{coverage_binary_location}:/benchmark",
+        "-v", f"{fuzzer_location}:/fuzzer",
+        *script_args,
+        "-v", f"{individual_data_storage}:/fuzzer_output",
+        *multi_config_args,
+        "fbpp/runner-coverage"
+    ], check=True, stdout=log_file, stderr=log_file)
+
+
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                   runtime, trials, trial_id, experiment_path, core_id, 
                   data_storage, memory_limit, tot_cts_count,
@@ -392,7 +418,6 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
 
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
-    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
 
     # log file
     log_file = os.path.join(individual_data_storage, f"{label}_{benchmark}_trial{trial_id}.log")
@@ -422,15 +447,9 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
 
             # Run coverage
             lf.write(f"[INFO] Calculating coverage for {benchmark}, trial {trial_id}\n")
-            subprocess.run([
-                "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id-1}-{core_id}",
-                "-v", f"{coverage_binary_location}:/benchmark",
-                "-v", f"{fuzzer_location}:/fuzzer",
-                "-v", f"{individual_data_storage}:/fuzzer_output",
-                *multi_config_args,
-                "fbpp/runner-coverage"
-            ], check=True, stdout=lf, stderr=lf)
+            lf.flush()
+            run_coverage(fuzzer, benchmark, experiment_path, core_id, individual_data_storage,
+                         lf, multi_config_args)
 
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while running {label} on {benchmark}, trial {trial_id}\n")

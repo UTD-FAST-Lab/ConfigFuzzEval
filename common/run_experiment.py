@@ -8,12 +8,13 @@ from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies, validate_runs
 from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy, count_ct_configurations
-from experiment_plan import load_experiment_file, expand_groups, unique
+from experiment_plan import (load_experiment_file, expand_groups, unique, estimate_seconds, read_record,
+                             saved_experiment_path, log_path, stop_command, write_experiment_file)
 import events
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
-import pickle, shutil, json
+import pickle, shutil, json, subprocess, time
 
 def plan_trial_tasks(experiment_state):
     """Every trial of the experiment's runs whose fuzzer and benchmark copy built, as
@@ -366,6 +367,11 @@ def triage_on_experiments(experiment_state):
 
 
 if __name__ == "__main__":
+    # No flags: ask what to run, save it as an experiment file and run that.
+    if len(sys.argv) == 1:
+        from interactive import main as interactive_main
+        sys.exit(interactive_main())
+
     # Set up logging
     logging = get_logger(__name__)
     
@@ -374,7 +380,8 @@ if __name__ == "__main__":
     # Process arguments
     parser = argparse.ArgumentParser(
         description="Run experiments. What to run comes either from an experiment file (--experiment) "
-                    "or from --fuzzers/--benchmarks/--compiletime/--runtime-strategy; see README.md.")
+                    "or from --fuzzers/--benchmarks/--compiletime/--runtime-strategy; see README.md. "
+                    "Without any flags, it asks what to run instead.")
     parser.add_argument("--config", type=str, required=True, help="Path to the configuration file (machine settings, default trials and max_total_time).")
     parser.add_argument("--experiment", "--groups", type=str, help="Experiment file (YAML, or JSON if it ends in .json) with groups of fuzzers, benchmarks and strategies. Replaces --fuzzers/--benchmarks/--compiletime/--runtime-strategy.")
     parser.add_argument("--fuzzers", type=str, nargs='+', help="List of fuzzers to run (without --experiment).")
@@ -388,6 +395,10 @@ if __name__ == "__main__":
     parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
     parser.add_argument("--dry-run", action="store_true", help="Validate everything and print the planned runs and trials, then exit without building or running anything.")
     parser.add_argument("--plan-json", type=str, help="With --dry-run: also write the planned runs, builds and trials to this JSON file (read by webapp/).")
+    parser.add_argument("--foreground", action="store_true",
+                        help="Run the experiment in this process instead of queueing it. The queue starts every "
+                             "experiment this way; by hand it runs attached to the terminal (output also goes to "
+                             "experiments/logs/<name>.log) and does not wait for other experiments.")
 
     args = parser.parse_args()
 
@@ -415,6 +426,8 @@ if __name__ == "__main__":
         no_superc = args.no_superc or experiment_file.get("no_superc", False)
         bug_triaging = args.bug_triaging if args.bug_triaging is not None else experiment_file["bug_triaging"]
         runs = expand_groups(groups, defaults, overrides=experiment_file["benchmarks"])
+        if "cores_to_use" in experiment_file:
+            config["cores_to_use"] = experiment_file["cores_to_use"]
     else:
         if not args.fuzzers or not args.benchmarks:
             logging.error("Give --experiment FILE, or --fuzzers and --benchmarks.")
@@ -445,13 +458,23 @@ if __name__ == "__main__":
     # error, listed with all the others, before anything is built.
     validate_runs(runs, project_root)
 
+    # Benchmark copies per (compile-time strategy, benchmark); each copy is built
+    # once per fuzzer that runs on it and gets max_total_time / copies per trial.
+    copies = {}
+    for key in unique((r["compiletime"], r["benchmark"]) for r in runs):
+        copies[key] = count_ct_configurations(key[0], project_root, key[1], config["random_seed"])
+    estimate = estimate_seconds(runs, copies, config)
+
+    # The experiment as a file: what experiments/<name>.yaml holds, however it was given.
+    experiment = {"experiment_name": experiment_name, "no_superc": no_superc, "bug_triaging": bug_triaging}
+    if args.experiment:
+        experiment.update({k: experiment_file[k] for k in ("cores_to_use", "not_applied") if k in experiment_file})
+    experiment["groups"] = groups
+    if args.experiment and experiment_file["benchmarks"]:
+        experiment["benchmarks"] = experiment_file["benchmarks"]
+
     if args.dry_run:
         logging.info(f"Dry run of experiment {experiment_name} (nothing is built, copied or run).")
-        # Benchmark copies per (compile-time strategy, benchmark); each copy is built
-        # once per fuzzer that runs on it and gets max_total_time / copies per trial.
-        copies = {}
-        for key in unique((r["compiletime"], r["benchmark"]) for r in runs):
-            copies[key] = count_ct_configurations(key[0], project_root, key[1], config["random_seed"])
         total_trials = total_seconds = 0
         for run in runs:
             n = copies[(run["compiletime"], run["benchmark"])]
@@ -465,6 +488,8 @@ if __name__ == "__main__":
         logging.info(f"Benchmark builds: {builds}, plus {sum(copies.values())} coverage build(s)")
         logging.info(f"Trials: {total_trials}, {total_seconds / 3600:.1f} fuzzing hours in total; "
                      f"with {config['cores_to_use']} cores at least {total_seconds / 3600 / config['cores_to_use']:.1f} hours.")
+        logging.info(f"Estimated duration: {estimate / 3600:.1f} hours (approximate; assumes every image "
+                     f"still needs to be built).")
         logging.info(f"SuperC: {'disabled' if no_superc else 'enabled'}; bug triaging: {bug_triaging or 'none'}")
         if args.plan_json:
             plan = {
@@ -476,13 +501,37 @@ if __name__ == "__main__":
                 "fuzzers": fuzzers, "benchmark_builds": builds, "coverage_builds": sum(copies.values()),
                 "trials": total_trials, "fuzzing_hours": total_seconds / 3600, "cores": config["cores_to_use"],
                 "min_hours": total_seconds / 3600 / config["cores_to_use"], "superc": not no_superc,
-                "bug_triaging": bug_triaging,
+                "bug_triaging": bug_triaging, "estimated_hours": estimate / 3600,
                 "exists": os.path.exists(os.path.join(config["experiment_filestore"], experiment_name)) or
                           os.path.exists(os.path.join(config["report_filestore"], experiment_name)),
             }
             with open(args.plan_json, "w") as f:
                 json.dump(plan, f, indent=1)
         sys.exit(0)
+
+    # Every experiment runs from the job queue, in the background: queue it and return.
+    if not args.foreground:
+        import jobs
+        try:
+            job_id, saved, log_file = jobs.queue_experiment(args.config, experiment, config)
+        except ValueError as e:
+            logging.error(str(e))
+            sys.exit(1)
+        logging.success(f"Queued experiment {experiment_name} (job {job_id}); "
+                        f"{jobs.queue_message(jobs.queue(config, logging), job_id)}")
+        logging.info(f"It runs in the background and keeps running when this terminal is closed.")
+        logging.info(f"  Experiment file: {os.path.relpath(saved)}")
+        logging.info(f"  Log:             {os.path.relpath(log_file)}   (tail -f {os.path.relpath(log_file)})")
+        logging.info(f"  Stop it:         {stop_command(experiment_name)}")
+        logging.info(f"  Estimated time:  {estimate / 3600:.1f} hours once it starts (approximate)")
+        sys.exit(0)
+
+    # By hand with --foreground in a terminal: copy the output to the log, as the queue does.
+    if sys.stdout.isatty():
+        os.makedirs(os.path.dirname(log_path(experiment_name)), exist_ok=True)
+        tee = subprocess.Popen(["tee", "-a", log_path(experiment_name)], stdin=subprocess.PIPE)
+        os.dup2(tee.stdin.fileno(), sys.stdout.fileno())
+        os.dup2(tee.stdin.fileno(), sys.stderr.fileno())
 
     # Save all to a state
     experiment_state = {
@@ -527,6 +576,7 @@ if __name__ == "__main__":
     logging.info(f"SuperC analysis: {'disabled' if no_superc else 'enabled'}")
     logging.info(f"Default trials / runtime per trial (seconds), from {args.config}: "
                  f"{experiment_state['trials']} / {experiment_state['max_total_time']}")
+    logging.info(f"Cores: {experiment_state['cores_to_use']}")
     logging.info(f"Parallel image builds: {experiment_state['build_parallelism']}")
     for run in runs:
         logging.info(f"Run (group {run['group']}): {run_label(run['fuzzer'], run['runtime_strategy'])} on "
@@ -559,14 +609,15 @@ if __name__ == "__main__":
     logging.info(f"Report directory created at: {report_path}")
     events.emit(experiment_path, "phase", phase="building images")
 
-    # Keep what this experiment ran with it: the experiment file as given, or the
-    # flags' single group written out in the same format.
-    if args.experiment:
-        shutil.copy(args.experiment, os.path.join(experiment_path, "experiment" + os.path.splitext(args.experiment)[1]))
-    else:
-        with open(os.path.join(experiment_path, "experiment.yaml"), "w") as f:
-            yaml.safe_dump({"experiment_name": experiment_name, "no_superc": no_superc,
-                            "bug_triaging": bug_triaging, "groups": groups}, f, sort_keys=False)
+    # Keep what this experiment runs: experiments/<name>.yaml with its start, estimated
+    # end and stop command, and a copy in the experiment folder.
+    saved = saved_experiment_path(experiment_name)
+    started = time.time()
+    write_experiment_file(saved, experiment, {"queued": read_record(saved).get("queued") if args.experiment and
+                                              os.path.abspath(args.experiment) == saved else None,
+                                              "started": started, "estimated_end": started + estimate})
+    shutil.copy(saved, os.path.join(experiment_path, "experiment.yaml"))
+    logging.info(f"Experiment file: {saved}; stop it with: {stop_command(experiment_name)}")
     
     # Build base image
     logging.info("Building base image...")

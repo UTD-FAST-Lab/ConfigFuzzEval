@@ -10,6 +10,11 @@ runtime strategy runs, and the experiment is the union of its groups:
     experiment_name: my_experiment       # optional if --experiment-name is given
     no_superc: true                      # optional, default false
     bug_triaging: [afl-collect]          # optional, default none
+    cores_to_use: 6                      # optional, default: cores_to_use in --config
+    not_applied: {...}                   # optional, ignored: answers saved by the
+                                         # interactive setup that are not applied yet
+    record: {...}                        # optional, ignored: when it was queued and
+                                         # started, its estimated end and stop command
     groups:
       - fuzzers: [vafuzz]
         benchmarks: [xz_xz, bison_bison]
@@ -35,8 +40,11 @@ The --fuzzers/--benchmarks/--compiletime/--runtime-strategy flags make a single
 group with the --config file's trials and max_total_time.
 """
 
+import heapq
 import json
+import os
 import sys
+import time
 
 import yaml
 
@@ -44,7 +52,8 @@ from color_logger import get_logger
 
 logging = get_logger(__name__)
 
-TOP_KEYS = {"experiment_name", "no_superc", "bug_triaging", "groups", "benchmarks"}
+TOP_KEYS = {"experiment_name", "no_superc", "bug_triaging", "cores_to_use", "not_applied", "record",
+            "groups", "benchmarks"}
 GROUP_KEYS = {"fuzzers", "benchmarks", "compiletime", "runtime_strategy", "trials", "max_total_time"}
 STRATEGY_KEYS = {"compiletime", "runtime_strategy"}
 
@@ -76,6 +85,10 @@ def load_experiment_file(path):
     if not isinstance(data.get("no_superc", False), bool):
         fail(f"Experiment file {path}: 'no_superc' must be true or false.")
     data["bug_triaging"] = _names(data, "bug_triaging", "the experiment file", default=[], allow_empty=True)
+    if "cores_to_use" in data:
+        _positive_int(data, "cores_to_use", f"Experiment file {path}", None)
+    if not isinstance(data.get("not_applied", {}), dict):
+        fail(f"Experiment file {path}: 'not_applied' must be a mapping.")
 
     benchmarks = data.get("benchmarks") or {}
     if not isinstance(benchmarks, dict):
@@ -181,3 +194,114 @@ def expand_groups(groups, defaults, overrides=None):
 
 def unique(values):
     return list(dict.fromkeys(values))
+
+
+# --- The saved experiment file: experiments/<name>.yaml ----------------------------
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+EXPERIMENTS_DIR = os.path.join(PROJECT_ROOT, "experiments")
+LOGS_DIR = os.path.join(EXPERIMENTS_DIR, "logs")
+
+
+def saved_experiment_path(name):
+    """experiments/<name>.yaml: every experiment, however it was started, is saved here."""
+    return os.path.join(EXPERIMENTS_DIR, f"{name}.yaml")
+
+
+def log_path(name):
+    """experiments/logs/<name>.log: the output of every experiment."""
+    return os.path.join(LOGS_DIR, f"{name}.log")
+
+
+def stop_command(name):
+    return f"python3 common/jobs.py stop {name}"
+
+
+class _PlainDumper(yaml.SafeDumper):
+    """Writes groups that share a benchmark list in full, without YAML anchors."""
+
+    def ignore_aliases(self, data):
+        return True
+
+
+def _when(value):
+    """A time as written in the record: epoch seconds are formatted, a written time is kept."""
+    if isinstance(value, str):
+        return value
+    return time.strftime("%Y-%m-%d %H:%M:%S %Z", time.localtime(value))
+
+
+def write_experiment_file(path, experiment, record=None):
+    """Writes an experiment file: the experiment (without any old record), then its record.
+
+    record: {"queued", "started", "estimated_end"} (epoch seconds) and "stop_command";
+    estimated_end gets a comment saying how rough it is. The record is for people
+    reading the file; load_experiment_file ignores it, so the file runs again as is.
+    """
+    experiment = {k: v for k, v in experiment.items() if k != "record"}
+    name = experiment.get("experiment_name", "")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        f.write("# FuzzBench++ experiment file. Run it again (with a new experiment_name) with\n"
+                f"#   python3 common/run_experiment.py --config CONFIG --experiment {os.path.relpath(path, PROJECT_ROOT)}\n"
+                "# record is written by run_experiment.py and ignored when the file is read.\n")
+        yaml.dump(experiment, f, Dumper=_PlainDumper, sort_keys=False, default_flow_style=None, width=120)
+        if record:
+            f.write("record:\n")
+            for key in ("queued", "started"):
+                if record.get(key):
+                    f.write(f"  {key}: \"{_when(record[key])}\"\n")
+            if record.get("estimated_end"):
+                f.write(f"  estimated_end: \"{_when(record['estimated_end'])}\"  # approximate: assumes everything "
+                        f"in the run still needs to be built now (see experiment_plan.estimate_seconds)\n")
+            f.write(f"  stop_command: \"{record.get('stop_command') or stop_command(name)}\"  "
+                    f"# stops it, queued or running (it runs in the background)\n")
+            f.write(f"  log: \"{os.path.relpath(log_path(name), PROJECT_ROOT)}\"\n")
+
+
+def read_record(path):
+    """The record of a saved experiment file ({} without one)."""
+    try:
+        with open(path) as f:
+            return (yaml.safe_load(f) or {}).get("record") or {}
+    except (OSError, yaml.YAMLError):
+        return {}
+
+
+# --- Estimated duration -------------------------------------------------------
+
+# Rough build times in minutes, from a run on this machine (12 benchmark and 3 coverage
+# builds took about 8.5 minutes, 6 at a time) plus uncached fuzzer builds. The estimate
+# assumes nothing is cached, so an experiment whose images exist ends earlier.
+BUILD_MINUTES = {"base_and_runner": 10, "fuzzer": 15, "benchmark": 3, "coverage": 3}
+# Coverage replay and bookkeeping after each trial's fuzzing, and the end of the
+# experiment (aggregation, statistics), in minutes.
+TRIAL_OVERHEAD_MINUTES = 2
+END_MINUTES = 10
+
+
+def estimate_seconds(runs, copies, config):
+    """Rough wall-clock time of an experiment from start to end, in seconds.
+
+    runs: from expand_groups; copies: {(compiletime, benchmark): benchmark copies}.
+    Builds run build_parallelism at a time, assuming every image must be built; each
+    copy of a run's trial fuzzes max_total_time / copies and the trials are packed
+    onto cores_to_use cores, longest first.
+    """
+    parallel = max(1, min(config.get("build_parallelism", 16), config["cores_to_use"]))
+    fuzzers = {r["fuzzer"] for r in runs}
+    benchmark_builds = sum(copies[(ct, b)] for _, ct, b in {(r["fuzzer"], r["compiletime"], r["benchmark"])
+                                                              for r in runs})
+    coverage_builds = sum(copies[key] for key in {(r["compiletime"], r["benchmark"]) for r in runs})
+    build = 60 * (BUILD_MINUTES["base_and_runner"]
+                  + BUILD_MINUTES["fuzzer"] * -(-len(fuzzers) // parallel)
+                  + BUILD_MINUTES["benchmark"] * -(-benchmark_builds // parallel)
+                  + BUILD_MINUTES["coverage"] * -(-coverage_builds // parallel))
+    tasks = []
+    for r in runs:
+        n = copies[(r["compiletime"], r["benchmark"])]
+        tasks += [r["max_total_time"] / n + 60 * TRIAL_OVERHEAD_MINUTES] * (n * r["trials"])
+    cores = [0.0] * max(1, config["cores_to_use"])
+    for task in sorted(tasks, reverse=True):
+        heapq.heapreplace(cores, cores[0] + task)
+    return build + max(cores) + 60 * END_MINUTES

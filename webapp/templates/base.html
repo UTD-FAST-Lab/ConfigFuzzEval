@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}FuzzBench++{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">FuzzBench++</a>
+  <nav>
+    <a href="/" class="{{ 'on' if request.path == '/' }}">Experiments</a>
+    <a href="/new" class="{{ 'on' if request.path == '/new' }}">New experiment</a>
+  </nav>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

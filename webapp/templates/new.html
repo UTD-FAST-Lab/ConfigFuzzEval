@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}New experiment · FuzzBench++{% endblock %}
+{% block content %}
+<h1>New experiment</h1>
+<p class="sub">Each group runs every chosen fuzzer on every chosen benchmark with every chosen compile-time and runtime strategy.
+The form writes an experiment file (right); you can edit it directly. Preview runs <code>run_experiment.py --dry-run</code> on it, which checks everything before anything is built.</p>
+
+<div class="grid2">
+<div>
+  <div class="card">
+    <div class="row">
+      <label class="field" style="flex:1"><span>Experiment name</span>
+        <input type="text" id="name" placeholder="e.g. rts_pcre2_5x1h" autocomplete="off"></label>
+    </div>
+    <div class="field"><span>Crash triage</span><div class="chips" id="triage"></div></div>
+    <label class="chip" id="superc-chip"><input type="checkbox" id="superc"> run SuperC presence-condition analysis</label>
+  </div>
+  <div id="groups"></div>
+  <button onclick="addGroup()">+ Add group</button>
+</div>
+
+<div>
+  <div class="card" style="position:sticky;top:64px">
+    <div class="row"><h3 style="margin:0">Experiment file</h3><span class="spacer"></span>
+      <span class="small muted" id="manual-note" hidden>edited by hand · <a href="#" onclick="regenerate();return false">rewrite from the form</a></span></div>
+    <textarea id="yaml" spellcheck="false" oninput="manual=true;document.getElementById('manual-note').hidden=false;resetPreview()"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button onclick="preview()" id="preview-btn">Preview (dry run)</button>
+      <button class="primary" onclick="queue()" id="queue-btn" disabled>Queue experiment</button>
+      <span class="small muted" id="busy"></span>
+    </div>
+    <div id="result"></div>
+  </div>
+</div>
+</div>
+
+<script>
+const CATALOG = {{ catalog | tojson }};
+const DEFAULTS = {{ defaults | tojson }};
+const INITIAL = {{ initial_yaml | tojson }};
+let groups = [];
+let manual = false;
+let lastPreviewOk = false;
+
+function chipList(el, options, selected, onChange, hint) {
+  el.innerHTML = "";
+  for (const opt of options) {
+    const lab = document.createElement("label");
+    lab.className = "chip" + (selected.includes(opt) ? " on" : "");
+    lab.innerHTML = `<input type="checkbox" ${selected.includes(opt) ? "checked" : ""}>${esc(opt)}` +
+      (hint && hint(opt) ? ` <span class="hint">${esc(hint(opt))}</span>` : "");
+    lab.querySelector("input").addEventListener("change", ev => {
+      lab.classList.toggle("on", ev.target.checked);
+      const i = selected.indexOf(opt);
+      if (ev.target.checked && i < 0) selected.push(opt);
+      if (!ev.target.checked && i >= 0) selected.splice(i, 1);
+      onChange();
+    });
+    el.appendChild(lab);
+  }
+}
+
+function addGroup(g) {
+  groups.push(g || {fuzzers: [], benchmarks: [], compiletime: ["default"], runtime_strategy: ["default"], trials: "", max_total_time: ""});
+  renderGroups(); changed();
+}
+
+function problems(f, b, rts) {
+  const out = [], files = (CATALOG.benchmarks[b] || {}).files || [];
+  if (!files.includes("ct_grammar.json")) out.push(`${b} has no ct_grammar.json`);
+  for (const p of (CATALOG.fuzzers[f] || {}).requires || []) if (!files.includes(p)) out.push(`${f} needs ${b}/${p}`);
+  if (rts !== "default") {
+    if (!(CATALOG.fuzzers[f] || {}).runtime_strategies) out.push(`${f} does not support runtime strategies`);
+    if (!files.includes("rt_grammar.json")) out.push(`${b} has no rt_grammar.json (needed by runtime strategies)`);
+  }
+  return out;
+}
+
+function renderGroups() {
+  const root = document.getElementById("groups");
+  root.innerHTML = "";
+  groups.forEach((g, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<h3>Group ${i + 1}<span class="spacer"></span>
+        ${groups.length > 1 ? `<button class="small" data-del>Remove</button>` : ""}</h3>
+      <div class="field"><span>Fuzzers</span><div class="chips" data-k="fuzzers"></div></div>
+      <div class="field"><span>Benchmarks</span><div class="chips" data-k="benchmarks"></div></div>
+      <div class="field"><span>Compile-time strategies</span><div class="chips" data-k="compiletime"></div></div>
+      <div class="field"><span>Runtime strategies</span><div class="chips" data-k="runtime_strategy"></div></div>
+      <div class="row">
+        <label class="field"><span>Trials</span><input type="number" min="1" data-n="trials" placeholder="${DEFAULTS.trials} (config)" style="width:130px"></label>
+        <label class="field"><span>Fuzzing time per trial (s)</span><input type="number" min="1" data-n="max_total_time" placeholder="${DEFAULTS.max_total_time} (config)" style="width:170px"></label>
+        <span class="small muted" data-cost></span>
+      </div>
+      <div data-warn></div>`;
+    const opts = {
+      fuzzers: Object.keys(CATALOG.fuzzers), benchmarks: Object.keys(CATALOG.benchmarks),
+      compiletime: CATALOG.compiletime, runtime_strategy: CATALOG.runtime,
+    };
+    const hints = {
+      fuzzers: f => CATALOG.fuzzers[f].runtime_strategies ? "runtime strategies" : "",
+      benchmarks: b => (CATALOG.benchmarks[b].files.includes("rt_grammar.json") ? "" : "no rt grammar"),
+    };
+    for (const el of div.querySelectorAll("[data-k]")) {
+      const k = el.dataset.k;
+      chipList(el, opts[k], g[k], () => { updateWarnings(div, g); changed(); }, hints[k]);
+    }
+    for (const el of div.querySelectorAll("[data-n]")) {
+      el.value = g[el.dataset.n];
+      el.addEventListener("input", () => { g[el.dataset.n] = el.value; updateWarnings(div, g); changed(); });
+    }
+    const del = div.querySelector("[data-del]");
+    if (del) del.addEventListener("click", () => { groups.splice(i, 1); renderGroups(); changed(); });
+    updateWarnings(div, g);
+    root.appendChild(div);
+  });
+}
+
+function updateWarnings(div, g) {
+  const seen = new Set(), list = [];
+  for (const f of g.fuzzers) for (const b of g.benchmarks) for (const r of g.runtime_strategy)
+    for (const p of problems(f, b, r)) if (!seen.has(p)) { seen.add(p); list.push(p); }
+  div.querySelector("[data-warn]").innerHTML = list.length ?
+    `<div class="warnbox"><b>These runs cannot run</b> (the dry run will refuse them):<br>${list.map(esc).join("<br>")}</div>` : "";
+  const trials = +(g.trials || DEFAULTS.trials), time = +(g.max_total_time || DEFAULTS.max_total_time);
+  const runs = g.fuzzers.length * g.benchmarks.length * g.compiletime.length * g.runtime_strategy.length;
+  div.querySelector("[data-cost]").textContent = runs ?
+    `${runs} run(s) × ${trials} trial(s) = ${(runs * trials * time / 3600).toFixed(1)} fuzzing hours` : "";
+}
+
+function yamlList(items) {
+  return "[" + items.map(s => /^[A-Za-z0-9_.+-]+$/.test(s) ? s : JSON.stringify(s)).join(", ") + "]";
+}
+
+function toYaml() {
+  const name = document.getElementById("name").value.trim();
+  const triage = [...document.querySelectorAll("#triage .chip.on")].map(c => c.textContent.replace("✓", "").trim());
+  let y = `experiment_name: ${name ? (/^[A-Za-z0-9_.-]+$/.test(name) ? name : JSON.stringify(name)) : ""}\n`;
+  y += `no_superc: ${!document.getElementById("superc").checked}\n`;
+  if (triage.length) y += `bug_triaging: ${yamlList(triage)}\n`;
+  y += "groups:\n";
+  for (const g of groups) {
+    y += `  - fuzzers: ${yamlList(g.fuzzers)}\n    benchmarks: ${yamlList(g.benchmarks)}\n`;
+    y += `    compiletime: ${yamlList(g.compiletime)}\n    runtime_strategy: ${yamlList(g.runtime_strategy)}\n`;
+    if (g.trials) y += `    trials: ${parseInt(g.trials)}\n`;
+    if (g.max_total_time) y += `    max_total_time: ${parseInt(g.max_total_time)}\n`;
+  }
+  return y;
+}
+
+function changed() { if (!manual) document.getElementById("yaml").value = toYaml(); resetPreview(); }
+function regenerate() { manual = false; document.getElementById("manual-note").hidden = true; changed(); }
+function resetPreview() {
+  lastPreviewOk = false;
+  document.getElementById("queue-btn").disabled = true;
+}
+
+function renderPlan(r) {
+  const out = [];
+  if (r.error) out.push(`<div class="errbox">${esc(r.error)}</div>`);
+  if (r.plan) {
+    const p = r.plan;
+    if (r.ok) out.push(`<div class="okbox">The experiment can run. Queue it to start it when the machine is free.</div>`);
+    out.push(`<div class="kpis">
+      <div class="kpi"><div class="v">${p.trials}</div><div class="l">trials</div></div>
+      <div class="kpi"><div class="v">${p.fuzzing_hours.toFixed(1)} h</div><div class="l">fuzzing in total</div></div>
+      <div class="kpi"><div class="v">≥ ${p.min_hours.toFixed(1)} h</div><div class="l">on ${p.cores} cores</div></div>
+      <div class="kpi"><div class="v">${p.benchmark_builds} + ${p.coverage_builds}</div><div class="l">benchmark + coverage builds</div></div></div>`);
+    out.push(`<div class="tw"><table><thead><tr><th>Group</th><th>Run</th><th>Benchmark</th><th>Compile-time</th><th class="num">Copies</th><th class="num">Trials</th><th class="num">Time</th></tr></thead><tbody>` +
+      p.runs.map(x => `<tr><td class="num">${x.group}</td><td>${esc(x.fuzzer)}${x.runtime_strategy !== "default" ? `[${esc(x.runtime_strategy)}]` : ""}</td><td>${esc(x.benchmark)}</td><td>${esc(x.compiletime)}</td><td class="num">${x.copies}</td><td class="num">${x.trials}</td><td class="num">${duration(x.max_total_time)}</td></tr>`).join("") +
+      `</tbody></table></div>`);
+    out.push(`<p class="small muted">SuperC: ${p.superc ? "on" : "off"} · crash triage: ${p.bug_triaging.length ? esc(p.bug_triaging.join(", ")) : "none"}</p>`);
+  }
+  if (r.output) out.push(`<details ${r.ok ? "" : "open"}><summary>Dry-run output</summary><pre class="log">${esc(r.output)}</pre></details>`);
+  document.getElementById("result").innerHTML = out.join("");
+}
+
+async function preview() {
+  const btn = document.getElementById("preview-btn");
+  btn.disabled = true; document.getElementById("busy").textContent = "checking…";
+  const r = await api("/api/preview", {yaml: document.getElementById("yaml").value});
+  btn.disabled = false; document.getElementById("busy").textContent = "";
+  renderPlan(r);
+  lastPreviewOk = !!r.ok;
+  document.getElementById("queue-btn").disabled = !r.ok;
+}
+
+async function queue() {
+  if (!lastPreviewOk) return;
+  const btn = document.getElementById("queue-btn");
+  btn.disabled = true; document.getElementById("busy").textContent = "queueing…";
+  const r = await api("/api/experiments", {yaml: document.getElementById("yaml").value});
+  document.getElementById("busy").textContent = "";
+  if (r.ok) { location.href = r.url; return; }
+  renderPlan(r); btn.disabled = false;
+}
+
+document.getElementById("name").addEventListener("input", changed);
+document.getElementById("superc").addEventListener("change", ev => {
+  document.getElementById("superc-chip").classList.toggle("on", ev.target.checked); changed();
+});
+chipList(document.getElementById("triage"), CATALOG.triagers, [], changed);
+if (INITIAL) {
+  addGroup();
+  manual = true;
+  document.getElementById("manual-note").hidden = false;
+  document.getElementById("yaml").value = INITIAL;
+} else {
+  addGroup();
+}
+</script>
+{% endblock %}

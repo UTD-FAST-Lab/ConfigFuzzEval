@@ -9,10 +9,11 @@ from validation import validate_configuration, validate_fuzzers, validate_benchm
 from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy, count_ct_configurations
 from experiment_plan import load_experiment_file, expand_groups, unique
+import events
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pprint
 import itertools
-import pickle, shutil
+import pickle, shutil, json
 
 def plan_trial_tasks(experiment_state):
     """Every trial of the experiment's runs whose fuzzer and benchmark copy built, as
@@ -129,12 +130,16 @@ def run_experiments(experiment_state):
         if task[2] not in coverage_binaries:
             logging.error(f"[SKIPPED] {run_label(task[0], task[1])} on {task[2]}, trial {task[3]}: "
                           f"its coverage binary failed to build")
+            events.emit(experiment_path, "trial_end", run=run_label(task[0], task[1]), benchmark=task[2],
+                        trial=task[3], status="skipped")
             continue
         tasks.append(task)
 
     def submit(executor, task, core_id):
         fuzzer, rts, benchmark, trial_id, tot_cts_count, rt_config_file, max_total_time = task
         logging.info(f"[START] {run_label(fuzzer, rts)} on {benchmark}, trial {trial_id}, core {core_id}")
+        events.emit(experiment_path, "trial_start", run=run_label(fuzzer, rts), benchmark=benchmark,
+                    trial=trial_id, core=core_id)
         return executor.submit(
             run_benchmark,
             fuzzer,
@@ -171,14 +176,18 @@ def run_experiments(experiment_state):
                 task, core_id = running.pop(finished_future)
                 fuzzer, rts, benchmark, trial_id = task[:4]
                 label = run_label(fuzzer, rts)
+                status = "failure"
                 try:
                     success = finished_future.result()
                     if success:
+                        status = "success"
                         logging.info(f"[SUCCESS] {label} on {benchmark}, trial {trial_id}, core {core_id}")
                     else:
                         logging.error(f"[FAILURE] {label} on {benchmark}, trial {trial_id}, core {core_id}")
                 except Exception as e:
                     logging.error(f"[EXCEPTION] {label} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
+                events.emit(experiment_path, "trial_end", run=label, benchmark=benchmark, trial=trial_id,
+                            core=core_id, status=status)
 
                 # Launch next task (reuse freed core)
                 if tasks:
@@ -378,6 +387,7 @@ if __name__ == "__main__":
     parser.add_argument("--experiment-name", type=str, help="Name of the experiment (overrides the experiment file's experiment_name).")
     parser.add_argument("--no-superc", action="store_true", help="Disable SuperC CFG analysis (skips building and running the SuperC container).")
     parser.add_argument("--dry-run", action="store_true", help="Validate everything and print the planned runs and trials, then exit without building or running anything.")
+    parser.add_argument("--plan-json", type=str, help="With --dry-run: also write the planned runs, builds and trials to this JSON file (read by webapp/).")
 
     args = parser.parse_args()
 
@@ -456,6 +466,22 @@ if __name__ == "__main__":
         logging.info(f"Trials: {total_trials}, {total_seconds / 3600:.1f} fuzzing hours in total; "
                      f"with {config['cores_to_use']} cores at least {total_seconds / 3600 / config['cores_to_use']:.1f} hours.")
         logging.info(f"SuperC: {'disabled' if no_superc else 'enabled'}; bug triaging: {bug_triaging or 'none'}")
+        if args.plan_json:
+            plan = {
+                "experiment_name": experiment_name,
+                "runs": [{"group": r["group"], "fuzzer": r["fuzzer"], "runtime_strategy": r["runtime_strategy"],
+                          "compiletime": r["compiletime"], "benchmark": r["benchmark"], "trials": r["trials"],
+                          "max_total_time": r["max_total_time"],
+                          "copies": copies[(r["compiletime"], r["benchmark"])]} for r in runs],
+                "fuzzers": fuzzers, "benchmark_builds": builds, "coverage_builds": sum(copies.values()),
+                "trials": total_trials, "fuzzing_hours": total_seconds / 3600, "cores": config["cores_to_use"],
+                "min_hours": total_seconds / 3600 / config["cores_to_use"], "superc": not no_superc,
+                "bug_triaging": bug_triaging,
+                "exists": os.path.exists(os.path.join(config["experiment_filestore"], experiment_name)) or
+                          os.path.exists(os.path.join(config["report_filestore"], experiment_name)),
+            }
+            with open(args.plan_json, "w") as f:
+                json.dump(plan, f, indent=1)
         sys.exit(0)
 
     # Save all to a state
@@ -531,6 +557,7 @@ if __name__ == "__main__":
     
     logging.info(f"Experiment directory created at: {experiment_path}")
     logging.info(f"Report directory created at: {report_path}")
+    events.emit(experiment_path, "phase", phase="building images")
 
     # Keep what this experiment ran with it: the experiment file as given, or the
     # flags' single group written out in the same format.
@@ -662,6 +689,7 @@ if __name__ == "__main__":
     
     # Build benchmarks
     logging.info("Building selected benchmarks...")
+    events.emit(experiment_path, "phase", phase="building benchmarks")
     built_benchmarks = {}
     benchmark_failures = {}
     fuzzer_benchmark_pairs = []
@@ -794,9 +822,11 @@ if __name__ == "__main__":
 
     # Run experiments
     logging.info("Ready to begin experiments!")
+    events.emit(experiment_path, "phase", phase="fuzzing", trials=len(experiment_state["trial_tasks"]))
     run_experiments(experiment_state)
 
     logging.info("Experiments completed. Starting result aggregation...")
+    events.emit(experiment_path, "phase", phase="aggregating")
     aggregate_results(experiment_state)
 
     # Run SuperC CFG analysis on experiments
@@ -804,15 +834,27 @@ if __name__ == "__main__":
         logging.info("Aggregation completed. SuperC disabled (--no-superc), skipping SuperC CFG analysis.")
     else:
         logging.info("Aggregation completed. Starting SuperC CFG analysis...")
+        events.emit(experiment_path, "phase", phase="superc")
         run_superc_on_experiments(experiment_state, logging)
         logging.info("SuperC CFG analysis completed.")
 
     if experiment_state.get("built_triagers"):
         logging.info("Starting triaging...")
+        events.emit(experiment_path, "phase", phase="triage")
         triage_on_experiments(experiment_state)
         logging.info("Triaging completed.")
-    
-    
+
+    events.emit(experiment_path, "phase", phase="statistics")
+    # Statistics report (the same as post_analysis.py --stats); a failure here does not fail the experiment.
+    try:
+        from statistical_analysis import generate_statistics_report
+        stats_path = generate_statistics_report(experiment_state["experiment_path"],
+                                                os.path.join(experiment_state["report_path"], "statistics"))
+        logging.info(f"Statistics report written to {stats_path}")
+    except Exception as e:
+        logging.error(f"Statistical analysis failed: {e} (rerun with post_analysis.py --stats)")
+
+
 
     
     # Collect results
@@ -820,3 +862,4 @@ if __name__ == "__main__":
     
     # Cleanup
     delete_cts_benchmarks(experiment_state, project_root)
+    events.emit(experiment_path, "finished")

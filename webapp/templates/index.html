@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Experiments · FuzzBench++{% endblock %}
+{% block content %}
+<div class="row">
+  <div><h1>Experiments</h1><p class="sub">Everything in the experiment filestore, including runs started from the command line.</p></div>
+  <span class="spacer"></span>
+  <a class="btn primary" href="/new">New experiment</a>
+</div>
+
+<div class="checks">
+  {% for c in checks %}
+  <span class="check {{ 'ok' if c.ok else 'bad' }}" title="{{ c.detail }}"><span class="icon">{{ '✓' if c.ok else '!' }}</span><b>{{ c.name }}</b>{{ c.detail }}</span>
+  {% endfor %}
+</div>
+
+{% set active = recent_jobs | selectattr('status', 'in', ['running', 'cancelling', 'queued']) | list %}
+{% if active or external %}
+<h2>Running and queued</h2>
+<div class="card tw">
+<table>
+  <thead><tr><th>Job</th><th>Status</th><th>Queued</th><th>Started</th><th></th></tr></thead>
+  <tbody>
+  {% for j in active | sort(attribute='id') %}
+  <tr>
+    <td><a href="/experiments/{{ j.name }}">{{ j.title }}</a></td>
+    <td><span class="badge {{ j.status }}">{{ j.status }}</span></td>
+    <td>{{ j.created | ago }}</td><td>{{ j.started | ago }}</td>
+    <td class="num"><button class="small danger" onclick="cancelJob({{ j.id }}, this)">{{ 'Remove' if j.status == 'queued' else 'Stop' }}</button></td>
+  </tr>
+  {% endfor %}
+  {% for p in external %}
+  <tr>
+    <td>{% if p.name %}<a href="/experiments/{{ p.name }}">{{ p.name }}</a>{% else %}(unknown experiment){% endif %}
+      <span class="muted small">· {{ p.script }}, pid {{ p.pid }}, started outside the web app</span></td>
+    <td><span class="badge running">running</span></td><td>–</td><td>–</td><td></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if queued and (external or (active | selectattr('status', 'in', ['running', 'cancelling']) | list)) %}
+<p class="muted small">Queued jobs start when the running one ends: experiments share the cores and benchmark copies.</p>
+{% endif %}
+</div>
+{% endif %}
+
+<h2>All experiments</h2>
+<div class="card tw">
+{% if experiments %}
+<table>
+  <thead><tr><th>Name</th><th>Status</th><th>Progress</th><th>Fuzzers</th><th>Benchmarks</th><th>Runtime strategies</th><th>Started</th><th>Results</th></tr></thead>
+  <tbody>
+  {% for e in experiments %}
+  <tr>
+    <td><a href="/experiments/{{ e.name }}"><b>{{ e.name }}</b></a></td>
+    <td><span class="badge {{ e.status }}">{{ e.status }}</span>{% if e.status == 'running' and e.phase %} <span class="muted small">{{ e.phase }}</span>{% endif %}</td>
+    <td>
+      {% if e.planned %}
+      <div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:110px"><span style="width:{{ (100 * e.done / e.planned) | round(1) }}%"></span></div>
+      <span class="small muted">{{ e.done }}/{{ e.planned }}{% if e.failed %}, <span style="color:var(--bad-ink)">{{ e.failed }} failed</span>{% endif %}</span></div>
+      {% else %}<span class="muted">–</span>{% endif %}
+    </td>
+    <td class="small">{{ e.fuzzers | join(', ') }}</td>
+    <td class="small">{{ e.benchmarks | join(', ') }}</td>
+    <td class="small">{{ e.runtime_strategies | join(', ') }}</td>
+    <td class="small" title="{{ e.started | when }}">{{ e.started | ago }}</td>
+    <td>{% if e.has_stats %}<a href="/experiments/{{ e.name }}#results">statistics</a>{% else %}<span class="muted">–</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty">No experiments yet. <a href="/new">Configure one</a>.</div>
+{% endif %}
+</div>
+
+{% if recent_jobs %}
+<h2>Recent jobs</h2>
+<div class="card tw">
+<table>
+  <thead><tr><th>#</th><th>Job</th><th>Status</th><th>Queued</th><th>Ended</th><th>Exit code</th></tr></thead>
+  <tbody>
+  {% for j in recent_jobs %}
+  <tr><td class="num">{{ j.id }}</td><td><a href="/experiments/{{ j.name }}">{{ j.title }}</a></td>
+    <td><span class="badge {{ j.status }}">{{ j.status }}</span></td>
+    <td class="small" title="{{ j.created | when }}">{{ j.created | ago }}</td><td class="small" title="{{ j.ended | when }}">{{ j.ended | ago }}</td>
+    <td class="num">{{ j.returncode if j.returncode is not none else '–' }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if active or external %}
+<script>setTimeout(() => location.reload(), 10000);</script>
+{% endif %}
+{% endblock %}

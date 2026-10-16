@@ -258,6 +258,139 @@ setsid nohup python3 common/rerun_coverage.py \
 
 A new experiment takes `coverage.py` and `run.sh` from the fuzzer's Docker image, so after changing them remove the image (`docker rmi fbpp/fuzzer:<fuzzer>`) to have it rebuilt.
 
+### Web app
+
+`webapp/` is a browser front end for the same workflow, from configuring an experiment to reading its results. It starts the same commands as this README (`run_experiment.py` with an experiment file, and `post_analysis.py`) and reads the files they write. You can use the web app and the command line side by side.
+
+#### Starting it
+
+Start the app on the fuzzing machine, from the root of the project:
+
+```bash
+python3 webapp/app.py --config config.yaml                 # http://127.0.0.1:8800/
+setsid nohup python3 webapp/app.py --config config.yaml \
+  > logs-reports/webapp.log 2>&1 < /dev/null &            # or in the background
+```
+
+Options:
+
+- `--config`: the configuration file. The default is `config.yaml`.
+- `--port`: the port. The default is 8800.
+- `--host`: the address to listen on. The default is localhost only.
+- `--token`: a secret the app asks for (also read from `FBPP_WEBAPP_TOKEN`).
+
+**Access.** Anyone who can reach the app can run Docker containers, which is root-equivalent, so it listens on localhost only. From another computer, tunnel the port over SSH and open http://localhost:8800/:
+
+```bash
+ssh -L 8800:localhost:8800 <fuzzing-machine>
+```
+
+The app only listens on other addresses (`--host 0.0.0.0`) when started with `--token SECRET`. Each browser then opens it once with `?token=SECRET`, and a cookie keeps it signed in.
+
+**Before the first experiment**, run `run_as_sudo.sh` as root. The Experiments page shows a red check when `core_pattern` is not `core` or the CPU governor is not `performance`. Experiments still run without these settings, but AFL++ warns, and the coverage numbers are noisier.
+
+#### Running an experiment
+
+1. **Open New experiment.** Give the experiment a name; it becomes the folder name, so use letters, digits, `.`, `_` and `-`. Choose any crash triage, and whether to run SuperC.
+2. **Fill in one or more groups.** Each group runs every chosen fuzzer on every chosen benchmark, with every chosen compile-time and runtime strategy (see "Experiment files" above).
+   - **Fuzzer chips:** "runtime strategies" marks the fuzzers that can use a non-default runtime strategy.
+   - **Benchmark chips:** "no rt grammar" marks the benchmarks that cannot use one.
+   - **Trials and fuzzing time:** leave them empty to use `config.yaml`.
+   - **Warnings:** a yellow box lists runs that cannot run, and the cost line shows the fuzzing hours.
+3. **Check the experiment file** on the right. The form writes it as you go, and you can also edit it directly, for example to add a top-level `benchmarks` section. After a hand edit the form stops overwriting the file; "rewrite from the form" switches it back.
+4. **Click Preview (dry run).** This runs `run_experiment.py --dry-run` on the file, which checks every name and combination without building anything. A green box means the experiment can run; it is followed by the trials, the fuzzing hours, the shortest possible run time on your cores, the builds, and one row per run. A red box shows the dry run's errors.
+5. **Click Queue experiment.** You can only queue after a preview passes, and after any change you have to preview again. The file is saved to `webapp/instance/experiments/<name>.yaml` and the log to `logs-reports/<name>.log`. The browser then opens the experiment's page.
+
+Jobs (experiments and post-analyses) run **one at a time**. They also never run next to an experiment started from a terminal, since both would use the same cores and benchmark copies; a queued job starts when the machine is free. Jobs run as their own processes, so they keep going if the web app is stopped or restarted. **Run again…** on an experiment's page opens the form with that experiment's file and a new name.
+
+#### Reading the pages
+
+**Experiments** (the home page):
+
+- **Checks:** a row of host checks, red when something needs attention.
+- **Running and queued:** what is running or waiting, including experiments started from a terminal.
+- **All experiments:** every experiment in the experiment filestore, with its status, its progress (trials done out of planned, and failures in red) and a link to its statistics. The status is one of:
+  - **queued:** waiting for the machine.
+  - **running:** with its current phase.
+  - **finished:** the experiment reached its end.
+  - **stopped:** it ended early, because it failed or was stopped.
+  - **incomplete:** an experiment from before `events.jsonl` existed that has fewer coverage reports than planned trials.
+
+**An experiment's page:**
+
+- **Header:**
+  - The trials done, running and failed; the time elapsed; and, while fuzzing, an estimate of the time left from the trials finished so far.
+  - The phases in order: building images, building benchmarks, fuzzing, aggregating, SuperC, triage, statistics. The current phase is highlighted.
+  - **Stop experiment:** shown while the experiment runs. It kills the experiment's processes and every trial container labelled `fbpp.experiment=<name>`. Finished trials are kept, and the experiment then shows as stopped.
+- **Trials:** one row per planned trial, which you can filter by status or benchmark. Each row has the arm (`fuzzer[strategy]`), benchmark, compile-time strategy, status, core, duration, the branches and lines covered (covered / instrumented, %, from the trial's `coverage/report.txt`) and a link to the trial's log. The status is one of:
+  - **queued:** not started yet.
+  - **running:** on the core shown.
+  - **success:** fuzzing and coverage finished.
+  - **failure:** the trial's log says why.
+  - **skipped:** its coverage binary did not build.
+  - **interrupted:** it started but the experiment stopped.
+- **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
+- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below).
+- **Post-analysis:** queues `post_analysis.py` on a finished experiment:
+  - **Statistics report:** the metric to rank by, the baseline fuzzer, and optionally another experiment for the reproducibility section.
+  - **Per-configuration coverage:** runtime strategies only. Needed before the "union against best single configuration" table.
+  - **Crash triage:** only when the experiment built a triage tool.
+
+  Below the options, the experiment's jobs are listed with their status and exit code.
+- **Experiment file:** the file the experiment ran with.
+
+For a first look at results: start with **Overall ranking** in the report, then each benchmark's **Against the default** table, which has the most statistical power. Then use the box plots to see how much the trials vary. Read "Limits of the analyses" below before quoting a p-value or a critical-difference diagram.
+
+#### Files
+
+- `webapp/instance/`: the job queue (`jobs.db`), saved experiment files and dry-run scratch files. It is not tracked by git. Deleting it empties the queue and the job history; experiments and reports are kept.
+- `<experiment>/events.jsonl`: written by `run_experiment.py`. It records the phases, each trial's start and end with its core and status, and the end of the experiment. Experiments from before this file existed still show, with their progress counted from the coverage reports.
+- `run_experiment.py --dry-run --plan-json FILE`: writes the dry-run plan as JSON. The preview uses it.
+- `webapp/static/`, `webapp/templates/`: the pages. They are plain HTML, CSS and JavaScript, with no build step and no external scripts.
+
+### Statistics report
+
+At the end of every experiment, `common/statistical_analysis.py` compares the experiment's arms and writes `<report_filestore>/EXP_NAME/statistics/index.html`, with CSV tables (`trials.csv`, `benchmark_ranking.csv`, `overall_ranking.csv`, `pairwise_tests.csv`) next to it. An arm is a fuzzer under one runtime strategy, written `fuzzer[strategy]` (`{cts:...}` is added for a non-default compile-time strategy). The report gives a ranking per benchmark and an overall ranking, and has these parts:
+
+- **Per benchmark:** median, minimum, maximum, IQR and CV of the final coverage, plotted as box plots. Two-sided Mann-Whitney U with Vargha-Delaney A12 against the default runtime strategy and the baseline fuzzer. Kruskal-Wallis with Dunn's test. Pairwise p-value and A12 heatmaps. The one-sided better-than matrix with wins. Unique, pairwise-unique and Jaccard coverage, and an UpSet plot.
+- **Across benchmarks:** average rank, average normalized score, first places, unique-coverage rankings, Friedman with a Nemenyi critical-difference diagram, and correlations between rankings. Each is given for all arms, for each fuzzer's runtime strategies, and for the fuzzers under their default strategy.
+- **Other tables:** relative coverage, benchmark properties, found bugs (from afl-collect), and minimum achievable p-values with low-sample flags.
+
+Every pairwise table uses Holm correction. Coverage comes from each trial's `coverage/report.txt`, and covered sets from `coverage/report.json`. To run the report on a finished experiment:
+
+```bash
+python3 common/post_analysis.py --state /path/to/experiment-data/EXP_NAME/experiment_state.pkl --stats
+```
+
+Options:
+
+- `--metric lines|branches|regions|functions`: the metric to rank by. The default is `branches`.
+- `--baseline FUZZER`: the fuzzer the other fuzzers are compared against. The default is `aflplusplus`.
+- `--compare-to /path/to/other/experiment`: adds a reproducibility section, with the rank correlation and changes in significance between the two experiments. Use it for a repeated run, or for a run with one setting changed.
+- `--per-config-coverage`: first writes one coverage report per runtime configuration (with Docker), so that the report can compare each trial's union over configurations with its best single configuration.
+
+#### Limits of the analyses
+
+Some analyses are computed, but do not mean what their names suggest for typical FuzzBench++ experiments. The report warns at the top when items 1 and 2 apply. The numbers below are from a test run with 5 arms (aflplusplus with 4 runtime strategies, and zigzagfuzz), 2 benchmarks and 5 trials of 300 s.
+
+1. **Full pairwise heatmaps need many trials.** With n trials per arm, an exact two-sided Mann-Whitney U test cannot go below 2 / C(2n, n): 0.1 for 3 trials and 0.008 for 5. Holm multiplies the smallest p-value by the number of pairs. With 5 trials and 5 arms (10 pairs), no cell of the two-sided heatmap can reach p < 0.05, whatever the data.
+   - **What has power:** the **Against the default** table only compares each runtime strategy with its fuzzer's default, and each fuzzer with the baseline, so Holm covers a few tests. There, 5 trials can show a significant difference.
+   - **Recommendation:** use that table as the main test, and plan 10 or more trials before reading the full heatmaps.
+   - **The better-than matrix:** it can show wins where the two-sided heatmap cannot, because a one-sided test has half the p-value floor.
+   - **Dunn's test:** it has the same problem as the heatmaps.
+2. **The Friedman test and the Nemenyi critical-difference diagram need many benchmarks.** The critical difference shrinks with the square root of the number of benchmarks. With 2 benchmarks and 5 arms it is 4.31 ranks, wider than the whole rank range, so the diagram joins every arm in one group.
+   - **What is still valid:** the average ranks, normalized scores and first places.
+   - **What needs more benchmarks:** the significance of the ranking. Expect it to separate arms only with most of the 12 benchmarks.
+3. **Correlations between rankings are computed over the arms**, usually 3–5 values. Their p-values tell nothing at that size, and the report gives exact permutation p-values to make that visible. Read ρ and τ as descriptions, not tests.
+4. **Unique coverage rewards variance.** It is computed on the union of all of an arm's trials. An arm whose trials differ a lot (as multi-configuration runtime strategies do) collects a large union even when its typical trial is weak. On objdump, `random` had the lowest median (1,984 branches) and close to the largest union (4,632). Unique coverage is also only comparable between arms with the same number of trials (see the low-sample flag).
+5. **"Union against best single configuration" is not a comparison with a single configuration.** A runtime strategy fuzzes its configurations one after another, each starting from the previous corpus. A configuration's report only replays the inputs first found under it, with its own options. Its "best single" value is therefore that configuration's share of the trial, not what it would reach running alone for the whole time. To compare with single configurations, run them as separate experiments. Also, with 300 s and `min_config_time` 60 s, a trial fuzzes at most 5 configurations, and those without new inputs are left out.
+6. **Found bugs cannot be split by runtime strategy.** Crash triage pools the crashes of a fuzzer's trials per benchmark. `run_triaging` also reads only `<fuzzer>_<benchmark>_trial_*` folders, so trials under a runtime strategy (`<fuzzer>_rts_<strategy>_...`) are not triaged at all. Until that is changed, the table counts the default runtime strategy only. Treat it as a secondary metric in any case: crashes are sparse, and one bug reached through different stacks can count more than once.
+7. **The benchmark properties table has no input format.** Nothing in `benchmarks/<name>/` records it, so the column is left out.
+8. **Reproducibility and sensitivity need a second experiment.** `--compare-to` gives the rank correlation and the significance changes against another experiment. The other experiment can be a repeat with the same file (reproducibility), or a run with one setting changed, such as seeds, dictionary or a longer time (sensitivity). Both experiments need the same arms and benchmarks.
+9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
+
+`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR` does the same without an experiment state.
+
 ### vafuzz coverage
 
 VAFuzz runs every input under a batch of command-line option configurations and saves, for each queue entry, the configurations it ran it with (`default/queue_argvs/id:<N>_<k>`, `+cov` on those that found new edges). Its `coverage.py` replays each queue entry once per saved configuration, with the options placed between the program and its own arguments as the fuzzer's target does; entries without saved configurations (the seeds) run without options. `VAFUZZ_COVERAGE_ARGVS=cov` replays only the `+cov` configurations, which gives the same coverage much faster. `VAFUZZ_COVERAGE_TIMEOUT` (seconds, default 30) limits each execution. Set them in the environment of `run_experiment.py` or `rerun_coverage.py`; they are passed on to the coverage container.

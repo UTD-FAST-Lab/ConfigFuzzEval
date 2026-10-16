@@ -66,3 +66,6 @@ uncommitted/
 
 # Your experiment file (see "Experiment files" in README.md); the README has an example.
 /experiment.yaml
+
+# Web app queue, saved experiment files and previews
+webapp/instance/

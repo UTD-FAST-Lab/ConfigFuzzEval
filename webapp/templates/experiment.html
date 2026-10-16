@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}{{ name }} · FuzzBench++{% endblock %}
+{% block content %}
+<div class="row">
+  <div>
+    <h1>{{ name }} <span id="status-badge"></span></h1>
+    <p class="sub" id="subline">
+      {% if state %}{{ state.fuzzers | join(', ') }} · {{ state.benchmarks | join(', ') }} · runtime {{ state.runtime_strategies | join(', ') }} · compile-time {{ state.compiletime | join(', ') }}{% else %}No experiment state yet.{% endif %}
+    </p>
+  </div>
+  <span class="spacer"></span>
+  <span id="actions"></span>
+  <a class="btn" href="/new?from={{ name }}">Run again…</a>
+</div>
+
+<div class="card">
+  <div class="kpis">
+    <div class="kpi"><div class="v" id="k-done">–</div><div class="l">trials done</div></div>
+    <div class="kpi"><div class="v" id="k-running">–</div><div class="l">running now</div></div>
+    <div class="kpi"><div class="v" id="k-failed">–</div><div class="l">failed</div></div>
+    <div class="kpi"><div class="v" id="k-elapsed">–</div><div class="l">elapsed</div></div>
+    <div class="kpi"><div class="v" id="k-eta">–</div><div class="l">estimated left</div></div>
+  </div>
+  <div class="progress" style="height:10px"><span id="bar" style="width:0"></span></div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<div class="tabs" role="tablist">
+  <button data-tab="trials" class="on">Trials</button>
+  <button data-tab="log">Log</button>
+  <button data-tab="results">Results</button>
+  <button data-tab="analyse">Post-analysis</button>
+  <button data-tab="file">Experiment file</button>
+</div>
+
+<section class="tab on" id="tab-trials">
+  <div class="row" style="margin-bottom:8px">
+    <label>Show <select id="filter"><option value="">all trials</option><option value="running">running</option>
+      <option value="failure">failed</option><option value="success">finished</option><option value="queued">queued</option></select></label>
+    <label>Benchmark <select id="bfilter"><option value="">all</option></select></label>
+  </div>
+  <div class="card tw"><table>
+    <thead><tr><th>Arm</th><th>Benchmark</th><th>Compile-time</th><th class="num">Trial</th><th>Status</th><th class="num">Core</th><th class="num">Duration</th><th class="num">Branches covered</th><th class="num">Lines covered</th><th>Log</th></tr></thead>
+    <tbody id="trials"><tr><td colspan="10" class="empty">Loading…</td></tr></tbody>
+  </table></div>
+</section>
+
+<section class="tab" id="tab-log">
+  <div class="row" style="margin-bottom:8px">
+    <select id="logsel"></select>
+    <label><input type="checkbox" id="follow" checked> follow</label>
+  </div>
+  <pre class="log" id="log">Loading…</pre>
+</section>
+
+<section class="tab" id="tab-results">
+  <div id="results-none" class="card empty" {% if stats_files %}hidden{% endif %}>No statistics report yet. It is written when the experiment ends, or run it from <a href="#analyse" onclick="showTab('analyse')">Post-analysis</a>.</div>
+  {% if stats_files %}
+  <div class="row" style="margin-bottom:8px">
+    <a class="btn" href="/reports/{{ name }}/statistics/index.html" target="_blank">Open the report in a new tab</a>
+    {% for f in stats_files if f.endswith('.csv') %}<a href="/reports/{{ name }}/statistics/{{ f }}">{{ f }}</a>{% endfor %}
+  </div>
+  <iframe class="report" src="/reports/{{ name }}/statistics/index.html" title="Statistics report"></iframe>
+  {% endif %}
+</section>
+
+<section class="tab" id="tab-analyse">
+  <div class="card">
+    <p class="muted">Runs <code>common/post_analysis.py</code> on this experiment as a queued job. The report is rewritten in place.</p>
+    <label class="chip on"><input type="checkbox" id="pa-stats" checked> statistics report</label>
+    <div class="row" style="margin:10px 0 4px 4px">
+      <label class="field"><span>Rank by</span><select id="pa-metric"><option>branches</option><option>lines</option><option>regions</option><option>functions</option></select></label>
+      <label class="field"><span>Baseline fuzzer</span><select id="pa-baseline"><option value="">default (aflplusplus)</option>{% for f in fuzzers %}<option>{{ f }}</option>{% endfor %}</select></label>
+      <label class="field"><span>Compare with (reproducibility)</span><select id="pa-compare"><option value="">none</option>{% for o in others %}<option>{{ o }}</option>{% endfor %}</select></label>
+    </div>
+    <div class="chips" style="margin:6px 0 12px">
+      <label class="chip"><input type="checkbox" id="pa-perconfig"> per-configuration coverage first <span class="hint">runtime strategies: union vs best configuration (Docker)</span></label>
+      {% if triagers %}<label class="chip"><input type="checkbox" id="pa-triage"> crash triage <span class="hint">{{ triagers | join(', ') }}</span></label>{% endif %}
+    </div>
+    <button class="primary" onclick="runPost()" id="pa-btn">Queue analysis</button> <span id="pa-msg" class="small"></span>
+  </div>
+  <h3>Jobs for this experiment</h3>
+  <div class="card tw"><table><thead><tr><th>#</th><th>Job</th><th>Status</th><th>Started</th><th class="num">Exit code</th><th></th></tr></thead><tbody id="jobs"></tbody></table></div>
+</section>
+
+<section class="tab" id="tab-file">
+  <pre class="log">{{ experiment_text or 'No experiment file.' }}</pre>
+</section>
+
+<script>
+const NAME = {{ name | tojson }};
+const PHASES = ["building images", "building benchmarks", "fuzzing", "aggregating", "superc", "triage", "statistics"];
+let status = null, logOffset = -1, logJob = "", pollTimer = null;
+
+for (const c of document.querySelectorAll(".chip input")) {
+  c.addEventListener("change", () => c.parentElement.classList.toggle("on", c.checked));
+}
+function showTab(t) {
+  for (const b of document.querySelectorAll(".tabs button")) b.classList.toggle("on", b.dataset.tab === t);
+  for (const s of document.querySelectorAll(".tab")) s.classList.toggle("on", s.id === "tab-" + t);
+  history.replaceState(null, "", "#" + t);
+  if (t === "log") loadLog(true);
+}
+for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
+if (location.hash) showTab(location.hash.slice(1));
+window.addEventListener("hashchange", () => { if (document.getElementById("tab-" + location.hash.slice(1))) showTab(location.hash.slice(1)); });
+
+function renderTrials(trials) {
+  const f = document.getElementById("filter").value, bf = document.getElementById("bfilter").value;
+  const bsel = document.getElementById("bfilter");
+  for (const b of [...new Set(trials.map(t => t.bench))])
+    if (![...bsel.options].some(o => o.value === b)) bsel.add(new Option(b, b));
+  const rows = trials.filter(t => (!f || t.status === f || (f === "failure" && ["failure", "interrupted", "skipped"].includes(t.status)))
+                                && (!bf || t.bench === bf));
+  const cov = c => c ? `${c[0].toLocaleString()} <span class="muted">/ ${c[1].toLocaleString()} · ${(100 * c[0] / c[1]).toFixed(1)}%</span>` : "–";
+  document.getElementById("trials").innerHTML = rows.length ? rows.map(t => `<tr>
+    <td>${esc(t.arm)}</td><td>${esc(t.bench)}</td><td>${esc(t.cts)}${t.copy ? ` <span class="muted">copy ${t.copy}</span>` : ""}</td><td class="num">${t.trial}</td><td>${badge(t.status)}</td>
+    <td class="num">${t.core ?? "–"}</td><td class="num">${duration(t.seconds)}</td>
+    <td class="num">${cov(t.branches)}</td><td class="num">${cov(t.lines)}</td>
+    <td>${t.log ? `<a href="/experiments/${encodeURIComponent(NAME)}/files/${t.log}" target="_blank">log</a>` : ""}</td></tr>`).join("")
+    : `<tr><td colspan="10" class="empty">No trials match.</td></tr>`;
+}
+
+function renderJobs(jobs) {
+  document.getElementById("jobs").innerHTML = jobs.length ? jobs.map(j => `<tr><td class="num">${j.id}</td><td>${esc(j.title)}</td>
+    <td>${badge(j.status)}</td><td>${j.started ? new Date(j.started * 1000).toLocaleString() : "–"}</td>
+    <td class="num">${j.returncode ?? "–"}</td>
+    <td class="num">${["queued", "running"].includes(j.status) ? `<button class="small danger" onclick="cancelJob(${j.id}, this)">${j.status === "queued" ? "Remove" : "Stop"}</button>` : ""}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="empty">No jobs from the web app.</td></tr>`;
+  const sel = document.getElementById("logsel"), cur = sel.value;
+  sel.innerHTML = `<option value="">experiment log</option>` + jobs.filter(j => j.kind === "post").map(j => `<option value="${j.id}">job ${j.id}: ${esc(j.title)}</option>`).join("");
+  sel.value = cur;
+}
+
+async function refresh() {
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/status`);
+  if (!r || !r.summary) return;
+  const s = r.summary, trials = r.trials;
+  status = s.status;
+  document.getElementById("status-badge").innerHTML = badge(s.status) + (s.phase && s.status === "running" ? ` <span class="small muted">${esc(s.phase)}</span>` : "");
+  const planned = s.planned || trials.length, done = trials.filter(t => ["success", "failure", "skipped"].includes(t.status)).length;
+  const running = trials.filter(t => t.status === "running").length, failed = trials.filter(t => ["failure", "skipped", "interrupted"].includes(t.status)).length;
+  document.getElementById("k-done").textContent = planned ? `${done} / ${planned}` : "–";
+  document.getElementById("k-running").textContent = running;
+  document.getElementById("k-failed").textContent = failed;
+  document.getElementById("bar").style.width = planned ? `${100 * done / planned}%` : "0";
+  const end = s.ended || (s.status === "running" ? r.now : null);
+  document.getElementById("k-elapsed").textContent = s.started && end ? duration(end - s.started) : "–";
+  const times = trials.filter(t => t.status === "success" && t.seconds).map(t => t.seconds);
+  if (s.status === "running" && times.length && running) {
+    const avg = times.reduce((a, b) => a + b, 0) / times.length;
+    const left = planned - done;
+    document.getElementById("k-eta").textContent = "~" + duration(Math.ceil(left / Math.max(running, 1)) * avg);
+  } else document.getElementById("k-eta").textContent = s.status === "running" ? "…" : "–";
+  const seen = r.phases.map(p => p.phase || "finished");
+  document.getElementById("timeline").innerHTML = PHASES.concat(["finished"]).filter(p => seen.includes(p) || PHASES.includes(p))
+    .map(p => `<span class="step ${s.phase === p && s.status === "running" ? "cur" : ""}" style="${seen.includes(p) ? "" : "opacity:.45"}">${esc(p)}</span>`).join("")
+    + (seen.includes("cancelled") ? `<span class="step" style="color:var(--bad-ink)">cancelled</span>` : "");
+  const active = r.jobs.find(j => ["running", "cancelling"].includes(j.status) && j.kind === "experiment");
+  document.getElementById("actions").innerHTML = active ? `<button class="danger" onclick="cancelJob(${active.id}, this)">Stop experiment</button>` : "";
+  renderTrials(trials); renderJobs(r.jobs);
+  if (r.stats && document.getElementById("results-none") && !document.querySelector("iframe.report") && s.status !== "running") {
+    document.getElementById("results-none").innerHTML = `The statistics report is ready. <a href="#results" onclick="location.reload()">Reload to show it</a>.`;
+  }
+  const busy = s.status === "running" || r.jobs.some(j => ["queued", "running", "cancelling"].includes(j.status));
+  clearTimeout(pollTimer);
+  pollTimer = setTimeout(refresh, busy ? 3000 : 30000);
+}
+
+async function loadLog(reset) {
+  const sel = document.getElementById("logsel").value;
+  if (reset || sel !== logJob) { logOffset = -1; logJob = sel; document.getElementById("log").textContent = ""; }
+  const q = `offset=${logOffset}` + (logJob ? `&job=${logJob}` : "");
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/log?${q}`);
+  const pre = document.getElementById("log");
+  if (logOffset < 0) pre.textContent = r.text || "No log.";
+  else if (r.text) pre.textContent += r.text;
+  logOffset = r.offset;
+  if (document.getElementById("follow").checked) pre.scrollTop = pre.scrollHeight;
+}
+document.getElementById("logsel").addEventListener("change", () => loadLog(true));
+setInterval(() => { if (document.getElementById("tab-log").classList.contains("on")) loadLog(false); }, 2000);
+document.getElementById("filter").addEventListener("change", refresh);
+document.getElementById("bfilter").addEventListener("change", refresh);
+
+async function runPost() {
+  const v = id => document.getElementById(id);
+  const body = {stats: v("pa-stats").checked, metric: v("pa-metric").value, baseline: v("pa-baseline").value,
+                compare_to: v("pa-compare").value, per_config: v("pa-perconfig").checked,
+                triage: v("pa-triage") ? v("pa-triage").checked : false};
+  v("pa-btn").disabled = true;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/post`, body);
+  v("pa-btn").disabled = false;
+  v("pa-msg").innerHTML = r.ok ? `Queued as job ${r.job_id}. Follow it in the log tab.` : `<span style="color:var(--bad-ink)">${esc(r.error)}</span>`;
+  refresh();
+}
+refresh();
+</script>
+{% endblock %}

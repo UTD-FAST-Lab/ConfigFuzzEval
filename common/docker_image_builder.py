@@ -356,6 +356,12 @@ def build_superc(superc_path, experiment_path, project_root):
 
 
 
+def experiment_label(experiment_path):
+    """Docker label of an experiment's trial containers, so they can be found and stopped
+    together (docker ps --filter label=fbpp.experiment=<name>, as webapp/ does)."""
+    return ["--label", f"fbpp.experiment={os.path.basename(os.path.normpath(experiment_path))}"]
+
+
 def run_label(fuzzer, rts="default"):
     """Name of a fuzzer's runs under a runtime strategy (the fuzzer itself for default)."""
     return fuzzer if rts == "default" else f"{fuzzer}_rts_{rts}"
@@ -376,7 +382,7 @@ def run_coverage(fuzzer, benchmark, experiment_path, core_id, individual_data_st
         if name.startswith("VAFUZZ_COVERAGE_"):
             script_args += ["-e", name]
     subprocess.run([
-        "docker", "run", "--rm",
+        "docker", "run", "--rm", *experiment_label(experiment_path),
         f"--cpuset-cpus={core_id-1}-{core_id}",
         "-v", f"{coverage_binary_location}:/benchmark",
         "-v", f"{fuzzer_location}:/fuzzer",
@@ -429,7 +435,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
 
             # Run the benchmark
             subprocess.run([
-                "docker", "run", "--rm",
+                "docker", "run", "--rm", *experiment_label(experiment_path),
                 f"--cpuset-cpus={core_id-1}-{core_id}",
                 "-m", f"{memory_limit}g",
                 f"--memory-swap={memory_limit}g",
@@ -512,7 +518,7 @@ def run_triaging(triager, fuzzer, benchmark, trials,
 
                 # Mount trial-specific input, but shared output
                 subprocess.run([
-                    "docker", "run", "--rm",
+                    "docker", "run", "--rm", *experiment_label(experiment_path),
                     f"--cpuset-cpus={core_id-1}-{core_id}",
                     "-m", f"{memory_limit}g",
                     f"--memory-swap={memory_limit}g",
@@ -561,7 +567,7 @@ def run_superc(fuzzer, benchmark, trial_id, experiment_path, core_id,
 
             # Run SuperC
             subprocess.run([
-                "docker", "run", "--rm",
+                "docker", "run", "--rm", *experiment_label(experiment_path),
                 f"--cpuset-cpus={core_id-1}-{core_id}",
                 "-m", f"{memory_limit}g",
                 f"--memory-swap={memory_limit}g",

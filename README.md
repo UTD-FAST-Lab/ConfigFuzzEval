@@ -436,6 +436,7 @@ Options:
 - `--baseline FUZZER`: the fuzzer the other fuzzers are compared against. The default is `aflplusplus`.
 - `--compare-to /path/to/other/experiment`: adds a reproducibility section, with the rank correlation and changes in significance between the two experiments. Use it for a repeated run, or for a run with one setting changed.
 - `--per-config-coverage`: first writes one coverage report per runtime configuration (with Docker), so that the report can compare each trial's union over configurations with its best single configuration.
+- `--stats-html`: also writes an llvm-cov HTML source report for every arm and benchmark, from the arm's merged trial profiles, to `statistics/html/<benchmark>/<arm>/index.html` (as FuzzBench's coverage reports). Only the source files the coverage build uses are copied out of its Docker image, into `statistics/html/src/` (`common/coverage_html.py`). Arms whose trials ran on several benchmark copies (a compile-time strategy with many configurations) are skipped, since their profiles cannot be merged.
 
 #### Limits of the analyses
 
@@ -457,7 +458,7 @@ Some analyses are computed, but do not mean what their names suggest for typical
 8. **Reproducibility and sensitivity need a second experiment.** `--compare-to` gives the rank correlation and the significance changes against another experiment. The other experiment can be a repeat with the same file (reproducibility), or a run with one setting changed, such as seeds, dictionary or a longer time (sensitivity). Both experiments need the same arms and benchmarks.
 9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
 
-`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR` does the same without an experiment state.
+`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR [--metric ...] [--html]` does the same without an experiment state (`--html` as `--stats-html`).
 
 ### vafuzz coverage
 

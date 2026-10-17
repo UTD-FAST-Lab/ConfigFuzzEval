@@ -33,6 +33,7 @@ import numpy as np
 from scipy import stats
 
 from color_logger import get_logger
+import coverage_html
 
 logging = get_logger(__name__)
 
@@ -145,6 +146,7 @@ def load_trials(experiment_path):
         lines, branches = parse_lcov_sets(report_lcov)
         copies[(ident["fuzzer"], ident["rts"], ident["cts"], ident["benchmark"], ident["trial"])].append(
             {"dir": trial_dir, "totals": totals, "lines": lines, "branches": branches,
+             "cts_benchmark": f"cts_{ident['cts']}_{ident['benchmark']}_{ident['copy']}",
              "configs": per_config_reports(trial_dir)})
 
     trials = []
@@ -163,6 +165,8 @@ def load_trials(experiment_path):
                        "benchmark": benchmark, "trial": trial, "copies": len(parts),
                        "values": values, "instrumented": instrumented,
                        "line_set": lines, "branch_set": branches,
+                       # for the HTML source reports (coverage_html.py)
+                       "dirs": [p["dir"] for p in parts], "cts_benchmarks": [p["cts_benchmark"] for p in parts],
                        "configs": parts[0]["configs"] if len(parts) == 1 else []})
     return trials
 
@@ -1312,12 +1316,19 @@ def write_tables(res, out_dir):
                              r["jaccard"][(a, b)]])
 
 
-def generate_statistics_report(experiment_path, out_dir, metric="branches", baseline=None, compare_to=None):
-    """Analyse an experiment and write index.html plus CSV tables to out_dir. Returns the HTML path."""
+def generate_statistics_report(experiment_path, out_dir, metric="branches", baseline=None, compare_to=None,
+                               html=False):
+    """Analyse an experiment and write index.html plus CSV tables to out_dir. Returns the HTML path.
+
+    html: also an llvm-cov HTML source report per arm and benchmark, in out_dir/html/ (coverage_html.py).
+    """
     res = analyse(experiment_path, metric, baseline)
     comparison = compare_experiments(res, analyse(compare_to, metric, baseline)) if compare_to else None
     os.makedirs(out_dir, exist_ok=True)
     write_tables(res, out_dir)
+    if html:
+        reports = coverage_html.html_reports(res, out_dir)
+        logging.info(f"{len(reports)} HTML source report(s) in {os.path.join(out_dir, 'html')}")
     path = os.path.join(out_dir, "index.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(render_html(res, comparison))
@@ -1331,9 +1342,11 @@ def main():
     parser.add_argument("--metric", choices=METRICS, default="branches", help="Primary coverage metric")
     parser.add_argument("--baseline", help="Fuzzer the other fuzzers are compared against (default: aflplusplus)")
     parser.add_argument("--compare-to", help="Another experiment folder, for the reproducibility section")
+    parser.add_argument("--html", action="store_true", help="Also write llvm-cov HTML source reports per arm")
     args = parser.parse_args()
     out = args.output_dir or os.path.join(args.experiment_path, "statistics")
-    path = generate_statistics_report(args.experiment_path, out, args.metric, args.baseline, args.compare_to)
+    path = generate_statistics_report(args.experiment_path, out, args.metric, args.baseline, args.compare_to,
+                                      args.html)
     logging.info(f"Statistics report written to {path}")
 
 

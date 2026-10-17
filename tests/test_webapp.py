@@ -18,6 +18,8 @@ def test_catalog_matches_validation_rules():
     assert "aflplusplus" in cat["fuzzers"] and cat["fuzzers"]["aflplusplus"]["runtime_strategies"]
     assert not cat["fuzzers"]["zigzagfuzz"]["runtime_strategies"]
     assert not any(b.startswith("cts_") for b in cat["benchmarks"])
+    for kind in ("compiletime", "runtime"):           # only folders with a strategy.py are strategies
+        assert cat[kind] and all(os.path.isfile(os.path.join(ROOT, kind, s, "strategy.py")) for s in cat[kind])
     assert catalog.problems(cat, "aflplusplus", "pcre2_pcre2test", "random") == []
     assert catalog.problems(cat, "zigzagfuzz", "pcre2_pcre2test", "random") == \
         ["zigzagfuzz does not support runtime strategies"]
@@ -128,6 +130,8 @@ def test_flask_routes(tmp_path, monkeypatch):
     client = webapp.app.test_client()
     assert client.get("/").status_code == 200
     assert client.get("/new").status_code == 200
+    docs = client.get("/docs")
+    assert docs.status_code == 200 and b"{{CT_CONFIGURATION}}" in docs.data
     assert client.get("/experiments/missing").status_code == 404
     assert client.get("/experiments/..%2fetc").status_code == 404
     assert client.post("/api/preview", json={"yaml": "x: 1"}).status_code == 400  # no X-FBPP header

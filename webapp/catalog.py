@@ -48,11 +48,16 @@ def load(project_root):
         seed = os.path.join(path, "seed")
         benchmarks[b] = {"files": sorted(files), "seeds": len(os.listdir(seed)) if os.path.isdir(seed) else 0}
 
+    def strategies(kind):
+        # Like validate_ct_strategies / validate_rt_strategies: a strategy is a folder with a strategy.py
+        root = os.path.join(project_root, kind)
+        return [s for s in _dirs(root) if os.path.isfile(os.path.join(root, s, "strategy.py"))]
+
     return {
         "fuzzers": fuzzers,
         "benchmarks": benchmarks,
-        "compiletime": [s for s in _dirs(os.path.join(project_root, "compiletime"))],
-        "runtime": [s for s in _dirs(os.path.join(project_root, "runtime"))],
+        "compiletime": strategies("compiletime"),
+        "runtime": strategies("runtime"),
         "triagers": _dirs(os.path.join(project_root, "bug-triaging")),
     }
 

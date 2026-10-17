@@ -213,6 +213,18 @@ def new():
     return render_template("new.html", catalog=cat, defaults=defaults, initial_yaml=initial, source=source)
 
 
+@app.route("/docs")
+def docs():
+    cat = catalog_mod.load(PROJECT_ROOT)
+    # Benchmarks whose load_src.sh does not put the source where cfg-analysis/run_superc.sh reads it
+    superc_mismatch = []
+    for b in cat["benchmarks"]:
+        p = os.path.join(PROJECT_ROOT, "benchmarks", b, "load_src.sh")
+        if os.path.isfile(p) and "/benchmark/source" not in open(p).read():
+            superc_mismatch.append(b)
+    return render_template("docs.html", catalog=cat, superc_mismatch=superc_mismatch)
+
+
 @app.route("/experiments/<name>")
 def experiment(name):
     path = experiment_path(name)

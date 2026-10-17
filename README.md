@@ -339,6 +339,8 @@ Jobs (experiments and post-analyses) run **one at a time**. They also never run 
   Below the options, the experiment's jobs are listed with their status and exit code.
 - **Experiment file:** the file the experiment ran with.
 
+**Documentation** explains the plugin interfaces: how to add a fuzzer, a benchmark, a compile-time or runtime configuration generator, a crash triage tool, or a post-analysis tool like SuperC. It covers the files each needs, what the framework mounts and sets for it, and what it must produce. It ends with the plugins currently in the repository.
+
 For a first look at results: start with **Overall ranking** in the report, then each benchmark's **Against the default** table, which has the most statistical power. Then use the box plots to see how much the trials vary. Read "Limits of the analyses" below before quoting a p-value or a critical-difference diagram.
 
 #### Files

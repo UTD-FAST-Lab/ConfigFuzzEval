@@ -8,7 +8,7 @@ experiment, trials in parallel on the given cores. Afterwards the lcov_results c
 are refreshed, as at the end of an experiment.
 
     python3 common/rerun_coverage.py --experiment-path /path/to/experiment-data/NAME \\
-        --fuzzer vafuzz --cores 54 > logs-reports/NAME_coverage_rerun.log 2>&1
+        --fuzzer vafuzz --cores 54 > experiments/logs/NAME_coverage_rerun.log 2>&1
 """
 
 import argparse

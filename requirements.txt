@@ -1,0 +1,17 @@
+# Python packages the host side of FuzzBenchPlusPlus imports (Python 3.10+):
+#   python3 -m pip install -r requirements.txt
+# Keep this complete: add a package here in the same change that first imports it.
+# Everything that runs inside the Docker images installs its own packages in its Dockerfile.
+# Not Python packages, needed on the host too: Docker (the docker command, used
+# through subprocess), and LLVM 18's llvm-profdata and llvm-cov (coverage_sets.py).
+
+pyyaml>=5.4          # config and experiment files (run_experiment.py, experiment_plan.py, interactive.py, webapp/)
+questionary>=2.0     # the interactive setup: run_experiment.py with no flags (interactive.py)
+z3-solver>=4.12      # the pairwise compile-time strategy's constraint solver (compiletime/pairwise/strategy.py)
+numpy>=1.22          # statistics report (statistical_analysis.py)
+scipy>=1.8           # statistics report: Mann-Whitney U, Kruskal-Wallis, Friedman (statistical_analysis.py)
+matplotlib>=3.5      # statistics report plots (statistical_analysis.py)
+pandas>=1.5          # coverage reports (report_generation.py, through post_analysis.py)
+pytz                 # pandas needs it; listed because a pandas without it fails to import
+flask>=2.0           # the web app (webapp/app.py)
+pytest>=7.0          # the tests in tests/ (python3 -m pytest tests)

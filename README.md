@@ -2,11 +2,20 @@
 
 ## Build instructions
 
+### 0. Install the Python packages
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+`requirements.txt` lists every Python package the host side imports (the Docker images install their own). Docker and LLVM 18 (`llvm-profdata`, `llvm-cov`) are needed on the host too.
+
 ### 1. Create the configuration file
 
-Create a file named `config.yaml` in the root of the project. Sample:
+Create `config.yaml` in the root of the project. Run this from the root of the project: it writes the sample below, with `$(pwd)` filled in, so the result folders are `results/` inside this checkout without any editing. Then change the settings you need (at least `cores_to_use`):
 
-```yaml
+```bash
+cat > config.yaml <<EOF
 # Number of independent trials to run for each fuzzer/benchmark pair.
 trials: 5
 
@@ -22,8 +31,9 @@ runner_image_path: docker/runner-image
 
 # Absolute paths where results are stored. A run named <name> writes to
 # <experiment_filestore>/<name> and <report_filestore>/<name>.
-experiment_filestore: /path/to/FuzzBenchPlusPlus/results/experiment-data
-report_filestore: /path/to/FuzzBenchPlusPlus/results/report-data
+# Written with the project folder by the command in README.md; change them to keep results elsewhere.
+experiment_filestore: $(pwd)/results/experiment-data
+report_filestore: $(pwd)/results/report-data
 
 # Number of CPU cores to use. The last N cores of the machine are used.
 # Use at most (number of CPU cores - 1).
@@ -56,18 +66,17 @@ random_seed: 42
 
 # Not used yet; keep it as false.
 serialize_multi_conf: false
+EOF
 ```
+
+`config.yaml` is not tracked by git. The written file has absolute paths (for example `/home/you/FuzzBenchPlusPlus/results/experiment-data`); to keep results somewhere else, such as a bigger disk, change the two filestore lines to absolute paths there.
 
 ### 2. Run an experiment
 
-Optional: if you save the output to `logs-reports/` as in the commands below, create that folder first (it is not in the repository, and the given example command fails without it):
+There are four ways to say what to run. All of them put the experiment in the same job queue, where it runs in the background (see "How experiments run" below):
 
-```bash
-mkdir -p logs-reports
-```
-
-There are two ways to say what to run:
-
+- **Interactive setup** (no flags, see "Interactive setup" below): asks what to run in the terminal, saves it as an experiment file and queues it.
+- **Web app** (see "Web app" below): the same in a browser, with live progress.
 - **Command-line flags** (below): every fuzzer runs on every benchmark with every listed strategy, all with the `trials` and `max_total_time` from `config.yaml`.
 - **An experiment file** (`--experiment` or `--groups`, see "Experiment files" below): groups of fuzzers and benchmarks, so specific fuzzers run on specific benchmarks, each group with its own strategies and optionally its own `trials` and `max_total_time`, plus optional per-benchmark strategies.
 
@@ -82,9 +91,10 @@ python3 common/run_experiment.py \
   --compiletime STRATEGY1 STRATEGY2 ... \
   --runtime-strategy STRATEGY1 STRATEGY2 ... \
   --bug-triaging TRIAGER1 ... \
-  --no-superc \
-  > logs-reports/EXP_NAME.log 2>&1
+  --no-superc
 ```
+
+The command checks everything, queues the experiment and returns; the experiment runs in the background and its output goes to `experiments/logs/EXP_NAME.log` (see "How experiments run").
 
 Flags:
 
@@ -95,10 +105,75 @@ Flags:
 - `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, manual, maximum, minimum, pairwise, randomsmart). Optional; if left out, only `default` is used.
 - `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, pairwise, random, mostenabled, mostdisabled, diversity). Optional; if left out, only `default` is used. See "Runtime strategies" below.
 - `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (afl-collect). Optional; if left out, no triage is run.
-- `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment.
+- `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment (see "SuperC presence-condition analysis" below).
 - `--experiment FILE` (or `--groups FILE`): optional. Reads what to run from an experiment file instead of `--fuzzers`, `--benchmarks`, `--compiletime` and `--runtime-strategy` (giving any of those with it is an error). See "Experiment files" below.
-- `--dry-run`: optional. Checks the configuration, the experiment and every name, prints the planned runs, builds and trials, and exits. Nothing is built, copied or run, so it is safe to use while another experiment is running.
-- `> logs-reports/EXP_NAME.log 2>&1`: saves the full output of the run, including errors, to a log file in `logs-reports/` (see the `mkdir` step above).
+- `--dry-run`: optional. Checks the configuration, the experiment and every name, prints the planned runs, builds, trials and the estimated duration, and exits. Nothing is built, copied, queued or run, so it is safe to use while another experiment is running.
+- `--foreground`: optional, rarely needed. Runs the experiment in this process, attached to the terminal, instead of queueing it; the output still goes to `experiments/logs/EXP_NAME.log` too. The queue starts every experiment this way. By hand it does not wait for other experiments, and closing the terminal stops it.
+
+### Interactive setup
+
+Run it with no flags, in a terminal:
+
+```bash
+python3 common/run_experiment.py
+```
+
+It asks, one question at a time (arrow keys to move, space to tick, enter to continue, Ctrl-C to cancel):
+
+1. The config file (default `config.yaml`) and the experiment name. A name already in the result folders, queued or running is asked again.
+2. Same benchmarks for the whole experiment, or different benchmarks for different fuzzers.
+3. The strategies, then the engine (fuzzer underneath) of each. A strategy with one engine is not asked:
+
+   | Strategy | Engines | Runs as |
+   |---|---|---|
+   | default | aflplusplus, libafl | that fuzzer with the benchmark's command line |
+   | random, pairwise, diversity, mostenabled, mostdisabled | aflplusplus, libafl | that fuzzer with that runtime strategy |
+   | carpet | carpetfuzz | `carpetfuzz` |
+   | prophet | carpetfuzz | `prophetfuzz` |
+   | variability aware | aflplusplus | `vafuzz` |
+   | config based | aflplusplus | `configfuzz` |
+   | zigzag | zigzagfuzz | `zigzagfuzz` |
+
+   Runtime strategies come from `runtime/` and their engines from the fuzzers that support them (`runtime/supported_fuzzers.json`), so a new one is offered without changing the setup.
+4. The benchmarks (once, or for each fuzzer), each followed by its compile-time strategies (`default` ticked). Benchmarks a choice cannot run on (a missing grammar, dictionary or CarpetFuzz file) are shown greyed out with the reason. The rules are the web app's (`webapp/catalog.py`), which match the checks of `run_experiment.py`.
+5. Cores (saved as `cores_to_use` in the file), trials and fuzzing time per trial (`900`, `15m`, `24h`, `1h30m`). With different benchmarks per fuzzer, trials and time can also differ per fuzzer.
+6. SuperC (applied: `no_superc` in the file) and bug triaging. **The triage answer is saved but not applied yet** (under `not_applied` in the file); the experiment runs without triage.
+
+The answers are saved as `experiments/<name>.yaml` and checked with `--dry-run`, which prints the planned runs and the estimated duration. Then you choose: add it to the queue (it runs in the background, also after the terminal is closed, and shows up in the web app), only keep the file, or cancel (deletes the file). After queueing it can follow the log for you; Ctrl-C then stops following, not the experiment. A kept file is queued later with:
+
+```bash
+python3 common/run_experiment.py --config config.yaml --experiment experiments/<name>.yaml
+```
+
+### How experiments run
+
+Every experiment, however it is started (flags, an experiment file, the interactive setup or the web app), goes through one job queue, `common/jobs.py`:
+
+- **One at a time, in the background.** `run_experiment.py` checks the experiment, queues it and returns. The queue runs jobs (experiments and the web app's post-analyses) one at a time, each as its own detached session (as `setsid nohup` would), so it keeps running when the terminal or the web app is closed. A background worker (`python3 common/jobs.py worker`, started automatically when something is queued) starts the next job when the machine is free and exits when the queue is empty; the web app ticks the same queue while it runs. A job also waits for an experiment run by hand with `--foreground`.
+- **A log for every experiment:** `experiments/logs/<name>.log` (created when needed), with the full output, including the build output and errors. The web app's post-analysis jobs log to `experiments/logs/<name>_post_<time>.log`, and the queue worker to `experiments/logs/queue_worker.log`.
+- **An experiment file for every experiment:** `experiments/<name>.yaml` (not tracked by git), the experiment as it runs, plus a `record` that `run_experiment.py` writes and that is ignored when the file is read:
+
+  ```yaml
+  record:
+    queued: "2026-10-16 10:02:11 CDT"
+    started: "2026-10-16 10:02:13 CDT"
+    estimated_end: "2026-10-19 02:40:00 CDT"  # approximate: assumes everything in the run still needs to be built now (...)
+    stop_command: "python3 common/jobs.py stop <name>"  # stops it, queued or running (it runs in the background)
+    log: "experiments/logs/<name>.log"
+  ```
+
+  `queued` and `stop_command` are written when it is queued, `started` and `estimated_end` when it starts. A copy is kept in the experiment folder as `experiment.yaml`. The file runs again with `--experiment` (with a new `experiment_name`).
+- **The estimated end** adds the build time of every image (base and runner images, fuzzers, benchmark copies and coverage builds, `build_parallelism` at a time, from fixed per-build times in `experiment_plan.estimate_seconds`), the trials packed onto `cores_to_use` cores with a few minutes of coverage replay each, and a few minutes at the end. Images that already exist are not rebuilt, so experiments usually end earlier. `--dry-run` prints the same estimate.
+
+Commands:
+
+```bash
+python3 common/jobs.py list                # the queue and recent jobs, with their logs
+python3 common/jobs.py stop EXP_NAME       # cancel a queued experiment, or stop a running one
+tail -f experiments/logs/EXP_NAME.log          # follow an experiment
+```
+
+Stopping kills the experiment's processes and every trial container labelled `fbpp.experiment=<name>`; finished trials are kept (the same as **Stop experiment** in the web app). `jobs.py` reads the result folders from `config.yaml`; give `--config FILE` before the command for another one.
 
 ### Full command
 
@@ -112,8 +187,7 @@ python3 common/run_experiment.py \
   --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_pngimage libtiff_tiff2pdf libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
   --compiletime default manual maximum minimum pairwise randomsmart \
   --runtime-strategy default pairwise random mostenabled mostdisabled diversity \
-  --bug-triaging afl-collect \
-  > logs-reports/EXP_NAME.log 2>&1
+  --bug-triaging afl-collect
 ```
 
 ### Experiment files
@@ -128,8 +202,7 @@ The machine settings (cores, memory, result folders, `random_seed`, ...) and the
 ```bash
 python3 common/run_experiment.py \
   --config config.yaml \
-  --experiment experiment.yaml \
-  > logs-reports/EXP_NAME.log 2>&1
+  --experiment experiment.yaml
 ```
 
 The file is YAML, or JSON if its name ends in `.json` (same keys). Experiment files are your own and are not tracked: `experiment.yaml` in the project root is in `.gitignore`, so copy the example below into it and edit it. A commented example:
@@ -191,6 +264,8 @@ What this example runs (with `trials: 3` in `config.yaml`):
 | `experiment_name` | top level | unless `--experiment-name` is given | none | Name of the experiment. `--experiment-name` overrides it. |
 | `no_superc` | top level | no | `false` | `true` turns off SuperC, like `--no-superc`. |
 | `bug_triaging` | top level | no | `[]` | Crash triage tools. `--bug-triaging` overrides it. |
+| `cores_to_use` | top level | no | `cores_to_use` in `config.yaml` | Cores for this experiment, replacing `config.yaml`'s. |
+| `not_applied` | top level | no | none | Ignored. The interactive setup saves its triage answer here until triage is supported. |
 | `groups` | top level | yes | none | List of groups (at least one). |
 | `fuzzers` | group | yes | none | Fuzzers of this group. |
 | `benchmarks` | group | yes | none | Benchmarks of this group (a list of names). |
@@ -232,26 +307,18 @@ Check a file with `--dry-run` before starting it. It prints every run with its t
 python3 common/run_experiment.py --config config.yaml --experiment experiment.yaml --dry-run
 ```
 
-To keep an experiment running after the terminal closes, start it detached:
-
-```bash
-setsid nohup python3 common/run_experiment.py \
-  --config config.yaml \
-  --experiment experiment.yaml \
-  > logs-reports/EXP_NAME.log 2>&1 < /dev/null &
-```
-
-Do not run two experiments at the same time from one checkout: they share the benchmark copies in `benchmarks/cts_*`, the coverage images and, unless `first_core` in `config.yaml` keeps them apart, the cores. Put everything in one experiment file instead, or start the second when the first has finished.
+Two experiments never run at the same time from one checkout: they would share the benchmark copies in `benchmarks/cts_*`, the coverage images and the cores. The queue starts the next one when the previous one has finished (see "How experiments run").
 
 ### Redoing the coverage of a finished experiment
 
 `common/rerun_coverage.py` runs the coverage step again on the fuzzer output of a finished experiment, with this repository's current `fuzzers/<fuzzer>/coverage.py` (for example after fixing it). The experiment's own copy of the fuzzer is not changed. Each trial's `coverage/` is renamed to `coverage_previous/` first (an existing `coverage_previous/` is kept), trials run in parallel on the given cores, and the `lcov_results` copies are refreshed at the end:
 
 ```bash
+mkdir -p experiments/logs
 setsid nohup python3 common/rerun_coverage.py \
   --experiment-path /path/to/experiment-data/EXP_NAME \
   --fuzzer vafuzz --cores 54 \
-  > logs-reports/EXP_NAME_coverage_rerun.log 2>&1 < /dev/null &
+  > experiments/logs/EXP_NAME_coverage_rerun.log 2>&1 < /dev/null &
 ```
 
 `--match REGEX` limits it to trial folders whose name matches, and `--first-core` chooses the cores (default: the last `--cores` cores). Each trial's coverage output is in its `coverage_rerun.log`.
@@ -268,8 +335,8 @@ Start the app on the fuzzing machine, from the root of the project:
 
 ```bash
 python3 webapp/app.py --config config.yaml                 # http://127.0.0.1:8800/
-setsid nohup python3 webapp/app.py --config config.yaml \
-  > logs-reports/webapp.log 2>&1 < /dev/null &            # or in the background
+mkdir -p experiments/logs && setsid nohup python3 webapp/app.py --config config.yaml \
+  > experiments/logs/webapp.log 2>&1 < /dev/null &            # or in the background
 ```
 
 Options:
@@ -299,9 +366,9 @@ The app only listens on other addresses (`--host 0.0.0.0`) when started with `--
    - **Warnings:** a yellow box lists runs that cannot run, and the cost line shows the fuzzing hours.
 3. **Check the experiment file** on the right. The form writes it as you go, and you can also edit it directly, for example to add a top-level `benchmarks` section. After a hand edit the form stops overwriting the file; "rewrite from the form" switches it back.
 4. **Click Preview (dry run).** This runs `run_experiment.py --dry-run` on the file, which checks every name and combination without building anything. A green box means the experiment can run; it is followed by the trials, the fuzzing hours, the shortest possible run time on your cores, the builds, and one row per run. A red box shows the dry run's errors.
-5. **Click Queue experiment.** You can only queue after a preview passes, and after any change you have to preview again. The file is saved to `webapp/instance/experiments/<name>.yaml` and the log to `logs-reports/<name>.log`. The browser then opens the experiment's page.
+5. **Click Queue experiment.** You can only queue after a preview passes, and after any change you have to preview again. The file is saved to `experiments/<name>.yaml`, as for an experiment queued from a terminal, and the log to `experiments/logs/<name>.log`. The browser then opens the experiment's page, which shows the saved file with its record.
 
-Jobs (experiments and post-analyses) run **one at a time**. They also never run next to an experiment started from a terminal, since both would use the same cores and benchmark copies; a queued job starts when the machine is free. Jobs run as their own processes, so they keep going if the web app is stopped or restarted. **Run again…** on an experiment's page opens the form with that experiment's file and a new name.
+Jobs (experiments and post-analyses) go into the same queue as experiments queued from a terminal and run **one at a time** (see "How experiments run"). Jobs run as their own processes, so they keep going if the web app is stopped or restarted, and the background worker starts queued jobs while the web app is down. **Run again…** on an experiment's page opens the form with that experiment's file and a new name.
 
 #### Reading the pages
 
@@ -330,10 +397,11 @@ Jobs (experiments and post-analyses) run **one at a time**. They also never run 
   - **skipped:** its coverage binary did not build.
   - **interrupted:** it started but the experiment stopped.
 - **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
-- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below).
+- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below), and a link to the SuperC report when there is one.
 - **Post-analysis:** queues `post_analysis.py` on a finished experiment:
   - **Statistics report:** the metric to rank by, the baseline fuzzer, and optionally another experiment for the reproducibility section.
   - **Per-configuration coverage:** runtime strategies only. Needed before the "union against best single configuration" table.
+  - **SuperC presence conditions:** runs the SuperC analysis (see below) on the experiment, also one that ran without it.
   - **Crash triage:** only when the experiment built a triage tool.
 
   Below the options, the experiment's jobs are listed with their status and exit code.
@@ -345,7 +413,8 @@ For a first look at results: start with **Overall ranking** in the report, then 
 
 #### Files
 
-- `webapp/instance/`: the job queue (`jobs.db`), saved experiment files and dry-run scratch files. It is not tracked by git. Deleting it empties the queue and the job history; experiments and reports are kept.
+- `webapp/instance/`: the job queue shared with the command line (`jobs.db` and its lock files) and dry-run scratch files. It is not tracked by git. Deleting it empties the queue and the job history; experiments, experiment files and reports are kept.
+- `experiments/<name>.yaml`: every experiment's file with its record, and `experiments/logs/`: every log (see "How experiments run"). The `experiments/` folder is not tracked by git.
 - `<experiment>/events.jsonl`: written by `run_experiment.py`. It records the phases, each trial's start and end with its core and status, and the end of the experiment. Experiments from before this file existed still show, with their progress counted from the coverage reports.
 - `run_experiment.py --dry-run --plan-json FILE`: writes the dry-run plan as JSON. The preview uses it.
 - `webapp/static/`, `webapp/templates/`: the pages. They are plain HTML, CSS and JavaScript, with no build step and no external scripts.
@@ -370,6 +439,7 @@ Options:
 - `--baseline FUZZER`: the fuzzer the other fuzzers are compared against. The default is `aflplusplus`.
 - `--compare-to /path/to/other/experiment`: adds a reproducibility section, with the rank correlation and changes in significance between the two experiments. Use it for a repeated run, or for a run with one setting changed.
 - `--per-config-coverage`: first writes one coverage report per runtime configuration (with Docker), so that the report can compare each trial's union over configurations with its best single configuration.
+- `--stats-html`: also writes an llvm-cov HTML source report for every arm and benchmark, from the arm's merged trial profiles, to `statistics/html/<benchmark>/<arm>/index.html` (as FuzzBench's coverage reports). Only the source files the coverage build uses are copied out of its Docker image, into `statistics/html/src/` (`common/coverage_html.py`). Arms whose trials ran on several benchmark copies (a compile-time strategy with many configurations) are skipped, since their profiles cannot be merged.
 
 #### Limits of the analyses
 
@@ -391,7 +461,45 @@ Some analyses are computed, but do not mean what their names suggest for typical
 8. **Reproducibility and sensitivity need a second experiment.** `--compare-to` gives the rank correlation and the significance changes against another experiment. The other experiment can be a repeat with the same file (reproducibility), or a run with one setting changed, such as seeds, dictionary or a longer time (sensitivity). Both experiments need the same arms and benchmarks.
 9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
 
-`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR` does the same without an experiment state.
+`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR [--metric ...] [--html]` does the same without an experiment state (`--html` as `--stats-html`).
+
+### SuperC presence-condition analysis
+
+[SuperC](https://github.com/appleseedlab/superc) parses C with every configuration at once and gives each source line its *presence condition*: the `#if`/`#ifdef` condition under which it is compiled, such as `defined(HAVE_LIBDEBUGINFOD)` or `!defined(_WIN32) && HAVE_MMAP`. `common/superc.py` joins those conditions with the trials' line coverage, to show which conditional code each fuzzer reached. It runs at the end of every experiment unless `no_superc` (or `--no-superc`) turns it off; a failure is logged and does not fail the experiment. On a finished experiment:
+
+```bash
+python3 common/post_analysis.py --state /path/to/experiment-data/EXP_NAME/experiment_state.pkl --superc
+python3 common/superc.py /path/to/experiment-data/EXP_NAME [-o OUT_DIR] [--jobs N] [--timeout SECONDS]   # without a state
+```
+
+How it works:
+
+1. **Once per benchmark build** (copy 0 of each compile-time strategy, not once per trial: the conditions depend only on the source), SuperC runs on every `.c` file of the build's coverage report. The sources are those of that coverage build: the experiment's own copy if it has one (`benchmarks/coverage_<copy>/source`), otherwise copied out of the coverage image `fbpp/benchmark:coverage_<copy>` (object files left out), so the lines match the coverage. Files run in parallel on the experiment's cores, each with a time limit (600 s by default) and its own JVM; a file analysed before is not analysed again.
+2. **Build flags** come from `benchmarks/<name>/superc_flags.txt`, one per line, as the benchmark's build uses them: `-I <dir>` relative to the benchmark's source root (for example `-I bfd` for `/binutils-2.47/bfd`) and `-D NAME[=VALUE]` (for example `-D HAVE_CONFIG_H`, which most builds pass so that their sources include `config.h`). Every benchmark has one; a new benchmark needs one too (without it only the root is an include directory). A missing `-D` shows up as an `#error` in the file's SuperC log (ffmpeg's `libavutil/common.h` needs `-D __STDC_CONSTANT_MACROS`, as SuperC also explores `defined(__cplusplus)`). SuperC runs with `-nostdinc`, so system headers such as `stdio.h` are not read (by design: only the program's own conditions are wanted); the "header not found" lines for them in the logs are expected, also for replacement headers with system names that a build does not use (gnulib's `lib/stdio.h`, ffmpeg's `compat/`, x264's `extras/`).
+3. **For every trial**, each condition gets the lines the coverage build instrumented under it and those the trial covered. Lines are keyed by their full path in the build, so files with the same name in different folders stay apart. Trials under runtime strategies are included, and the copies of a compile-time strategy are combined.
+4. **Per benchmark**, the arms (`fuzzer[strategy]`, as in the statistics report) are compared by the conditions their trials covered together.
+
+Conditions `1` (always compiled) and `0` (compiled in no configuration, such as `#if 0`) are left out of the counts. A condition is *in the build* when the coverage build instrumented at least one of its lines (code under `defined(_WIN32)`, say, is not), and *covered* when a trial executed one.
+
+Outputs:
+
+| File | Contents |
+|---|---|
+| `<report_filestore>/EXP_NAME/superc/index.html` | per benchmark and arm: conditions in the build, covered by the union of the trials and by the median trial, conditional lines covered, and the conditions only one arm covered |
+| `.../superc/pc_summary.csv` | the same as a table |
+| `.../superc/<benchmark>_pc_comparison.csv` | every condition with its instrumented lines, the arms that covered it and their covered lines |
+| `<experiment>/data/<trial>/pc_analysis/pc_coverage_summary.{json,csv}` | every condition of one trial |
+| `<experiment>/superc/<copy>/` | SuperC's trees (`pc/<path>.json`), logs (`logs/<path>.log`), `status.tsv` (file, exit code (124: timed out), seconds), and the files and includes it ran with |
+
+Limits:
+
+- **Code in headers has no condition.** SuperC reports conditions for the lines of the `.c` file it parses, so header code (for example bfd's `coffcode.h`, included by many `.c` files) is not attributed. The report gives these lines, and any other covered lines without a condition, next to the counts.
+- **SuperC's top region ends anywhere.** It often ends at line 1, or before blocks it does report, so the analysis takes it to cover the whole file: every line outside the reported `#if` blocks is top-level code. Only when a conditional directive (outside comments) is in no reported block did SuperC really stop early; the lines from that directive on then have no condition, and the experiment log names the file. On the 12 benchmarks this happens for no file.
+- **SuperC fails on a few files**: 2 of the 2,795 `.c` files of the 12 benchmarks' builds (libpng `pngsimd.c`, a NullPointerException in SuperC; ffmpeg `libavcodec/ccaption_dec.c`, a lexer error). They have exit code 1 in `status.tsv` and no conditions.
+- **A line on the boundary of two blocks** (an `#elif` or `#else` line) belongs to both, as SuperC reports it.
+- **Only `.c` files** of the coverage report are analysed; the conditions are those of copy 0 of each compile-time strategy.
+
+The image is `fbpp/superc_runner:<hash of cfg-analysis/>` (SuperC at a fixed commit), so a change to `cfg-analysis/` builds a new one. It runs as the calling user, so its output can be removed and redone without root.
 
 ### vafuzz coverage
 
@@ -440,3 +548,9 @@ To add a strategy, add `runtime/<name>/strategy.py` with a `request_configuratio
 function that returns a list of argument lists (see `runtime/rt_common.py`). To support another
 fuzzer, add it to `runtime/supported_fuzzers.json` with the folder its corpus is written to, and
 make its `run.sh` read seeds from `${SEED_DIR:-/benchmark/seed}`.
+
+## Tests
+
+```bash
+python3 -m pytest tests
+```

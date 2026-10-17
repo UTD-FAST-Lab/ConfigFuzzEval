@@ -29,7 +29,8 @@ import catalog as catalog_mod          # noqa: E402
 import events                          # noqa: E402
 import experiments as exps             # noqa: E402
 from color_logger import get_logger    # noqa: E402
-from jobs import Jobs, external_processes  # noqa: E402
+import experiment_plan                 # noqa: E402
+from jobs import DB_PATH, Jobs, ensure_worker, external_processes, queue_experiment  # noqa: E402
 
 logging = get_logger("webapp")
 INSTANCE = os.path.join(HERE, "instance")
@@ -94,7 +95,7 @@ def experiment_log(name):
     for job in jobs().for_experiment(name):
         if job["kind"] == "experiment" and os.path.isfile(job["log_path"]):
             return job["log_path"]
-    path = os.path.join(PROJECT_ROOT, "logs-reports", f"{name}.log")
+    path = experiment_plan.log_path(name)
     return path if os.path.isfile(path) else None
 
 
@@ -206,6 +207,7 @@ def new():
             if os.path.isfile(p):
                 with open(p) as f:
                     loaded = yaml.safe_load(f) or {}
+                loaded.pop("record", None)
                 loaded["experiment_name"] = f"{source}_rerun"
                 initial = yaml.safe_dump(loaded, sort_keys=False)
                 break
@@ -233,14 +235,15 @@ def experiment(name):
     state = exps.load_state(path)
     exp_file = next((f for f in ("experiment.yaml", "experiment.json") if os.path.isfile(os.path.join(path, f))), None)
     exp_text = open(os.path.join(path, exp_file)).read() if exp_file else ""
-    saved = os.path.join(INSTANCE, "experiments", f"{name}.yaml")
-    if not exp_text and os.path.isfile(saved):
+    saved = experiment_plan.saved_experiment_path(name)
+    if os.path.isfile(saved):        # with its record: start, estimated end, stop command
         exp_text = open(saved).read()
     others = [e["name"] for e in exps.list_experiments(config()) if e["name"] != name]
     stats_dir = os.path.join(config()["report_filestore"], name, "statistics")
     stats_files = sorted(os.listdir(stats_dir)) if os.path.isdir(stats_dir) else []
+    superc_report = os.path.isfile(os.path.join(config()["report_filestore"], name, "superc", "index.html"))
     return render_template("experiment.html", name=name, state=state, experiment_text=exp_text,
-                           others=others, stats_files=stats_files,
+                           others=others, stats_files=stats_files, superc_report=superc_report,
                            triagers=(state or {}).get("built_triagers") or [],
                            fuzzers=(state or {}).get("fuzzers") or [])
 
@@ -270,14 +273,11 @@ def api_create():
     name = data["experiment_name"]
     if plan.get("exists") or name in jobs().active_names():
         return jsonify(ok=False, error=f"An experiment named {name} already exists or is queued."), 409
-    saved = os.path.join(INSTANCE, "experiments", f"{name}.yaml")
-    os.makedirs(os.path.dirname(saved), exist_ok=True)
-    with open(saved, "w") as f:
-        f.write(text)
-    command = [sys.executable, "common/run_experiment.py", "--config", STATE["config_path"], "--experiment", saved]
-    log_path = os.path.join(PROJECT_ROOT, "logs-reports", f"{name}.log")
-    job_id = jobs().enqueue("experiment", name, f"Experiment {name}", command, log_path)
-    jobs().tick()
+    # The same queue as run_experiment.py from a terminal: saved as experiments/<name>.yaml.
+    try:
+        job_id, _, _ = queue_experiment(STATE["config_path"], data, config())
+    except ValueError as e:
+        return jsonify(ok=False, error=str(e)), 409
     return jsonify(ok=True, job_id=job_id, name=name, url=f"/experiments/{name}")
 
 
@@ -332,6 +332,8 @@ def api_post(name):
         args.append("--triage"); parts.append("triage")
     if body.get("per_config"):
         args.append("--per-config-coverage"); parts.append("per-configuration coverage")
+    if body.get("superc"):
+        args.append("--superc"); parts.append("SuperC presence conditions")
     if body.get("stats"):
         args.append("--stats"); parts.append("statistics")
         metric = body.get("metric") or "branches"
@@ -350,9 +352,9 @@ def api_post(name):
     if not args:
         return jsonify(ok=False, error="Choose at least one analysis."), 400
     command = [sys.executable, "common/post_analysis.py", "--state", state_path, *args]
-    log_path = os.path.join(PROJECT_ROOT, "logs-reports", f"{name}_post_{int(time.time())}.log")
+    log_path = os.path.join(experiment_plan.LOGS_DIR, f"{name}_post_{int(time.time())}.log")
     job_id = jobs().enqueue("post", name, f"{', '.join(parts).capitalize()} for {name}", command, log_path)
-    jobs().tick()
+    ensure_worker(STATE["config_path"])
     return jsonify(ok=True, job_id=job_id)
 
 
@@ -424,8 +426,9 @@ def main():
         STATE["config"] = yaml.safe_load(f)
     STATE["config_path"] = config_path
     STATE["token"] = args.token
-    STATE["jobs"] = Jobs(os.path.join(INSTANCE, "jobs.db"), PROJECT_ROOT, STATE["config"], logging)
-    STATE["jobs"].start_worker()
+    STATE["jobs"] = Jobs(DB_PATH, PROJECT_ROOT, STATE["config"], logging)
+    STATE["jobs"].start_worker()        # ticks the shared queue while the app runs
+    ensure_worker(STATE["config_path"])  # and the background worker, for jobs queued while it was down
     logging.info(f"FuzzBench++ web app on http://{args.host}:{args.port}/" + ("?token=..." if args.token else ""))
     app.run(host=args.host, port=args.port, threaded=True, debug=False, use_reloader=False)
 

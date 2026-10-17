@@ -105,3 +105,6 @@ code{font-size:12px}
 .docs article p code,.docs article li code,.docs article td code{background:var(--surface2);padding:1px 4px;border-radius:4px}
 .docs .note{border-left:3px solid var(--accent);background:var(--surface);padding:8px 12px;margin:12px 0;color:var(--ink2)}
 @media (max-width:860px){.docs{grid-template-columns:1fr}.docs .toc{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 14px}}
+table.conds td.cond{min-width:280px;max-width:560px;white-space:normal;overflow-wrap:anywhere}
+table.conds td.cond code{font-size:12px}
+table.conds td.heat{background:color-mix(in oklab,var(--accent) var(--f),transparent)}

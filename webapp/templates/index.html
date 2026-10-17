@@ -63,7 +63,7 @@
     <td class="small">{{ e.benchmarks | join(', ') }}</td>
     <td class="small">{{ e.runtime_strategies | join(', ') }}</td>
     <td class="small" title="{{ e.started | when }}">{{ e.started | ago }}</td>
-    <td>{% if e.has_stats %}<a href="/experiments/{{ e.name }}#results">statistics</a>{% else %}<span class="muted">–</span>{% endif %}</td>
+    <td>{% if e.has_stats %}<a href="/experiments/{{ e.name }}#results">statistics</a>{% endif %}{% if e.has_stats and e.has_superc %} · {% endif %}{% if e.has_superc %}<a href="/experiments/{{ e.name }}#superc">presence conditions</a>{% endif %}{% if not e.has_stats and not e.has_superc %}<span class="muted">–</span>{% endif %}</td>
   </tr>
   {% endfor %}
   </tbody>

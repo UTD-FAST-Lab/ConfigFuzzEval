@@ -29,6 +29,7 @@
   <button data-tab="trials" class="on">Trials</button>
   <button data-tab="log">Log</button>
   <button data-tab="results">Results</button>
+  <button data-tab="superc">Presence conditions</button>
   <button data-tab="analyse">Post-analysis</button>
   <button data-tab="file">Experiment file</button>
 </div>
@@ -63,11 +64,52 @@
   <iframe class="report" src="/reports/{{ name }}/statistics/index.html" title="Statistics report"></iframe>
   {% endif %}
   {% if superc_report %}
-  <div class="row" style="margin-top:12px">
-    <a class="btn" href="/reports/{{ name }}/superc/index.html" target="_blank">SuperC presence-condition report</a>
-    <a href="/reports/{{ name }}/superc/pc_summary.csv">pc_summary.csv</a>
-  </div>
+  <p class="small muted" style="margin-top:12px">SuperC's presence-condition results are in the <a href="#superc" onclick="showTab('superc')">Presence conditions</a> tab.</p>
   {% endif %}
+</section>
+
+<section class="tab" id="tab-superc">
+  <div id="sc-none" class="card empty" {% if superc_report %}hidden{% endif %}>
+    {% if no_superc %}SuperC was turned off for this experiment (<code>no_superc</code>).{% else %}No SuperC report yet. It is written when the experiment ends, after aggregation.{% endif %}
+    You can run it from <a href="#analyse" onclick="showTab('analyse')">Post-analysis</a> ("SuperC presence conditions").
+  </div>
+  <div id="sc-body" hidden>
+    <p class="muted" style="max-width:85ch">SuperC gives every source line the <code>#if</code> condition under which it is compiled.
+      A condition is <b>in the build</b> when the coverage build instrumented at least one of its lines, and <b>covered</b> when a trial executed one.
+      Unconditional code (condition <code>1</code>) and code no configuration compiles (<code>0</code>) are left out. Arm totals are the union over the arm's trials.</p>
+    <div class="row" style="margin-bottom:6px">
+      <label id="sc-build-wrap" hidden>Benchmark build <select id="sc-build"></select></label>
+      <span class="spacer"></span>
+      <span class="small" id="sc-links"></span>
+    </div>
+    <div id="sc-status"></div>
+    <h3>Arms</h3>
+    <div class="card tw"><table>
+      <thead><tr><th>Arm</th><th class="num">Trials</th><th>Conditions covered (union) / in build</th><th class="num">Median trial</th>
+        <th class="num" title="Conditions this arm covered and no other arm did">Only this arm</th>
+        <th class="num">Conditional lines covered</th>
+        <th class="num" title="Covered lines in headers, or past the end of SuperC's tree: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
+      <tbody id="sc-arms"></tbody>
+    </table></div>
+    <p class="small muted" id="sc-uncovered"></p>
+    <h3>Conditions</h3>
+    <div class="row" style="margin-bottom:8px">
+      <label>Show <select id="sc-show">
+        <option value="in_build">in the build</option><option value="covered">covered by some arm</option>
+        <option value="uncovered">in the build, covered by no arm</option><option value="only">covered only by…</option>
+        <option value="missed">missed by… (another arm covered it)</option><option value="all">all</option></select></label>
+      <label id="sc-arm-wrap" hidden>arm <select id="sc-arm"></select></label>
+      <label>Sort <select id="sc-sort"><option value="instrumented">most instrumented lines</option>
+        <option value="missed">most lines no arm covered</option><option value="arm">most lines covered by the arm</option>
+        <option value="condition">condition (A–Z)</option></select></label>
+      <input type="text" id="sc-q" placeholder="Search conditions, e.g. SUPPORT_JIT" style="min-width:240px">
+      <span class="small muted" id="sc-count"></span>
+    </div>
+    <div class="card tw"><table class="conds">
+      <thead id="sc-head"></thead><tbody id="sc-conds"></tbody>
+    </table></div>
+    <button id="sc-more" hidden onclick="loadConditions(false)">Show more</button>
+  </div>
 </section>
 
 <section class="tab" id="tab-analyse">
@@ -107,6 +149,7 @@ function showTab(t) {
   for (const s of document.querySelectorAll(".tab")) s.classList.toggle("on", s.id === "tab-" + t);
   history.replaceState(null, "", "#" + t);
   if (t === "log") loadLog(true);
+  if (t === "superc") setTimeout(loadSuperc);   // after the whole script has run
 }
 for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
 if (location.hash) showTab(location.hash.slice(1));
@@ -124,7 +167,7 @@ function renderTrials(trials) {
     <td>${esc(t.arm)}</td><td>${esc(t.bench)}</td><td>${esc(t.cts)}${t.copy ? ` <span class="muted">copy ${t.copy}</span>` : ""}</td><td class="num">${t.trial}</td><td>${badge(t.status)}</td>
     <td class="num">${t.core ?? "–"}</td><td class="num">${duration(t.seconds)}</td>
     <td class="num">${cov(t.branches)}</td><td class="num">${cov(t.lines)}</td>
-    <td>${t.log ? `<a href="/experiments/${encodeURIComponent(NAME)}/files/${t.log}" target="_blank">log</a>` : ""}</td></tr>`).join("")
+    <td>${t.log ? `<a href="/experiments/${encodeURIComponent(NAME)}/files/${t.log}" target="_blank">log</a>` : ""}${t.pc ? ` · <a href="/experiments/${encodeURIComponent(NAME)}/files/${t.pc}" target="_blank" title="This trial's presence-condition coverage (SuperC)">conditions</a>` : ""}</td></tr>`).join("")
     : `<tr><td colspan="10" class="empty">No trials match.</td></tr>`;
 }
 
@@ -166,6 +209,7 @@ async function refresh() {
   const active = r.jobs.find(j => ["running", "cancelling"].includes(j.status) && j.kind === "experiment");
   document.getElementById("actions").innerHTML = active ? `<button class="danger" onclick="cancelJob(${active.id}, this)">Stop experiment</button>` : "";
   renderTrials(trials); renderJobs(r.jobs);
+  if (s.has_superc && !sc.loaded && document.getElementById("tab-superc").classList.contains("on")) loadSuperc();
   if (r.stats && document.getElementById("results-none") && !document.querySelector("iframe.report") && s.status !== "running") {
     document.getElementById("results-none").innerHTML = `The statistics report is ready. <a href="#results" onclick="location.reload()">Reload to show it</a>.`;
   }
@@ -202,6 +246,91 @@ async function runPost() {
   v("pa-msg").innerHTML = r.ok ? `Queued as job ${r.job_id}. Follow it in the log tab.` : `<span style="color:var(--bad-ink)">${esc(r.error)}</span>`;
   refresh();
 }
+
+// ---- Presence conditions (SuperC) ----
+const sc = {data: null, build: null, offset: 0, loaded: false, timer: null};
+const pct = (a, b) => b ? (100 * a / b) : 0;
+function meter(a, b) {
+  return `<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:100px;min-width:100px"><span style="width:${pct(a, b).toFixed(1)}%"></span></div>
+    <span class="num">${a.toLocaleString()} <span class="muted">/ ${b.toLocaleString()} · ${pct(a, b).toFixed(1)}%</span></span></div>`;
+}
+
+async function loadSuperc(force) {
+  if (sc.loaded && !force) return;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc`);
+  if (!r.ok || !r.builds || !r.builds.length) {
+    document.getElementById("sc-none").hidden = false; document.getElementById("sc-body").hidden = true; return;
+  }
+  sc.data = r; sc.loaded = true;
+  document.getElementById("sc-none").hidden = true; document.getElementById("sc-body").hidden = false;
+  const sel = document.getElementById("sc-build");
+  sel.innerHTML = r.builds.map(b => `<option value="${esc(b.key)}">${esc(b.benchmark)}${b.compiletime !== "default" ? ` (compile-time ${esc(b.compiletime)})` : ""}</option>`).join("");
+  document.getElementById("sc-build-wrap").hidden = r.builds.length < 2;
+  if (sc.build && r.builds.some(b => b.key === sc.build)) sel.value = sc.build;
+  renderBuild();
+}
+
+function currentBuild() { return sc.data.builds.find(b => b.key === document.getElementById("sc-build").value) || sc.data.builds[0]; }
+
+function renderBuild() {
+  const b = currentBuild(); sc.build = b.key;
+  const base = `/reports/${encodeURIComponent(NAME)}/superc/`;
+  document.getElementById("sc-links").innerHTML = [
+    `<a href="${base}index.html" target="_blank">SuperC report</a>`, `<a href="${base}pc_summary.csv">pc_summary.csv</a>`,
+    b.comparison_file ? `<a href="${base}${encodeURIComponent(b.comparison_file)}">${esc(b.comparison_file)}</a>` : ""].filter(Boolean).join(" · ");
+  const st = b.superc, statusEl = document.getElementById("sc-status");
+  if (!st) statusEl.innerHTML = "";
+  else {
+    const bad = st.timed_out + st.failed;
+    statusEl.innerHTML = `<div class="${bad ? "warnbox" : "okbox"}">SuperC analysed <b>${st.ok.toLocaleString()} of ${st.files.toLocaleString()}</b> .c files of this build
+      (${duration(st.seconds)} summed over the files)${bad ? `; <b>${st.timed_out} timed out and ${st.failed} failed</b>, so their lines have no condition and are left out` : ""}.
+      ${bad ? `<details><summary>Files without a result</summary><div class="tw"><table><thead><tr><th>File</th><th>Result</th><th class="num">Seconds</th></tr></thead><tbody>` +
+        st.problems.map(p => `<tr><td><code>${esc(p.file)}</code></td><td>${esc(p.reason)}</td><td class="num">${p.seconds}</td></tr>`).join("") + `</tbody></table></div></details>` : ""}</div>`;
+  }
+  const best = Math.max(...b.rows.map(r => r.conditions_covered_union));
+  document.getElementById("sc-arms").innerHTML = [...b.rows].sort((x, y) => y.conditions_covered_union - x.conditions_covered_union).map(r => `<tr>
+    <td style="white-space:nowrap">${esc(r.arm)}${r.conditions_covered_union === best && b.rows.length > 1 ? ` <span class="badge success" title="Covered the most conditions">most</span>` : ""}</td>
+    <td class="num">${r.trials}</td><td>${meter(r.conditions_covered_union, r.conditions_in_build)}</td>
+    <td class="num">${Number(r.conditions_covered_median_trial).toLocaleString()}</td>
+    <td class="num">${(b.only[r.arm] || 0).toLocaleString()}</td>
+    <td class="num">${r.conditional_lines_covered_union.toLocaleString()} <span class="muted">/ ${r.conditional_lines_in_build.toLocaleString()} · ${pct(r.conditional_lines_covered_union, r.conditional_lines_in_build).toFixed(1)}%</span></td>
+    <td class="num" title="${r.covered_lines_in_headers.toLocaleString()} in headers, ${r.covered_lines_without_condition.toLocaleString()} in .c files past SuperC's tree">${(r.covered_lines_in_headers + r.covered_lines_without_condition).toLocaleString()} <span class="muted">of ${r.covered_lines_union.toLocaleString()} covered</span></td></tr>`).join("");
+  document.getElementById("sc-uncovered").textContent = b.comparison_file ?
+    `${b.uncovered.toLocaleString()} of the ${b.in_build.toLocaleString()} conditions in the build were covered by no arm.` : "";
+  const armSel = document.getElementById("sc-arm"), cur = armSel.value;
+  armSel.innerHTML = b.arms.map(a => `<option>${esc(a)}</option>`).join("");
+  if (b.arms.includes(cur)) armSel.value = cur;
+  loadConditions(true);
+}
+
+async function loadConditions(reset) {
+  const b = currentBuild();
+  const tbody = document.getElementById("sc-conds"), more = document.getElementById("sc-more");
+  if (!b.comparison_file) { tbody.innerHTML = `<tr><td class="empty">No comparison table for this build.</td></tr>`; more.hidden = true; return; }
+  const show = document.getElementById("sc-show").value, sort = document.getElementById("sc-sort").value;
+  const needsArm = ["only", "missed"].includes(show) || sort === "arm";
+  document.getElementById("sc-arm-wrap").hidden = !needsArm;
+  if (reset) sc.offset = 0;
+  const q = new URLSearchParams({show, sort, q: document.getElementById("sc-q").value, offset: sc.offset, limit: 100});
+  if (needsArm) q.set("arm", document.getElementById("sc-arm").value);
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/${encodeURIComponent(b.key)}/conditions?${q}`);
+  if (!r.ok) return;
+  document.getElementById("sc-head").innerHTML = `<tr><th>Condition</th><th class="num">Instrumented lines</th>` +
+    r.arms.map(a => `<th class="num">${esc(a)}</th>`).join("") + `<th>Covered by</th></tr>`;
+  const rows = r.rows.map(c => `<tr><td class="cond"><code>${esc(c.condition)}</code></td><td class="num">${c.instrumented.toLocaleString()}</td>` +
+    r.arms.map(a => { const n = c.lines[a] || 0, f = c.instrumented ? n / c.instrumented : 0;
+      return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(a)}: ${n} of ${c.instrumented} lines">${n ? n.toLocaleString() : `<span class="muted">0</span>`}</td>`; }).join("") +
+    `<td class="small">${c.covered_by.length ? (c.only ? `only <b>${esc(c.only)}</b>` : c.covered_by.length === r.arms.length ? "all arms" : c.covered_by.map(esc).join(", ")) : `<span class="muted">none</span>`}</td></tr>`).join("");
+  if (reset) tbody.innerHTML = rows || `<tr><td colspan="${r.arms.length + 3}" class="empty">No conditions match.</td></tr>`;
+  else tbody.insertAdjacentHTML("beforeend", rows);
+  sc.offset = r.offset + r.rows.length;
+  more.hidden = sc.offset >= r.matching;
+  document.getElementById("sc-count").textContent = `${r.matching.toLocaleString()} of ${r.total.toLocaleString()} conditions`;
+}
+
+document.getElementById("sc-build").addEventListener("change", renderBuild);
+for (const id of ["sc-show", "sc-sort", "sc-arm"]) document.getElementById(id).addEventListener("change", () => loadConditions(true));
+document.getElementById("sc-q").addEventListener("input", () => { clearTimeout(sc.timer); sc.timer = setTimeout(() => loadConditions(true), 250); });
 refresh();
 </script>
 {% endblock %}

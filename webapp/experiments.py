@@ -82,6 +82,7 @@ def summary(config, name, running_names=()):
     return {"name": name, "status": status, "phase": phases[-1]["phase"] if phases else None,
             "planned": planned, "done": done, "failed": failed, "started": started, "ended": ended,
             "has_stats": statistics_path(config, name) is not None,
+            "has_superc": os.path.isfile(os.path.join(config["report_filestore"], name, "superc", "pc_summary.csv")),
             "fuzzers": state.get("fuzzers", []) if state else [],
             "benchmarks": state.get("benchmarks", []) if state else [],
             "runtime_strategies": state.get("runtime_strategies", []) if state else []}
@@ -119,6 +120,7 @@ def trials(config, name, running=False):
             status = "queued" if running else "not run"
         start = started.get(key, {}).get("time")
         end = ended.get(key, {}).get("time")
+        pc = f"data/{trial_dir_name}/pc_analysis/pc_coverage_summary.csv"
         log = f"data/{trial_dir_name}/{label}_{benchmark}_trial{trial}.log"
         m = CTS.match(benchmark)
         out.append({"run": label, "arm": fuzzer if rts == "default" else f"{fuzzer}[{rts}]",
@@ -129,7 +131,8 @@ def trials(config, name, running=False):
                     "seconds": (end or time.time()) - start if start else None,
                     "branches": totals.get("branches") if totals else None,
                     "lines": totals.get("lines") if totals else None,
-                    "log": log if os.path.isfile(os.path.join(path, log)) else None})
+                    "log": log if os.path.isfile(os.path.join(path, log)) else None,
+                    "pc": pc if os.path.isfile(os.path.join(path, pc)) else None})
     return out
 
 

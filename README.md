@@ -397,7 +397,14 @@ Jobs (experiments and post-analyses) go into the same queue as experiments queue
   - **skipped:** its coverage binary did not build.
   - **interrupted:** it started but the experiment stopped.
 - **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
-- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below), and a link to the SuperC report when there is one.
+- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below).
+- **Presence conditions:** the SuperC report (see `common/superc.py`), once the experiment's SuperC step or a SuperC post-analysis has run. For each benchmark build (pick one when there are several compile-time strategies) it shows:
+  - **SuperC's result per file:** how many `.c` files SuperC analysed, and which ones timed out or failed. Those files' lines have no condition and are left out of every count.
+  - **Arms:** per arm, the conditions covered over its trials against the conditions in the build (with a bar), the median trial, the conditions only that arm covered, the conditional lines covered, and the covered lines not attributed to any condition (in headers, or past the end of SuperC's tree).
+  - **Conditions:** every condition with its instrumented lines and each arm's covered lines (shaded by the share covered). You can show the conditions in the build, those covered by some arm, those covered by none, those covered only by one arm, or those another arm covered but one arm missed. You can search conditions (for example `SUPPORT_JIT`) and sort them. It loads 100 at a time.
+  - **Links:** SuperC's own `index.html`, `pc_summary.csv` and the build's `<benchmark>_pc_comparison.csv`.
+
+  The Trials tab links each trial's own `pc_analysis/pc_coverage_summary.csv`, and the Experiments page links "presence conditions" for experiments that have a report.
 - **Post-analysis:** queues `post_analysis.py` on a finished experiment:
   - **Statistics report:** the metric to rank by, the baseline fuzzer, and optionally another experiment for the reproducibility section.
   - **Per-configuration coverage:** runtime strategies only. Needed before the "union against best single configuration" table.

@@ -28,6 +28,7 @@ sys.path.insert(0, HERE)
 import catalog as catalog_mod          # noqa: E402
 import events                          # noqa: E402
 import experiments as exps             # noqa: E402
+import superc_view                     # noqa: E402
 from color_logger import get_logger    # noqa: E402
 import experiment_plan                 # noqa: E402
 from jobs import DB_PATH, Jobs, ensure_worker, external_processes, queue_experiment  # noqa: E402
@@ -241,9 +242,10 @@ def experiment(name):
     others = [e["name"] for e in exps.list_experiments(config()) if e["name"] != name]
     stats_dir = os.path.join(config()["report_filestore"], name, "statistics")
     stats_files = sorted(os.listdir(stats_dir)) if os.path.isdir(stats_dir) else []
-    superc_report = os.path.isfile(os.path.join(config()["report_filestore"], name, "superc", "index.html"))
+    superc_report = superc_view.has_report(config(), name)
     return render_template("experiment.html", name=name, state=state, experiment_text=exp_text,
                            others=others, stats_files=stats_files, superc_report=superc_report,
+                           no_superc=bool((state or {}).get("no_superc")),
                            triagers=(state or {}).get("built_triagers") or [],
                            fuzzers=(state or {}).get("fuzzers") or [])
 
@@ -293,6 +295,28 @@ def api_status(name):
     return jsonify(summary=summary, trials=exps.trials(config(), name, running), jobs=exp_jobs,
                    phases=[e for e in events.read(path) if e["event"] in ("phase", "finished")],
                    stats=exps.statistics_path(config(), name) is not None, now=time.time())
+
+
+@app.get("/api/experiments/<name>/superc")
+def api_superc(name):
+    experiment_path(name)
+    data = superc_view.overview(config(), name)
+    return jsonify(ok=data is not None, **(data or {}))
+
+
+@app.get("/api/experiments/<name>/superc/<key>/conditions")
+def api_superc_conditions(name, key):
+    experiment_path(name)
+    if not re.match(r"^[A-Za-z0-9_.+-]+$", key) or ".." in key:
+        abort(404)
+    data = superc_view.conditions(config(), name, key, show=request.args.get("show", "all"),
+                                  arm=request.args.get("arm") or None, query=request.args.get("q", ""),
+                                  sort=request.args.get("sort", "instrumented"),
+                                  offset=request.args.get("offset", 0, type=int),
+                                  limit=request.args.get("limit", 100, type=int))
+    if data is None:
+        abort(404)
+    return jsonify(ok=True, **data)
 
 
 @app.get("/api/experiments/<name>/log")

@@ -105,7 +105,7 @@ Flags:
 - `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, manual, maximum, minimum, pairwise, randomsmart). Optional; if left out, only `default` is used.
 - `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, pairwise, random, mostenabled, mostdisabled, diversity). Optional; if left out, only `default` is used. See "Runtime strategies" below.
 - `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (afl-collect). Optional; if left out, no triage is run.
-- `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment.
+- `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment (see "SuperC presence-condition analysis" below).
 - `--experiment FILE` (or `--groups FILE`): optional. Reads what to run from an experiment file instead of `--fuzzers`, `--benchmarks`, `--compiletime` and `--runtime-strategy` (giving any of those with it is an error). See "Experiment files" below.
 - `--dry-run`: optional. Checks the configuration, the experiment and every name, prints the planned runs, builds, trials and the estimated duration, and exits. Nothing is built, copied, queued or run, so it is safe to use while another experiment is running.
 - `--foreground`: optional, rarely needed. Runs the experiment in this process, attached to the terminal, instead of queueing it; the output still goes to `experiments/logs/EXP_NAME.log` too. The queue starts every experiment this way. By hand it does not wait for other experiments, and closing the terminal stops it.
@@ -137,7 +137,7 @@ It asks, one question at a time (arrow keys to move, space to tick, enter to con
    Runtime strategies come from `runtime/` and their engines from the fuzzers that support them (`runtime/supported_fuzzers.json`), so a new one is offered without changing the setup.
 4. The benchmarks (once, or for each fuzzer), each followed by its compile-time strategies (`default` ticked). Benchmarks a choice cannot run on (a missing grammar, dictionary or CarpetFuzz file) are shown greyed out with the reason. The rules are the web app's (`webapp/catalog.py`), which match the checks of `run_experiment.py`.
 5. Cores (saved as `cores_to_use` in the file), trials and fuzzing time per trial (`900`, `15m`, `24h`, `1h30m`). With different benchmarks per fuzzer, trials and time can also differ per fuzzer.
-6. SuperC and bug triaging. **These answers are saved but not applied yet** (under `not_applied` in the file); the experiment runs without SuperC and without triage.
+6. SuperC (applied: `no_superc` in the file) and bug triaging. **The triage answer is saved but not applied yet** (under `not_applied` in the file); the experiment runs without triage.
 
 The answers are saved as `experiments/<name>.yaml` and checked with `--dry-run`, which prints the planned runs and the estimated duration. Then you choose: add it to the queue (it runs in the background, also after the terminal is closed, and shows up in the web app), only keep the file, or cancel (deletes the file). After queueing it can follow the log for you; Ctrl-C then stops following, not the experiment. A kept file is queued later with:
 
@@ -265,7 +265,7 @@ What this example runs (with `trials: 3` in `config.yaml`):
 | `no_superc` | top level | no | `false` | `true` turns off SuperC, like `--no-superc`. |
 | `bug_triaging` | top level | no | `[]` | Crash triage tools. `--bug-triaging` overrides it. |
 | `cores_to_use` | top level | no | `cores_to_use` in `config.yaml` | Cores for this experiment, replacing `config.yaml`'s. |
-| `not_applied` | top level | no | none | Ignored. The interactive setup saves its SuperC and triage answers here until they are supported. |
+| `not_applied` | top level | no | none | Ignored. The interactive setup saves its triage answer here until triage is supported. |
 | `groups` | top level | yes | none | List of groups (at least one). |
 | `fuzzers` | group | yes | none | Fuzzers of this group. |
 | `benchmarks` | group | yes | none | Benchmarks of this group (a list of names). |
@@ -397,10 +397,11 @@ Jobs (experiments and post-analyses) go into the same queue as experiments queue
   - **skipped:** its coverage binary did not build.
   - **interrupted:** it started but the experiment stopped.
 - **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
-- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below).
+- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below), and a link to the SuperC report when there is one.
 - **Post-analysis:** queues `post_analysis.py` on a finished experiment:
   - **Statistics report:** the metric to rank by, the baseline fuzzer, and optionally another experiment for the reproducibility section.
   - **Per-configuration coverage:** runtime strategies only. Needed before the "union against best single configuration" table.
+  - **SuperC presence conditions:** runs the SuperC analysis (see below) on the experiment, also one that ran without it.
   - **Crash triage:** only when the experiment built a triage tool.
 
   Below the options, the experiment's jobs are listed with their status and exit code.
@@ -459,6 +460,44 @@ Some analyses are computed, but do not mean what their names suggest for typical
 9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
 
 `python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR [--metric ...] [--html]` does the same without an experiment state (`--html` as `--stats-html`).
+
+### SuperC presence-condition analysis
+
+[SuperC](https://github.com/appleseedlab/superc) parses C with every configuration at once and gives each source line its *presence condition*: the `#if`/`#ifdef` condition under which it is compiled, such as `defined(HAVE_LIBDEBUGINFOD)` or `!defined(_WIN32) && HAVE_MMAP`. `common/superc.py` joins those conditions with the trials' line coverage, to show which conditional code each fuzzer reached. It runs at the end of every experiment unless `no_superc` (or `--no-superc`) turns it off; a failure is logged and does not fail the experiment. On a finished experiment:
+
+```bash
+python3 common/post_analysis.py --state /path/to/experiment-data/EXP_NAME/experiment_state.pkl --superc
+python3 common/superc.py /path/to/experiment-data/EXP_NAME [-o OUT_DIR] [--jobs N] [--timeout SECONDS]   # without a state
+```
+
+How it works:
+
+1. **Once per benchmark build** (copy 0 of each compile-time strategy, not once per trial: the conditions depend only on the source), SuperC runs on every `.c` file of the build's coverage report. The sources are those of that coverage build: the experiment's own copy if it has one (`benchmarks/coverage_<copy>/source`), otherwise copied out of the coverage image `fbpp/benchmark:coverage_<copy>` (object files left out), so the lines match the coverage. Files run in parallel on the experiment's cores, each with a time limit (600 s by default) and its own JVM; a file analysed before is not analysed again.
+2. **Build flags** come from `benchmarks/<name>/superc_flags.txt`, one per line, as the benchmark's build uses them: `-I <dir>` relative to the benchmark's source root (for example `-I bfd` for `/binutils-2.47/bfd`) and `-D NAME[=VALUE]` (for example `-D HAVE_CONFIG_H`, which most builds pass so that their sources include `config.h`). Every benchmark has one; a new benchmark needs one too (without it only the root is an include directory). A missing `-D` shows up as an `#error` in the file's SuperC log (ffmpeg's `libavutil/common.h` needs `-D __STDC_CONSTANT_MACROS`, as SuperC also explores `defined(__cplusplus)`). SuperC runs with `-nostdinc`, so system headers such as `stdio.h` are not read (by design: only the program's own conditions are wanted); the "header not found" lines for them in the logs are expected, also for replacement headers with system names that a build does not use (gnulib's `lib/stdio.h`, ffmpeg's `compat/`, x264's `extras/`).
+3. **For every trial**, each condition gets the lines the coverage build instrumented under it and those the trial covered. Lines are keyed by their full path in the build, so files with the same name in different folders stay apart. Trials under runtime strategies are included, and the copies of a compile-time strategy are combined.
+4. **Per benchmark**, the arms (`fuzzer[strategy]`, as in the statistics report) are compared by the conditions their trials covered together.
+
+Conditions `1` (always compiled) and `0` (compiled in no configuration, such as `#if 0`) are left out of the counts. A condition is *in the build* when the coverage build instrumented at least one of its lines (code under `defined(_WIN32)`, say, is not), and *covered* when a trial executed one.
+
+Outputs:
+
+| File | Contents |
+|---|---|
+| `<report_filestore>/EXP_NAME/superc/index.html` | per benchmark and arm: conditions in the build, covered by the union of the trials and by the median trial, conditional lines covered, and the conditions only one arm covered |
+| `.../superc/pc_summary.csv` | the same as a table |
+| `.../superc/<benchmark>_pc_comparison.csv` | every condition with its instrumented lines, the arms that covered it and their covered lines |
+| `<experiment>/data/<trial>/pc_analysis/pc_coverage_summary.{json,csv}` | every condition of one trial |
+| `<experiment>/superc/<copy>/` | SuperC's trees (`pc/<path>.json`), logs (`logs/<path>.log`), `status.tsv` (file, exit code (124: timed out), seconds), and the files and includes it ran with |
+
+Limits:
+
+- **Code in headers has no condition.** SuperC reports conditions for the lines of the `.c` file it parses, so header code (for example bfd's `coffcode.h`, included by many `.c` files) is not attributed. The report gives these lines, and any other covered lines without a condition, next to the counts.
+- **SuperC's top region ends anywhere.** It often ends at line 1, or before blocks it does report, so the analysis takes it to cover the whole file: every line outside the reported `#if` blocks is top-level code. Only when a conditional directive (outside comments) is in no reported block did SuperC really stop early; the lines from that directive on then have no condition, and the experiment log names the file. On the 12 benchmarks this happens for no file.
+- **SuperC fails on a few files**: 2 of the 2,795 `.c` files of the 12 benchmarks' builds (libpng `pngsimd.c`, a NullPointerException in SuperC; ffmpeg `libavcodec/ccaption_dec.c`, a lexer error). They have exit code 1 in `status.tsv` and no conditions.
+- **A line on the boundary of two blocks** (an `#elif` or `#else` line) belongs to both, as SuperC reports it.
+- **Only `.c` files** of the coverage report are analysed; the conditions are those of copy 0 of each compile-time strategy.
+
+The image is `fbpp/superc_runner:<hash of cfg-analysis/>` (SuperC at a fixed commit), so a change to `cfg-analysis/` builds a new one. It runs as the calling user, so its output can be removed and redone without root.
 
 ### vafuzz coverage
 

@@ -1,0 +1,16 @@
+# Build flags for the SuperC presence-condition analysis (common/superc.py), as the benchmark's
+# build uses them: -I <dir> relative to the source root (/xz-5.2.5 in the coverage build), -D NAME[=VALUE].
+-I .
+-I lib
+-I src/common
+-I src/liblzma/api
+-I src/liblzma/common
+-I src/liblzma/check
+-I src/liblzma/lz
+-I src/liblzma/rangecoder
+-I src/liblzma/lzma
+-I src/liblzma/delta
+-I src/liblzma/simple
+-I src/xz
+-D HAVE_CONFIG_H
+-D TUKLIB_SYMBOL_PREFIX=lzma_

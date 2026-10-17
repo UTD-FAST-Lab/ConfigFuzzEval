@@ -1,0 +1,14 @@
+# Build flags for the SuperC presence-condition analysis (common/superc.py), as the benchmark's
+# build uses them: -I <dir> relative to the source root (/ffmpeg-4.7 in the coverage build), -D NAME[=VALUE].
+-I .
+-I compat/stdbit
+-D HAVE_AV_CONFIG_H
+-D _ISOC11_SOURCE
+-D _FILE_OFFSET_BITS=64
+-D _LARGEFILE_SOURCE
+-D _POSIX_C_SOURCE=200112
+-D _XOPEN_SOURCE=600
+-D PIC
+-D ZLIB_CONST
+# Only stops the #error in libavutil/common.h's C++ branch (SuperC also explores defined(__cplusplus)).
+-D __STDC_CONSTANT_MACROS

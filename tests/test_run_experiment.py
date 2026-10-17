@@ -7,8 +7,9 @@ from run_experiment import run_superc_on_experiments
 from color_logger import get_logger
 
 # Assumes run_superc is working
-@patch('run_experiment.run_superc')
-def test_run_superc_on_experiments(mock_run_superc):
+# SuperC runs once for the whole experiment (common/superc.py), on all the experiment's CPUs
+@patch('superc.analyse_experiment', return_value='/tmp/report-data/test_xml_afl_1/superc/index.html')
+def test_run_superc_on_experiments(mock_analyse):
     logging = get_logger(__name__)
 
     mock_state = {'allow_serial_execution': True,
@@ -147,6 +148,10 @@ def test_run_superc_on_experiments(mock_run_superc):
 
     run_superc_on_experiments(mock_state, logging)
     
-    assert mock_run_superc.called
-    print(f"run_superc was called {mock_run_superc.call_count} times")
+    assert mock_analyse.call_count == 1
+    experiment_path, report_dir, cpus = mock_analyse.call_args[0]
+    assert experiment_path == mock_state["experiment_path"]
+    assert report_dir == "/tmp/report-data/test_xml_afl_1/superc"
+    start, end = mock_state["cores_range"]
+    assert cpus == list(range(start - 1, end + 1))
     

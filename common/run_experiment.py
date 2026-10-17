@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 import argparse
-from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_superc, run_label
+from docker_image_builder import build_base_image, build_fuzzer,build_bug_triager, build_benchmark, run_benchmark,run_triaging, build_runner_image, build_superc, run_label
 from color_logger import get_logger
 from resource_allocation import allocate_resources
 from validation import validate_configuration, validate_fuzzers, validate_benchmarks, validate_ct_strategies, validate_triagers, validate_rt_strategies, validate_runs
@@ -200,83 +200,23 @@ def run_experiments(experiment_state):
 
 
 def run_superc_on_experiments(experiment_state, logging=None):
-    built_benchmarks = experiment_state["built_benchmarks"]
-    experiment_path = experiment_state["experiment_path"]
-    data_storage = os.path.join(experiment_path, "data")
-    os.makedirs(data_storage, exist_ok=True)
-
-    core_range = experiment_state["cores_range"]
-    core_start = core_range[0]
-    core_end = core_range[1]
-    max_workers = core_end - core_start + 1
-    cores = [core for core in range(core_start, core_end + 1)]
-    logging.info(f"Core range: {core_range}, using up to {max_workers} workers for SuperC analysis")
-
-    # --- Collect tasks ---
-    # Every (fuzzer, benchmark copy, trial) that ran; runtime strategies share them.
-    tasks = []
-    for benchmark in built_benchmarks:
-        if benchmark.split("_")[-1] != "0":
-            logging.warning(f"Skipping SuperC analysis for {benchmark} as it does not correspond to config id 0")
-    for fuzzer, _, benchmark, trial_id, tot_cts_count, *_ in trial_tasks(experiment_state):
-        if benchmark.split("_")[-1] == "0":
-            tasks.append((fuzzer, benchmark, trial_id, tot_cts_count))
-    tasks = unique(tasks)
-
-    logging.debug(f"Collected SuperC analysis tasks: {pprint.pformat(tasks)}")
-    # --- Initialize executor ---
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        core_cycle = itertools.cycle(cores)  # Round-robin assignment of cores
-        running = {}  # Map of futures → (task, core_id)
-
-        # Start initial batch
-        for _ in range(min(max_workers, len(tasks))):
-            fuzzer, benchmark, trial_id, tot_cts_count = tasks.pop(0)
-            core_id = next(core_cycle)
-            future = executor.submit(
-                run_superc,
-                fuzzer,
-                benchmark,
-                trial_id,
-                experiment_state["experiment_path"],
-                core_id,
-                data_storage,
-                experiment_state["total_memory_needed_gb"]
-            )
-            running[future] = (fuzzer, benchmark, trial_id, core_id, tot_cts_count)
-            logging.info(f"[START] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
-
-        # As tasks finish, schedule new ones on the freed core
-        while running:
-            for finished_future in as_completed(list(running.keys()), timeout=None):
-                fuzzer, benchmark, trial_id, core_id, tot_cts_count = running.pop(finished_future)
-                try:
-                    success = finished_future.result()
-                    if success:
-                        logging.info(f"[SUCCESS] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
-                    else:
-                        logging.error(f"[FAILURE] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id}")
-                except Exception as e:
-                    logging.error(f"[EXCEPTION] SuperC analysis: {fuzzer} on {benchmark}, trial {trial_id}, core {core_id} -> {e}")
-
-                # Launch next task (reuse freed core)
-                if tasks:
-                    next_fuzzer, next_bench, next_trial, next_tot_cts = tasks.pop(0)
-                    new_future = executor.submit(
-                        run_superc,
-                        next_fuzzer,
-                        next_bench,
-                        next_trial,
-                        experiment_state["experiment_path"],
-                        core_id,  # reuse same core
-                        data_storage,
-                        experiment_state["total_memory_needed_gb"]
-                    )
-                    running[new_future] = (next_fuzzer, next_bench, next_trial, core_id, next_tot_cts)
-                    logging.info(f"[START] SuperC analysis: {next_fuzzer} on {next_bench}, trial {next_trial}, core {core_id}")
-
-                # Break after processing one finished future
-                break
+    """SuperC presence-condition coverage of the experiment's trials (common/superc.py):
+    SuperC once per benchmark build, then every trial, then the arms per benchmark, into
+    <report_filestore>/<experiment>/superc/. Failures are logged; the experiment goes on."""
+    import superc
+    logging = logging or get_logger(__name__)
+    core_start, core_end = experiment_state["cores_range"]
+    # A trial on core c uses CPUs c-1 and c (see resource_allocation): SuperC uses them all.
+    cpus = list(range(max(0, core_start - 1), core_end + 1))
+    report_path = experiment_state.get("report_path") or os.path.join(
+        experiment_state["report_filestore"], os.path.basename(os.path.normpath(experiment_state["experiment_path"])))
+    try:
+        path = superc.analyse_experiment(experiment_state["experiment_path"], os.path.join(report_path, "superc"),
+                                         cpus, memory_gb=3 * len(cpus))
+        if path:
+            logging.info(f"SuperC report written to {path}")
+    except Exception as e:
+        logging.error(f"SuperC analysis failed: {e}")
 
 
 def triage_on_experiments(experiment_state):
@@ -463,7 +403,7 @@ if __name__ == "__main__":
     copies = {}
     for key in unique((r["compiletime"], r["benchmark"]) for r in runs):
         copies[key] = count_ct_configurations(key[0], project_root, key[1], config["random_seed"])
-    estimate = estimate_seconds(runs, copies, config)
+    estimate = estimate_seconds(runs, copies, config, superc=not no_superc)
 
     # The experiment as a file: what experiments/<name>.yaml holds, however it was given.
     experiment = {"experiment_name": experiment_name, "no_superc": no_superc, "bug_triaging": bug_triaging}

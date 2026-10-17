@@ -13,7 +13,7 @@ folder in fuzzers/ with a runtime strategy, see strategies().
 What can run comes from webapp/catalog.py, the same rules the web app and
 validation.validate_runs use; runs are named like statistical_analysis.arm_name.
 
-SuperC and bug triaging are asked and saved under not_applied, but not run yet.
+Bug triaging is asked and saved under not_applied, but not run yet; SuperC is applied.
 """
 
 import os
@@ -277,16 +277,17 @@ def ask_experiment(ui, config):
         for group in groups:
             group["trials"], group["max_total_time"] = trials, time
 
-    ui.say("SuperC and bug triaging are not set up yet: your answers are saved, not run.")
-    superc = ui.confirm("Run the SuperC presence-condition analysis?", default=False)
+    superc = ui.confirm("Run the SuperC presence-condition analysis at the end (which #if conditions "
+                        "the trials covered)?", default=False)
+    ui.say("Bug triaging is not set up yet: your answer is saved, not run.")
     triagers = available_triagers()
     triaging = ui.checkbox("Bug triaging:", [("none", "", True, None)] +
                            [(t, t, False, None) for t in triagers])
     triaging = [t for t in triaging if t]
 
     return {"experiment_name": name, "cores_to_use": cores,
-            "no_superc": True, "bug_triaging": [],
-            "not_applied": {"superc": superc, "bug_triaging": triaging},
+            "no_superc": not superc, "bug_triaging": [],
+            "not_applied": {"bug_triaging": triaging},
             "groups": groups}
 
 

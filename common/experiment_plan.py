@@ -278,9 +278,12 @@ BUILD_MINUTES = {"base_and_runner": 10, "fuzzer": 15, "benchmark": 3, "coverage"
 # experiment (aggregation, statistics), in minutes.
 TRIAL_OVERHEAD_MINUTES = 2
 END_MINUTES = 10
+# SuperC per benchmark build (copy 0 of each compile-time strategy) when it runs: about a
+# minute for objdump's 132 files on 7 cores, more for large benchmarks such as ffmpeg.
+SUPERC_MINUTES = 5
 
 
-def estimate_seconds(runs, copies, config):
+def estimate_seconds(runs, copies, config, superc=False):
     """Rough wall-clock time of an experiment from start to end, in seconds.
 
     runs: from expand_groups; copies: {(compiletime, benchmark): benchmark copies}.
@@ -304,4 +307,5 @@ def estimate_seconds(runs, copies, config):
     cores = [0.0] * max(1, config["cores_to_use"])
     for task in sorted(tasks, reverse=True):
         heapq.heapreplace(cores, cores[0] + task)
-    return build + max(cores) + 60 * END_MINUTES
+    analysis = 60 * SUPERC_MINUTES * len({(r["compiletime"], r["benchmark"]) for r in runs}) if superc else 0
+    return build + max(cores) + analysis + 60 * END_MINUTES

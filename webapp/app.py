@@ -229,8 +229,9 @@ def experiment(name):
     others = [e["name"] for e in exps.list_experiments(config()) if e["name"] != name]
     stats_dir = os.path.join(config()["report_filestore"], name, "statistics")
     stats_files = sorted(os.listdir(stats_dir)) if os.path.isdir(stats_dir) else []
+    superc_report = os.path.isfile(os.path.join(config()["report_filestore"], name, "superc", "index.html"))
     return render_template("experiment.html", name=name, state=state, experiment_text=exp_text,
-                           others=others, stats_files=stats_files,
+                           others=others, stats_files=stats_files, superc_report=superc_report,
                            triagers=(state or {}).get("built_triagers") or [],
                            fuzzers=(state or {}).get("fuzzers") or [])
 
@@ -319,6 +320,8 @@ def api_post(name):
         args.append("--triage"); parts.append("triage")
     if body.get("per_config"):
         args.append("--per-config-coverage"); parts.append("per-configuration coverage")
+    if body.get("superc"):
+        args.append("--superc"); parts.append("SuperC presence conditions")
     if body.get("stats"):
         args.append("--stats"); parts.append("statistics")
         metric = body.get("metric") or "branches"

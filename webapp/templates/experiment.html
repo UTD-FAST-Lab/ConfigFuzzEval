@@ -62,6 +62,12 @@
   </div>
   <iframe class="report" src="/reports/{{ name }}/statistics/index.html" title="Statistics report"></iframe>
   {% endif %}
+  {% if superc_report %}
+  <div class="row" style="margin-top:12px">
+    <a class="btn" href="/reports/{{ name }}/superc/index.html" target="_blank">SuperC presence-condition report</a>
+    <a href="/reports/{{ name }}/superc/pc_summary.csv">pc_summary.csv</a>
+  </div>
+  {% endif %}
 </section>
 
 <section class="tab" id="tab-analyse">
@@ -75,6 +81,7 @@
     </div>
     <div class="chips" style="margin:6px 0 12px">
       <label class="chip"><input type="checkbox" id="pa-perconfig"> per-configuration coverage first <span class="hint">runtime strategies: union vs best configuration (Docker)</span></label>
+      <label class="chip"><input type="checkbox" id="pa-superc"> SuperC presence conditions <span class="hint">which #if conditions the trials covered (Docker)</span></label>
       {% if triagers %}<label class="chip"><input type="checkbox" id="pa-triage"> crash triage <span class="hint">{{ triagers | join(', ') }}</span></label>{% endif %}
     </div>
     <button class="primary" onclick="runPost()" id="pa-btn">Queue analysis</button> <span id="pa-msg" class="small"></span>
@@ -187,6 +194,7 @@ async function runPost() {
   const v = id => document.getElementById(id);
   const body = {stats: v("pa-stats").checked, metric: v("pa-metric").value, baseline: v("pa-baseline").value,
                 compare_to: v("pa-compare").value, per_config: v("pa-perconfig").checked,
+                superc: v("pa-superc").checked,
                 triage: v("pa-triage") ? v("pa-triage").checked : false};
   v("pa-btn").disabled = true;
   const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/post`, body);

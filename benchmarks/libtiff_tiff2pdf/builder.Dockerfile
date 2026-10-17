@@ -49,7 +49,6 @@ COPY rt_grammar.json /
 # analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
 COPY manpage.1 /
 COPY carpetfuzz /carpetfuzz_analysis
-COPY load_src.sh /
 
 CMD ["bash", "-c", "mkdir -p /benchmark_out_dir/lib && \
     cp -a /usr/lib/x86_64-linux-gnu/libwebp*.so* /benchmark_out_dir/lib/ || true && \
@@ -65,5 +64,4 @@ CMD ["bash", "-c", "mkdir -p /benchmark_out_dir/lib && \
     cp /dict /benchmark_out_dir/ && \
     cp /run_target.sh /benchmark_out_dir/ && \
     cp -r /seed /benchmark_out_dir/seed && \
-    cp -r /load_src.sh /benchmark_out_dir/ && \
     cp -r /libtiff/tools/tiff2pdf /benchmark_out_dir/"]

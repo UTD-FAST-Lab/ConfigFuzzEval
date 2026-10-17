@@ -90,9 +90,9 @@ class AskTest(StoresTest):
             self.assertEqual(group["benchmarks"], ["binutils_objdump", "libxml2_xmllint"])
             self.assertEqual((group["compiletime"], group["trials"], group["max_total_time"]), (["default"], 2, 900))
         self.assertEqual(experiment["cores_to_use"], 4)
-        # SuperC and triaging are saved, not applied.
-        self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (True, []))
-        self.assertEqual(experiment["not_applied"], {"superc": True, "bug_triaging": ["afl-collect"]})
+        # SuperC is applied; triaging is saved, not applied.
+        self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (False, []))
+        self.assertEqual(experiment["not_applied"], {"bug_triaging": ["afl-collect"]})
         # zigzag has one engine, so it is not asked.
         self.assertFalse(any("zigzag" in m for m in ui.asked))
 
@@ -114,7 +114,7 @@ class AskTest(StoresTest):
                           carpet["max_total_time"]), (["carpetfuzz"], ["binutils_objdump"], ["default", "maximum"], 1, 3600))
         self.assertEqual((vafuzz["fuzzers"], vafuzz["benchmarks"], vafuzz["trials"], vafuzz["max_total_time"]),
                          (["vafuzz"], ["libxml2_xmllint"], 5, 86400))
-        self.assertEqual(experiment["not_applied"], {"superc": False, "bug_triaging": []})
+        self.assertEqual((experiment["no_superc"], experiment["not_applied"]), (True, {"bug_triaging": []}))
 
     def test_benchmarks_a_choice_cannot_run_are_disabled(self):
         ui = ScriptedUI(["dis1", True, ["carpet"], ["binutils_objdump"], None, None, None, None, False, None])

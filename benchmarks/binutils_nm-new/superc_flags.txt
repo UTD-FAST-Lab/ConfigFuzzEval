@@ -1,0 +1,11 @@
+# Build flags for the SuperC presence-condition analysis (common/superc.py), as the benchmark's
+# build uses them: -I <dir> relative to the source root (/binutils-2.47 in the coverage build), -D NAME[=VALUE].
+-I .
+-I binutils
+-I bfd
+-I include
+-I opcodes
+-I zlib
+-I libctf
+-D HAVE_CONFIG_H
+-D _GNU_SOURCE

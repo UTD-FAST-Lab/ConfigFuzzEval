@@ -563,7 +563,15 @@ def reference_pairs(arms, info, baseline):
 
 
 def found_bugs(experiment_path):
-    """{(fuzzer, benchmark): set of crash keys} from afl-collect's crashes.db files."""
+    """{triager: {(arm, benchmark): set of bugs}} from crash triage
+    (bug-triaging/<triager>/output/*/crashes.db, table Data).
+
+    A bug is a distinct Hash up to its first ".": gdb-exploitable's crash state (the signal and
+    the top 3 program frames, as FuzzBench counts bugs), afl-collect's exploitable major hash
+    (the top frames). The triagers count differently, so they are kept apart. Crashes that did
+    not crash again have no hash and are not counted. Each pooled folder's pool.json names its
+    fuzzer, runtime strategy and benchmark copy; the copies of a compile-time strategy are combined.
+    """
     out = {}
     root = os.path.join(experiment_path, "bug-triaging")
     if not os.path.isdir(root):
@@ -574,25 +582,23 @@ def found_bugs(experiment_path):
             continue
         for pooled in os.listdir(output):
             db = os.path.join(output, pooled, "crashes.db")
-            if not os.path.isfile(db):
+            meta = os.path.join(output, pooled, "pool.json")
+            if not (os.path.isfile(db) and os.path.isfile(meta)):
                 continue
-            match = re.match(r"^(?P<fuzzer>.+?)_(?P<benchmark>cts_.+_\d+)$", pooled)
-            if not match:
-                continue
-            m = CTS_BENCHMARK.match(match.group("benchmark"))
-            key = (match.group("fuzzer"), m.group("benchmark") if m else match.group("benchmark"))
+            with open(meta, encoding="utf-8") as f:
+                info = json.load(f)
+            m = CTS_BENCHMARK.match(info["benchmark"])
+            cts, benchmark = (m.group("cts"), m.group("benchmark")) if m else ("default", info["benchmark"])
+            key = (arm_name(info["fuzzer"], info.get("runtime_strategy", "default"), cts), benchmark)
             try:
                 con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
-                table = con.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchone()[0]
-                cols = [c[1] for c in con.execute(f"PRAGMA table_info({table})")]
-                col = next((c for c in cols if c.lower() == "hash"), None) or \
-                    next((c for c in cols if "class" in c.lower()), cols[0])
-                keys = {r[0] for r in con.execute(f"SELECT {col} FROM {table}")}
+                bugs = {r[0].split(".")[0] for r in con.execute(
+                    "SELECT Hash FROM Data WHERE Hash IS NOT NULL AND Hash != ''")}
                 con.close()
             except Exception as e:
                 logging.warning(f"Cannot read {db}: {e}")
                 continue
-            out.setdefault(key, set()).update(keys)
+            out.setdefault(triager, {}).setdefault(key, set()).update(bugs)
     return out
 
 
@@ -1061,17 +1067,23 @@ def render_html(res, comparison=None):
     # ---- Bugs ----
     w("<h2 id='bugs'>Found bugs</h2>")
     if res["bugs"]:
-        w("<p>Distinct crash keys from crash triage (afl-collect), pooled over a fuzzer's trials. A secondary "
-          "metric only: crashes are sparse and one bug reached through different stacks can count more than "
-          "once. Triage runs per fuzzer, not per runtime strategy, so runtime strategies are not separated.</p>")
-        fz = sorted({f for f, _ in res["bugs"]})
-        rows = []
-        for b in res["benchmarks"]:
-            sets = [res["bugs"].get((f, b), set()) for f in fz]
-            rows.append([e(b)] + [fmt(len(s)) for s in sets] + [fmt(len(set().union(*sets)))])
-        w(table(["Benchmark"] + [e(f) for f in fz] + ["Union"], rows))
+        w("<p>Distinct bugs from crash triage, pooled over an arm's trials. Every crash is replayed under gdb "
+          "with the command line it was found with; crashes that do not crash again are not counted. "
+          "<b>gdb-exploitable</b> counts crashes with the same crash state (signal and top 3 program frames, "
+          "as FuzzBench) as one bug; <b>afl-collect</b> counts distinct major stack hashes of exploitable "
+          "(more frames, so usually more bugs). A secondary metric only: crashes are sparse, and one bug "
+          "reached through different stacks can count more than once.</p>")
+        for triager, bugs in sorted(res["bugs"].items()):
+            fz = sorted({f for f, _ in bugs})
+            rows = []
+            for b in res["benchmarks"]:
+                sets = [bugs.get((f, b), set()) for f in fz]
+                rows.append([e(b)] + [fmt(len(s)) for s in sets] + [fmt(len(set().union(*sets)))])
+            w(f"<h3>{e(triager)}</h3>")
+            w(table(["Benchmark"] + [e(f) for f in fz] + ["Union"], rows))
     else:
-        w("<p>No crash triage results in this experiment (run with --bug-triaging afl-collect).</p>")
+        w("<p>No crash triage results in this experiment (run with --bug-triaging gdb-exploitable "
+          "and/or afl-collect).</p>")
 
     # ---- Reproducibility ----
     if comparison:

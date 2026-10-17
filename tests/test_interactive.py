@@ -79,7 +79,7 @@ class AskTest(StoresTest):
             "4",                                          # cores
             "2", "15m",                                   # trials, time
             True,                                         # superc
-            ["afl-collect"],                              # triaging
+            ["gdb-exploitable"],                          # triaging
         ])
         experiment = ia.ask_experiment(ui, self.config)
         self.assertEqual(ui.answers, [])
@@ -90,9 +90,9 @@ class AskTest(StoresTest):
             self.assertEqual(group["benchmarks"], ["binutils_objdump", "libxml2_xmllint"])
             self.assertEqual((group["compiletime"], group["trials"], group["max_total_time"]), (["default"], 2, 900))
         self.assertEqual(experiment["cores_to_use"], 4)
-        # SuperC is applied; triaging is saved, not applied.
-        self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (False, []))
-        self.assertEqual(experiment["not_applied"], {"bug_triaging": ["afl-collect"]})
+        # SuperC and triage are applied.
+        self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (False, ["gdb-exploitable"]))
+        self.assertNotIn("not_applied", experiment)
         # zigzag has one engine, so it is not asked.
         self.assertFalse(any("zigzag" in m for m in ui.asked))
 
@@ -114,7 +114,7 @@ class AskTest(StoresTest):
                           carpet["max_total_time"]), (["carpetfuzz"], ["binutils_objdump"], ["default", "maximum"], 1, 3600))
         self.assertEqual((vafuzz["fuzzers"], vafuzz["benchmarks"], vafuzz["trials"], vafuzz["max_total_time"]),
                          (["vafuzz"], ["libxml2_xmllint"], 5, 86400))
-        self.assertEqual((experiment["no_superc"], experiment["not_applied"]), (True, {"bug_triaging": []}))
+        self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (True, []))
 
     def test_benchmarks_a_choice_cannot_run_are_disabled(self):
         ui = ScriptedUI(["dis1", True, ["carpet"], ["binutils_objdump"], None, None, None, None, False, None])
@@ -139,7 +139,7 @@ class FileTest(StoresTest):
     def test_saved_file_loads_and_expands(self):
         from experiment_plan import load_experiment_file, expand_groups
         experiment = {"experiment_name": "e", "cores_to_use": 2, "no_superc": True, "bug_triaging": [],
-                      "not_applied": {"superc": True, "bug_triaging": ["afl-collect"]},
+                      "not_applied": {"superc": True},
                       "groups": [{"fuzzers": ["aflplusplus"], "benchmarks": ["xz_xz"], "compiletime": ["default"],
                                   "runtime_strategy": ["random"], "trials": 2, "max_total_time": 900}]}
         path = os.path.join(self.tmp.name, "experiments", "e.yaml")

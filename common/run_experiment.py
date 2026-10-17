@@ -220,90 +220,37 @@ def run_superc_on_experiments(experiment_state, logging=None):
 
 
 def triage_on_experiments(experiment_state):
-    built_benchmarks = experiment_state["built_benchmarks"]
-    coverage_binaries = experiment_state["coverage_binaries"]
-    experiment_path = experiment_state["experiment_path"]
-    data_storage = os.path.join(experiment_path, "data")
-    os.makedirs(data_storage, exist_ok=True)
-
-    # cores = experiment_state["cores_range"]
-    # max_workers = len(cores)
-    # logging.info(f"Detected cores: {cores}, using up to {max_workers} workers")
-
-    core_range = experiment_state["cores_range"]
-    core_start = core_range[0]
-    core_end = core_range[1]
-    max_workers = core_end - core_start + 1
-    cores = [core for core in range(core_start, core_end + 1)]
-    logging.info(f"Core range: {core_range}, using up to {max_workers} workers")
-
-    # --- Collect all triage tasks ---
-    # One per triager and (fuzzer, benchmark copy) that ran, over its trials.
+    """Crash triage of every trial: one task per triager, fuzzer, runtime strategy and benchmark
+    copy, pooling its trials (docker_image_builder.run_triaging), on the experiment's cores."""
+    logging = get_logger(__name__)      # also when called from post_analysis.py
+    core_start, core_end = experiment_state["cores_range"]
+    data_storage = os.path.join(experiment_state["experiment_path"], "data")
     trials_of = {}
-    for fuzzer, _, benchmark, trial_id, *_ in trial_tasks(experiment_state):
-        trials_of[(fuzzer, benchmark)] = max(trials_of.get((fuzzer, benchmark), 0), trial_id + 1)
-    tasks = []
-    for (fuzzer, benchmark), trials in trials_of.items():
-        tot_cts_count = experiment_state["tot_cts"].get(benchmark, 1)
-        for triager in experiment_state["built_triagers"]:
-            tasks.append((triager, fuzzer, benchmark, tot_cts_count, trials))
-
-    # --- Initialize executor ---
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        core_cycle = itertools.cycle(cores)  # Round-robin core assignment
-        running = {}  # Map futures → (task, core_id)
-
-        # Start initial batch
-        for _ in range(min(max_workers, len(tasks))):
-            triager, fuzzer, benchmark, tot_cts_count, trials = tasks.pop(0)
-            core_id = next(core_cycle)
-            future = executor.submit(
-                run_triaging,
-                triager,
-                fuzzer,
-                benchmark,
-                trials,
-                experiment_state["experiment_path"],
-                core_id,
-                data_storage,
-                experiment_state["total_memory_needed_gb"]
-            )
-            running[future] = (triager, fuzzer, benchmark, core_id, tot_cts_count)
-            logging.info(f"[START] Triaging {fuzzer} on {benchmark}, core {core_id} using {triager}")
-
-        # As tasks finish, schedule new ones on the freed core
-        while running:
-            for finished_future in as_completed(list(running.keys()), timeout=None):
-                triager, fuzzer, benchmark, core_id, tot_cts_count = running.pop(finished_future)
-                try:
-                    success = finished_future.result()
-                    if success:
-                        logging.info(f"[SUCCESS] Completed Triaging {fuzzer} on {benchmark}, core {core_id} using {triager}, total cts {tot_cts_count}")
-                    else:
-                        logging.error(f"[FAILURE] Failed Triaging {fuzzer} on {benchmark}, core {core_id} using {triager}, total cts {tot_cts_count}")
-                except Exception as e:
-                    logging.error(f"[EXCEPTION] Triaging {triager} with {fuzzer} on {benchmark}, core {core_id} -> {e}")
-
-                # Launch next task on freed core
-                if tasks:
-                    next_triager, next_fuzzer, next_bench, next_tot_cts, next_trials = tasks.pop(0)
-                    new_future = executor.submit(
-                        run_triaging,
-                        next_triager,
-                        next_fuzzer,
-                        next_bench,
-                        next_trials,
-                        experiment_state["experiment_path"],
-                        core_id,  # reuse same core
-                        data_storage,
-                        experiment_state["total_memory_needed_gb"]
-                    )
-                    running[new_future] = (next_triager, next_fuzzer, next_bench, core_id, next_tot_cts)
-                    logging.info(f"[START] Triaging {next_fuzzer} on {next_bench}, core {core_id} using {next_triager}")
-
-                # Break after processing one finished future
-                break
-
+    for fuzzer, rts, benchmark, trial_id, *_ in trial_tasks(experiment_state):
+        trials_of.setdefault((fuzzer, rts, benchmark), set()).add(trial_id)
+    tasks = [(triager, fuzzer, rts, benchmark, trials) for (fuzzer, rts, benchmark), trials in sorted(trials_of.items())
+             for triager in experiment_state["built_triagers"]]
+    free_cores = list(range(core_start, core_end + 1))
+    logging.info(f"Triaging {len(tasks)} task(s) on cores {core_start}-{core_end}")
+    with ThreadPoolExecutor(max_workers=len(free_cores)) as executor:
+        running = {}
+        while tasks or running:
+            while tasks and free_cores:
+                triager, fuzzer, rts, benchmark, trials = tasks.pop(0)
+                core_id = free_cores.pop(0)
+                future = executor.submit(run_triaging, triager, fuzzer, rts, benchmark, trials,
+                                         experiment_state["experiment_path"], core_id, data_storage,
+                                         experiment_state["total_memory_needed_gb"])
+                running[future] = (triager, run_label(fuzzer, rts), benchmark, core_id)
+                logging.info(f"[START] Triaging {run_label(fuzzer, rts)} on {benchmark} with {triager}, core {core_id}")
+            done = next(as_completed(list(running)))
+            triager, label, benchmark, core_id = running.pop(done)
+            free_cores.append(core_id)
+            try:
+                status = "SUCCESS" if done.result() else "FAILURE"
+            except Exception as e:
+                status = f"EXCEPTION {e}"
+            logging.info(f"[{status}] Triaging {label} on {benchmark} with {triager}")
 
 
 if __name__ == "__main__":
@@ -832,8 +779,12 @@ if __name__ == "__main__":
     if experiment_state.get("built_triagers"):
         logging.info("Starting triaging...")
         events.emit(experiment_path, "phase", phase="triage")
-        triage_on_experiments(experiment_state)
-        logging.info("Triaging completed.")
+        # A failure here does not fail the experiment: the statistics and the clean-up still run.
+        try:
+            triage_on_experiments(experiment_state)
+            logging.info("Triaging completed.")
+        except Exception as e:
+            logging.error(f"Triaging failed: {e} (rerun with post_analysis.py --triage)")
 
     events.emit(experiment_path, "phase", phase="statistics")
     # Statistics report (the same as post_analysis.py --stats); a failure here does not fail the experiment.

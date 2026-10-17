@@ -104,7 +104,7 @@ Flags:
 - `--benchmarks`: list of benchmarks to run. Each name must match a folder name in `benchmarks/` (for example `libxml2_xmllint`). Required unless `--experiment` is given.
 - `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, manual, maximum, minimum, pairwise, randomsmart). Optional; if left out, only `default` is used.
 - `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, pairwise, random, mostenabled, mostdisabled, diversity). Optional; if left out, only `default` is used. See "Runtime strategies" below.
-- `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (afl-collect). Optional; if left out, no triage is run.
+- `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (gdb-exploitable, afl-collect; see "Crash triage" below). Optional; if left out, no triage is run.
 - `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment (see "SuperC presence-condition analysis" below).
 - `--experiment FILE` (or `--groups FILE`): optional. Reads what to run from an experiment file instead of `--fuzzers`, `--benchmarks`, `--compiletime` and `--runtime-strategy` (giving any of those with it is an error). See "Experiment files" below.
 - `--dry-run`: optional. Checks the configuration, the experiment and every name, prints the planned runs, builds, trials and the estimated duration, and exits. Nothing is built, copied, queued or run, so it is safe to use while another experiment is running.
@@ -137,7 +137,7 @@ It asks, one question at a time (arrow keys to move, space to tick, enter to con
    Runtime strategies come from `runtime/` and their engines from the fuzzers that support them (`runtime/supported_fuzzers.json`), so a new one is offered without changing the setup.
 4. The benchmarks (once, or for each fuzzer), each followed by its compile-time strategies (`default` ticked). Benchmarks a choice cannot run on (a missing grammar, dictionary or CarpetFuzz file) are shown greyed out with the reason. The rules are the web app's (`webapp/catalog.py`), which match the checks of `run_experiment.py`.
 5. Cores (saved as `cores_to_use` in the file), trials and fuzzing time per trial (`900`, `15m`, `24h`, `1h30m`). With different benchmarks per fuzzer, trials and time can also differ per fuzzer.
-6. SuperC (applied: `no_superc` in the file) and bug triaging. **The triage answer is saved but not applied yet** (under `not_applied` in the file); the experiment runs without triage.
+6. SuperC (`no_superc` in the file) and bug triaging (`bug_triaging`).
 
 The answers are saved as `experiments/<name>.yaml` and checked with `--dry-run`, which prints the planned runs and the estimated duration. Then you choose: add it to the queue (it runs in the background, also after the terminal is closed, and shows up in the web app), only keep the file, or cancel (deletes the file). After queueing it can follow the log for you; Ctrl-C then stops following, not the experiment. A kept file is queued later with:
 
@@ -187,7 +187,7 @@ python3 common/run_experiment.py \
   --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_pngimage libtiff_tiff2pdf libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
   --compiletime default manual maximum minimum pairwise randomsmart \
   --runtime-strategy default pairwise random mostenabled mostdisabled diversity \
-  --bug-triaging afl-collect
+  --bug-triaging gdb-exploitable
 ```
 
 ### Experiment files
@@ -217,7 +217,7 @@ no_superc: true
 
 # Optional, default: no triage. Crash triage tools from bug-triaging/.
 # --bug-triaging on the command line overrides this list.
-bug_triaging: [afl-collect]
+bug_triaging: [gdb-exploitable]
 
 # Required: one or more groups. Within a group, every fuzzer runs on every benchmark
 # with every compile-time and runtime strategy of that group. The experiment is all
@@ -265,7 +265,7 @@ What this example runs (with `trials: 3` in `config.yaml`):
 | `no_superc` | top level | no | `false` | `true` turns off SuperC, like `--no-superc`. |
 | `bug_triaging` | top level | no | `[]` | Crash triage tools. `--bug-triaging` overrides it. |
 | `cores_to_use` | top level | no | `cores_to_use` in `config.yaml` | Cores for this experiment, replacing `config.yaml`'s. |
-| `not_applied` | top level | no | none | Ignored. The interactive setup saves its triage answer here until triage is supported. |
+| `not_applied` | top level | no | none | Ignored (written by earlier versions of the interactive setup). |
 | `groups` | top level | yes | none | List of groups (at least one). |
 | `fuzzers` | group | yes | none | Fuzzers of this group. |
 | `benchmarks` | group | yes | none | Benchmarks of this group (a list of names). |
@@ -425,7 +425,7 @@ At the end of every experiment, `common/statistical_analysis.py` compares the ex
 
 - **Per benchmark:** median, minimum, maximum, IQR and CV of the final coverage, plotted as box plots. Two-sided Mann-Whitney U with Vargha-Delaney A12 against the default runtime strategy and the baseline fuzzer. Kruskal-Wallis with Dunn's test. Pairwise p-value and A12 heatmaps. The one-sided better-than matrix with wins. Unique, pairwise-unique and Jaccard coverage, and an UpSet plot.
 - **Across benchmarks:** average rank, average normalized score, first places, unique-coverage rankings, Friedman with a Nemenyi critical-difference diagram, and correlations between rankings. Each is given for all arms, for each fuzzer's runtime strategies, and for the fuzzers under their default strategy.
-- **Other tables:** relative coverage, benchmark properties, found bugs (from afl-collect), and minimum achievable p-values with low-sample flags.
+- **Other tables:** relative coverage, benchmark properties, found bugs (from crash triage, per arm), and minimum achievable p-values with low-sample flags.
 
 Every pairwise table uses Holm correction. Coverage comes from each trial's `coverage/report.txt`, and covered sets from `coverage/report.json`. To run the report on a finished experiment:
 
@@ -456,7 +456,7 @@ Some analyses are computed, but do not mean what their names suggest for typical
 3. **Correlations between rankings are computed over the arms**, usually 3–5 values. Their p-values tell nothing at that size, and the report gives exact permutation p-values to make that visible. Read ρ and τ as descriptions, not tests.
 4. **Unique coverage rewards variance.** It is computed on the union of all of an arm's trials. An arm whose trials differ a lot (as multi-configuration runtime strategies do) collects a large union even when its typical trial is weak. On objdump, `random` had the lowest median (1,984 branches) and close to the largest union (4,632). Unique coverage is also only comparable between arms with the same number of trials (see the low-sample flag).
 5. **"Union against best single configuration" is not a comparison with a single configuration.** A runtime strategy fuzzes its configurations one after another, each starting from the previous corpus. A configuration's report only replays the inputs first found under it, with its own options. Its "best single" value is therefore that configuration's share of the trial, not what it would reach running alone for the whole time. To compare with single configurations, run them as separate experiments. Also, with 300 s and `min_config_time` 60 s, a trial fuzzes at most 5 configurations, and those without new inputs are left out.
-6. **Found bugs cannot be split by runtime strategy.** Crash triage pools the crashes of a fuzzer's trials per benchmark. `run_triaging` also reads only `<fuzzer>_<benchmark>_trial_*` folders, so trials under a runtime strategy (`<fuzzer>_rts_<strategy>_...`) are not triaged at all. Until that is changed, the table counts the default runtime strategy only. Treat it as a secondary metric in any case: crashes are sparse, and one bug reached through different stacks can count more than once.
+6. **Found bugs are a secondary metric.** Crashes are sparse, and one bug reached through different stacks can count more than once (see "Crash triage").
 7. **The benchmark properties table has no input format.** Nothing in `benchmarks/<name>/` records it, so the column is left out.
 8. **Reproducibility and sensitivity need a second experiment.** `--compare-to` gives the rank correlation and the significance changes against another experiment. The other experiment can be a repeat with the same file (reproducibility), or a run with one setting changed, such as seeds, dictionary or a longer time (sensitivity). Both experiments need the same arms and benchmarks.
 9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
@@ -500,6 +500,33 @@ Limits:
 - **Only `.c` files** of the coverage report are analysed; the conditions are those of copy 0 of each compile-time strategy.
 
 The image is `fbpp/superc_runner:<hash of cfg-analysis/>` (SuperC at a fixed commit), so a change to `cfg-analysis/` builds a new one. It runs as the calling user, so its output can be removed and redone without root.
+
+### Crash triage
+
+`bug_triaging: [gdb-exploitable]` (or `--bug-triaging gdb-exploitable afl-collect`, ...) triages every trial's crashes at the end of the experiment; on a finished experiment that built the triagers, `post_analysis.py --state ... --triage` does it again. There are two triagers; both use gdb and the [exploitable](https://github.com/jfoote/exploitable) gdb plugin, and both replay each crash with the command line it was found with (`bug-triaging/crash_commands.py`, below). They differ in what counts as one bug:
+
+| Triager | Tool | One bug is |
+|---|---|---|
+| `gdb-exploitable` | `triage.py`: gdb + exploitable at a fixed commit | the same crash state: the signal and the top 3 stack frames in the program (frames in libc and other libraries are skipped), as FuzzBench counts bugs |
+| `afl-collect` | [afl-collect](https://github.com/rc0r/afl-utils) (afl-utils at a fixed commit), with its exploitable copy patched for gdb 12 | the same exploitable major hash (more frames, so usually more bugs: 4 instead of 1 on the 24-hour xmllint crashes) |
+
+afl-collect replays every crash of a folder with one command, written into a gdb script and run through a shell, which changes fuzzed arguments (bytes that are not text, spaces, empty arguments) and turns every `@@` into the crash. So its target is `bug-triaging/afl-collect/launcher.py @@`, which looks each crash's command line up and replaces itself with the program and its exact arguments; gdb follows the exec, so afl-collect classifies the program's crash. On the 38 crashes of the 24-hour ZigZagFuzz runs, afl-collect without the launcher lost 13 (non-text arguments) and with it handled all 38.
+
+- **Each crash is replayed with the command line it was found with**, on the trial's coverage build, under gdb, without a shell, so fuzzed arguments reach the program byte for byte. Fuzzers that change the command line save it differently, and `crash_commands.py` reads it as the fuzzer's `coverage.py` does:
+
+  | Fuzzer | Command line of a crash |
+  |---|---|
+  | aflplusplus, libafl | the benchmark's `run_target.sh` |
+  | zigzagfuzz | `default/crashes_argvs/id:<N>`, the full argv |
+  | carpetfuzz, prophetfuzz | the `argv:<N>` in the crash's name, a line of the ranked commands |
+  | vafuzz | `default/crashes_argvs/id:<N>_<k>`, every configuration it crashed under (tried in turn) |
+  | configfuzz | the options encoded in the input, decoded by ConfigFuzz's printer |
+
+  A runtime-strategy trial's crashes (`config_<i>/default/crashes/`) run with the configuration they were found under. Replayed with the benchmark's fixed command line instead, none of the 38 crashes of the 24-hour ZigZagFuzz runs on objdump and xmllint crashed again; with their own argv, 37 did.
+- **Classification and bugs:** exploitable's classification (EXPLOITABLE, PROBABLY_NOT_EXPLOITABLE, ...) is kept with every crash. gdb-exploitable records a crash that does not crash again, or runs longer than 30 s, as `NOT_REPRODUCED` or `TIMEOUT`; afl-collect drops it (`-r`). Neither is counted.
+- **Results** are pooled per fuzzer, runtime strategy and benchmark copy, in `<experiment>/bug-triaging/<triager>/output/<run label>_<copy>/`: `crashes.db` (afl-collect's table `Data` for both: every crash with its classification and bug key in `Hash`), `pool.json` and a log per trial. gdb-exploitable adds, in `User_Comment`, the command, configuration, signal and crash state, and `bugs/<key>/` with the first crash of every bug (`input`, `command.txt`, the exact `argv`, `crash_state.txt`, `gdb.txt`); afl-collect adds `collection/` with the crashes it kept. The statistics report counts the bugs per arm (`fuzzer[strategy]`) and benchmark, one table per triager.
+
+Triage runs as root in its container, to read the fuzzers' root-owned output (mounted read-only), and gives its results to the user who started it.
 
 ### vafuzz coverage
 

@@ -9,7 +9,7 @@ runtime strategy runs, and the experiment is the union of its groups:
 
     experiment_name: my_experiment       # optional if --experiment-name is given
     no_superc: true                      # optional, default false
-    bug_triaging: [afl-collect]          # optional, default none
+    bug_triaging: [gdb-exploitable]      # optional, default none
     cores_to_use: 6                      # optional, default: cores_to_use in --config
     not_applied: {...}                   # optional, ignored: answers saved by the
                                          # interactive setup that are not applied yet

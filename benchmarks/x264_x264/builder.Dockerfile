@@ -24,7 +24,12 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y nasm yasm make cmake flex bison
-RUN git clone https://code.videolan.org/videolan/x264.git
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources x264.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://code.videolan.org/videolan/x264.git || \
+    (rm -rf /x264 && mkdir -p /x264 && \
+     tar -xJf /fbpp_sources/x264.tar.xz -C /x264 --strip-components=1)
 WORKDIR /x264
 COPY build.sh .
 RUN bash build.sh

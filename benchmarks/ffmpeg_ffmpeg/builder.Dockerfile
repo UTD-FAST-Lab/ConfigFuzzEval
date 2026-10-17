@@ -35,7 +35,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
-RUN  git clone --depth 1 https://github.com/FFmpeg/FFmpeg.git /ffmpeg-4.7
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources FFmpeg.tar.xz /fbpp_sources/
+RUN timeout 900 git clone --depth 1 https://github.com/FFmpeg/FFmpeg.git /ffmpeg-4.7 || \
+    (rm -rf /ffmpeg-4.7 && mkdir -p /ffmpeg-4.7 && \
+     tar -xJf /fbpp_sources/FFmpeg.tar.xz -C /ffmpeg-4.7 --strip-components=1)
 WORKDIR /ffmpeg-4.7
 COPY build.sh .
 RUN bash build.sh || true

@@ -40,7 +40,12 @@ RUN apt-get update && apt-get install -y \
     # apt install ./automake_1.16.5-1.3_all.deb
 
 RUN apt-get install -y automake
-RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /libxml2
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources libxml2.tar.xz /fbpp_sources/
+RUN timeout 900 git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /libxml2 || \
+    (rm -rf /libxml2 && mkdir -p /libxml2 && \
+     tar -xJf /fbpp_sources/libxml2.tar.xz -C /libxml2 --strip-components=1)
 WORKDIR /libxml2
 COPY build.sh .
 

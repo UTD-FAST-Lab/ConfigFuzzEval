@@ -29,7 +29,12 @@ ARG CFLAGS=""
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev
 
-RUN git clone https://github.com/pnggroup/libpng.git /libpng
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources libpng.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://github.com/pnggroup/libpng.git /libpng || \
+    (rm -rf /libpng && mkdir -p /libpng && \
+     tar -xJf /fbpp_sources/libpng.tar.xz -C /libpng --strip-components=1)
 
 WORKDIR /libpng
 

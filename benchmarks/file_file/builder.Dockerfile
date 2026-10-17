@@ -29,7 +29,12 @@ ARG CFLAGS=""
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     build-essential make autoconf libtool automake zlib1g zlib1g-dev
 
-RUN git clone https://github.com/file/file.git /file
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources file.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://github.com/file/file.git /file || \
+    (rm -rf /file && mkdir -p /file && \
+     tar -xJf /fbpp_sources/file.tar.xz -C /file --strip-components=1)
 WORKDIR /file
 
 

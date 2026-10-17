@@ -170,6 +170,8 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                     "-t", f"fbpp/benchmark:{benchmark_pair_name}",
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
+                    # Offline copies of the sources the Dockerfiles download (COPY --from=sources)
+                    "--build-context", f"sources={os.path.join(project_root, 'benchmarks', 'sources')}",
                     "--build-arg", "parent_image=fbpp/base",
                         "--build-arg", "CC=clang",
                         "--build-arg", "CXX=clang++",
@@ -203,6 +205,8 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                     "-t", f"fbpp/benchmark:{benchmark_pair_name}",
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
+                    # Offline copies of the sources the Dockerfiles download (COPY --from=sources)
+                    "--build-context", f"sources={os.path.join(project_root, 'benchmarks', 'sources')}",
                     "--build-arg", f"parent_image=fbpp/fuzzer:{fuzzer}",
                     "--no-cache"
                 ]

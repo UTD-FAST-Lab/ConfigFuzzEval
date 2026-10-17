@@ -27,7 +27,12 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
-RUN wget  https://ftp.gnu.org/gnu/bison/bison-3.8.tar.xz
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources bison-3.8.tar.xz /fbpp_sources/
+RUN (wget --tries=3 --timeout=60 https://ftp.gnu.org/gnu/bison/bison-3.8.tar.xz && \
+     echo "1e0a14a8bf52d878e500c33d291026b9ebe969c27b3998d4b4285ab6dbce4527  bison-3.8.tar.xz" | sha256sum -c) || \
+    cp -f /fbpp_sources/bison-3.8.tar.xz .
 RUN tar -xf bison-3.8.tar.xz
 WORKDIR /bison-3.8
 

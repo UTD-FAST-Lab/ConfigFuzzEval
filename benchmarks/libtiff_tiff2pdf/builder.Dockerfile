@@ -32,7 +32,12 @@ RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
     zlib1g-dev libdeflate-dev liblerc-dev liblzma-dev \
     libjbig-dev libwebp-dev libjpeg-dev libzstd-dev && \
     rm -rf /var/lib/apt/lists/*
-RUN git clone https://gitlab.com/libtiff/libtiff.git /libtiff
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources libtiff.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://gitlab.com/libtiff/libtiff.git /libtiff || \
+    (rm -rf /libtiff && mkdir -p /libtiff && \
+     tar -xJf /fbpp_sources/libtiff.tar.xz -C /libtiff --strip-components=1)
 WORKDIR /libtiff
 COPY build.sh .
 RUN bash build.sh || true

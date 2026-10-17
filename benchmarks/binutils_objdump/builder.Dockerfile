@@ -24,7 +24,12 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
-RUN  wget https://ftp.gnu.org/gnu/binutils/binutils-2.47.tar.xz
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources binutils-2.47.tar.xz /fbpp_sources/
+RUN (wget --tries=3 --timeout=60 https://ftp.gnu.org/gnu/binutils/binutils-2.47.tar.xz && \
+     echo "154ab23b60070e8f27013c22977f1129425d67d1e8acd6e13010e617811e4cff  binutils-2.47.tar.xz" | sha256sum -c) || \
+    cp -f /fbpp_sources/binutils-2.47.tar.xz .
 RUN tar -xf binutils-2.47.tar.xz
 WORKDIR /binutils-2.47
 COPY build.sh .

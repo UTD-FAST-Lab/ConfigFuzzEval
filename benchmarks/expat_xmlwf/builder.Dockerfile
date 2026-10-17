@@ -31,9 +31,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zlib1g-dev liblzma-dev libbsd-dev
 
 # Build requires automake 1.16.3
-RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
+# The downloads below fall back to the copies in benchmarks/sources/ if they fail
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources automake_1.16.5-1.3_all.deb libexpat.tar.xz /fbpp_sources/
+RUN ((curl -fLO --retry 3 --max-time 300 http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
+      echo "59e3890fc8407bcf8ccc9f709d6513156346d5c942e8c624dc90435e58f6f978  automake_1.16.5-1.3_all.deb" | sha256sum -c) || \
+     cp -f /fbpp_sources/automake_1.16.5-1.3_all.deb .) && \
     apt install ./automake_1.16.5-1.3_all.deb
-RUN git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat
+RUN timeout 900 git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat || \
+    (rm -rf /libexpat && mkdir -p /libexpat && \
+     tar -xJf /fbpp_sources/libexpat.tar.xz -C /libexpat --strip-components=1)
 WORKDIR /libexpat/expat
 COPY build.sh .
 

@@ -32,9 +32,14 @@
         rm -rf /var/lib/apt/lists/*
     
     # Clone PCRE2 and initialize submodules (needed for SLJIT)
-    RUN git clone https://github.com/PCRE2Project/pcre2.git /pcre2 && \
-        cd /pcre2 && \
-        git submodule update --init --recursive
+    # The download below falls back to the copy in benchmarks/sources/ if it fails
+    # (the `sources` build context, passed by common/docker_image_builder.py).
+    COPY --from=sources pcre2.tar.xz /fbpp_sources/
+    RUN (timeout 900 git clone https://github.com/PCRE2Project/pcre2.git /pcre2 && \
+         cd /pcre2 && \
+         timeout 900 git submodule update --init --recursive) || \
+        (rm -rf /pcre2 && mkdir -p /pcre2 && \
+         tar -xJf /fbpp_sources/pcre2.tar.xz -C /pcre2 --strip-components=1)
     
     WORKDIR /pcre2
     

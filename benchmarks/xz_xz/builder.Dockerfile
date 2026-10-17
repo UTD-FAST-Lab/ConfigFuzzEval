@@ -24,7 +24,13 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y make cmake flex bison
-RUN  wget https://tukaani.org/xz/xz-5.2.5.tar.gz && tar -xzf xz-5.2.5.tar.gz
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources xz-5.2.5.tar.gz /fbpp_sources/
+RUN ((wget --tries=3 --timeout=60 https://tukaani.org/xz/xz-5.2.5.tar.gz && \
+      echo "f6f4910fd033078738bd82bfba4f49219d03b17eb0794eb91efbae419f4aba10  xz-5.2.5.tar.gz" | sha256sum -c) || \
+     cp -f /fbpp_sources/xz-5.2.5.tar.gz .) && \
+    tar -xzf xz-5.2.5.tar.gz
 WORKDIR /xz-5.2.5
 COPY build.sh .
 RUN bash build.sh

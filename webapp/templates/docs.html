@@ -71,7 +71,7 @@ CMD ["bash", "-c", "cp -r /&lt;name&gt; /fuzzer_output/"]</code></pre>
   <tr><td><code>/fuzzer</code></td><td>the folder your image copied out</td></tr>
   <tr><td><code>/benchmark</code></td><td>the benchmark built with your compiler: the binary, <code>run_target.sh</code>, <code>seed/</code>, <code>dict</code>, grammars, …</td></tr>
   <tr><td><code>$OUT</code></td><td><code>/fuzzer_output</code>, the trial's folder (write everything here)</td></tr>
-  <tr><td><code>$RUNTIME</code></td><td>seconds to fuzz (the trial's time divided by the number of compile-time copies)</td></tr>
+  <tr><td><code>$RUNTIME</code></td><td>seconds to fuzz (the trial's time divided by the number of compile-time copies); <b>0 in continuous mode</b>: fuzz until the container is stopped</td></tr>
   <tr><td><code>$RUN_TARGET</code></td><td>the contents of <code>/benchmark/run_target.sh</code>, for example <code>/benchmark/pcre2test @@</code>; <code>@@</code> is the input file</td></tr>
   <tr><td><code>$SEED_DIR</code></td><td>only under a runtime strategy: the seeds to start from (the previous configuration's corpus)</td></tr>
   </tbody>
@@ -81,6 +81,8 @@ export AFL_IGNORE_SEED_PROBLEMS=1
 /fuzzer/afl-fuzz -i ${SEED_DIR:-/benchmark/seed} -o $OUT -V $RUNTIME $RUN_TARGET</code></pre>
 <ul>
   <li>Stop after <code>$RUNTIME</code> seconds. The container is killed after <code>$RUNTIME</code> + 600 s and the trial counts as failed.</li>
+  <li><b>When <code>$RUNTIME</code> is 0 or unset, run without a time limit</b> (continuous mode stops the container itself). Every <code>run.sh</code> here starts with
+    <code>LIMIT=""; [ "${RUNTIME:-0}" -gt 0 ] 2&gt;/dev/null &amp;&amp; LIMIT="-V $RUNTIME"</code> and passes <code>$LIMIT</code> where it passed <code>-V $RUNTIME</code>; anything else derived from the time (carpetfuzz's ranking budget) needs a fixed value then. In continuous mode the repository's <code>run.sh</code> is mounted over the one in the fuzzer image, so this works without rebuilding the image, and <code>AFL_NO_AFFINITY=1</code> is set because Docker already pins the container to its CPU.</li>
   <li>Write the corpus under <code>$OUT</code>, and crashes to <code>$OUT/default/crashes/</code> if crash triage should find them (AFL++ layout).</li>
   <li>To support runtime strategies, take seeds from <code>${SEED_DIR:-/benchmark/seed}</code> and add the fuzzer to <code>runtime/supported_fuzzers.json</code> with the folder its corpus is in (below).</li>
 </ul>
@@ -93,6 +95,7 @@ export AFL_IGNORE_SEED_PROBLEMS=1
   <li>write <code>$OUT/coverage/report.json</code> with <code>llvm-cov export &lt;binary&gt; -instr-profile=… -format=lcov</code> (LCOV, despite the name) and <code>$OUT/coverage/report.txt</code> with <code>llvm-cov report &lt;binary&gt; -instr-profile=…</code>. The binary is the first word of <code>$RUN_TARGET</code>.</li>
 </ol>
 <p>The statistics report reads both files, aggregation copies <code>report.json</code> to <code>lcov_results/</code>, and SuperC reads that copy. Start from <code>fuzzers/aflplusplus/coverage.py</code>; if your fuzzer changes the command line per input (as zigzagfuzz and vafuzz do), replay each input with the arguments it was found with.</p>
+<div class="note"><b>Continuous mode runs the same <code>coverage.py</code> on part of the corpus.</b> Every round, <code>runtime/continuous_coverage.py</code> copies only the inputs found since the last round into a scratch <code>$OUT</code> (<code>$OUT/default/queue/</code>), together with <code>default/queue_argvs/</code> and the regular files at the top of the trial's output (such as carpetfuzz's <code>ranked_stubs.txt</code>), runs <code>coverage.py</code> on it and merges its <code>merged.profdata</code> into the trial's cumulative profile. So <code>coverage.py</code> must work on any subset of the queue, and must read nothing else from <code>$OUT</code> than those; a fuzzer that needs another side file must add its folder to <code>SIDE_DIRS</code> in that script.</div>
 
 <h3>Registering optional abilities</h3>
 <table>

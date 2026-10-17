@@ -12,6 +12,16 @@ The form writes an experiment file (right); you can edit it directly. Preview ru
       <label class="field" style="flex:1"><span>Experiment name</span>
         <input type="text" id="name" placeholder="e.g. rts_pcre2_5x1h" autocomplete="off"></label>
     </div>
+    <div class="field"><span>Mode</span><div class="chips" id="mode">
+      <label class="chip on" title="Every trial fuzzes for a fixed time, then its coverage is measured"><input type="radio" name="mode" value="evaluation" checked> evaluation <span class="hint">fixed time per trial</span></label>
+      <label class="chip" title="Every trial fuzzes until the campaign stops; coverage and the analyses are updated in rounds"><input type="radio" name="mode" value="continuous"> continuous <span class="hint">fuzz until stopped, coverage in rounds</span></label>
+    </div></div>
+    <div class="row" id="continuous-fields" hidden>
+      <label class="field"><span>Coverage round every (minutes)</span><input type="number" min="1" id="c-interval" placeholder="60" style="width:150px"></label>
+      <label class="field"><span>Coverage cores</span><input type="number" min="1" id="c-cores" placeholder="1" style="width:110px"></label>
+      <label class="field"><span>Stop after (hours)</span><input type="number" min="1" step="any" id="c-duration" placeholder="until stopped" style="width:140px"></label>
+    </div>
+    <p class="small muted" id="continuous-note" hidden>Every trial (and every compile-time build) is an instance that fuzzes without a time limit on its own core, so the experiment needs a core per instance plus the coverage cores. Runtime strategies move to their next configuration at every round. Stop it from its page; a last round then takes every remaining input.</p>
     <div class="field"><span>Crash triage</span><div class="chips" id="triage"></div></div>
     <label class="chip" id="superc-chip"><input type="checkbox" id="superc"> run SuperC presence-condition analysis</label>
   </div>
@@ -90,7 +100,7 @@ function renderGroups() {
       <div class="field"><span>Runtime strategies</span><div class="chips" data-k="runtime_strategy"></div></div>
       <div class="row">
         <label class="field"><span>Trials</span><input type="number" min="1" data-n="trials" placeholder="${DEFAULTS.trials} (config)" style="width:130px"></label>
-        <label class="field"><span>Fuzzing time per trial (s)</span><input type="number" min="1" data-n="max_total_time" placeholder="${DEFAULTS.max_total_time} (config)" style="width:170px"></label>
+        <label class="field" data-evaluation-only ${isContinuous() ? "hidden" : ""}><span>Fuzzing time per trial (s)</span><input type="number" min="1" data-n="max_total_time" placeholder="${DEFAULTS.max_total_time} (config)" style="width:170px"></label>
         <span class="small muted" data-cost></span>
       </div>
       <div data-warn></div>`;
@@ -125,6 +135,10 @@ function updateWarnings(div, g) {
     `<div class="warnbox"><b>These runs cannot run</b> (the dry run will refuse them):<br>${list.map(esc).join("<br>")}</div>` : "";
   const trials = +(g.trials || DEFAULTS.trials), time = +(g.max_total_time || DEFAULTS.max_total_time);
   const runs = g.fuzzers.length * g.benchmarks.length * g.compiletime.length * g.runtime_strategy.length;
+  if (isContinuous()) {
+    div.querySelector("[data-cost]").textContent = runs ? `${runs * trials} instance(s), more if a compile-time strategy makes several builds (Preview counts them)` : "";
+    return;
+  }
   div.querySelector("[data-cost]").textContent = runs ?
     `${runs} run(s) × ${trials} trial(s) = ${(runs * trials * time / 3600).toFixed(1)} fuzzing hours` : "";
 }
@@ -139,15 +153,36 @@ function toYaml() {
   let y = `experiment_name: ${name ? (/^[A-Za-z0-9_.-]+$/.test(name) ? name : JSON.stringify(name)) : ""}\n`;
   y += `no_superc: ${!document.getElementById("superc").checked}\n`;
   if (triage.length) y += `bug_triaging: ${yamlList(triage)}\n`;
+  if (isContinuous()) {
+    y += "mode: continuous\n";
+    const iv = parseInt(document.getElementById("c-interval").value), cc = parseInt(document.getElementById("c-cores").value);
+    const du = parseFloat(document.getElementById("c-duration").value);
+    const parts = [];
+    if (iv > 0) parts.push(`interval: ${iv * 60}`);
+    if (cc > 0) parts.push(`coverage_cores: ${cc}`);
+    if (du > 0) parts.push(`duration: ${Math.round(du * 3600)}`);
+    if (parts.length) y += `continuous: {${parts.join(", ")}}\n`;
+  }
   y += "groups:\n";
   for (const g of groups) {
     y += `  - fuzzers: ${yamlList(g.fuzzers)}\n    benchmarks: ${yamlList(g.benchmarks)}\n`;
     y += `    compiletime: ${yamlList(g.compiletime)}\n    runtime_strategy: ${yamlList(g.runtime_strategy)}\n`;
     if (g.trials) y += `    trials: ${parseInt(g.trials)}\n`;
-    if (g.max_total_time) y += `    max_total_time: ${parseInt(g.max_total_time)}\n`;
+    if (g.max_total_time && !isContinuous()) y += `    max_total_time: ${parseInt(g.max_total_time)}\n`;
   }
   return y;
 }
+
+function isContinuous() { return (document.querySelector("input[name=mode]:checked") || {}).value === "continuous"; }
+function modeChanged() {
+  const c = isContinuous();
+  for (const lab of document.querySelectorAll("#mode .chip")) lab.classList.toggle("on", lab.querySelector("input").checked);
+  document.getElementById("continuous-fields").hidden = !c;
+  document.getElementById("continuous-note").hidden = !c;
+  renderGroups(); changed();
+}
+for (const r of document.querySelectorAll("input[name=mode]")) r.addEventListener("change", modeChanged);
+for (const id of ["c-interval", "c-cores", "c-duration"]) document.getElementById(id).addEventListener("input", changed);
 
 function changed() { if (!manual) document.getElementById("yaml").value = toYaml(); resetPreview(); }
 function regenerate() { manual = false; document.getElementById("manual-note").hidden = true; changed(); }
@@ -162,6 +197,19 @@ function renderPlan(r) {
   if (r.plan) {
     const p = r.plan;
     if (r.ok) out.push(`<div class="okbox">The experiment can run. Queue it to start it when the machine is free.</div>`);
+    if (p.mode === "continuous") {
+      const c = p.continuous;
+      out.push(`<div class="kpis">
+      <div class="kpi"><div class="v">${p.instances}</div><div class="l">instances, one core each</div></div>
+      <div class="kpi"><div class="v">${c.coverage_cores}</div><div class="l">coverage core(s)</div></div>
+      <div class="kpi"><div class="v">${duration(c.interval)}</div><div class="l">between coverage rounds</div></div>
+      <div class="kpi"><div class="v">${c.duration ? duration(c.duration) : "until stopped"}</div><div class="l">campaign length</div></div>
+      <div class="kpi"><div class="v">${p.benchmark_builds} + ${p.coverage_builds}</div><div class="l">benchmark + coverage builds</div></div></div>`);
+      out.push(`<div class="tw"><table><thead><tr><th>Group</th><th>Run</th><th>Benchmark</th><th>Compile-time</th><th class="num">Builds</th><th class="num">Trials</th><th class="num">Instances</th></tr></thead><tbody>` +
+        p.runs.map(x => `<tr><td class="num">${x.group}</td><td>${esc(x.fuzzer)}${x.runtime_strategy !== "default" ? `[${esc(x.runtime_strategy)}]` : ""}</td><td>${esc(x.benchmark)}</td><td>${esc(x.compiletime)}</td><td class="num">${x.copies}</td><td class="num">${x.trials}</td><td class="num">${x.copies * x.trials}</td></tr>`).join("") +
+        `</tbody></table></div>`);
+      out.push(`<p class="small muted">SuperC: ${p.superc ? "on" : "off"} · crash triage: ${p.bug_triaging.length ? esc(p.bug_triaging.join(", ")) : "none"} · both are redone every round, with the statistics report</p>`);
+    } else {
     out.push(`<div class="kpis">
       <div class="kpi"><div class="v">${p.trials}</div><div class="l">trials</div></div>
       <div class="kpi"><div class="v">${p.fuzzing_hours.toFixed(1)} h</div><div class="l">fuzzing in total</div></div>
@@ -171,6 +219,7 @@ function renderPlan(r) {
       p.runs.map(x => `<tr><td class="num">${x.group}</td><td>${esc(x.fuzzer)}${x.runtime_strategy !== "default" ? `[${esc(x.runtime_strategy)}]` : ""}</td><td>${esc(x.benchmark)}</td><td>${esc(x.compiletime)}</td><td class="num">${x.copies}</td><td class="num">${x.trials}</td><td class="num">${duration(x.max_total_time)}</td></tr>`).join("") +
       `</tbody></table></div>`);
     out.push(`<p class="small muted">SuperC: ${p.superc ? "on" : "off"} · crash triage: ${p.bug_triaging.length ? esc(p.bug_triaging.join(", ")) : "none"}</p>`);
+    }
   }
   if (r.output) out.push(`<details ${r.ok ? "" : "open"}><summary>Dry-run output</summary><pre class="log">${esc(r.output)}</pre></details>`);
   document.getElementById("result").innerHTML = out.join("");

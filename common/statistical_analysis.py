@@ -680,7 +680,32 @@ def analyse(experiment_path, metric="branches", baseline=None):
             "metric": metric, "baseline": baseline, "arms": arms, "info": info, "benchmarks": benchmarks,
             "trials": trials, "per_benchmark": per_benchmark, "views": views, "low_sample": low_sample,
             "missing": missing, "properties": properties, "bugs": found_bugs(experiment_path),
-            "trial_counts": Counter((t["arm"], t["benchmark"]) for t in trials)}
+            "trial_counts": Counter((t["arm"], t["benchmark"]) for t in trials),
+            "timeline": coverage_over_time(experiment_path, metric, arms)}
+
+
+def coverage_over_time(experiment_path, metric, arms):
+    """Continuous mode: {benchmark: {arm: [(hours, median, min, max, trials)]}} from the campaign's
+    continuous/timeline.jsonl (one snapshot of every trial per coverage round), or {}."""
+    path = os.path.join(experiment_path, "continuous", "timeline.jsonl")
+    if not os.path.isfile(path):
+        return {}
+    series = defaultdict(lambda: defaultdict(list))
+    with open(path) as f:
+        for line in f:
+            try:
+                snap = json.loads(line)
+            except ValueError:
+                continue
+            values = defaultdict(list)
+            for t in snap.get("trials", []):
+                if metric in t.get("values", {}):
+                    values[(t["benchmark"], t["arm"])].append(t["values"][metric])
+            for (benchmark, arm), v in values.items():
+                series[benchmark][arm].append((snap["elapsed"] / 3600, float(np.median(v)), min(v), max(v), len(v)))
+    order = {a: i for i, a in enumerate(arms)}
+    return {b: dict(sorted(by_arm.items(), key=lambda kv: order.get(kv[0], len(order))))
+            for b, by_arm in sorted(series.items())}
 
 
 def compare_experiments(a, b):
@@ -720,6 +745,16 @@ def compare_experiments(a, b):
 INK, MUTED, GRID, S1, S1_LIGHT = "#010101", "#020202", "#030303", "#040404", "#050505"
 TOKENS = {INK: "var(--ink)", MUTED: "var(--muted)", GRID: "var(--grid)", S1: "var(--series-1)",
           S1_LIGHT: "var(--series-1-light)"}
+# Categorical slots for one line per arm, in the fixed order of the reference palette (validated for
+# adjacent-pair colour-vision separation in light and dark mode); a ninth arm onwards is drawn in gray.
+CATEGORICAL_LIGHT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
+CATEGORICAL_DARK = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767"]
+CAT = [f"#0b0b{i:02x}" for i in range(1, 9)]
+TOKENS.update({c: f"var(--cat-{i + 1})" for i, c in enumerate(CAT)})
+CAT_CSS = (":root{" + "".join(f"--cat-{i + 1}:{c};" for i, c in enumerate(CATEGORICAL_LIGHT)) + "}"
+           "@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){"
+           + "".join(f"--cat-{i + 1}:{c};" for i, c in enumerate(CATEGORICAL_DARK)) + "}}"
+           ":root[data-theme=\"dark\"]{" + "".join(f"--cat-{i + 1}:{c};" for i, c in enumerate(CATEGORICAL_DARK)) + "}")
 
 
 def _plt():
@@ -743,6 +778,26 @@ def to_svg(fig):
     for placeholder, var in TOKENS.items():
         svg = svg.replace(placeholder, var)
     return f'<figure class="fig">{svg}</figure>'
+
+
+def timeline_plot(by_arm, metric):
+    """Median coverage of each arm's trials after every round, with the range between its
+    worst and best trial shaded."""
+    plt = _plt()
+    fig, ax = plt.subplots(figsize=(7.5, 3.6))
+    for i, (arm, points) in enumerate(by_arm.items()):
+        colour = CAT[i] if i < len(CAT) else MUTED
+        hours = [p[0] for p in points]
+        ax.fill_between(hours, [p[2] for p in points], [p[3] for p in points], color=colour, alpha=0.15, linewidth=0)
+        ax.plot(hours, [p[1] for p in points], color=colour, linewidth=2, marker="o", markersize=3, label=arm)
+    ax.set_xlabel("hours since the campaign started")
+    ax.set_ylabel(f"{metric} covered (median trial)")
+    ax.grid(color=GRID, linewidth=0.6)
+    ax.set_axisbelow(True)
+    ax.set_ylim(bottom=0)
+    if by_arm:
+        ax.legend(loc="lower right", frameon=False, fontsize=9)
+    return to_svg(fig)
 
 
 def box_plot(result, metric):
@@ -968,7 +1023,7 @@ def render_html(res, comparison=None):
     out = []
     w = out.append
     w(f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' "
-      f"content='width=device-width,initial-scale=1'><title>Coverage statistics</title><style>{CSS}</style></head><body><main>")
+      f"content='width=device-width,initial-scale=1'><title>Coverage statistics</title><style>{CSS}{CAT_CSS}</style></head><body><main>")
     w(f"<h1>Coverage statistics: {e(res['experiment'])}</h1>")
     n_trials = len(res["trials"])
     w(f"<p class='sub'>{len(arms)} arms × {len(res['benchmarks'])} benchmarks, {n_trials} trials. Primary metric: "
@@ -979,6 +1034,8 @@ def render_html(res, comparison=None):
                 ("bugs", "Found bugs"), ("power", "Trials and statistical power"), ("method", "Method notes")]
     if comparison:
         sections.insert(6, ("repro", "Reproducibility"))
+    if res.get("timeline"):
+        sections.insert(1, ("over-time", "Coverage over time"))
     w("<nav>" + "".join(f"<a href='#{k}'>{e(t)}</a>" for k, t in sections) + "".join(
         f"<a href='#b-{e(r['benchmark'])}'>{e(r['benchmark'])}</a>" for r in res["per_benchmark"]) + "</nav>")
 
@@ -1032,6 +1089,21 @@ def render_html(res, comparison=None):
                     [[e(c["pair"]), fmt(c["spearman"]), fmt_p(c["spearman_p"]), fmt(c["kendall"]),
                       fmt_p(c["kendall_p"]), c["n"]] for c in v["correlations"]]))
         w("</section>")
+
+    # ---- Coverage over time (continuous mode) ----
+    if res.get("timeline"):
+        w("<h2 id='over-time'>Coverage over time</h2>")
+        w(f"<p>This is a continuous campaign: after every coverage round, the {e(metric)} each trial had covered "
+          f"so far. The line is the median trial of each arm, the shaded band the range from its worst to its best "
+          f"trial. The rankings and tests on this page use the latest round.</p>")
+        for benchmark, by_arm in res["timeline"].items():
+            w(f"<section class='card'><h3>{e(benchmark)}</h3>")
+            w(timeline_plot(by_arm, metric))
+            last = [(arm, pts[-1]) for arm, pts in by_arm.items() if pts]
+            w(table(["Arm", "Rounds", "Hours", f"Median {e(metric)}", "Min", "Max", "Trials"],
+                    [[e(arm), len(by_arm[arm]), fmt(p[0], 1), fmt(p[1], 0), fmt(p[2]), fmt(p[3]), p[4]]
+                     for arm, p in last]))
+            w("</section>")
 
     # ---- Per benchmark ----
     w("<h2 id='benchmarks'>Per-benchmark results</h2>")

@@ -4,6 +4,7 @@ Everything comes from what common/run_experiment.py writes (experiment_state.pkl
 events.jsonl, data/<trial>/...), so experiments started from the command line show up
 the same as those started from the web app.
 """
+import json
 import os
 import pickle
 import re
@@ -85,7 +86,25 @@ def summary(config, name, running_names=()):
             "has_superc": os.path.isfile(os.path.join(config["report_filestore"], name, "superc", "pc_summary.csv")),
             "fuzzers": state.get("fuzzers", []) if state else [],
             "benchmarks": state.get("benchmarks", []) if state else [],
-            "runtime_strategies": state.get("runtime_strategies", []) if state else []}
+            "runtime_strategies": state.get("runtime_strategies", []) if state else [],
+            "mode": (state or {}).get("mode") or "evaluation",
+            "continuous": continuous_summary(path) if (state or {}).get("mode") == "continuous" else None}
+
+
+def continuous_summary(experiment_path):
+    """A continuous campaign's round, next round and instances, from continuous/status.json."""
+    try:
+        with open(os.path.join(experiment_path, "continuous", "status.json")) as f:
+            st = json.load(f)
+    except (OSError, ValueError):
+        return {"round": 0}
+    insts = st.get("instances", [])
+    return {"round": st.get("round", 0), "step": st.get("step"), "next_round": st.get("next_round"),
+            "interval": st.get("interval"), "duration": st.get("duration"), "ends": st.get("ends"),
+            "started": st.get("started"), "stopping": st.get("stopping"), "updated": st.get("updated"),
+            "instances": len(insts), "fuzzing": sum(1 for i in insts if i.get("running")),
+            "fuzz_cpus": st.get("fuzz_cpus"), "coverage_cpus": st.get("coverage_cpus"),
+            "exited": [i for i in insts if not i.get("running") and i.get("exit_code") is not None]}
 
 
 def trials(config, name, running=False):

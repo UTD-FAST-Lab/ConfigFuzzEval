@@ -319,6 +319,34 @@ def api_superc_conditions(name, key):
     return jsonify(ok=True, **data)
 
 
+@app.get("/api/experiments/<name>/timeline")
+def api_timeline(name):
+    """Coverage after every round of a continuous campaign: {benchmark: {arm: [[hours, median, min, max, n]]}}."""
+    path = experiment_path(name)
+    metric = request.args.get("metric", "branches")
+    if metric not in ("branches", "lines", "regions", "functions"):
+        abort(400)
+    from statistical_analysis import coverage_over_time
+    series = coverage_over_time(path, metric, [])
+    return jsonify(ok=bool(series), metric=metric, benchmarks=series)
+
+
+@app.post("/api/experiments/<name>/continuous/<action>")
+def api_continuous(name, action):
+    """Asks a running continuous campaign for a coverage round now, or to stop after a last round."""
+    path = experiment_path(name)
+    if action not in ("round", "stop"):
+        abort(404)
+    state = exps.load_state(path)
+    if not state or state.get("mode") != "continuous":
+        return jsonify(ok=False, error="This experiment is not a continuous campaign."), 400
+    if name not in running_names():
+        return jsonify(ok=False, error="The campaign is not running."), 409
+    import continuous
+    continuous.request(path, action)
+    return jsonify(ok=True)
+
+
 @app.get("/api/experiments/<name>/log")
 def api_log(name):
     experiment_path(name)

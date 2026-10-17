@@ -52,9 +52,11 @@
   {% for e in experiments %}
   <tr>
     <td><a href="/experiments/{{ e.name }}"><b>{{ e.name }}</b></a></td>
-    <td><span class="badge {{ e.status }}">{{ e.status }}</span>{% if e.status == 'running' and e.phase %} <span class="muted small">{{ e.phase }}</span>{% endif %}</td>
+    <td><span class="badge {{ e.status }}">{{ e.status }}</span>{% if e.mode == 'continuous' %} <span class="badge" title="Continuous mode: fuzzes until stopped, coverage in rounds">continuous</span>{% if e.continuous and e.continuous.round %} <span class="muted small">round {{ e.continuous.round }}</span>{% endif %}{% elif e.status == 'running' and e.phase %} <span class="muted small">{{ e.phase }}</span>{% endif %}</td>
     <td>
-      {% if e.planned %}
+      {% if e.mode == 'continuous' and e.continuous and e.continuous.instances %}
+      <span class="small">{{ e.continuous.fuzzing }}/{{ e.continuous.instances }} fuzzing</span>{% if e.continuous.exited %}<span class="small" style="color:var(--bad-ink)">, {{ e.continuous.exited | length }} stopped</span>{% endif %}
+      {% elif e.planned %}
       <div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:110px"><span style="width:{{ (100 * e.done / e.planned) | round(1) }}%"></span></div>
       <span class="small muted">{{ e.done }}/{{ e.planned }}{% if e.failed %}, <span style="color:var(--bad-ink)">{{ e.failed }} failed</span>{% endif %}</span></div>
       {% else %}<span class="muted">–</span>{% endif %}

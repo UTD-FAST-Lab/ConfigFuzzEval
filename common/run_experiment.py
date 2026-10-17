@@ -9,6 +9,7 @@ from validation import validate_configuration, validate_fuzzers, validate_benchm
 from rt_config_generator import generate_rt_configs, load_supported_fuzzers
 from ct_strategy_applicator import apply_ct_strategy, count_ct_configurations
 from experiment_plan import (load_experiment_file, expand_groups, unique, estimate_seconds, read_record,
+                             continuous_instances, estimate_continuous_seconds,
                              saved_experiment_path, log_path, stop_command, write_experiment_file)
 import events
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -199,7 +200,7 @@ def run_experiments(experiment_state):
                 break
 
 
-def run_superc_on_experiments(experiment_state, logging=None):
+def run_superc_on_experiments(experiment_state, logging=None, cpus=None):
     """SuperC presence-condition coverage of the experiment's trials (common/superc.py):
     SuperC once per benchmark build, then every trial, then the arms per benchmark, into
     <report_filestore>/<experiment>/superc/. Failures are logged; the experiment goes on."""
@@ -207,7 +208,7 @@ def run_superc_on_experiments(experiment_state, logging=None):
     logging = logging or get_logger(__name__)
     core_start, core_end = experiment_state["cores_range"]
     # A trial on core c uses CPUs c-1 and c (see resource_allocation): SuperC uses them all.
-    cpus = list(range(max(0, core_start - 1), core_end + 1))
+    cpus = cpus or list(range(max(0, core_start - 1), core_end + 1))   # continuous mode: its coverage CPUs
     report_path = experiment_state.get("report_path") or os.path.join(
         experiment_state["report_filestore"], os.path.basename(os.path.normpath(experiment_state["experiment_path"])))
     try:
@@ -219,7 +220,7 @@ def run_superc_on_experiments(experiment_state, logging=None):
         logging.error(f"SuperC analysis failed: {e}")
 
 
-def triage_on_experiments(experiment_state):
+def triage_on_experiments(experiment_state, cpus=None):
     """Crash triage of every trial: one task per triager, fuzzer, runtime strategy and benchmark
     copy, pooling its trials (docker_image_builder.run_triaging), on the experiment's cores."""
     logging = get_logger(__name__)      # also when called from post_analysis.py
@@ -230,7 +231,8 @@ def triage_on_experiments(experiment_state):
         trials_of.setdefault((fuzzer, rts, benchmark), set()).add(trial_id)
     tasks = [(triager, fuzzer, rts, benchmark, trials) for (fuzzer, rts, benchmark), trials in sorted(trials_of.items())
              for triager in experiment_state["built_triagers"]]
-    free_cores = list(range(core_start, core_end + 1))
+    # A trial on core c uses CPUs c-1 and c; given cpus (continuous mode: its coverage CPUs), one CPU each.
+    free_cores = list(cpus) if cpus else list(range(core_start, core_end + 1))
     logging.info(f"Triaging {len(tasks)} task(s) on cores {core_start}-{core_end}")
     with ThreadPoolExecutor(max_workers=len(free_cores)) as executor:
         running = {}
@@ -240,7 +242,8 @@ def triage_on_experiments(experiment_state):
                 core_id = free_cores.pop(0)
                 future = executor.submit(run_triaging, triager, fuzzer, rts, benchmark, trials,
                                          experiment_state["experiment_path"], core_id, data_storage,
-                                         experiment_state["total_memory_needed_gb"])
+                                         experiment_state["total_memory_needed_gb"],
+                                         cpuset=str(core_id) if cpus else None)
                 running[future] = (triager, run_label(fuzzer, rts), benchmark, core_id)
                 logging.info(f"[START] Triaging {run_label(fuzzer, rts)} on {benchmark} with {triager}, core {core_id}")
             done = next(as_completed(list(running)))
@@ -352,10 +355,26 @@ if __name__ == "__main__":
         copies[key] = count_ct_configurations(key[0], project_root, key[1], config["random_seed"])
     estimate = estimate_seconds(runs, copies, config, superc=not no_superc)
 
+    # Continuous mode: every trial of every benchmark copy is an instance that fuzzes on its
+    # own core until the campaign stops, next to coverage_cores cores for the coverage rounds.
+    mode = experiment_file["mode"] if args.experiment else "evaluation"
+    continuous = experiment_file["continuous"] if args.experiment else None
+    if mode == "continuous":
+        instances = continuous_instances(runs, copies)
+        fuzz_cores = config["cores_to_use"] - continuous["coverage_cores"]
+        if instances > fuzz_cores:
+            logging.error(f"Continuous mode needs one core per instance: {instances} instance(s) (trials x benchmark "
+                          f"copies) but only {fuzz_cores} of the {config['cores_to_use']} cores are left after "
+                          f"{continuous['coverage_cores']} coverage core(s). Raise cores_to_use, or run fewer trials.")
+            sys.exit(1)
+        estimate = estimate_continuous_seconds(runs, copies, config, continuous["duration"])
+
     # The experiment as a file: what experiments/<name>.yaml holds, however it was given.
     experiment = {"experiment_name": experiment_name, "no_superc": no_superc, "bug_triaging": bug_triaging}
     if args.experiment:
         experiment.update({k: experiment_file[k] for k in ("cores_to_use", "not_applied") if k in experiment_file})
+    if mode == "continuous":
+        experiment.update({"mode": mode, "continuous": continuous})
     experiment["groups"] = groups
     if args.experiment and experiment_file["benchmarks"]:
         experiment["benchmarks"] = experiment_file["benchmarks"]
@@ -375,8 +394,15 @@ if __name__ == "__main__":
         logging.info(f"Benchmark builds: {builds}, plus {sum(copies.values())} coverage build(s)")
         logging.info(f"Trials: {total_trials}, {total_seconds / 3600:.1f} fuzzing hours in total; "
                      f"with {config['cores_to_use']} cores at least {total_seconds / 3600 / config['cores_to_use']:.1f} hours.")
-        logging.info(f"Estimated duration: {estimate / 3600:.1f} hours (approximate; assumes every image "
-                     f"still needs to be built).")
+        if mode == "continuous":
+            logging.info(f"Continuous mode: {instances} instance(s) fuzzing without a time limit on "
+                         f"{instances} of {fuzz_cores} fuzzing core(s); coverage rounds every "
+                         f"{continuous['interval']} s on {continuous['coverage_cores']} core(s); "
+                         + (f"stops after {continuous['duration'] / 3600:.1f} hours." if continuous["duration"]
+                            else "runs until it is stopped."))
+        if estimate is not None:
+            logging.info(f"Estimated duration: {estimate / 3600:.1f} hours (approximate; assumes every image "
+                         f"still needs to be built).")
         logging.info(f"SuperC: {'disabled' if no_superc else 'enabled'}; bug triaging: {bug_triaging or 'none'}")
         if args.plan_json:
             plan = {
@@ -388,7 +414,9 @@ if __name__ == "__main__":
                 "fuzzers": fuzzers, "benchmark_builds": builds, "coverage_builds": sum(copies.values()),
                 "trials": total_trials, "fuzzing_hours": total_seconds / 3600, "cores": config["cores_to_use"],
                 "min_hours": total_seconds / 3600 / config["cores_to_use"], "superc": not no_superc,
-                "bug_triaging": bug_triaging, "estimated_hours": estimate / 3600,
+                "bug_triaging": bug_triaging, "estimated_hours": estimate / 3600 if estimate is not None else None,
+                "mode": mode, "continuous": continuous,
+                "instances": instances if mode == "continuous" else None,
                 "exists": os.path.exists(os.path.join(config["experiment_filestore"], experiment_name)) or
                           os.path.exists(os.path.join(config["report_filestore"], experiment_name)),
             }
@@ -410,7 +438,8 @@ if __name__ == "__main__":
         logging.info(f"  Experiment file: {os.path.relpath(saved)}")
         logging.info(f"  Log:             {os.path.relpath(log_file)}   (tail -f {os.path.relpath(log_file)})")
         logging.info(f"  Stop it:         {stop_command(experiment_name)}")
-        logging.info(f"  Estimated time:  {estimate / 3600:.1f} hours once it starts (approximate)")
+        logging.info(f"  Estimated time:  {estimate / 3600:.1f} hours once it starts (approximate)" if estimate is not None
+                     else "  Estimated time:  until it is stopped (continuous mode)")
         sys.exit(0)
 
     # By hand with --foreground in a terminal: copy the output to the log, as the queue does.
@@ -450,6 +479,8 @@ if __name__ == "__main__":
         "serialize_multi_conf": config["serialize_multi_conf"],
         "no_superc": no_superc,
         "rt_supported_fuzzers": rt_supported_fuzzers,
+        "mode": mode,
+        "continuous": continuous,
     }
     
     logging.info("Running experiments with the following parameters:")
@@ -502,7 +533,8 @@ if __name__ == "__main__":
     started = time.time()
     write_experiment_file(saved, experiment, {"queued": read_record(saved).get("queued") if args.experiment and
                                               os.path.abspath(args.experiment) == saved else None,
-                                              "started": started, "estimated_end": started + estimate})
+                                              "started": started,
+                                              "estimated_end": started + estimate if estimate is not None else None})
     shutil.copy(saved, os.path.join(experiment_path, "experiment.yaml"))
     logging.info(f"Experiment file: {saved}; stop it with: {stop_command(experiment_name)}")
     
@@ -757,6 +789,17 @@ if __name__ == "__main__":
     # Save the state
     with open(f"{experiment_state['experiment_path']}/experiment_state.pkl", "wb") as f:
         pickle.dump(experiment_state, f)
+
+    if mode == "continuous":
+        # The campaign runs its own coverage rounds and analyses, including a last round when
+        # it stops (common/continuous.py); then only the clean-up is left.
+        import continuous as continuous_mode
+        logging.info("Ready to begin the continuous campaign!")
+        events.emit(experiment_path, "phase", phase="fuzzing", trials=len(experiment_state["trial_tasks"]))
+        continuous_mode.run_campaign(experiment_state, logging)
+        delete_cts_benchmarks(experiment_state, project_root)
+        events.emit(experiment_path, "finished")
+        sys.exit(0)
 
     # Run experiments
     logging.info("Ready to begin experiments!")

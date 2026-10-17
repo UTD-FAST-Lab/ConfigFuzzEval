@@ -25,11 +25,29 @@
   <div class="timeline" id="timeline"></div>
 </div>
 
+<div class="card" id="campaign" hidden>
+  <div class="row">
+    <b>Continuous campaign</b> <span class="small muted" id="cp-line"></span>
+    <span class="spacer"></span>
+    <button id="cp-round" onclick="campaignAction('round', this)" title="Replay the new inputs and update the analyses now, without waiting for the next round">Run a coverage round now</button>
+    <button id="cp-stop" class="danger" onclick="campaignAction('stop', this)" title="Stop the fuzzers, then a last round takes every remaining input">Stop campaign</button>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="v" id="cp-round-no">–</div><div class="l">coverage rounds</div></div>
+    <div class="kpi"><div class="v" id="cp-next">–</div><div class="l">next round in</div></div>
+    <div class="kpi"><div class="v" id="cp-fuzzing">–</div><div class="l">instances fuzzing</div></div>
+    <div class="kpi"><div class="v" id="cp-ends">–</div><div class="l">ends</div></div>
+  </div>
+  <div id="cp-exited"></div>
+  <p class="small muted" id="cp-msg"></p>
+</div>
+
 <div class="tabs" role="tablist">
   <button data-tab="trials" class="on">Trials</button>
   <button data-tab="log">Log</button>
   <button data-tab="results">Results</button>
   <button data-tab="superc">Presence conditions</button>
+  <button data-tab="overtime" id="tab-btn-overtime" hidden>Coverage over time</button>
   <button data-tab="analyse">Post-analysis</button>
   <button data-tab="file">Experiment file</button>
 </div>
@@ -66,6 +84,14 @@
   {% if superc_report %}
   <p class="small muted" style="margin-top:12px">SuperC's presence-condition results are in the <a href="#superc" onclick="showTab('superc')">Presence conditions</a> tab.</p>
   {% endif %}
+</section>
+
+<section class="tab" id="tab-overtime">
+  <div class="row" style="margin-bottom:8px">
+    <label>Metric <select id="ot-metric"><option>branches</option><option>lines</option><option>regions</option><option>functions</option></select></label>
+    <span class="small muted">After every coverage round: the median trial of each arm (line) and the range from its worst to its best trial (band).</span>
+  </div>
+  <div id="ot-charts"><div class="card empty">No coverage round yet.</div></div>
 </section>
 
 <section class="tab" id="tab-superc">
@@ -150,6 +176,7 @@ function showTab(t) {
   history.replaceState(null, "", "#" + t);
   if (t === "log") loadLog(true);
   if (t === "superc") setTimeout(loadSuperc);   // after the whole script has run
+  if (t === "overtime") setTimeout(loadTimeline);
 }
 for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
 if (location.hash) showTab(location.hash.slice(1));
@@ -203,11 +230,14 @@ async function refresh() {
     document.getElementById("k-eta").textContent = "~" + duration(Math.ceil(left / Math.max(running, 1)) * avg);
   } else document.getElementById("k-eta").textContent = s.status === "running" ? "…" : "–";
   const seen = r.phases.map(p => p.phase || "finished");
-  document.getElementById("timeline").innerHTML = PHASES.concat(["finished"]).filter(p => seen.includes(p) || PHASES.includes(p))
+  const phases = s.mode === "continuous" ? ["building images", "building benchmarks", "fuzzing", "stopping"] : PHASES;
+  document.getElementById("timeline").innerHTML = phases.concat(["finished"]).filter(p => seen.includes(p) || phases.includes(p))
     .map(p => `<span class="step ${s.phase === p && s.status === "running" ? "cur" : ""}" style="${seen.includes(p) ? "" : "opacity:.45"}">${esc(p)}</span>`).join("")
     + (seen.includes("cancelled") ? `<span class="step" style="color:var(--bad-ink)">cancelled</span>` : "");
   const active = r.jobs.find(j => ["running", "cancelling"].includes(j.status) && j.kind === "experiment");
-  document.getElementById("actions").innerHTML = active ? `<button class="danger" onclick="cancelJob(${active.id}, this)">Stop experiment</button>` : "";
+  document.getElementById("actions").innerHTML = active ? `<button class="danger" onclick="cancelJob(${active.id}, this)"
+    ${s.mode === "continuous" ? `title="Kill the campaign now: no last coverage round"` : ""}>${s.mode === "continuous" ? "Cancel (no last round)" : "Stop experiment"}</button>` : "";
+  if (s.mode === "continuous") renderCampaign(s, r.now);
   renderTrials(trials); renderJobs(r.jobs);
   if (s.has_superc && !sc.loaded && document.getElementById("tab-superc").classList.contains("on")) loadSuperc();
   if (r.stats && document.getElementById("results-none") && !document.querySelector("iframe.report") && s.status !== "running") {
@@ -246,6 +276,91 @@ async function runPost() {
   v("pa-msg").innerHTML = r.ok ? `Queued as job ${r.job_id}. Follow it in the log tab.` : `<span style="color:var(--bad-ink)">${esc(r.error)}</span>`;
   refresh();
 }
+
+// ---- Continuous campaign ----
+let campaignRound = null;
+function cpuRanges(cpus) {        // [0,1,2,5] -> "0–2, 5"
+  const out = [];
+  for (const c of [...cpus].sort((a, b) => a - b)) {
+    const last = out[out.length - 1];
+    if (last && c === last[1] + 1) last[1] = c; else out.push([c, c]);
+  }
+  return out.map(([a, b]) => a === b ? `${a}` : `${a}–${b}`).join(", ");
+}
+function renderCampaign(s, now) {
+  const c = s.continuous || {};
+  document.getElementById("campaign").hidden = false;
+  document.getElementById("tab-btn-overtime").hidden = false;
+  document.getElementById("k-done").nextElementSibling.textContent = "instances ended";
+  document.getElementById("k-eta").nextElementSibling.textContent = "next coverage round";
+  const live = s.status === "running";
+  document.getElementById("cp-round-no").textContent = c.round ?? 0;
+  const next = live && c.next_round && !c.stopping ? Math.max(0, c.next_round - now) : null;
+  document.getElementById("cp-next").textContent = c.step ? `running (${c.step})` : next != null ? duration(next) : "–";
+  document.getElementById("k-eta").textContent = document.getElementById("cp-next").textContent;
+  document.getElementById("cp-fuzzing").textContent = c.instances ? `${c.fuzzing} / ${c.instances}` : "–";
+  document.getElementById("cp-ends").textContent = c.ends ? new Date(c.ends * 1000).toLocaleString() : (live ? "when stopped" : "–");
+  // The bar is the campaign's time when it has a duration; without one there is nothing to fill.
+  document.getElementById("bar").style.width = c.duration && c.started ? `${Math.min(100, 100 * ((s.ended || now) - c.started) / c.duration)}%` : "0";
+  if (c.started) document.getElementById("k-elapsed").textContent = duration((s.ended || now) - c.started);
+  document.getElementById("cp-line").textContent = [
+    c.interval ? `a round every ${duration(c.interval)}` : "",
+    c.fuzz_cpus ? `fuzzing on CPU ${cpuRanges(c.fuzz_cpus)}` : "", c.coverage_cpus ? `coverage on CPU ${cpuRanges(c.coverage_cpus)}` : "",
+    c.stopping ? "stopping: last round" : ""].filter(Boolean).join(" · ");
+  document.getElementById("cp-exited").innerHTML = (c.exited || []).length ? `<div class="warnbox"><b>${c.exited.length} instance(s) stopped on their own</b> and are not restarted;
+    their inputs so far still count: ${c.exited.map(i => `${esc(i.label)} on ${esc(i.benchmark)}, trial ${i.trial} (exit code ${i.exit_code})`).join("; ")}.
+    Their <code>fuzzing.log</code> says why.</div>` : "";
+  for (const id of ["cp-round", "cp-stop"]) document.getElementById(id).disabled = !live || c.stopping;
+  if (campaignRound !== null && c.round !== campaignRound && document.getElementById("tab-overtime").classList.contains("on")) loadTimeline();
+  campaignRound = c.round;
+}
+
+async function campaignAction(action, btn) {
+  if (action === "stop" && !confirm("Stop the campaign? The fuzzers stop now; a last coverage round then takes every remaining input, and the analyses are updated once more.")) return;
+  btn.disabled = true;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/continuous/${action}`, {});
+  document.getElementById("cp-msg").innerHTML = r.ok ? (action === "round" ? "A coverage round starts within a few seconds." : "Stopping: the last round runs next.")
+    : `<span style="color:var(--bad-ink)">${esc(r.error || "failed")}</span>`;
+  setTimeout(refresh, 1500);
+}
+
+function lineChart(byArm, metric) {
+  const arms = Object.keys(byArm), W = 760, H = 300, L = 64, R = 16, T = 12, B = 40;
+  const pts = arms.flatMap(a => byArm[a]);
+  if (!pts.length) return "";
+  const xMax = Math.max(...pts.map(p => p[0]), 0.01), yMax = Math.max(...pts.map(p => p[3]), 1) * 1.05;
+  const x = h => L + (W - L - R) * h / xMax, y = v => T + (H - T - B) * (1 - v / yMax);
+  const ticks = (max, n) => { const step = Math.pow(10, Math.floor(Math.log10(max / n))); const m = [1, 2, 5, 10].find(k => max / (k * step) <= n) * step; const out = []; for (let v = 0; v <= max; v += m) out.push(v); return out; };
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(metric)} covered over time">`;
+  for (const v of ticks(yMax, 5)) svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" class="tick">${v.toLocaleString()}</text>`;
+  for (const v of ticks(xMax, 6)) svg += `<text x="${x(v)}" y="${H - B + 16}" text-anchor="middle" class="tick">${v}</text>`;
+  svg += `<line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" class="axis"/>`;
+  svg += `<text x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle" class="tick">hours since the campaign started</text>`;
+  arms.forEach((arm, i) => {
+    const c = i < 8 ? `var(--cat-${i + 1})` : "var(--muted)", p = byArm[arm];
+    const band = p.map(q => `${x(q[0])},${y(q[3])}`).concat([...p].reverse().map(q => `${x(q[0])},${y(q[2])}`)).join(" ");
+    svg += `<polygon points="${band}" fill="${c}" opacity="0.15"/>`;
+    svg += `<polyline points="${p.map(q => `${x(q[0])},${y(q[1])}`).join(" ")}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round"/>`;
+    for (const q of p) svg += `<circle cx="${x(q[0])}" cy="${y(q[1])}" r="7" fill="transparent"><title>${esc(arm)} after ${q[0].toFixed(1)} h: median ${Math.round(q[1]).toLocaleString()} (${q[2].toLocaleString()}–${q[3].toLocaleString()}, ${q[4]} trials)</title></circle><circle cx="${x(q[0])}" cy="${y(q[1])}" r="3" fill="${c}" stroke="var(--surface)" stroke-width="1.5" pointer-events="none"/>`;
+  });
+  svg += `</svg>`;
+  const legend = `<div class="legend-row">${arms.map((a, i) => `<span><i style="background:${i < 8 ? `var(--cat-${i + 1})` : "var(--muted)"}"></i>${esc(a)}</span>`).join("")}</div>`;
+  return svg + legend;
+}
+
+async function loadTimeline() {
+  const metric = document.getElementById("ot-metric").value;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/timeline?metric=${metric}`);
+  const root = document.getElementById("ot-charts");
+  if (!r.ok) { root.innerHTML = `<div class="card empty">No coverage round yet: the first one runs after the first interval.</div>`; return; }
+  root.innerHTML = Object.entries(r.benchmarks).map(([b, byArm]) => {
+    const rows = Object.entries(byArm).map(([a, p]) => { const q = p[p.length - 1];
+      return `<tr><td>${esc(a)}</td><td class="num">${p.length}</td><td class="num">${q[0].toFixed(1)}</td><td class="num">${Math.round(q[1]).toLocaleString()}</td><td class="num">${q[2].toLocaleString()}</td><td class="num">${q[3].toLocaleString()}</td><td class="num">${q[4]}</td></tr>`; }).join("");
+    return `<div class="card"><h3 style="margin-top:0">${esc(b)}</h3>${lineChart(byArm, metric)}
+      <div class="tw"><table><thead><tr><th>Arm</th><th class="num">Rounds</th><th class="num">Hours</th><th class="num">Median ${esc(metric)}</th><th class="num">Min</th><th class="num">Max</th><th class="num">Trials</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }).join("");
+}
+document.getElementById("ot-metric").addEventListener("change", loadTimeline);
 
 // ---- Presence conditions (SuperC) ----
 const sc = {data: null, build: null, offset: 0, loaded: false, timer: null};

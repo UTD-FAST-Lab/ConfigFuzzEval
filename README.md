@@ -325,6 +325,55 @@ setsid nohup python3 common/rerun_coverage.py \
 
 A new experiment takes `coverage.py` and `run.sh` from the fuzzer's Docker image, so after changing them remove the image (`docker rmi fbpp/fuzzer:<fuzzer>`) to have it rebuilt.
 
+### Continuous mode
+
+The default **evaluation** mode fuzzes every trial for `max_total_time`, then measures its coverage. **Continuous** mode is for long campaigns:
+- every trial fuzzes without a time limit;
+- every `interval` seconds, the inputs the fuzzers found since the last round are replayed on the coverage builds;
+- the statistics report, SuperC and crash triage are then redone, so the web app is always current.
+
+Set it in the experiment file (`common/continuous.py` runs it):
+
+```yaml
+experiment_name: pcre2_campaign
+mode: continuous
+continuous:
+  interval: 3600          # seconds between coverage rounds (default 3600, at least 60)
+  coverage_cores: 2       # cores kept for the coverage rounds and the analyses (default 1)
+  duration: 604800        # optional: stop after this many seconds (default: run until stopped)
+groups:
+  - fuzzers: [aflplusplus]
+    benchmarks: [pcre2_pcre2test]
+    runtime_strategy: [default, random]
+    trials: 3             # trials are parallel instances; groups cannot set max_total_time
+```
+
+The web app's New experiment form has the same choice (Mode: continuous).
+
+- **Cores:** every trial of every benchmark build is an **instance**: one fuzzing container pinned to its own core.
+  - A compile-time strategy with N builds gives N instances per trial.
+  - The experiment needs one core per instance plus `coverage_cores`, out of `cores_to_use`. Otherwise it stops before building anything, and the dry run says how many cores it needs.
+  - Coverage rounds and the analyses run only on the coverage cores, so they never slow the fuzzers.
+- **Each round:** for each instance, `runtime/continuous_coverage.py` copies the queue entries found since the last round into a scratch folder, and runs the fuzzer's own `coverage.py` on it. It then merges the result into the instance's cumulative profile, and rewrites the trial's `coverage/report.json` and `report.txt`.
+  - An input is taken once it's at least 30 s old.
+  - The cumulative result equals replaying the whole queue at once (checked on aflplusplus/pcre2: identical totals and covered lines and branches).
+  - Each round, `<experiment>/continuous/timeline.jsonl` gets every trial's coverage after that round.
+- **Runtime strategies:** an instance fuzzes one configuration per round. At each round it moves to the next configuration (cycling through them), starting from the previous configuration's corpus, in `config_<n>/`. `rt_run.jsonl` and the trial's `rt_configs.json` record them, as in evaluation mode, so triage and the statistics read them the same way.
+- **Fuzzers:** each `run.sh` treats `RUNTIME=0` as no limit. The repository's `run.sh` is mounted over the copy in the fuzzer image, so older images work without a rebuild. AFL++'s own CPU binding is turned off (`AFL_NO_AFFINITY=1`), since Docker already pins each container.
+- **Stopping:**
+  - **Stop campaign** on the experiment's page, `python3 common/continuous.py stop <experiment folder>`, or the end of `duration`: the fuzzers are stopped, then a last round takes every remaining input and redoes the analyses.
+  - **Run a coverage round now** (or `continuous.py round <experiment folder>`): runs a round without waiting for the interval.
+  - `python3 common/jobs.py stop NAME` or **Cancel** on the page: kills the campaign at once, without a last round.
+  - `continuous.py status <experiment folder>` prints the current round, the next round's time and each instance.
+- **In the web app:**
+  - A **campaign card** on the experiment's page: the rounds so far, the time to the next round, the instances still fuzzing, and the cores in use.
+  - A **Coverage over time** tab: per benchmark, each arm's median trial after every round, with its worst-to-best range shaded.
+  - The **statistics report** gets a "Coverage over time" section with the same charts. Its rankings and tests use the latest round.
+- **Limits:**
+  - A campaign blocks the job queue until it ends, like any experiment.
+  - An instance whose fuzzer exits is reported, and isn't restarted. Its inputs so far still count.
+  - Crash triage redoes every crash each round (see "Crash triage"), so a round takes longer as crashes accumulate.
+
 ### Web app
 
 `webapp/` is a browser front end for the same workflow, from configuring an experiment to reading its results. It starts the same commands as this README (`run_experiment.py` with an experiment file, and `post_analysis.py`) and reads the files they write. You can use the web app and the command line side by side.

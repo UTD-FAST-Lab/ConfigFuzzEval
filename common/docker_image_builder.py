@@ -434,7 +434,8 @@ def triager_smoke_test(bug_triager_name, lf):
                     "/smoke_test.sh"], check=True, stdout=lf, stderr=lf)
 
 
-def run_triaging(triager, fuzzer, rts, benchmark, trial_ids, experiment_path, core_id, data_storage, memory_limit):
+def run_triaging(triager, fuzzer, rts, benchmark, trial_ids, experiment_path, core_id, data_storage, memory_limit,
+                 cpuset=None):
     """Triages the crashes of every trial of one fuzzer under one runtime strategy on one benchmark
     copy, pooled into <experiment>/bug-triaging/<triager>/output/<run label>_<copy>/.
 
@@ -463,8 +464,8 @@ def run_triaging(triager, fuzzer, rts, benchmark, trial_ids, experiment_path, co
                 # ptrace and no seccomp let gdb turn address randomisation off, for stable stacks.
                 subprocess.run([
                     "docker", "run", "--rm", *experiment_label(experiment_path),
-                    f"--cpuset-cpus={core_id-1}-{core_id}", "-m", f"{memory_limit}g", f"--memory-swap={memory_limit}g",
-                    "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined",
+                    f"--cpuset-cpus={cpuset or f'{core_id-1}-{core_id}'}", "-m", f"{memory_limit}g",
+                    f"--memory-swap={memory_limit}g", "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined",
                     "-e", f"FUZZER_NAME={fuzzer}", "-e", f"TRIAL={trial_id}", "-e", f"OWNER={os.getuid()}:{os.getgid()}",
                     "-v", f"{trial_dir}:/fuzzer_output:ro", "-v", f"{coverage_build}:/benchmark:ro",
                     "-v", f"{fuzzer_location}:/fuzzer:ro", "-v", f"{pool}:/triaging_output",

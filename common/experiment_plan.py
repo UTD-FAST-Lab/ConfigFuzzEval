@@ -15,6 +15,11 @@ runtime strategy runs, and the experiment is the union of its groups:
                                          # interactive setup that are not applied yet
     record: {...}                        # optional, ignored: when it was queued and
                                          # started, its estimated end and stop command
+    mode: continuous                     # optional, default evaluation (see below)
+    continuous:                          # optional, only with mode: continuous
+      interval: 3600                     #   seconds between coverage rounds (default 3600)
+      coverage_cores: 2                  #   cores kept for coverage and the analyses (default 1)
+      duration: 604800                   #   seconds to run, then stop (default: until stopped)
     groups:
       - fuzzers: [vafuzz]
         benchmarks: [xz_xz, bison_bison]
@@ -35,6 +40,13 @@ that cannot run, such as a non-default runtime strategy for a fuzzer that does n
 support one, stops the experiment with an error. Nothing is skipped or replaced by
 a default.
 
+Modes: in evaluation mode (the default) every trial fuzzes for max_total_time, then its
+coverage is measured. In continuous mode (common/continuous.py) every trial is an
+instance that fuzzes without a time limit on its own core, and every `interval` seconds
+the inputs it found since the last round are replayed on the coverage builds, on
+`coverage_cores` cores kept for that, and the analyses are updated. A group cannot set
+max_total_time in continuous mode; `duration` ends the whole campaign instead.
+
 runtime-strategy is accepted for runtime_strategy, and --groups for --experiment.
 The --fuzzers/--benchmarks/--compiletime/--runtime-strategy flags make a single
 group with the --config file's trials and max_total_time.
@@ -53,7 +65,10 @@ from color_logger import get_logger
 logging = get_logger(__name__)
 
 TOP_KEYS = {"experiment_name", "no_superc", "bug_triaging", "cores_to_use", "not_applied", "record",
-            "groups", "benchmarks"}
+            "groups", "benchmarks", "mode", "continuous"}
+MODES = ("evaluation", "continuous")
+CONTINUOUS_KEYS = {"interval", "coverage_cores", "duration"}
+CONTINUOUS_DEFAULTS = {"interval": 3600, "coverage_cores": 1, "duration": None}
 GROUP_KEYS = {"fuzzers", "benchmarks", "compiletime", "runtime_strategy", "trials", "max_total_time"}
 STRATEGY_KEYS = {"compiletime", "runtime_strategy"}
 
@@ -89,6 +104,10 @@ def load_experiment_file(path):
         _positive_int(data, "cores_to_use", f"Experiment file {path}", None)
     if not isinstance(data.get("not_applied", {}), dict):
         fail(f"Experiment file {path}: 'not_applied' must be a mapping.")
+    data["mode"] = data.get("mode") or "evaluation"
+    if data["mode"] not in MODES:
+        fail(f"Experiment file {path}: 'mode' must be one of {', '.join(MODES)}, not {data['mode']!r}.")
+    data["continuous"] = continuous_settings(data, f"Experiment file {path}")
 
     benchmarks = data.get("benchmarks") or {}
     if not isinstance(benchmarks, dict):
@@ -102,6 +121,37 @@ def load_experiment_file(path):
             fail(f"{where}: unknown key(s) {unknown}; allowed: {sorted(STRATEGY_KEYS)}.")
         data["benchmarks"][benchmark] = {key: _names(entry, key, where) for key in entry}
     return data
+
+
+def continuous_settings(data, where):
+    """The continuous block with its defaults, or None in evaluation mode."""
+    block = data.get("continuous")
+    if data.get("mode", "evaluation") != "continuous":
+        if block:
+            fail(f"{where}: 'continuous' needs mode: continuous.")
+        return None
+    if block is not None and not isinstance(block, dict):
+        fail(f"{where}: 'continuous' must be a mapping.")
+    block = dict(block or {})
+    unknown = sorted(set(block) - CONTINUOUS_KEYS)
+    if unknown:
+        fail(f"{where}: continuous: unknown key(s) {unknown}; allowed: {sorted(CONTINUOUS_KEYS)}.")
+    out = {}
+    for key, default in CONTINUOUS_DEFAULTS.items():
+        value = block.get(key, default)
+        if value is None and key == "duration":
+            out[key] = None
+            continue
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            fail(f"{where}: continuous: {key} must be a positive integer (seconds for interval and duration).")
+        out[key] = value
+    if out["interval"] < 60:
+        fail(f"{where}: continuous: interval must be at least 60 seconds.")
+    for i, group in enumerate(data.get("groups") or [], 1):
+        if isinstance(group, dict) and "max_total_time" in group:
+            fail(f"{where}: group {i} sets max_total_time, which continuous mode does not use: instances "
+                 f"fuzz until the campaign stops. Use continuous: duration to end the campaign.")
+    return out
 
 
 def _accept_runtime_strategy_alias(entry, where):
@@ -283,6 +333,31 @@ END_MINUTES = 10
 SUPERC_MINUTES = 5
 
 
+def build_seconds(runs, copies, config):
+    """Rough time of the image builds, build_parallelism at a time, assuming every image must be built."""
+    parallel = max(1, min(config.get("build_parallelism", 16), config["cores_to_use"]))
+    fuzzers = {r["fuzzer"] for r in runs}
+    benchmark_builds = sum(copies[(ct, b)] for _, ct, b in {(r["fuzzer"], r["compiletime"], r["benchmark"])
+                                                              for r in runs})
+    coverage_builds = sum(copies[key] for key in {(r["compiletime"], r["benchmark"]) for r in runs})
+    return 60 * (BUILD_MINUTES["base_and_runner"]
+                 + BUILD_MINUTES["fuzzer"] * -(-len(fuzzers) // parallel)
+                 + BUILD_MINUTES["benchmark"] * -(-benchmark_builds // parallel)
+                 + BUILD_MINUTES["coverage"] * -(-coverage_builds // parallel))
+
+
+def continuous_instances(runs, copies):
+    """Fuzzing instances of a continuous campaign: every trial of every benchmark copy."""
+    return sum(copies[(r["compiletime"], r["benchmark"])] * r["trials"] for r in runs)
+
+
+def estimate_continuous_seconds(runs, copies, config, duration):
+    """Builds plus the campaign's duration, or None when it runs until stopped."""
+    if not duration:
+        return None
+    return build_seconds(runs, copies, config) + duration + 60 * END_MINUTES
+
+
 def estimate_seconds(runs, copies, config, superc=False):
     """Rough wall-clock time of an experiment from start to end, in seconds.
 
@@ -291,15 +366,7 @@ def estimate_seconds(runs, copies, config, superc=False):
     copy of a run's trial fuzzes max_total_time / copies and the trials are packed
     onto cores_to_use cores, longest first.
     """
-    parallel = max(1, min(config.get("build_parallelism", 16), config["cores_to_use"]))
-    fuzzers = {r["fuzzer"] for r in runs}
-    benchmark_builds = sum(copies[(ct, b)] for _, ct, b in {(r["fuzzer"], r["compiletime"], r["benchmark"])
-                                                              for r in runs})
-    coverage_builds = sum(copies[key] for key in {(r["compiletime"], r["benchmark"]) for r in runs})
-    build = 60 * (BUILD_MINUTES["base_and_runner"]
-                  + BUILD_MINUTES["fuzzer"] * -(-len(fuzzers) // parallel)
-                  + BUILD_MINUTES["benchmark"] * -(-benchmark_builds // parallel)
-                  + BUILD_MINUTES["coverage"] * -(-coverage_builds // parallel))
+    build = build_seconds(runs, copies, config)
     tasks = []
     for r in runs:
         n = copies[(r["compiletime"], r["benchmark"])]

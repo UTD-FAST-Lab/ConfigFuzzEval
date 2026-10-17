@@ -220,6 +220,14 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                 f"fbpp/benchmark:{benchmark_pair_name}"
             ], check=True, stdout=lf, stderr=lf)
 
+            # A fuzzer build's image is only used to copy the build out above. Remove
+            # it and the build cache (which keeps its layers even with --no-cache), or
+            # hundreds of benchmark copies fill Docker's disk. Coverage images are kept:
+            # SuperC and the HTML source reports read the sources out of them.
+            if fuzzer != "coverage":
+                subprocess.run(["docker", "rmi", f"fbpp/benchmark:{benchmark_pair_name}"], stdout=lf, stderr=lf)
+            subprocess.run(["docker", "builder", "prune", "-f"], stdout=lf, stderr=lf)
+
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while building {benchmark_name}.\n")
             lf.write(f"[ERROR] Command: {e.cmd}\n")

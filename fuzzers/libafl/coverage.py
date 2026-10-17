@@ -70,6 +70,11 @@ def main():
             subprocess.run(merge_cmd, check=True)
         except subprocess.CalledProcessError as e:
             print(f"[!] Error merging profraw files: {e}")
+        else:
+            # merged.profdata has everything the reports need; the per-input profiles
+            # are almost all of a trial's size on disk.
+            for f in profraw_files:
+                Path(f).unlink(missing_ok=True)
     else:
         print("[!] No profraw files generated, nothing to merge.")
     

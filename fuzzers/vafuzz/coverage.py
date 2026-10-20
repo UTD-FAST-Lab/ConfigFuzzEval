@@ -65,7 +65,7 @@ def merge(profraws, merged_profdata):
         inputs.append(str(merged_profdata))
     if inputs:
         tmp = merged_profdata.with_suffix(".tmp")
-        subprocess.run(["llvm-profdata", "merge", "-sparse", "-o", str(tmp)] + inputs, check=True)
+        subprocess.run(["llvm-profdata", "merge", "-sparse", "--failure-mode=warn", "-o", str(tmp)] + inputs, check=True)
         tmp.replace(merged_profdata)
     for p in profraws:
         p.unlink(missing_ok=True)

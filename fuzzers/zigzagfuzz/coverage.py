@@ -122,7 +122,7 @@ def main():
         input_list = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
         input_list.write("".join(f"1,{p}\n" for p in valid_profraw_files))
         input_list.close()
-        merge_cmd = ["llvm-profdata", "merge", "-sparse", "-f", input_list.name, "-o", str(merged_profdata)]
+        merge_cmd = ["llvm-profdata", "merge", "-sparse", "--failure-mode=warn", "-f", input_list.name, "-o", str(merged_profdata)]
         print(f"[+] Merging {len(valid_profraw_files)} profraw files into {merged_profdata}")
         try:
             subprocess.run(merge_cmd, check=True)

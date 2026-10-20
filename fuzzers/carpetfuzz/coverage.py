@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import tempfile
 import shlex
 from pathlib import Path
 import re
@@ -84,8 +85,17 @@ def main():
     # Merge all profraw into a single profdata
     # -------------------------------
     merged_profdata = coverage_dir / "merged.profdata"
+    # Only merge profraw files that exist: an input killed at the timeout writes
+    # none, and one missing file fails the whole merge.
+    profraw_files = [f for f in profraw_files if Path(f).exists()]
     if profraw_files:
-        merge_cmd = ["llvm-profdata", "merge", "-sparse", "-o", str(merged_profdata)] + profraw_files
+        # Inputs go in a file list: a large corpus exceeds the kernel argv limit.
+        # Each line is "weight,path"; the explicit weight keeps commas in AFL names intact.
+        input_list = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
+        input_list.write("".join(f"1,{p}\n" for p in profraw_files))
+        input_list.close()
+        merge_cmd = ["llvm-profdata", "merge", "-sparse", "--failure-mode=warn", "-f", input_list.name,
+                     "-o", str(merged_profdata)]
         print(f"[+] Merging {len(profraw_files)} profraw files into {merged_profdata}")
         try:
             subprocess.run(merge_cmd, check=True)
@@ -96,6 +106,7 @@ def main():
             # are almost all of a trial's size on disk.
             for f in profraw_files:
                 Path(f).unlink(missing_ok=True)
+            Path(input_list.name).unlink(missing_ok=True)
     else:
         print("[!] No profraw files generated, nothing to merge.")
 

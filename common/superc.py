@@ -23,6 +23,9 @@ Outputs:
   <report>/superc/index.html          per benchmark and arm, with
   <report>/superc/pc_summary.csv      covered conditions per arm and benchmark, and
   <report>/superc/<benchmark>_pc_comparison.csv  every condition with the arms that covered it
+  <report>/superc/cross_strategy.csv  per benchmark run under several compile-time strategies,
+                                      the strategies compared per arm (cross_strategy)
+  <report>/superc/<benchmark>_strategy_comparison.csv  every condition under every strategy
 
 Run at the end of an experiment (unless no_superc), or on a finished one with
     python3 common/post_analysis.py --state <experiment>/experiment_state.pkl --superc
@@ -539,6 +542,7 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
 
     results = []          # (benchmark, cts, arm, trials, counts of the arm's union, per-trial counts)
     comparisons = {}
+    builds = {}           # (benchmark, cts) -> {arm without its compile-time strategy: summary}
     for (cts, benchmark), build_trials in sorted(by_build.items()):
         cts_benchmark = f"cts_{cts}_{benchmark}_0"
         coverage = {t[6]: merged_lcov(lcov_reports(t[6])) for t in build_trials}
@@ -582,10 +586,78 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
                             {**coverage_counts(arm_summaries[arm]), **unassigned(pcs, arm_union[arm])},
                             arm_trial_counts[arm], len(files), len(files) - len(bad)))
         comparisons[(benchmark, cts)] = (arms, arm_summaries)
+        # For the comparison across compile-time strategies: the arms without their strategy.
+        from statistical_analysis import arm_name
+        base = {t[0]: arm_name(t[1], t[2], "default") for t in build_trials}
+        builds[(benchmark, cts)] = {base[arm]: arm_summaries[arm] for arm in arms}
 
     os.makedirs(report_dir, exist_ok=True)
-    write_report(results, comparisons, report_dir, experiment_path)
+    write_report(results, comparisons, report_dir, experiment_path, cross_strategy(builds))
     return os.path.join(report_dir, "index.html")
+
+
+ALL_ARMS = "all fuzzers"
+
+
+def _condition_sets(summary):
+    """(conditions in the build, conditions covered) of one arm's summary, conditional code only."""
+    built = {pc for pc, s in summary.items() if pc not in (ALWAYS, NEVER) and s["instrumented_lines"]}
+    return built, {pc for pc in built if summary[pc]["covered_lines"]}
+
+
+def cross_strategy(builds):
+    """Compares the compile-time strategies of every benchmark run under at least two.
+
+    builds: {(benchmark, compile-time strategy): {arm: summary}}, with arms named without their
+    strategy (fuzzer[runtime strategy]). For each benchmark, arm (and "all fuzzers": the union of
+    the arms) and strategy: the conditions the strategy's builds compiled ("in build") and its
+    trials covered, those covered only under this strategy, those another strategy covered but
+    this one did not ("missed"), how many of those this strategy's builds did not even compile,
+    and the gain and loss against the default strategy. Conditions are matched by their text,
+    which SuperC derives from the source, so the same code has the same condition in every build.
+    Returns {benchmark: {"strategies", "rows", "conditions"}}.
+    """
+    by_benchmark = defaultdict(dict)
+    for (benchmark, cts), arms in builds.items():
+        by_benchmark[benchmark][cts] = arms
+    out = {}
+    for benchmark, strategies in sorted(by_benchmark.items()):
+        if len(strategies) < 2:
+            continue
+        order = sorted(strategies, key=lambda c: (c != "default", c))
+        arms = sorted({a for per in strategies.values() for a in per})
+        rows, conditions = [], {}
+        for arm in arms + [ALL_ARMS]:
+            sets, lines = {}, {}
+            for cts in order:
+                if arm == ALL_ARMS:
+                    pairs = [_condition_sets(s) for s in strategies[cts].values()]
+                    sets[cts] = (set().union(*(b for b, _ in pairs)), set().union(*(c for _, c in pairs)))
+                    lines[cts] = {pc: (max((s.get(pc, {}).get("covered_lines", 0) for s in strategies[cts].values()), default=0),
+                                       max((s.get(pc, {}).get("instrumented_lines", 0) for s in strategies[cts].values()), default=0))
+                                  for pc in sets[cts][0]}
+                elif arm in strategies[cts]:
+                    summary = strategies[cts][arm]
+                    sets[cts] = _condition_sets(summary)
+                    lines[cts] = {pc: (summary[pc]["covered_lines"], summary[pc]["instrumented_lines"]) for pc in sets[cts][0]}
+            if len(sets) < 2:
+                continue                      # this arm ran under one strategy only
+            for cts, (built, covered) in sets.items():
+                others = set().union(*(c for k, (_, c) in sets.items() if k != cts))
+                missed = others - covered
+                row = {"benchmark": benchmark, "arm": arm, "compiletime": cts, "conditions_in_build": len(built),
+                       "conditions_covered": len(covered), "only_this_strategy": len(covered - others),
+                       "missed": len(missed), "missed_not_in_build": len(missed - built),
+                       "gained_over_default": None, "lost_against_default": None}
+                if "default" in sets and cts != "default":
+                    row["gained_over_default"] = len(covered - sets["default"][1])
+                    row["lost_against_default"] = len(sets["default"][1] - covered)
+                rows.append(row)
+            conditions[arm] = {pc: {cts: lines[cts].get(pc) for cts in sets}
+                               for pc in set().union(*(b for b, _ in sets.values()))}
+        if rows:
+            out[benchmark] = {"strategies": order, "rows": rows, "conditions": conditions}
+    return out
 
 
 def _median(values):
@@ -594,7 +666,33 @@ def _median(values):
     return (values[n // 2] if n % 2 else (values[n // 2 - 1] + values[n // 2]) / 2) if n else 0
 
 
-def write_report(results, comparisons, report_dir, experiment_path):
+def write_cross_strategy(cross, report_dir):
+    """cross_strategy.csv, and <benchmark>_strategy_comparison.csv with every condition of every arm:
+    per strategy, the covered lines of the condition, or "-" when no build of the strategy compiled it."""
+    fields = ["benchmark", "arm", "compiletime", "conditions_in_build", "conditions_covered", "only_this_strategy",
+              "missed", "missed_not_in_build", "gained_over_default", "lost_against_default"]
+    with open(os.path.join(report_dir, "cross_strategy.csv"), "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(fields)
+        for data in cross.values():
+            for row in data["rows"]:
+                writer.writerow(["" if row[k] is None else row[k] for k in fields])
+    for benchmark, data in cross.items():
+        strategies = data["strategies"]
+        with open(os.path.join(report_dir, f"{benchmark}_strategy_comparison.csv"), "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["arm", "presence_condition", "covered_under", "covered_only_under"]
+                            + [f"covered_lines:{c}" for c in strategies] + [f"instrumented_lines:{c}" for c in strategies])
+            for arm, conds in data["conditions"].items():
+                for pc in sorted(conds):
+                    per = conds[pc]
+                    under = [c for c in strategies if per.get(c) and per[c][0]]
+                    writer.writerow([arm, pc, ";".join(under), under[0] if len(under) == 1 else ""]
+                                    + [per[c][0] if per.get(c) else "-" for c in strategies]
+                                    + [per[c][1] if per.get(c) else "-" for c in strategies])
+
+
+def write_report(results, comparisons, report_dir, experiment_path, cross=None):
     with open(os.path.join(report_dir, "pc_summary.csv"), "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["benchmark", "compiletime", "arm", "trials", "files", "files_analysed", "conditions",
@@ -636,6 +734,24 @@ def write_report(results, comparisons, report_dir, experiment_path):
                 owners[by[0]] += 1
         unique_rows += "".join(f"<tr><td>{e(benchmark)}</td><td>{e(cts)}</td><td>{e(a)}</td><td>{owners.get(a, 0):,}</td></tr>"
                                for a in arms)
+    cross = cross or {}
+    write_cross_strategy(cross, report_dir)
+    fmt_opt = lambda v: "–" if v is None else f"{v:,}"
+    cross_rows = "".join(
+        f"<tr><td>{e(r['benchmark'])}</td><td>{e(r['arm'])}</td><td>{e(r['compiletime'])}</td>"
+        f"<td>{r['conditions_in_build']:,}</td><td>{r['conditions_covered']:,}</td><td>{r['only_this_strategy']:,}</td>"
+        f"<td>{r['missed']:,} ({r['missed_not_in_build']:,} not in build)</td>"
+        f"<td>{fmt_opt(r['gained_over_default'])}</td><td>{fmt_opt(r['lost_against_default'])}</td></tr>"
+        for data in cross.values() for r in data["rows"])
+    cross_html = (f"""<h2>Across compile-time strategies</h2>
+<p>For a benchmark run under several compile-time strategies, each arm (and all fuzzers together) under each strategy.
+<i>Only this strategy</i>: conditions its trials covered and no other strategy's did. <i>Missed</i>: conditions another
+strategy covered and this one did not; <i>not in build</i> of those were not even compiled by this strategy's builds,
+so no fuzzer could have reached them. Gained and lost are against the default strategy.</p>
+<table><tr><th>Benchmark</th><th>Arm</th><th>Compile-time</th><th>Conditions in build</th><th>Covered</th>
+<th>Only this strategy</th><th>Missed</th><th>Gained over default</th><th>Lost against default</th></tr>{cross_rows}</table>
+<p>Per condition: <code>&lt;benchmark&gt;_strategy_comparison.csv</code>; summary: <a href="cross_strategy.csv">cross_strategy.csv</a>.</p>
+""" if cross_rows else "")
     with open(os.path.join(report_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(f"""<!doctype html><meta charset="utf-8"><title>SuperC presence conditions</title>
 <style>body{{font:14px system-ui,sans-serif;margin:24px;max-width:1100px}}table{{border-collapse:collapse;margin:12px 0}}
@@ -653,7 +769,7 @@ Files: those of the coverage report that SuperC analysed, out of all its .c file
 where SuperC's tree ends (the experiment log names those files). They are left out of every count above.</p>
 <h2>Conditions only one arm covered</h2>
 <table><tr><th>Benchmark</th><th>Compile-time</th><th>Arm</th><th>Conditions</th></tr>{unique_rows}</table>
-<p>Tables: <a href="pc_summary.csv">pc_summary.csv</a>, and per benchmark <code>&lt;benchmark&gt;_pc_comparison.csv</code>
+{cross_html}<p>Tables: <a href="pc_summary.csv">pc_summary.csv</a>, and per benchmark <code>&lt;benchmark&gt;_pc_comparison.csv</code>
 with every condition, the arms that covered it and their covered lines. Per trial:
 <code>data/&lt;trial&gt;/pc_analysis/pc_coverage_summary.csv</code>.</p>
 """)

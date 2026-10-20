@@ -118,6 +118,39 @@
       <tbody id="sc-arms"></tbody>
     </table></div>
     <p class="small muted" id="sc-uncovered"></p>
+
+    <div id="cs" hidden>
+      <h3>Across compile-time strategies <span class="small muted" id="cs-bench"></span></h3>
+      <p class="small muted" style="max-width:90ch">The same benchmark under each compile-time strategy it ran with. <b>Only this strategy</b>: conditions covered under it and under no other.
+        <b>Missed</b>: conditions another strategy covered and this one did not; <b>not compiled</b> of those are conditions none of this strategy's builds compiled, so no fuzzer could reach them under it.
+        Gained and lost are against the default build.</p>
+      <div class="row" style="margin-bottom:8px">
+        <label>Arm <select id="cs-arm"></select></label>
+        <span class="spacer"></span><span class="small" id="cs-links"></span>
+      </div>
+      <div class="card tw"><table>
+        <thead><tr><th>Compile-time strategy</th><th>Conditions in build</th><th>Covered / in build</th>
+          <th class="num" title="Covered under this strategy and under no other">Only this strategy</th>
+          <th class="num" title="Covered under another strategy, not under this one">Missed</th>
+          <th class="num" title="Of the missed: not compiled by any build of this strategy">not compiled</th>
+          <th class="num" title="Covered under this strategy and not under the default build">Gained vs default</th>
+          <th class="num" title="Covered under the default build and not under this strategy">Lost vs default</th></tr></thead>
+        <tbody id="cs-rows"></tbody>
+      </table></div>
+      <div class="row" style="margin:10px 0 8px">
+        <label>Show <select id="cs-show">
+          <option value="only">covered only under…</option><option value="missed">missed under… (another strategy covered it)</option>
+          <option value="not_built">not compiled under… (another strategy covered it)</option>
+          <option value="gained">gained over default by…</option><option value="lost">lost against default by…</option>
+          <option value="uncovered">compiled somewhere, covered under none</option><option value="all">all</option></select></label>
+        <label id="cs-strategy-wrap">strategy <select id="cs-strategy"></select></label>
+        <input type="text" id="cs-q" placeholder="Search conditions" style="min-width:200px">
+        <span class="small muted" id="cs-count"></span>
+      </div>
+      <div class="card tw"><table class="conds"><thead id="cs-head"></thead><tbody id="cs-conds"></tbody></table></div>
+      <button id="cs-more" hidden onclick="loadStrategyConditions(false)">Show more</button>
+    </div>
+
     <h3>Conditions</h3>
     <div class="row" style="margin-bottom:8px">
       <label>Show <select id="sc-show">
@@ -362,12 +395,87 @@ async function loadTimeline() {
 }
 document.getElementById("ot-metric").addEventListener("change", loadTimeline);
 
+// ---- Presence conditions across compile-time strategies ----
+const cs = {data: null, offset: 0, timer: null};
+
+async function loadStrategies() {
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/strategies`);
+  cs.data = r.ok ? r.benchmarks : null;
+  renderStrategies();
+}
+
+function currentStrategyBenchmark() {
+  if (!cs.data || !sc.data) return null;
+  const b = currentBuild();
+  return b ? cs.data[b.benchmark] || null : null;
+}
+
+function renderStrategies() {
+  const c = currentStrategyBenchmark();
+  document.getElementById("cs").hidden = !c;
+  if (!c) return;
+  document.getElementById("cs-bench").textContent = `· ${c.benchmark}: ${c.strategies.join(", ")}`;
+  const armSel = document.getElementById("cs-arm"), cur = armSel.value;
+  armSel.innerHTML = c.arms.map(a => `<option>${esc(a)}</option>`).join("");
+  armSel.value = c.arms.includes(cur) ? cur : (c.arms.includes("all fuzzers") ? "all fuzzers" : c.arms[0]);
+  const stSel = document.getElementById("cs-strategy"), curSt = stSel.value;
+  stSel.innerHTML = c.strategies.map(x => `<option>${esc(x)}</option>`).join("");
+  stSel.value = c.strategies.includes(curSt) ? curSt : (c.strategies.find(x => x !== "default") || c.strategies[0]);
+  const base = `/reports/${encodeURIComponent(NAME)}/superc/`;
+  document.getElementById("cs-links").innerHTML = `<a href="${base}cross_strategy.csv">cross_strategy.csv</a> · <a href="${base}${encodeURIComponent(c.file)}">${esc(c.file)}</a>`;
+  renderStrategyRows();
+  loadStrategyConditions(true);
+}
+
+function renderStrategyRows() {
+  const c = currentStrategyBenchmark(), arm = document.getElementById("cs-arm").value;
+  const rows = c.rows.filter(r => r.arm === arm);
+  const maxBuilt = Math.max(...rows.map(r => r.conditions_in_build), 1);
+  const best = Math.max(...rows.map(r => r.conditions_covered));
+  const opt = v => v == null ? `<span class="muted">–</span>` : v.toLocaleString();
+  document.getElementById("cs-rows").innerHTML = rows.map(r => `<tr>
+    <td style="white-space:nowrap">${esc(r.compiletime)}${r.conditions_covered === best && rows.length > 1 ? ` <span class="badge success" title="Covered the most conditions">most</span>` : ""}</td>
+    <td title="Bars are relative to the strategy whose builds compile the most conditions"><div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:100px;min-width:100px"><span style="width:${(100 * r.conditions_in_build / maxBuilt).toFixed(1)}%"></span></div><span class="num">${r.conditions_in_build.toLocaleString()}</span></div></td>
+    <td>${meter(r.conditions_covered, r.conditions_in_build)}</td>
+    <td class="num">${r.only_this_strategy.toLocaleString()}</td><td class="num">${r.missed.toLocaleString()}</td>
+    <td class="num">${r.missed_not_in_build.toLocaleString()}</td>
+    <td class="num">${opt(r.gained_over_default)}</td><td class="num">${opt(r.lost_against_default)}</td></tr>`).join("");
+}
+
+async function loadStrategyConditions(reset) {
+  const c = currentStrategyBenchmark();
+  if (!c) return;
+  const show = document.getElementById("cs-show").value;
+  document.getElementById("cs-strategy-wrap").hidden = ["all", "uncovered"].includes(show);
+  if (reset) cs.offset = 0;
+  const q = new URLSearchParams({arm: document.getElementById("cs-arm").value, show, strategy: document.getElementById("cs-strategy").value,
+                                 q: document.getElementById("cs-q").value, offset: cs.offset, limit: 100});
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/strategies/${encodeURIComponent(c.benchmark)}/conditions?${q}`);
+  if (!r.ok) return;
+  document.getElementById("cs-head").innerHTML = `<tr><th>Condition</th>` + r.strategies.map(x => `<th class="num">${esc(x)}</th>`).join("") + `<th>Covered under</th></tr>`;
+  const rows = r.rows.map(x => `<tr><td class="cond"><code>${esc(x.condition)}</code></td>` + r.strategies.map(st => {
+      const p = x.per[st];
+      if (!p) return `<td class="num muted" title="No build of ${esc(st)} compiled this condition">not compiled</td>`;
+      const f = p[1] ? p[0] / p[1] : 0;
+      return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(st)}: ${p[0]} of ${p[1]} instrumented lines covered">${p[0] ? `${p[0].toLocaleString()} <span class="muted">/ ${p[1].toLocaleString()}</span>` : `<span class="muted">0 / ${p[1].toLocaleString()}</span>`}</td>`;
+    }).join("") + `<td class="small">${x.covered_under.length ? (x.only ? `only <b>${esc(x.only)}</b>` : x.covered_under.length === r.strategies.length ? "all strategies" : x.covered_under.map(esc).join(", ")) : `<span class="muted">none</span>`}</td></tr>`).join("");
+  const tbody = document.getElementById("cs-conds");
+  if (reset) tbody.innerHTML = rows || `<tr><td colspan="${r.strategies.length + 2}" class="empty">No conditions match.</td></tr>`;
+  else tbody.insertAdjacentHTML("beforeend", rows);
+  cs.offset = r.offset + r.rows.length;
+  document.getElementById("cs-more").hidden = cs.offset >= r.matching;
+  document.getElementById("cs-count").textContent = `${r.matching.toLocaleString()} of ${r.total.toLocaleString()} conditions`;
+}
+document.getElementById("cs-arm").addEventListener("change", () => { renderStrategyRows(); loadStrategyConditions(true); });
+for (const id of ["cs-show", "cs-strategy"]) document.getElementById(id).addEventListener("change", () => loadStrategyConditions(true));
+document.getElementById("cs-q").addEventListener("input", () => { clearTimeout(cs.timer); cs.timer = setTimeout(() => loadStrategyConditions(true), 250); });
+
 // ---- Presence conditions (SuperC) ----
 const sc = {data: null, build: null, offset: 0, loaded: false, timer: null};
 const pct = (a, b) => b ? (100 * a / b) : 0;
 function meter(a, b) {
   return `<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:100px;min-width:100px"><span style="width:${pct(a, b).toFixed(1)}%"></span></div>
-    <span class="num">${a.toLocaleString()} <span class="muted">/ ${b.toLocaleString()} · ${pct(a, b).toFixed(1)}%</span></span></div>`;
+    <span class="num" style="white-space:nowrap">${a.toLocaleString()} <span class="muted">/ ${b.toLocaleString()} · ${pct(a, b).toFixed(1)}%</span></span></div>`;
 }
 
 async function loadSuperc(force) {
@@ -377,6 +485,7 @@ async function loadSuperc(force) {
     document.getElementById("sc-none").hidden = false; document.getElementById("sc-body").hidden = true; return;
   }
   sc.data = r; sc.loaded = true;
+  loadStrategies();
   document.getElementById("sc-none").hidden = true; document.getElementById("sc-body").hidden = false;
   const sel = document.getElementById("sc-build");
   sel.innerHTML = r.builds.map(b => `<option value="${esc(b.key)}">${esc(b.benchmark)}${b.compiletime !== "default" ? ` (compile-time ${esc(b.compiletime)})` : ""}</option>`).join("");
@@ -443,7 +552,7 @@ async function loadConditions(reset) {
   document.getElementById("sc-count").textContent = `${r.matching.toLocaleString()} of ${r.total.toLocaleString()} conditions`;
 }
 
-document.getElementById("sc-build").addEventListener("change", renderBuild);
+document.getElementById("sc-build").addEventListener("change", () => { renderBuild(); renderStrategies(); });
 for (const id of ["sc-show", "sc-sort", "sc-arm"]) document.getElementById(id).addEventListener("change", () => loadConditions(true));
 document.getElementById("sc-q").addEventListener("input", () => { clearTimeout(sc.timer); sc.timer = setTimeout(() => loadConditions(true), 250); });
 refresh();

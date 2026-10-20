@@ -304,6 +304,27 @@ def api_superc(name):
     return jsonify(ok=data is not None, **(data or {}))
 
 
+@app.get("/api/experiments/<name>/superc/strategies")
+def api_superc_strategies(name):
+    experiment_path(name)
+    data = superc_view.cross_overview(config(), name)
+    return jsonify(ok=data is not None, benchmarks=data or {})
+
+
+@app.get("/api/experiments/<name>/superc/strategies/<benchmark>/conditions")
+def api_superc_strategy_conditions(name, benchmark):
+    experiment_path(name)
+    if not re.match(r"^[A-Za-z0-9_.+-]+$", benchmark) or ".." in benchmark:
+        abort(404)
+    data = superc_view.cross_conditions(config(), name, benchmark, request.args.get("arm", superc_view.ALL_ARMS),
+                                        show=request.args.get("show", "all"), strategy=request.args.get("strategy") or None,
+                                        query=request.args.get("q", ""), offset=request.args.get("offset", 0, type=int),
+                                        limit=request.args.get("limit", 100, type=int))
+    if data is None:
+        abort(404)
+    return jsonify(ok=True, **data)
+
+
 @app.get("/api/experiments/<name>/superc/<key>/conditions")
 def api_superc_conditions(name, key):
     experiment_path(name)

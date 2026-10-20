@@ -451,7 +451,15 @@ Jobs (experiments and post-analyses) go into the same queue as experiments queue
   - **SuperC's result per file:** how many `.c` files SuperC analysed, and which ones timed out or failed. Those files' lines have no condition and are left out of every count.
   - **Arms:** per arm, the conditions covered over its trials against the conditions in the build (with a bar), the median trial, the conditions only that arm covered, the conditional lines covered, and the covered lines not attributed to any condition (in headers, or past the end of SuperC's tree).
   - **Conditions:** every condition with its instrumented lines and each arm's covered lines (shaded by the share covered). You can show the conditions in the build, those covered by some arm, those covered by none, those covered only by one arm, or those another arm covered but one arm missed. You can search conditions (for example `SUPPORT_JIT`) and sort them. It loads 100 at a time.
-  - **Links:** SuperC's own `index.html`, `pc_summary.csv` and the build's `<benchmark>_pc_comparison.csv`.
+  - **Across compile-time strategies:** shown when the benchmark ran under two or more strategies. For one arm, or all fuzzers together, each strategy's row has:
+    - **Conditions in build:** what its builds compiled.
+    - **Covered:** what its trials covered.
+    - **Only this strategy:** conditions covered under it and under no other strategy.
+    - **Missed:** conditions another strategy covered and this one didn't. "Not compiled" counts those its builds didn't even compile, so no fuzzer could have reached them under it.
+    - **Gained and lost:** against the default build.
+
+    Under the table, every condition is listed with its covered lines under each strategy, or "not compiled". You can filter it to the conditions covered only under one strategy, missed or not compiled under one, gained or lost against default, or covered under none.
+  - **Links:** SuperC's own `index.html`, `pc_summary.csv`, the build's `<benchmark>_pc_comparison.csv`, and the cross-strategy CSVs.
 
   The Trials tab links each trial's own `pc_analysis/pc_coverage_summary.csv`, and the Experiments page links "presence conditions" for experiments that have a report.
 - **Post-analysis:** queues `post_analysis.py` on a finished experiment:
@@ -544,6 +552,8 @@ Outputs:
 | `<report_filestore>/EXP_NAME/superc/index.html` | per benchmark and arm: conditions in the build, covered by the union of the trials and by the median trial, conditional lines covered, and the conditions only one arm covered |
 | `.../superc/pc_summary.csv` | the same as a table |
 | `.../superc/<benchmark>_pc_comparison.csv` | every condition with its instrumented lines, the arms that covered it and their covered lines |
+| `.../superc/cross_strategy.csv` | for a benchmark run under several compile-time strategies: per arm (and `all fuzzers`) and strategy, the conditions in the build and covered, covered only under that strategy, missed (and of those, not compiled), gained and lost against default |
+| `.../superc/<benchmark>_strategy_comparison.csv` | per arm, every condition with its covered and instrumented lines under each strategy (`-` when no build of the strategy compiled it) |
 | `<experiment>/data/<trial>/pc_analysis/pc_coverage_summary.{json,csv}` | every condition of one trial |
 | `<experiment>/superc/<copy>/` | SuperC's trees (`pc/<path>.json`), logs (`logs/<path>.log`), `status.tsv` (file, exit code (124: timed out), seconds), and the files and includes it ran with |
 

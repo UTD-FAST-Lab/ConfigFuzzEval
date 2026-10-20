@@ -147,3 +147,80 @@ def conditions(config, name, key, show="all", arm=None, query="", sort="instrume
     offset, limit = max(0, offset), max(1, min(limit, 1000))
     return {"arms": arms, "total": len(rows), "matching": len(selected), "offset": offset,
             "rows": selected[offset:offset + limit]}
+
+
+# --- Across compile-time strategies (superc.cross_strategy) ------------------------------
+
+CROSS_INT = ("conditions_in_build", "conditions_covered", "only_this_strategy", "missed", "missed_not_in_build")
+ALL_ARMS = "all fuzzers"
+
+
+def cross_overview(config, name):
+    """{benchmark: {"strategies", "arms", "rows"}} from cross_strategy.csv, or None without one."""
+    path = os.path.join(report_dir(config, name), "cross_strategy.csv")
+    if not os.path.isfile(path):
+        return None
+    out = {}
+    with open(path, newline="") as f:
+        for row in csv.DictReader(f):
+            row = {k: (_number(v) if k in CROSS_INT else (None if v == "" and k.endswith("default") else
+                                                           _number(v) if k.endswith("default") else v))
+                   for k, v in row.items()}
+            b = out.setdefault(row["benchmark"], {"benchmark": row["benchmark"], "strategies": [], "arms": [], "rows": []})
+            if row["compiletime"] not in b["strategies"]:
+                b["strategies"].append(row["compiletime"])
+            if row["arm"] not in b["arms"]:
+                b["arms"].append(row["arm"])
+            b["rows"].append(row)
+    for b in out.values():
+        b["strategies"].sort(key=lambda c: (c != "default", c))
+        b["arms"].sort(key=lambda a: (a == ALL_ARMS, a))
+        b["file"] = f"{b['benchmark']}_strategy_comparison.csv"
+    return out
+
+
+def cross_conditions(config, name, benchmark, arm, show="all", strategy=None, query="", offset=0, limit=100):
+    """The conditions of one benchmark and arm across its compile-time strategies.
+
+    show: "all"; "only" (covered under |strategy| and no other), "missed" (covered under another
+    strategy, not under |strategy|), "not_built" (missed, and no build of |strategy| compiled it),
+    "gained" / "lost" (covered under |strategy| and not under default, or the other way round),
+    "uncovered" (compiled by some strategy, covered under none)."""
+    path = os.path.join(report_dir(config, name), f"{benchmark}_strategy_comparison.csv")
+    if not os.path.isfile(path):
+        return None
+    with open(path, newline="") as f:
+        reader = csv.reader(f)
+        header = next(reader, [])
+        strategies = [h.split(":", 1)[1] for h in header if h.startswith("covered_lines:")]
+        n = len(strategies)
+        rows = []
+        for r in reader:
+            if len(r) < 4 + 2 * n or r[0] != arm:
+                continue
+            per = {}
+            for i, cts in enumerate(strategies):
+                covered, instrumented = r[4 + i], r[4 + n + i]
+                per[cts] = None if covered == "-" else [_number(covered), _number(instrumented)]
+            rows.append({"condition": r[1], "covered_under": [c for c in r[2].split(";") if c],
+                         "only": r[3] or None, "per": per})
+    if strategy not in strategies:
+        strategy = None
+    q = (query or "").strip().lower()
+
+    def covered(row, cts):
+        return bool(row["per"].get(cts) and row["per"][cts][0])
+    keep = {
+        "all": lambda r: True,
+        "only": lambda r: strategy and r["only"] == strategy,
+        "missed": lambda r: strategy and r["covered_under"] and not covered(r, strategy),
+        "not_built": lambda r: strategy and r["covered_under"] and r["per"].get(strategy) is None,
+        "gained": lambda r: strategy and "default" in strategies and covered(r, strategy) and not covered(r, "default"),
+        "lost": lambda r: strategy and "default" in strategies and covered(r, "default") and not covered(r, strategy),
+        "uncovered": lambda r: not r["covered_under"],
+    }.get(show, lambda r: True)
+    selected = [r for r in rows if keep(r) and (not q or q in r["condition"].lower())]
+    selected.sort(key=lambda r: (-max((p[1] for p in r["per"].values() if p), default=0), r["condition"]))
+    offset, limit = max(0, offset), max(1, min(limit, 1000))
+    return {"strategies": strategies, "arm": arm, "total": len(rows), "matching": len(selected), "offset": offset,
+            "rows": selected[offset:offset + limit]}

@@ -98,3 +98,16 @@ def test_directives_in_comments_are_not_blocks():
     stripped = superc.strip_comments(text).split("\n")
     assert len(stripped) == len(text.split("\n"))
     assert [n for n, l in enumerate(stripped, 1) if superc.CONDITIONAL_DIRECTIVE.match(l)] == [6]
+
+
+def test_mean_summary_and_counts():
+    pcs = {("defined A", "/s/a.c"): {1, 2}, ("defined B", "/s/a.c"): {3}}
+    trials = [{"/s/a.c": ({1, 2, 3}, {1, 2, 3})}, {"/s/a.c": ({1, 2, 3}, {1})}]
+    summaries = [superc.summarize(pcs, t) for t in trials]
+    means = superc.mean_summary(summaries)
+    assert means == {"defined A": {"covered_lines_mean": 1.5, "trials_covered": 2},
+                     "defined B": {"covered_lines_mean": 0.5, "trials_covered": 1}}
+    per_trial = [{**superc.coverage_counts(s), **superc.unassigned(pcs, t)} for s, t in zip(summaries, trials)]
+    counts = superc.mean_counts(per_trial, means)
+    assert (counts["conditions_covered_mean"], counts["conditions_covered_every_trial"]) == (1.5, 1)
+    assert counts["conditional_lines_covered_mean"] == 2.0

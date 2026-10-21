@@ -1016,7 +1016,8 @@ details{margin:8px 0}summary{cursor:pointer;color:var(--ink2);font-weight:600}
 """
 
 
-def render_html(res, comparison=None):
+def render_html(res, comparison=None, combined=None):
+    """combined: {(method, benchmark, arm): path} of the combined coverage reports (coverage_html.py)."""
     metric = res["metric"]
     arms = res["arms"]
     info = res["info"]
@@ -1034,6 +1035,8 @@ def render_html(res, comparison=None):
                 ("bugs", "Found bugs"), ("power", "Trials and statistical power"), ("method", "Method notes")]
     if comparison:
         sections.insert(6, ("repro", "Reproducibility"))
+    if combined:
+        sections.insert(-1, ("combined", "Combined coverage reports"))
     if res.get("timeline"):
         sections.insert(1, ("over-time", "Coverage over time"))
     w("<nav>" + "".join(f"<a href='#{k}'>{e(t)}</a>" for k, t in sections) + "".join(
@@ -1186,6 +1189,16 @@ def render_html(res, comparison=None):
         w(table(["Arm", "Benchmark", "Trials with coverage", "Most on benchmark", "Planned"], rows, numeric_from=2))
 
     # ---- Method ----
+    if combined:
+        w("<h2 id='combined'>Combined coverage reports</h2><p>Each arm's trials combined into one source report: "
+          "<b>union</b>, what any trial covered (llvm-cov on the merged profiles), and <b>mean</b>, the coverage "
+          "averaged over the trials, with per line how many trials covered it. "
+          "<a href='html/index.html'>All reports</a>.</p>")
+        keys = sorted({(b, a) for _, b, a in combined})
+        w(table(["Benchmark", "Arm", "Union", "Mean"],
+                [[e(b), e(a)] + [f"<a href='{e(os.path.relpath(combined[(m, b, a)], res['out_dir']))}'>{m}</a>"
+                                 if (m, b, a) in combined else "–" for m in ("union", "mean")] for b, a in keys],
+                numeric_from=4))
     w("<h2 id='method'>Method notes</h2><ul>")
     for note in method_notes(res):
         w(f"<li>{note}</li>")
@@ -1401,21 +1414,27 @@ def write_tables(res, out_dir):
 
 
 def generate_statistics_report(experiment_path, out_dir, metric="branches", baseline=None, compare_to=None,
-                               html=False):
+                               html=True):
     """Analyse an experiment and write index.html plus CSV tables to out_dir. Returns the HTML path.
 
-    html: also an llvm-cov HTML source report per arm and benchmark, in out_dir/html/ (coverage_html.py).
+    html: also the combined coverage reports of every arm and benchmark, union and mean, in
+    out_dir/html/ (coverage_html.py); a failure there is logged and the statistics are still written.
     """
     res = analyse(experiment_path, metric, baseline)
     comparison = compare_experiments(res, analyse(compare_to, metric, baseline)) if compare_to else None
     os.makedirs(out_dir, exist_ok=True)
     write_tables(res, out_dir)
+    reports = {}
+    res["out_dir"] = out_dir
     if html:
-        reports = coverage_html.html_reports(res, out_dir)
-        logging.info(f"{len(reports)} HTML source report(s) in {os.path.join(out_dir, 'html')}")
+        try:
+            reports = coverage_html.html_reports(res, out_dir)
+            logging.info(f"{len(reports)} combined coverage report(s) (union and mean) in {os.path.join(out_dir, 'html')}")
+        except Exception as e:
+            logging.error(f"Combined coverage reports failed: {e}")
     path = os.path.join(out_dir, "index.html")
     with open(path, "w", encoding="utf-8") as f:
-        f.write(render_html(res, comparison))
+        f.write(render_html(res, comparison, reports))
     return path
 
 
@@ -1426,11 +1445,13 @@ def main():
     parser.add_argument("--metric", choices=METRICS, default="branches", help="Primary coverage metric")
     parser.add_argument("--baseline", help="Fuzzer the other fuzzers are compared against (default: aflplusplus)")
     parser.add_argument("--compare-to", help="Another experiment folder, for the reproducibility section")
-    parser.add_argument("--html", action="store_true", help="Also write llvm-cov HTML source reports per arm")
+    parser.add_argument("--no-html", action="store_true",
+                        help="Skip the combined coverage reports (union and mean HTML per arm and benchmark)")
+    parser.add_argument("--html", action="store_true", help=argparse.SUPPRESS)   # the default now
     args = parser.parse_args()
     out = args.output_dir or os.path.join(args.experiment_path, "statistics")
     path = generate_statistics_report(args.experiment_path, out, args.metric, args.baseline, args.compare_to,
-                                      args.html)
+                                      not args.no_html)
     logging.info(f"Statistics report written to {path}")
 
 

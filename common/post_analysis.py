@@ -72,8 +72,9 @@ def per_config_coverage(experiment_state):
         ], check=True)
 
 
-def statistics_report(experiment_state, metric="branches", baseline=None, compare_to=None, html=False):
-    """Statistical analysis of the trials' coverage, written to <report_filestore>/<experiment>/statistics."""
+def statistics_report(experiment_state, metric="branches", baseline=None, compare_to=None, html=True):
+    """Statistical analysis of the trials' coverage, written to <report_filestore>/<experiment>/statistics,
+    with the combined coverage reports (union and mean) unless html is False."""
     experiment_path = experiment_state["experiment_path"]
     report_path = experiment_state.get("report_path") or os.path.join(
         experiment_state["report_filestore"], os.path.basename(os.path.normpath(experiment_path)))
@@ -101,8 +102,9 @@ if __name__ == "__main__":
     parser.add_argument("--metric", choices=METRICS, default="branches", help="Primary metric for --stats")
     parser.add_argument("--baseline", help="Fuzzer the others are compared against in --stats (default: aflplusplus)")
     parser.add_argument("--compare-to", help="Another experiment folder, for the --stats reproducibility section")
-    parser.add_argument("--stats-html", action="store_true",
-                        help="With --stats, also write llvm-cov HTML source reports per arm and benchmark")
+    parser.add_argument("--no-stats-html", action="store_true",
+                        help="With --stats, skip the combined coverage reports (union and mean HTML per arm and benchmark)")
+    parser.add_argument("--stats-html", action="store_true", help=argparse.SUPPRESS)   # the default now
 
     args = parser.parse_args()
 
@@ -157,7 +159,7 @@ if __name__ == "__main__":
 
     if args.stats:
         logging.info("Running the statistical analysis...")
-        path = statistics_report(experiment_state, args.metric, args.baseline, args.compare_to, args.stats_html)
+        path = statistics_report(experiment_state, args.metric, args.baseline, args.compare_to, not args.no_stats_html)
         logging.success(f"Statistics report written to {path}")
 
     # Cleanup

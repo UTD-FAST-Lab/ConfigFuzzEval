@@ -1,16 +1,19 @@
 """The SuperC presence-condition report, read for the web app's Presence conditions tab.
 
 common/superc.py writes <report>/superc/pc_summary.csv (one row per benchmark build and
-arm), <report>/superc/<benchmark>[_cts_<cts>]_pc_comparison.csv (every condition, with
-each arm's covered lines) and, per benchmark build, <experiment>/superc/<copy>/status.tsv
+arm, with the arm's trials combined both ways: union and mean), <report>/superc/
+<benchmark>[_cts_<cts>]_pc_comparison.csv (every condition, with each arm's covered lines in
+the union, its mean covered lines and the trials that covered it) and, per benchmark build, <experiment>/superc/<copy>/status.tsv
 (SuperC's exit code and time per file). This only reads them.
 """
 import csv
 import os
+import sys
 
-INT_FIELDS = ("trials", "files", "files_analysed", "conditions", "conditions_in_build",
-              "conditions_covered_union", "conditional_lines_in_build", "conditional_lines_covered_union",
-              "covered_lines_union", "covered_lines_in_headers", "covered_lines_without_condition")
+# A presence condition can be longer than csv's default 128 KiB field limit (one of binutils' is 166 KB).
+csv.field_size_limit(sys.maxsize)
+
+TEXT_FIELDS = ("benchmark", "compiletime", "arm")       # every other column of pc_summary.csv is a number
 TIMEOUT_CODES = (124, 137)        # timeout(1), and SIGKILL after it
 
 
@@ -40,14 +43,20 @@ def _comparison_rows(path):
         reader = csv.reader(f)
         header = next(reader, [])
         arms = [h.split(":", 1)[1] for h in header[4:] if h.startswith("covered_lines:")]
+        n = len(arms)
+        has_mean = len(header) >= 4 + 3 * n      # reports from before the mean have the union columns only
         rows = []
         for r in reader:
-            if len(r) < 4 + len(arms):
+            if len(r) < 4 + n:
                 continue
-            rows.append({"condition": r[0], "instrumented": _number(r[1]),
-                         "covered_by": [a for a in r[2].split(";") if a],
-                         "only": r[3] or None,
-                         "lines": {a: _number(v) for a, v in zip(arms, r[4:4 + len(arms)])}})
+            row = {"condition": r[0], "instrumented": _number(r[1]),
+                   "covered_by": [a for a in r[2].split(";") if a],
+                   "only": r[3] or None,
+                   "lines": {a: _number(v) for a, v in zip(arms, r[4:4 + n])}}
+            if has_mean and len(r) >= 4 + 3 * n:
+                row["mean"] = {a: _number(v) for a, v in zip(arms, r[4 + n:4 + 2 * n])}
+                row["trials"] = {a: _number(v) for a, v in zip(arms, r[4 + 2 * n:4 + 3 * n])}
+            rows.append(row)
     return arms, rows
 
 
@@ -83,8 +92,7 @@ def overview(config, name):
     builds = {}
     with open(summary, newline="") as f:
         for row in csv.DictReader(f):
-            row = {k: (_number(v) if k in INT_FIELDS or k == "conditions_covered_median_trial" else v)
-                   for k, v in row.items()}
+            row = {k: (v if k in TEXT_FIELDS else _number(v)) for k, v in row.items()}
             key = comparison_key(row["benchmark"], row["compiletime"])
             b = builds.setdefault(key, {"key": key, "benchmark": row["benchmark"], "compiletime": row["compiletime"],
                                         "arms": [], "rows": []})
@@ -117,6 +125,7 @@ SORTS = {
     "instrumented": lambda r, arm: (-r["instrumented"], r["condition"]),
     "condition": lambda r, arm: (r["condition"],),
     "arm": lambda r, arm: (-r["lines"].get(arm, 0), -r["instrumented"], r["condition"]),
+    "arm_mean": lambda r, arm: (-r.get("mean", {}).get(arm, 0), -r["instrumented"], r["condition"]),
     "missed": lambda r, arm: (-(r["instrumented"] - max(r["lines"].values(), default=0)), r["condition"]),
 }
 

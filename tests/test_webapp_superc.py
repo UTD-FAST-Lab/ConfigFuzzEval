@@ -18,13 +18,25 @@ COVERAGE = {
 }
 
 
+# Two trials per arm, whose union is COVERAGE.
+TRIALS = {
+    "A": [{"/s/a.c": ({1, 2, 3, 4, 5}, {1}), "/s/b.c": ({1, 2, 3, 4, 5}, {5})},
+          {"/s/a.c": ({1, 2, 3, 4, 5}, {1, 4}), "/s/b.c": ({1, 2, 3, 4, 5}, set())}],
+    "B": [{"/s/a.c": ({1, 2, 3, 4, 5}, {5}), "/s/b.c": ({1, 2, 3, 4, 5}, {2, 5}), "/s/h.h": ({9}, {9})},
+          {"/s/a.c": ({1, 2, 3, 4, 5}, set()), "/s/b.c": ({1, 2, 3, 4, 5}, {5})}],
+}
+
+
 def make_report(tmp_path):
     exp, rep = tmp_path / "exp" / "e1", tmp_path / "rep" / "e1" / "superc"
     rep.mkdir(parents=True)
     summaries = {a: superc.summarize(PCS, cov) for a, cov in COVERAGE.items()}
+    trial_summaries = {a: [superc.summarize(PCS, t) for t in ts] for a, ts in TRIALS.items()}
     results = [("xz_xz", "default", a, 2, {**superc.coverage_counts(summaries[a]), **superc.unassigned(PCS, COVERAGE[a])},
-                [superc.coverage_counts(summaries[a])] * 2, 3, 2) for a in sorted(COVERAGE)]
-    superc.write_report(results, {("xz_xz", "default"): (sorted(COVERAGE), summaries)}, str(rep), str(exp))
+                [{**superc.coverage_counts(s), **superc.unassigned(PCS, t)} for s, t in zip(trial_summaries[a], TRIALS[a])],
+                3, 2) for a in sorted(COVERAGE)]
+    means = {a: superc.mean_summary(trial_summaries[a]) for a in COVERAGE}
+    superc.write_report(results, {("xz_xz", "default"): (sorted(COVERAGE), summaries, means)}, str(rep), str(exp))
     status = exp / "superc" / "cts_default_xz_xz_0"
     status.mkdir(parents=True)
     (status / "status.tsv").write_text("/s/a.c\t0\t12\n/s/b.c\t0\t8\n/s/c.c\t124\t600\n")
@@ -42,6 +54,9 @@ def test_overview(tmp_path):
     assert b["only"] == {"A": 1, "B": 1}          # JIT only by A, WIN32 only by B
     assert (b["in_build"], b["uncovered"]) == (4, 1)  # DEBUG is in the build, nobody covered it
     assert rows["B"]["covered_lines_in_headers"] == 1
+    # A covered JIT in both trials and UNICODE in one; B covered UNICODE and WIN32 in its first trial only.
+    assert (rows["A"]["conditions_covered_mean"], rows["A"]["conditions_covered_every_trial"]) == (1.5, 1)
+    assert (rows["B"]["conditions_covered_mean"], rows["B"]["conditions_covered_every_trial"]) == (1, 0)
     st = b["superc"]
     assert (st["files"], st["ok"], st["timed_out"], st["failed"]) == (3, 2, 1, 0)
     assert st["problems"] == [{"file": "/s/c.c", "code": 124, "seconds": 600, "reason": "timed out"}]

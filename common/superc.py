@@ -12,7 +12,8 @@ always is). This joins those conditions with the trials' line coverage:
   2. for every trial, each presence condition gets the build's instrumented lines under
      it (the lines LCOV lists) and those the trial covered;
   3. per benchmark, the arms (fuzzer[runtime strategy], as in the statistics report) are
-     compared by the conditions their trials covered together.
+     compared both ways their trials combine: the union (what any trial covered) and the
+     mean over the trials (what a typical trial covers), with the conditions every trial covered.
 
 Lines are keyed by their absolute path in the coverage build, as in the LCOV reports,
 so files with the same name in different folders are kept apart.
@@ -21,8 +22,9 @@ Outputs:
   <experiment>/superc/<copy>/         pc/ (SuperC's trees), logs/, status.tsv, files.txt
   <experiment>/data/<trial>/pc_analysis/pc_coverage_summary.{json,csv}
   <report>/superc/index.html          per benchmark and arm, with
-  <report>/superc/pc_summary.csv      covered conditions per arm and benchmark, and
-  <report>/superc/<benchmark>_pc_comparison.csv  every condition with the arms that covered it
+  <report>/superc/pc_summary.csv      covered conditions per arm and benchmark (union, mean, every trial), and
+  <report>/superc/<benchmark>_pc_comparison.csv  every condition with the arms that covered it: per arm
+                                      its covered lines (union), mean covered lines and the trials covering it
   <report>/superc/cross_strategy.csv  per benchmark run under several compile-time strategies,
                                       the strategies compared per arm (cross_strategy)
   <report>/superc/<benchmark>_strategy_comparison.csv  every condition under every strategy
@@ -540,7 +542,7 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
     for t in trials:
         by_build[(t[3], t[4])].append(t)
 
-    results = []          # (benchmark, cts, arm, trials, counts of the arm's union, per-trial counts)
+    results = []          # (benchmark, cts, arm, trials, counts of the arm's union, per-trial counts, files, analysed)
     comparisons = {}
     builds = {}           # (benchmark, cts) -> {arm without its compile-time strategy: summary}
     for (cts, benchmark), build_trials in sorted(by_build.items()):
@@ -567,6 +569,7 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
 
         arm_union = defaultdict(dict)
         arm_trial_counts = defaultdict(list)
+        arm_trial_summaries = defaultdict(list)
         for t in build_trials:
             arm, trial_dir = t[0], t[6]
             summary = summarize(pcs, coverage[trial_dir])
@@ -574,7 +577,8 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
             os.makedirs(pc_dir, exist_ok=True)
             write_summary(summary, os.path.join(pc_dir, "pc_coverage_summary.json"),
                           os.path.join(pc_dir, "pc_coverage_summary.csv"))
-            arm_trial_counts[arm].append(coverage_counts(summary))
+            arm_trial_counts[arm].append({**coverage_counts(summary), **unassigned(pcs, coverage[trial_dir])})
+            arm_trial_summaries[arm].append(summary)
             for source, (instrumented, covered) in coverage[trial_dir].items():
                 i, c = arm_union[arm].setdefault(source, (set(), set()))
                 i |= instrumented
@@ -585,7 +589,7 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
             results.append((benchmark, cts, arm, len(arm_trial_counts[arm]),
                             {**coverage_counts(arm_summaries[arm]), **unassigned(pcs, arm_union[arm])},
                             arm_trial_counts[arm], len(files), len(files) - len(bad)))
-        comparisons[(benchmark, cts)] = (arms, arm_summaries)
+        comparisons[(benchmark, cts)] = (arms, arm_summaries, {arm: mean_summary(arm_trial_summaries[arm]) for arm in arms})
         # For the comparison across compile-time strategies: the arms without their strategy.
         from statistical_analysis import arm_name
         base = {t[0]: arm_name(t[1], t[2], "default") for t in build_trials}
@@ -597,6 +601,16 @@ def analyse_experiment(experiment_path, report_dir, cores, memory_gb=None, timeo
 
 
 ALL_ARMS = "all fuzzers"
+
+
+def mean_summary(trial_summaries):
+    """Per condition, over an arm's trials: the mean covered lines and how many trials covered it."""
+    n = len(trial_summaries)
+    out = {}
+    for pc in {pc for s in trial_summaries for pc in s if pc not in (ALWAYS, NEVER)}:
+        lines = [s.get(pc, {}).get("covered_lines", 0) for s in trial_summaries]
+        out[pc] = {"covered_lines_mean": sum(lines) / n if n else 0, "trials_covered": sum(1 for x in lines if x)}
+    return out
 
 
 def _condition_sets(summary):
@@ -660,6 +674,15 @@ def cross_strategy(builds):
     return out
 
 
+def _mean_sd(values):
+    values = list(values)
+    if not values:
+        return 0, 0
+    mean = sum(values) / len(values)
+    sd = (sum((v - mean) ** 2 for v in values) / (len(values) - 1)) ** 0.5 if len(values) > 1 else 0.0
+    return mean, sd
+
+
 def _median(values):
     values = sorted(values)
     n = len(values)
@@ -692,41 +715,67 @@ def write_cross_strategy(cross, report_dir):
                                     + [per[c][1] if per.get(c) else "-" for c in strategies])
 
 
+MEAN_FIELDS = ("conditions_covered", "conditional_lines_covered", "covered_lines")
+
+
+def mean_counts(per_trial, means):
+    """The mean and standard deviation over an arm's trials of MEAN_FIELDS, and the conditions
+    every trial covered (from mean_summary)."""
+    out = {}
+    for field in MEAN_FIELDS:
+        out[f"{field}_mean"], out[f"{field}_sd"] = _mean_sd(c[field] for c in per_trial)
+    out["conditions_covered_every_trial"] = sum(1 for m in means.values() if per_trial and m["trials_covered"] == len(per_trial))
+    return out
+
+
 def write_report(results, comparisons, report_dir, experiment_path, cross=None):
     with open(os.path.join(report_dir, "pc_summary.csv"), "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["benchmark", "compiletime", "arm", "trials", "files", "files_analysed", "conditions",
                          "conditions_in_build", "conditions_covered_union", "conditions_covered_median_trial",
                          "conditional_lines_in_build", "conditional_lines_covered_union", "covered_lines_union",
-                         "covered_lines_in_headers", "covered_lines_without_condition"])
+                         "covered_lines_in_headers", "covered_lines_without_condition",
+                         "conditions_covered_mean", "conditions_covered_sd", "conditional_lines_covered_mean",
+                         "conditional_lines_covered_sd", "covered_lines_mean", "covered_lines_sd",
+                         "conditions_covered_every_trial"])
         for benchmark, cts, arm, n, union, per_trial, files, analysed in results:
+            mean = mean_counts(per_trial, comparisons[(benchmark, cts)][2][arm])
             writer.writerow([benchmark, cts, arm, n, files, analysed, union["conditions"], union["conditions_in_build"],
                              union["conditions_covered"], _median([c["conditions_covered"] for c in per_trial]),
                              union["conditional_lines_in_build"], union["conditional_lines_covered"],
                              union["covered_lines"], union["covered_lines_in_headers"],
-                             union["covered_lines_without_condition"]])
-    for (benchmark, cts), (arms, summaries) in comparisons.items():
+                             union["covered_lines_without_condition"]]
+                            + [round(mean[f"{field}_{k}"], 2) for field in MEAN_FIELDS for k in ("mean", "sd")]
+                            + [mean["conditions_covered_every_trial"]])
+    for (benchmark, cts), (arms, summaries, means) in comparisons.items():
         name = benchmark if cts == "default" else f"{benchmark}_cts_{cts}"
         all_pcs = sorted({pc for s in summaries.values() for pc in s if pc not in (ALWAYS, NEVER)})
         with open(os.path.join(report_dir, f"{name}_pc_comparison.csv"), "w", newline="") as f:
             writer = csv.writer(f)
+            # The union columns first (covered_lines:<arm>), then the mean ones, so readers of the union keep working.
             writer.writerow(["presence_condition", "instrumented_lines", "covered_by", "covered_only_by"]
-                            + [f"covered_lines:{a}" for a in arms])
+                            + [f"covered_lines:{a}" for a in arms] + [f"mean_covered_lines:{a}" for a in arms]
+                            + [f"trials_covered:{a}" for a in arms])
             for pc in all_pcs:
                 instrumented = max(summaries[a].get(pc, {}).get("instrumented_lines", 0) for a in arms)
                 lines = [summaries[a].get(pc, {}).get("covered_lines", 0) for a in arms]
                 by = [a for a, n in zip(arms, lines) if n]
-                writer.writerow([pc, instrumented, ";".join(by), by[0] if len(by) == 1 else ""] + lines)
+                writer.writerow([pc, instrumented, ";".join(by), by[0] if len(by) == 1 else ""] + lines
+                                + [round(means[a].get(pc, {}).get("covered_lines_mean", 0), 2) for a in arms]
+                                + [means[a].get(pc, {}).get("trials_covered", 0) for a in arms])
 
     e = html.escape
-    rows = "".join(
-        f"<tr><td>{e(b)}</td><td>{e(c)}</td><td>{e(a)}</td><td>{n}</td><td>{an}/{fl}</td><td>{u['conditions_in_build']:,}</td>"
-        f"<td>{u['conditions_covered']:,}</td><td>{_median([x['conditions_covered'] for x in pt]):,}</td>"
-        f"<td>{u['conditional_lines_covered']:,} / {u['conditional_lines_in_build']:,}</td>"
-        f"<td>{u['covered_lines_in_headers'] + u['covered_lines_without_condition']:,} / {u['covered_lines']:,}</td></tr>"
-        for b, c, a, n, u, pt, fl, an in results)
+    def row(b, c, a, n, u, pt, fl, an):
+        m = mean_counts(pt, comparisons[(b, c)][2][a])
+        return (f"<tr><td>{e(b)}</td><td>{e(c)}</td><td>{e(a)}</td><td>{n}</td><td>{an}/{fl}</td><td>{u['conditions_in_build']:,}</td>"
+                f"<td>{u['conditions_covered']:,}</td><td>{m['conditions_covered_mean']:,.1f} ± {m['conditions_covered_sd']:,.1f}</td>"
+                f"<td>{m['conditions_covered_every_trial']:,}</td><td>{_median([x['conditions_covered'] for x in pt]):,}</td>"
+                f"<td>{u['conditional_lines_covered']:,} / {u['conditional_lines_in_build']:,}</td>"
+                f"<td>{m['conditional_lines_covered_mean']:,.1f} ± {m['conditional_lines_covered_sd']:,.1f}</td>"
+                f"<td>{u['covered_lines_in_headers'] + u['covered_lines_without_condition']:,} / {u['covered_lines']:,}</td></tr>")
+    rows = "".join(row(*r) for r in results)
     unique_rows = ""
-    for (benchmark, cts), (arms, summaries) in comparisons.items():
+    for (benchmark, cts), (arms, summaries, _) in comparisons.items():
         owners = Counter()
         for pc in {pc for s in summaries.values() for pc in s if pc not in (ALWAYS, NEVER)}:
             by = [a for a in arms if summaries[a].get(pc, {}).get("covered_lines", 0)]
@@ -759,10 +808,13 @@ td,th{{border:1px solid #ccc;padding:4px 8px;text-align:right}}td:nth-child(-n+3
 <h1>Presence-condition coverage: {e(os.path.basename(os.path.normpath(experiment_path)))}</h1>
 <p>SuperC gives every source line the #if condition under which it is compiled. A condition is <i>in the build</i>
 when the coverage build instrumented at least one of its lines, and <i>covered</i> when a trial executed one.
-Unconditional code (condition 1) and code no configuration compiles (condition 0) are left out. The union is over an arm's trials; the median is per trial.
+Unconditional code (condition 1) and code no configuration compiles (condition 0) are left out. An arm's trials are combined
+two ways: the <i>union</i> (what any trial covered) and the <i>mean</i> over the trials (± standard deviation; what a typical
+trial covers). <i>Every trial</i>: conditions all of the arm's trials covered. The median is per trial.
 Files: those of the coverage report that SuperC analysed, out of all its .c files.</p>
 <table><tr><th>Benchmark</th><th>Compile-time</th><th>Arm</th><th>Trials</th><th>Files</th><th>Conditions in build</th>
-<th>Covered (union)</th><th>Covered (median trial)</th><th>Conditional lines covered / in build</th>
+<th>Covered (union)</th><th>Covered (mean)</th><th>Covered by every trial</th><th>Covered (median trial)</th>
+<th>Conditional lines covered (union) / in build</th><th>Conditional lines covered (mean)</th>
 <th>Covered lines without a condition / all covered</th></tr>{rows}</table>
 <p><i>Covered lines without a condition</i> are in headers (SuperC gives conditions only for the lines of the
 .c file it parses, so code in headers such as bfd's coffcode.h is not attributed) or in .c files past the line
@@ -770,7 +822,8 @@ where SuperC's tree ends (the experiment log names those files). They are left o
 <h2>Conditions only one arm covered</h2>
 <table><tr><th>Benchmark</th><th>Compile-time</th><th>Arm</th><th>Conditions</th></tr>{unique_rows}</table>
 {cross_html}<p>Tables: <a href="pc_summary.csv">pc_summary.csv</a>, and per benchmark <code>&lt;benchmark&gt;_pc_comparison.csv</code>
-with every condition, the arms that covered it and their covered lines. Per trial:
+with every condition, the arms that covered it and, per arm, its covered lines (union), mean covered lines and the
+number of trials that covered it. Per trial:
 <code>data/&lt;trial&gt;/pc_analysis/pc_coverage_summary.csv</code>.</p>
 """)
 

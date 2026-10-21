@@ -77,6 +77,7 @@
   {% if stats_files %}
   <div class="row" style="margin-bottom:8px">
     <a class="btn" href="/reports/{{ name }}/statistics/index.html" target="_blank">Open the report in a new tab</a>
+    {% if 'html' in stats_files %}<a class="btn" href="/reports/{{ name }}/statistics/html/index.html" target="_blank" title="Every arm's trials combined: union (what any trial covered) and mean (averaged over the trials, per line how many trials covered it)">Combined coverage: union &amp; mean</a>{% endif %}
     {% for f in stats_files if f.endswith('.csv') %}<a href="/reports/{{ name }}/statistics/{{ f }}">{{ f }}</a>{% endfor %}
   </div>
   <iframe class="report" src="/reports/{{ name }}/statistics/index.html" title="Statistics report"></iframe>
@@ -102,7 +103,8 @@
   <div id="sc-body" hidden>
     <p class="muted" style="max-width:85ch">SuperC gives every source line the <code>#if</code> condition under which it is compiled.
       A condition is <b>in the build</b> when the coverage build instrumented at least one of its lines, and <b>covered</b> when a trial executed one.
-      Unconditional code (condition <code>1</code>) and code no configuration compiles (<code>0</code>) are left out. Arm totals are the union over the arm's trials.</p>
+      Unconditional code (condition <code>1</code>) and code no configuration compiles (<code>0</code>) are left out.
+      An arm's trials are combined two ways: the <b>union</b> (what any of its trials covered) and the <b>mean</b> over its trials (± standard deviation: what a typical trial covers); <b>every trial</b> counts the conditions all of them covered.</p>
     <div class="row" style="margin-bottom:6px">
       <label id="sc-build-wrap" hidden>Benchmark build <select id="sc-build"></select></label>
       <span class="spacer"></span>
@@ -111,9 +113,11 @@
     <div id="sc-status"></div>
     <h3>Arms</h3>
     <div class="card tw"><table>
-      <thead><tr><th>Arm</th><th class="num">Trials</th><th>Conditions covered (union) / in build</th><th class="num">Median trial</th>
-        <th class="num" title="Conditions this arm covered and no other arm did">Only this arm</th>
-        <th class="num">Conditional lines covered</th>
+      <thead><tr><th>Arm</th><th class="num">Trials</th><th>Conditions covered (union) / in build</th>
+        <th class="num" title="Mean over the arm's trials ± standard deviation (median trial in the tooltip)">Mean trial</th>
+        <th class="num" title="Conditions every one of the arm's trials covered">Every trial</th>
+        <th class="num" title="Conditions this arm covered and no other arm did (union)">Only this arm</th>
+        <th class="num">Conditional lines covered (union)</th><th class="num">Conditional lines (mean trial)</th>
         <th class="num" title="Covered lines in headers, or past the end of SuperC's tree: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
       <tbody id="sc-arms"></tbody>
     </table></div>
@@ -158,6 +162,7 @@
         <option value="uncovered">in the build, covered by no arm</option><option value="only">covered only by…</option>
         <option value="missed">missed by… (another arm covered it)</option><option value="all">all</option></select></label>
       <label id="sc-arm-wrap" hidden>arm <select id="sc-arm"></select></label>
+      <label title="Union: the lines any of the arm's trials covered. Mean: the mean over its trials, and how many trials covered the condition.">Trials <select id="sc-combine"><option value="union">union</option><option value="mean">mean</option></select></label>
       <label>Sort <select id="sc-sort"><option value="instrumented">most instrumented lines</option>
         <option value="missed">most lines no arm covered</option><option value="arm">most lines covered by the arm</option>
         <option value="condition">condition (A–Z)</option></select></label>
@@ -494,6 +499,13 @@ async function loadSuperc(force) {
   renderBuild();
 }
 
+// Reports from before the mean have no mean columns: shown as "–".
+function meanSd(mean, sd) {
+  if (mean === undefined || mean === "") return `<span class="muted">–</span>`;
+  const f = v => Number(v).toLocaleString(undefined, {maximumFractionDigits: 1});
+  return `${f(mean)} <span class="muted">± ${f(sd)}</span>`;
+}
+
 function currentBuild() { return sc.data.builds.find(b => b.key === document.getElementById("sc-build").value) || sc.data.builds[0]; }
 
 function renderBuild() {
@@ -511,13 +523,16 @@ function renderBuild() {
       ${bad ? `<details><summary>Files without a result</summary><div class="tw"><table><thead><tr><th>File</th><th>Result</th><th class="num">Seconds</th></tr></thead><tbody>` +
         st.problems.map(p => `<tr><td><code>${esc(p.file)}</code></td><td>${esc(p.reason)}</td><td class="num">${p.seconds}</td></tr>`).join("") + `</tbody></table></div></details>` : ""}</div>`;
   }
+  sc.trials = Object.fromEntries(b.rows.map(r => [r.arm, r.trials]));
   const best = Math.max(...b.rows.map(r => r.conditions_covered_union));
   document.getElementById("sc-arms").innerHTML = [...b.rows].sort((x, y) => y.conditions_covered_union - x.conditions_covered_union).map(r => `<tr>
     <td style="white-space:nowrap">${esc(r.arm)}${r.conditions_covered_union === best && b.rows.length > 1 ? ` <span class="badge success" title="Covered the most conditions">most</span>` : ""}</td>
     <td class="num">${r.trials}</td><td>${meter(r.conditions_covered_union, r.conditions_in_build)}</td>
-    <td class="num">${Number(r.conditions_covered_median_trial).toLocaleString()}</td>
+    <td class="num" title="median trial: ${Number(r.conditions_covered_median_trial).toLocaleString()}">${meanSd(r.conditions_covered_mean, r.conditions_covered_sd)}</td>
+    <td class="num">${r.conditions_covered_every_trial === undefined ? "–" : r.conditions_covered_every_trial.toLocaleString()}</td>
     <td class="num">${(b.only[r.arm] || 0).toLocaleString()}</td>
     <td class="num">${r.conditional_lines_covered_union.toLocaleString()} <span class="muted">/ ${r.conditional_lines_in_build.toLocaleString()} · ${pct(r.conditional_lines_covered_union, r.conditional_lines_in_build).toFixed(1)}%</span></td>
+    <td class="num">${meanSd(r.conditional_lines_covered_mean, r.conditional_lines_covered_sd)}${r.conditional_lines_covered_mean === undefined ? "" : ` <span class="muted">· ${pct(r.conditional_lines_covered_mean, r.conditional_lines_in_build).toFixed(1)}%</span>`}</td>
     <td class="num" title="${r.covered_lines_in_headers.toLocaleString()} in headers, ${r.covered_lines_without_condition.toLocaleString()} in .c files past SuperC's tree">${(r.covered_lines_in_headers + r.covered_lines_without_condition).toLocaleString()} <span class="muted">of ${r.covered_lines_union.toLocaleString()} covered</span></td></tr>`).join("");
   document.getElementById("sc-uncovered").textContent = b.comparison_file ?
     `${b.uncovered.toLocaleString()} of the ${b.in_build.toLocaleString()} conditions in the build were covered by no arm.` : "";
@@ -531,8 +546,10 @@ async function loadConditions(reset) {
   const b = currentBuild();
   const tbody = document.getElementById("sc-conds"), more = document.getElementById("sc-more");
   if (!b.comparison_file) { tbody.innerHTML = `<tr><td class="empty">No comparison table for this build.</td></tr>`; more.hidden = true; return; }
-  const show = document.getElementById("sc-show").value, sort = document.getElementById("sc-sort").value;
-  const needsArm = ["only", "missed"].includes(show) || sort === "arm";
+  const show = document.getElementById("sc-show").value, combine = document.getElementById("sc-combine").value;
+  let sort = document.getElementById("sc-sort").value;
+  if (sort === "arm" && combine === "mean") sort = "arm_mean";
+  const needsArm = ["only", "missed"].includes(show) || sort.startsWith("arm");
   document.getElementById("sc-arm-wrap").hidden = !needsArm;
   if (reset) sc.offset = 0;
   const q = new URLSearchParams({show, sort, q: document.getElementById("sc-q").value, offset: sc.offset, limit: 100});
@@ -542,7 +559,13 @@ async function loadConditions(reset) {
   document.getElementById("sc-head").innerHTML = `<tr><th>Condition</th><th class="num">Instrumented lines</th>` +
     r.arms.map(a => `<th class="num">${esc(a)}</th>`).join("") + `<th>Covered by</th></tr>`;
   const rows = r.rows.map(c => `<tr><td class="cond"><code>${esc(c.condition)}</code></td><td class="num">${c.instrumented.toLocaleString()}</td>` +
-    r.arms.map(a => { const n = c.lines[a] || 0, f = c.instrumented ? n / c.instrumented : 0;
+    r.arms.map(a => {
+      if (combine === "mean") {
+        if (!c.mean) return `<td class="num muted" title="This report has no mean columns; rerun SuperC">–</td>`;
+        const m = c.mean[a] || 0, k = c.trials[a] || 0, n = sc.trials[a] || 0, f = c.instrumented ? m / c.instrumented : 0;
+        return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(a)}: ${m} of ${c.instrumented} lines on average; covered by ${k} of ${n} trials">${m ? Number(m).toLocaleString(undefined, {maximumFractionDigits: 1}) : `<span class="muted">0</span>`} <span class="muted small">${k}/${n}</span></td>`;
+      }
+      const n = c.lines[a] || 0, f = c.instrumented ? n / c.instrumented : 0;
       return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(a)}: ${n} of ${c.instrumented} lines">${n ? n.toLocaleString() : `<span class="muted">0</span>`}</td>`; }).join("") +
     `<td class="small">${c.covered_by.length ? (c.only ? `only <b>${esc(c.only)}</b>` : c.covered_by.length === r.arms.length ? "all arms" : c.covered_by.map(esc).join(", ")) : `<span class="muted">none</span>`}</td></tr>`).join("");
   if (reset) tbody.innerHTML = rows || `<tr><td colspan="${r.arms.length + 3}" class="empty">No conditions match.</td></tr>`;
@@ -553,7 +576,7 @@ async function loadConditions(reset) {
 }
 
 document.getElementById("sc-build").addEventListener("change", () => { renderBuild(); renderStrategies(); });
-for (const id of ["sc-show", "sc-sort", "sc-arm"]) document.getElementById(id).addEventListener("change", () => loadConditions(true));
+for (const id of ["sc-show", "sc-sort", "sc-arm", "sc-combine"]) document.getElementById(id).addEventListener("change", () => loadConditions(true));
 document.getElementById("sc-q").addEventListener("input", () => { clearTimeout(sc.timer); sc.timer = setTimeout(() => loadConditions(true), 250); });
 refresh();
 </script>

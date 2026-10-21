@@ -446,11 +446,11 @@ Jobs (experiments and post-analyses) go into the same queue as experiments queue
   - **skipped:** its coverage binary did not build.
   - **interrupted:** it started but the experiment stopped.
 - **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
-- **Results:** the statistics report embedded in the page, with links to open it in a new tab and to its CSV files (see "Statistics report" below).
+- **Results:** the statistics report embedded in the page, with links to open it in a new tab, to its CSV files, and to the combined coverage reports, union and mean (see "Statistics report" below).
 - **Presence conditions:** the SuperC report (see `common/superc.py`), once the experiment's SuperC step or a SuperC post-analysis has run. For each benchmark build (pick one when there are several compile-time strategies) it shows:
   - **SuperC's result per file:** how many `.c` files SuperC analysed, and which ones timed out or failed. Those files' lines have no condition and are left out of every count.
-  - **Arms:** per arm, the conditions covered over its trials against the conditions in the build (with a bar), the median trial, the conditions only that arm covered, the conditional lines covered, and the covered lines not attributed to any condition (in headers, or past the end of SuperC's tree).
-  - **Conditions:** every condition with its instrumented lines and each arm's covered lines (shaded by the share covered). You can show the conditions in the build, those covered by some arm, those covered by none, those covered only by one arm, or those another arm covered but one arm missed. You can search conditions (for example `SUPPORT_JIT`) and sort them. It loads 100 at a time.
+  - **Arms:** per arm, its trials combined both ways. The **union** is the conditions any trial covered, against the conditions in the build (with a bar). The **mean trial** is the average over its trials ± standard deviation, with the median in the tooltip. **Every trial** is the conditions all of its trials covered. The table also has the conditions only that arm covered, the conditional lines covered (union and mean), and the covered lines not attributed to any condition (in headers, or past the end of SuperC's tree).
+  - **Conditions:** every condition with its instrumented lines and each arm's covered lines (shaded by the share covered). The **Trials** menu switches between the union (lines any trial covered) and the mean (mean covered lines, and how many of the arm's trials covered the condition, such as `2/3`). You can show the conditions in the build, those covered by some arm, those covered by none, those covered only by one arm, or those another arm covered but one arm missed. You can search conditions (for example `SUPPORT_JIT`) and sort them. It loads 100 at a time.
   - **Across compile-time strategies:** shown when the benchmark ran under two or more strategies. For one arm, or all fuzzers together, each strategy's row has:
     - **Conditions in build:** what its builds compiled.
     - **Covered:** what its trials covered.
@@ -503,7 +503,14 @@ Options:
 - `--baseline FUZZER`: the fuzzer the other fuzzers are compared against. The default is `aflplusplus`.
 - `--compare-to /path/to/other/experiment`: adds a reproducibility section, with the rank correlation and changes in significance between the two experiments. Use it for a repeated run, or for a run with one setting changed.
 - `--per-config-coverage`: first writes one coverage report per runtime configuration (with Docker), so that the report can compare each trial's union over configurations with its best single configuration.
-- `--stats-html`: also writes an llvm-cov HTML source report for every arm and benchmark, from the arm's merged trial profiles, to `statistics/html/<benchmark>/<arm>/index.html` (as FuzzBench's coverage reports). Only the source files the coverage build uses are copied out of its Docker image, into `statistics/html/src/` (`common/coverage_html.py`). Arms whose trials ran on several benchmark copies (a compile-time strategy with many configurations) are skipped, since their profiles cannot be merged.
+- `--no-stats-html`: skips the combined coverage reports, which are otherwise always written (see below).
+
+**Combined coverage reports.** For every arm and benchmark, the statistics report combines the arm's trials into one source report in two ways, both written every time (`common/coverage_html.py`). The experiment writes them at its end, and `post_analysis.py --stats` writes them again. They are linked from the statistics report ("Combined coverage reports"), from `statistics/html/index.html`, and from the web app's Results tab.
+
+- **Union:** `statistics/html/<benchmark>/<arm>/index.html`, llvm-cov's HTML source report of the arm's merged trial profiles, as in FuzzBench's coverage reports. It shows what any trial covered. Arms whose trials ran on several benchmark copies (a compile-time strategy with many configurations) get no union report, since their profiles cannot be merged.
+- **Mean:** `statistics/html/mean/<benchmark>/<arm>/index.html`, from the trials' LCOV reports. It gives the mean ± standard deviation over the trials of the regions, functions, lines and branches covered, with the worst and best trial. Per file, it gives the mean lines, branches and functions covered, and the lines covered by every trial and by some. Per source line, it shows how many trials covered it (green: all, yellow: some, red: none) and its mean execution count. `mean_files.csv` has the per-file numbers. The union shows what an arm can reach, the mean what a typical trial reaches, and the per-line counts how reliably it is reached.
+
+Only the source files the coverage build uses are copied out of its Docker image, into `statistics/html/src/`. Without Docker, the mean report is still written, without the source text.
 
 #### Limits of the analyses
 
@@ -525,7 +532,7 @@ Some analyses are computed, but do not mean what their names suggest for typical
 8. **Reproducibility and sensitivity need a second experiment.** `--compare-to` gives the rank correlation and the significance changes against another experiment. The other experiment can be a repeat with the same file (reproducibility), or a run with one setting changed, such as seeds, dictionary or a longer time (sensitivity). Both experiments need the same arms and benchmarks.
 9. **Host settings affect every number.** Without `run_as_sudo.sh` (CPU governor `powersave`, `core_pattern` not `core`), trials vary more, which weakens every test above. The web app's Experiments page shows both settings.
 
-`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR [--metric ...] [--html]` does the same without an experiment state (`--html` as `--stats-html`).
+`python3 common/statistical_analysis.py EXPERIMENT_PATH -o OUT_DIR [--metric ...] [--no-html]` does the same without an experiment state (`--no-html` as `--no-stats-html`).
 
 ### SuperC presence-condition analysis
 
@@ -549,9 +556,9 @@ Outputs:
 
 | File | Contents |
 |---|---|
-| `<report_filestore>/EXP_NAME/superc/index.html` | per benchmark and arm: conditions in the build, covered by the union of the trials and by the median trial, conditional lines covered, and the conditions only one arm covered |
-| `.../superc/pc_summary.csv` | the same as a table |
-| `.../superc/<benchmark>_pc_comparison.csv` | every condition with its instrumented lines, the arms that covered it and their covered lines |
+| `<report_filestore>/EXP_NAME/superc/index.html` | per benchmark and arm, with the arm's trials combined both ways: conditions in the build; covered by the union of the trials, by the mean trial (± standard deviation), by every trial and by the median trial; conditional lines covered (union and mean); and the conditions only one arm covered |
+| `.../superc/pc_summary.csv` | the same as a table (`*_union`, `*_mean`, `*_sd`, `conditions_covered_every_trial`, `conditions_covered_median_trial`) |
+| `.../superc/<benchmark>_pc_comparison.csv` | every condition with its instrumented lines, the arms that covered it, and per arm its covered lines in the union (`covered_lines:<arm>`), its mean covered lines over the trials (`mean_covered_lines:<arm>`) and the number of trials that covered it (`trials_covered:<arm>`) |
 | `.../superc/cross_strategy.csv` | for a benchmark run under several compile-time strategies: per arm (and `all fuzzers`) and strategy, the conditions in the build and covered, covered only under that strategy, missed (and of those, not compiled), gained and lost against default |
 | `.../superc/<benchmark>_strategy_comparison.csv` | per arm, every condition with its covered and instrumented lines under each strategy (`-` when no build of the strategy compiled it) |
 | `<experiment>/data/<trial>/pc_analysis/pc_coverage_summary.{json,csv}` | every condition of one trial |

@@ -61,3 +61,18 @@ def test_mean_report_without_docker(tmp_path, monkeypatch):
     rows = open(out / "html" / "mean" / "x" / "fuzzer" / "mean_files.csv").read().splitlines()
     assert rows[1].startswith("/src/a.c,2,3,1.5,")
     assert coverage_html.mean_report("exp", str(out), "x", "none", [{"dirs": [str(tmp_path / "missing")]}]) is None
+
+
+def test_union_from_lcov_without_profiles(tmp_path, monkeypatch):
+    # No merged.profdata: llvm-cov cannot make the union, so it comes from the LCOV reports.
+    trials = [write_trial(tmp_path, "t0", 4, 3, 0, 2), write_trial(tmp_path, "t1", 1, 0, 5, 0)]
+    monkeypatch.setattr(coverage_html, "copy_sources", lambda *a, **k: False)
+    out = tmp_path / "stats"
+    path = coverage_html.union_report("exp", str(out), "x", "fuzzer", trials)
+    assert path == str(out / "html" / "x" / "fuzzer" / "index.html")
+    text = open(path).read()
+    assert "union of 2 trial(s)" in text and "2 / 3 (66.7%)" in text       # lines 1 and 2, each by one trial
+    page = open(out / "html" / "x" / "fuzzer" / "files" / "0000.html").read()
+    assert "<tr class='some'><td>2</td><td>1/2</td><td>5</td>" in page      # the total count, not the mean
+    rows = open(out / "html" / "x" / "fuzzer" / "union_files.csv").read().splitlines()
+    assert rows[1] == "/src/a.c,2,3,2,2,1,2,1,0"           # g never ran

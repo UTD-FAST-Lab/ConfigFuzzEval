@@ -3,7 +3,9 @@ the mean, both written every time.
 
 Union (FuzzBench's coverage reports): the arm's trial profiles are merged and llvm-cov show
 writes a browsable report to <statistics>/html/<benchmark>/<arm>/index.html, with what any
-trial covered.
+trial covered. Profiles merge only on one binary, so for an arm whose trials ran on several
+benchmark copies (or without profiles) the union is made from the trials' LCOV reports
+instead, in the same layout as the mean report (union_files.csv).
 
 Mean: from the trials' LCOV reports, <statistics>/html/mean/<benchmark>/<arm>/index.html gives
 per file the mean (and standard deviation) over the trials of the lines, branches and functions
@@ -97,7 +99,8 @@ def html_report(experiment_path, out_dir, benchmark, arm, trials):
     """
     copies = {c for t in trials for c in t["cts_benchmarks"]}
     if len(copies) != 1:
-        logging.warning(f"No HTML report for {arm} on {benchmark}: its trials ran on {len(copies)} benchmark copies")
+        logging.info(f"Union report of {arm} on {benchmark} from the LCOV reports: its trials ran on "
+                     f"{len(copies)} benchmark copies, whose profiles llvm-cov cannot merge")
         return None
     cts_benchmark = copies.pop()
     profiles = [p for t in trials for p in map(trial_profile, t["dirs"]) if p]
@@ -186,8 +189,8 @@ def mean_sd(values):
 
 def combine_mean(per_trial):
     """Per file, from [lcov_counts of each trial]: the instrumented lines, branches and functions
-    (of any trial), and per trial how many it covered; per line the trials that covered it and its
-    mean execution count."""
+    (of any trial), per trial how many it covered and how many any trial covered (the union); per
+    line the trials that covered it and its mean execution count."""
     n = len(per_trial)
     files = {}
     for source in sorted({s for counts in per_trial for s in counts}):
@@ -197,6 +200,8 @@ def combine_mean(per_trial):
             entry[kind] = len(keys)
             entry[f"{kind}_covered"] = [sum(1 for v in counts.get(source, {}).get(kind, {}).values() if v > 0)
                                         for counts in per_trial]
+            entry[f"{kind}_union"] = len({k for counts in per_trial
+                                          for k, v in counts.get(source, {}).get(kind, {}).items() if v > 0})
         lines = {}
         for counts in per_trial:
             for number, count in counts.get(source, {}).get("lines", {}).items():
@@ -225,14 +230,25 @@ def _fmt_mean(mean, sd, total):
     return f"{mean:,.1f} ± {sd:,.1f} / {total:,} ({mean / total * 100:.1f}%)"
 
 
-def mean_report(experiment_path, out_dir, benchmark, arm, trials):
-    """html/mean/<benchmark>/<arm>/index.html, the arm's coverage averaged over its trials, or None."""
+def _fmt_union(covered, total):
+    return "–" if total == 0 else f"{covered:,} / {total:,} ({covered / total * 100:.1f}%)"
+
+
+def lcov_report(experiment_path, out_dir, benchmark, arm, trials, method="mean"):
+    """The arm's trials combined from their LCOV reports, or None without any.
+
+    mean:  html/mean/<benchmark>/<arm>/, the coverage averaged over the trials (mean_files.csv);
+    union: html/<benchmark>/<arm>/, what any trial covered (union_files.csv), where llvm-cov's
+           union report cannot be made (no profiles, or trials on several benchmark copies).
+    Both show per source line the trials that covered it and its mean (or, for the union, total)
+    execution count."""
     per_trial = [c for c in map(trial_counts, trials) if c]
     if not per_trial:
         return None
     n = len(per_trial)
+    mean = method == "mean"
     files = combine_mean(per_trial)
-    report_dir = os.path.join(out_dir, "html", "mean", benchmark, arm)
+    report_dir = os.path.join(out_dir, "html", *(("mean",) if mean else ()), benchmark, arm)
     shutil.rmtree(report_dir, ignore_errors=True)
     os.makedirs(os.path.join(report_dir, "files"))
     cts_benchmark = trials[0]["cts_benchmarks"][0]
@@ -241,26 +257,36 @@ def mean_report(experiment_path, out_dir, benchmark, arm, trials):
         with _source_locks[src_root]:
             have_sources = copy_sources(cts_benchmark, list(files), src_root)
     except OSError as error:                  # no Docker: the report without the source text
-        logging.warning(f"No sources for the mean report of {arm} on {benchmark}: {error}")
+        logging.warning(f"No sources for the {method} report of {arm} on {benchmark}: {error}")
         have_sources = False
     e = html.escape
+    kinds = ("lines", "branches", "functions")
 
-    with open(os.path.join(report_dir, "mean_files.csv"), "w", newline="") as f:
+    with open(os.path.join(report_dir, f"{method}_files.csv"), "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["file", "trials", "lines", "lines_covered_mean", "lines_covered_sd", "branches",
-                         "branches_covered_mean", "branches_covered_sd", "functions", "functions_covered_mean",
-                         "functions_covered_sd", "lines_covered_by_every_trial", "lines_covered_by_some_trial"])
+        if mean:
+            writer.writerow(["file", "trials", "lines", "lines_covered_mean", "lines_covered_sd", "branches",
+                             "branches_covered_mean", "branches_covered_sd", "functions", "functions_covered_mean",
+                             "functions_covered_sd", "lines_covered_by_every_trial", "lines_covered_by_some_trial"])
+        else:
+            writer.writerow(["file", "trials", "lines", "lines_covered", "branches", "branches_covered", "functions",
+                             "functions_covered", "lines_covered_by_every_trial"])
         for source, s in files.items():
             hits = [h for h, _ in s["line_hits"].values()]
-            writer.writerow([source, n, s["lines"], *mean_sd(s["lines_covered"])[:2], s["branches"],
-                             *mean_sd(s["branches_covered"]), s["functions"], *mean_sd(s["functions_covered"]),
-                             sum(1 for h in hits if h == n), sum(1 for h in hits if h)])
+            every = sum(1 for h in hits if h == n)
+            if mean:
+                writer.writerow([source, n, s["lines"], *mean_sd(s["lines_covered"]), s["branches"],
+                                 *mean_sd(s["branches_covered"]), s["functions"], *mean_sd(s["functions_covered"]),
+                                 every, sum(1 for h in hits if h)])
+            else:
+                writer.writerow([source, n] + [x for k in kinds for x in (s[k], s[f"{k}_union"])] + [every])
 
     rows = []
     for i, (source, s) in enumerate(files.items()):
         page = f"files/{i:04d}.html"
-        rows.append(f"<tr><td><a href='{page}'>{e(source)}</a></td>"
-                    + "".join(f"<td>{_fmt_mean(*mean_sd(s[f'{k}_covered']), s[k])}</td>" for k in ("lines", "branches", "functions"))
+        cells = (_fmt_mean(*mean_sd(s[f"{k}_covered"]), s[k]) if mean else _fmt_union(s[f"{k}_union"], s[k])
+                 for k in kinds)
+        rows.append(f"<tr><td><a href='{page}'>{e(source)}</a></td>" + "".join(f"<td>{c}</td>" for c in cells)
                     + f"<td>{sum(1 for h, _ in s['line_hits'].values() if h == n):,}</td>"
                     + f"<td>{sum(1 for h, _ in s['line_hits'].values() if 0 < h < n):,}</td></tr>")
         text = []
@@ -276,39 +302,61 @@ def mean_report(experiment_path, out_dir, benchmark, arm, trials):
             if hit is None:
                 body.append(f"<tr><td class='muted'>{number}</td><td></td><td></td><td class='code'>{code}</td></tr>")
             else:
+                count = hit[1] if mean else hit[1] * n
                 body.append(f"<tr class='{_line_class(hit[0], n)}'><td>{number}</td><td>{hit[0]}/{n}</td>"
-                            f"<td>{hit[1]:,.1f}</td><td class='code'>{code}</td></tr>")
+                            f"<td>{count:,.{1 if mean else 0}f}</td><td class='code'>{code}</td></tr>")
         with open(os.path.join(report_dir, page), "w", encoding="utf-8") as out:
-            out.write(f"<!doctype html><meta charset='utf-8'><title>{e(os.path.basename(source))} (mean)</title>"
+            out.write(f"<!doctype html><meta charset='utf-8'><title>{e(os.path.basename(source))} ({method})</title>"
                       f"<style>{CSS}</style><p><a href='../index.html'>&larr; {e(arm)} on {e(benchmark)}</a></p>"
-                      f"<h2>{e(source)}</h2><p>Mean over {n} trial(s). Per line: the trials that covered it and its "
-                      f"mean execution count. Green: every trial; yellow: some; red: none."
+                      f"<h2>{e(source)}</h2><p>{'Mean over' if mean else 'Union of'} {n} trial(s). Per line: the trials "
+                      f"that covered it and its {'mean' if mean else 'total'} execution count. Green: every trial; "
+                      f"yellow: some; red: none."
                       + ("" if text else " <i>The source is not available, so only line numbers are shown.</i>")
-                      + f"</p><table class='src'><tr><th>Line</th><th>Trials</th><th>Mean count</th><th></th></tr>"
-                      + "\n".join(body) + "</table>")
+                      + f"</p><table class='src'><tr><th>Line</th><th>Trials</th><th>{'Mean' if mean else 'Total'} count</th>"
+                      f"<th></th></tr>" + "\n".join(body) + "</table>")
 
     totals = []
-    for metric in ("regions", "functions", "lines", "branches"):
-        values = [t["values"][metric] for t in trials if metric in t["values"]]
-        instrumented = max((t["instrumented"].get(metric, 0) for t in trials), default=0)
-        if values:
-            mean, sd = mean_sd(values)
-            totals.append(f"<tr><td>{metric}</td><td>{_fmt_mean(mean, sd, instrumented)}</td>"
-                          f"<td>{min(values):,}</td><td>{max(values):,}</td></tr>")
+    if mean:
+        for metric in ("regions", "functions", "lines", "branches"):
+            values = [t["values"][metric] for t in trials if metric in t["values"]]
+            instrumented = max((t["instrumented"].get(metric, 0) for t in trials), default=0)
+            if values:
+                mean_value, sd = mean_sd(values)
+                totals.append(f"<tr><td>{metric}</td><td>{_fmt_mean(mean_value, sd, instrumented)}</td>"
+                              f"<td>{min(values):,}</td><td>{max(values):,}</td></tr>")
+        head = "<th>Metric</th><th>Covered (mean ± sd / instrumented)</th><th>Worst trial</th><th>Best trial</th>"
+    else:
+        for metric in kinds:
+            totals.append(f"<tr><td>{metric}</td><td>{_fmt_union(sum(s[f'{metric}_union'] for s in files.values()), sum(s[metric] for s in files.values()))}</td></tr>")
+        head = "<th>Metric</th><th>Covered by any trial / instrumented</th>"
     every = sum(1 for s in files.values() for h, _ in s["line_hits"].values() if h == n)
     some = sum(1 for s in files.values() for h, _ in s["line_hits"].values() if h)
+    intro = (f"Coverage averaged over the trials (mean ± standard deviation / instrumented). The union report shows "
+             f"what any trial covered; this one what a typical trial covers." if mean else
+             f"What any of the trials covered, from their LCOV reports (llvm-cov's own union report needs the "
+             f"trials' profiles on one benchmark copy, which this arm does not have). The mean report shows what a "
+             f"typical trial covers.")
     with open(os.path.join(report_dir, "index.html"), "w", encoding="utf-8") as out:
-        out.write(f"<!doctype html><meta charset='utf-8'><title>{e(arm)} on {e(benchmark)} (mean)</title><style>{CSS}</style>"
-                  f"<h1>{e(arm)} on {e(benchmark)}: mean of {n} trial(s)</h1>"
-                  f"<p>Coverage averaged over the trials (mean ± standard deviation / instrumented). The union report "
-                  f"shows what any trial covered; this one what a typical trial covers. Lines covered by every trial: "
-                  f"{every:,}; by at least one (the union): {some:,}.</p>"
-                  f"<table><tr><th>Metric</th><th>Covered (mean ± sd / instrumented)</th><th>Worst trial</th>"
-                  f"<th>Best trial</th></tr>{''.join(totals)}</table><h2>Files</h2>"
+        out.write(f"<!doctype html><meta charset='utf-8'><title>{e(arm)} on {e(benchmark)} ({method})</title><style>{CSS}</style>"
+                  f"<h1>{e(arm)} on {e(benchmark)}: {method} of {n} trial(s)</h1>"
+                  f"<p>{intro} Lines covered by every trial: {every:,}; by at least one (the union): {some:,}.</p>"
+                  f"<table><tr>{head}</tr>{''.join(totals)}</table><h2>Files</h2>"
                   f"<table><tr><th>File</th><th>Lines</th><th>Branches</th><th>Functions</th>"
                   f"<th>Lines in every trial</th><th>Lines in some trials</th></tr>{''.join(rows)}</table>"
-                  f"<p>Per file: <a href='mean_files.csv'>mean_files.csv</a>.</p>")
+                  f"<p>Per file: <a href='{method}_files.csv'>{method}_files.csv</a>.</p>")
     return os.path.join(report_dir, "index.html")
+
+
+def mean_report(experiment_path, out_dir, benchmark, arm, trials):
+    """html/mean/<benchmark>/<arm>/index.html, the arm's coverage averaged over its trials, or None."""
+    return lcov_report(experiment_path, out_dir, benchmark, arm, trials, "mean")
+
+
+def union_report(experiment_path, out_dir, benchmark, arm, trials):
+    """html/<benchmark>/<arm>/index.html: llvm-cov's report of the merged profiles, or, where there is none
+    (no profiles, or trials on several benchmark copies), the union of the trials' LCOV reports."""
+    return (html_report(experiment_path, out_dir, benchmark, arm, trials)
+            or lcov_report(experiment_path, out_dir, benchmark, arm, trials, "union"))
 
 
 def write_index(out_dir, reports):
@@ -321,8 +369,9 @@ def write_index(out_dir, reports):
     with open(os.path.join(out_dir, "html", "index.html"), "w", encoding="utf-8") as f:
         f.write(f"<!doctype html><meta charset='utf-8'><title>Combined coverage reports</title><style>{CSS}</style>"
                 f"<h1>Combined coverage reports</h1><p>Every arm's trials combined: <b>union</b> (what any trial "
-                f"covered, llvm-cov's source view of the merged profiles) and <b>mean</b> (the average over the "
-                f"trials, and per line how many trials covered it).</p>"
+                f"covered: llvm-cov's source view of the merged profiles, or, for an arm whose trials ran on several "
+                f"benchmark copies, the union of their LCOV reports) and <b>mean</b> (the average over the trials, "
+                f"and per line how many trials covered it).</p>"
                 f"<table><tr><th>Benchmark</th><th>Arm</th><th>Union</th><th>Mean</th></tr>{rows}</table>")
 
 
@@ -332,7 +381,7 @@ def html_reports(res, out_dir, jobs=None):
     for t in res["trials"]:
         groups[(t["benchmark"], t["arm"])].append(t)
     tasks = [(method, *key) for key in groups for method in ("union", "mean")]
-    build = {"union": html_report, "mean": mean_report}
+    build = {"union": union_report, "mean": mean_report}
 
     def run(task):
         method, benchmark, arm = task

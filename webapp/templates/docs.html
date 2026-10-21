@@ -28,7 +28,9 @@
   <li>A compile-time strategy turns <code>benchmarks/&lt;benchmark&gt;</code> into one or more copies <code>benchmarks/cts_&lt;strategy&gt;_&lt;benchmark&gt;_&lt;i&gt;</code>, each with its own <code>build.sh</code>.</li>
   <li>Each copy is built once per fuzzer (on top of <code>fbpp/fuzzer:&lt;fuzzer&gt;</code>, with the fuzzer's compiler) and once for coverage (with clang source-based coverage), into <code>&lt;experiment&gt;/benchmarks/&lt;fuzzer&gt;_cts_…</code> and <code>…/coverage_cts_…</code>.</li>
   <li>Each trial runs the fuzzer's <code>run.sh</code> in <code>fbpp/runner</code>, then its <code>coverage.py</code> in <code>fbpp/runner-coverage</code>; output goes to <code>&lt;experiment&gt;/data/&lt;fuzzer&gt;[_rts_&lt;strategy&gt;]_cts_…_trial_&lt;k&gt;/</code>.</li>
-  <li>After all trials: aggregation, SuperC (unless turned off), crash triage (if asked for) and the statistics report.</li>
+  <li>After all trials: aggregation, SuperC (unless turned off), crash triage (if asked for) and the statistics report.
+    Both combine each arm's trials two ways, always: the <b>union</b> (what any trial covered) and the <b>mean</b> over the trials (what a typical trial covers).
+    The statistics report links a combined coverage report of each arm in both forms, with per source line how many trials covered it; SuperC's tables give each arm's conditions covered by the union, the mean trial and every trial.</li>
 </ol>
 <div class="note"><b>Images are reused.</b> When <code>fbpp/fuzzer:&lt;name&gt;</code>, <code>fbpp/bug-triaging:&lt;name&gt;</code> or <code>fbpp/superc_runner</code> already exists, it is not rebuilt. After changing a fuzzer, triage tool or SuperC, remove the image first, for example <code>docker rmi fbpp/fuzzer:aflplusplus</code>. Benchmark images are always rebuilt.</div>
 </section>

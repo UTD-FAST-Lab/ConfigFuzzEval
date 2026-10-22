@@ -4,8 +4,8 @@
 
 ConfigFuzzEval finds its plugins by folder name: a new benchmark is a folder in `benchmarks/`, a new fuzzer a folder
 in `fuzzers/`. Once the folder is there, every way of running an experiment offers it: the
-[command line](run-command-line.md), the [interactive setup](run-interactive.md), an
-[experiment file](run-experiment-file.md) and the [web app](web-app.md). This guide covers the two most common
+[command line](run-command-line.md), an [experiment file](run-experiment-file.md) (and the interactive setup that
+writes one) and the [web app](web-app.md). This guide covers the two most common
 contributions:
 
 1. [Adding a benchmark](#part-1-adding-a-benchmark): a target program to fuzz.

@@ -28,6 +28,7 @@ sys.path.insert(0, HERE)
 import catalog as catalog_mod          # noqa: E402
 import events                          # noqa: E402
 import experiments as exps             # noqa: E402
+import live_view                       # noqa: E402
 import superc_view                     # noqa: E402
 from color_logger import get_logger    # noqa: E402
 import experiment_plan                 # noqa: E402
@@ -288,6 +289,23 @@ def api_status(name):
     return jsonify(summary=summary, trials=exps.trials(config(), name, running), jobs=exp_jobs,
                    phases=[e for e in events.read(path) if e["event"] in ("phase", "finished")],
                    stats=exps.statistics_path(config(), name) is not None, now=time.time())
+
+
+@app.get("/api/experiments/<name>/live")
+def api_live(name):
+    """The Live tab: every trial, the running ones with the fuzzer's own statistics."""
+    experiment_path(name)
+    return jsonify(live_view.overview(config(), name, name in running_names()))
+
+
+@app.get("/api/experiments/<name>/trial/<folder>")
+def api_trial(name, folder):
+    """One trial's fuzzer_stats, charts, crash files and logs, for the Live tab's detail window."""
+    experiment_path(name)
+    data = live_view.trial(config(), name, folder, name in running_names())
+    if data is None:
+        abort(404)
+    return jsonify(data)
 
 
 @app.get("/api/experiments/<name>/superc")

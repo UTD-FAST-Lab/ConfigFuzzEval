@@ -10,8 +10,7 @@ the two kinds of configuration strategy) are explained in the [main README](../R
 |---|---|
 | **This page** | [Installation](#installation) · [Running an experiment](#running-an-experiment) · [Job queue](#job-queue) · [Continuous mode](#continuous-mode) · [Strategies in depth](#strategies-in-depth) · [Tests](#tests) |
 | [Command line](run-command-line.md) | Running an experiment with command-line flags, every flag, and a full example |
-| [Interactive setup](run-interactive.md) | Running an experiment by answering questions in the terminal |
-| [Experiment file](run-experiment-file.md) | Running an experiment from a YAML file: groups, keys, which setting wins, checking a file |
+| [Experiment file](run-experiment-file.md) | Running an experiment from a YAML file, written by hand or by the interactive setup: groups, keys, which setting wins, checking a file |
 | [Web app](web-app.md) | Starting the web app, and every page and tab, with screenshots |
 | [Live demo](live-demo.md) | The demo at https://configfuzzeval.vercel.app/: what is in it and how it differs from the web app |
 | [Statistics report](statistics-report.md) | The rankings and statistical tests written at the end of every experiment, and their limits |
@@ -103,14 +102,13 @@ The settings are lost on a reboot.
 
 ## Running an experiment
 
-There are four ways to say what to run. All of them put the experiment in the same [job queue](#job-queue), where it
+There are three ways to say what to run. All of them put the experiment in the same [job queue](#job-queue), where it
 runs in the background:
 
 | Way | Command | Best for |
 |---|---|---|
 | [Command-line flags](run-command-line.md) | `run_experiment.py --fuzzers ... --benchmarks ...` | every fuzzer on every benchmark with every listed strategy, all with the `trials` and `max_total_time` of `config.yaml` |
-| [Interactive setup](run-interactive.md) | `run_experiment.py` (no flags) | a first experiment: it asks what to run, saves it as an experiment file and queues it |
-| [Experiment file](run-experiment-file.md) | `run_experiment.py --experiment FILE` | specific fuzzers on specific benchmarks: groups, each with its own strategies, trials and time, and per-benchmark strategies; also scripts and CI/CD pipelines |
+| [Experiment file](run-experiment-file.md) | `run_experiment.py --experiment FILE`, or `run_experiment.py` with no flags to [write one interactively](run-experiment-file.md#writing-a-file-interactively) | specific fuzzers on specific benchmarks: groups, each with its own strategies, trials and time, and per-benchmark strategies; also scripts and CI/CD pipelines |
 | [Web app](web-app.md) | `webapp/app.py` | the same in a browser, with live progress and the results |
 
 Every experiment writes the [statistics report](statistics-report.md) with its
@@ -119,7 +117,7 @@ Every experiment writes the [statistics report](statistics-report.md) with its
 
 ## Job queue
 
-Every experiment, however it is started ([flags](run-command-line.md), an [experiment file](run-experiment-file.md), the [interactive setup](run-interactive.md) or the [web app](web-app.md)), goes through one job queue, `common/jobs.py`:
+Every experiment, however it is started ([flags](run-command-line.md), an [experiment file](run-experiment-file.md) or the [web app](web-app.md)), goes through one job queue, `common/jobs.py`:
 
 - **One at a time, in the background.** `run_experiment.py` checks the experiment, queues it and returns. The queue runs jobs (experiments and the web app's post-analyses) one at a time, each as its own detached session (as `setsid nohup` would), so it keeps running when the terminal or the web app is closed. A background worker (`python3 common/jobs.py worker`, started automatically when something is queued) starts the next job when the machine is free and exits when the queue is empty; the web app ticks the same queue while it runs. A job also waits for an experiment run by hand with `--foreground`.
 - **A log for every experiment:** `experiments/logs/<name>.log` (created when needed), with the full output, including the build output and errors. The web app's post-analysis jobs log to `experiments/logs/<name>_post_<time>.log`, and the queue worker to `experiments/logs/queue_worker.log`.

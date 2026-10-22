@@ -13,7 +13,7 @@ ConfigFuzzEval on a fuzzing machine (see [Installation](README.md#installation))
 |---|---|---|
 | [`/experiments/1`](https://configfuzzeval.vercel.app/experiments/1) | `aflpp_vafuzz_rts-all_cts-default_24h`: AFL++ under every [runtime strategy](../README.md#runtime-strategies), and VAFuzz, on six benchmarks with the default build | mock |
 | [`/experiments/2`](https://configfuzzeval.vercel.app/experiments/2) | `aflpp_vafuzz_cts-all_rts-default_24h`: AFL++ and VAFuzz under every [compile-time strategy](../README.md#compile-time-strategies), with the default runtime strategy | mock |
-| [`/experiments/live_demo`](https://configfuzzeval.vercel.app/experiments/live_demo) | a real 14-trial run with [SuperC](superc.md), [crash triage](crash-triage.md) and the [statistics report](statistics-report.md), replayed as if it were running now, about 5× faster than it ran | real |
+| [`/experiments/live_demo`](https://configfuzzeval.vercel.app/experiments/live_demo) | a [continuous campaign](README.md#continuous-mode) that is always fuzzing: 14 instances of AFL++ and VAFuzz on xz and pcre2, with a coverage round every 5 minutes that redoes [SuperC](superc.md), [crash triage](crash-triage.md) and the [statistics report](statistics-report.md) | real start, extended |
 
 **Mock data.** Experiments 1 and 2 were not run. Their numbers are made up, following the levels of real 24-hour
 runs, with noise per trial. Their statistics reports, [combined coverage reports](coverage-reports.md#combined-coverage-reports)
@@ -43,14 +43,15 @@ The ids `1` and `2` are short names for the two mock experiments; an experiment 
   The New experiment page still checks the experiment and shows its preview and time estimate, computed in the
   browser.
 - **Demo-only extras**, which the web app in this repository does not have:
-  - a **Live** tab, with the running trials on their cores and a trial detail window;
   - a **`configure.yaml` editor**, to change the machine configuration (cores, default trials and time) and see how
     the estimates change; it is saved in your browser only;
-  - the **replay** of `live_demo`.
+  - the **live campaign** `live_demo`: a real short run, shown as a continuous campaign on a clock shared by every
+    visitor, so it is fuzzing whenever it is opened. Its fuzzer statistics after the recorded first minutes are
+    extended for the demo, and its reports are those of the real run.
 - **The rest is the same**: the pages, tabs and reports are the web app's, as described with screenshots in
   [The web app](web-app.md).
 
 ## See also
 
 - [The web app](web-app.md): every page and tab, with screenshots taken from this demo.
-- [Running an experiment](README.md#running-an-experiment): the four ways to run one yourself.
+- [Running an experiment](README.md#running-an-experiment): the three ways to run one yourself.

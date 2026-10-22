@@ -2,7 +2,7 @@
 
 [ConfigFuzzEval](../README.md) › [Documentation](README.md) › Command line
 
-Command-line flags are one of three ways to start an experiment from the terminal, next to the [interactive setup](run-interactive.md) and an [experiment file](run-experiment-file.md). With flags, every fuzzer runs on every benchmark with every listed strategy, all with the `trials` and `max_total_time` from `config.yaml`. Like every way, it puts the experiment in the [job queue](README.md#job-queue). Create `config.yaml` first (see [Installation](README.md#installation)).
+Command-line flags are one of the three ways to run an experiment, next to an [experiment file](run-experiment-file.md) and the [web app](web-app.md). With flags, every fuzzer runs on every benchmark with every listed strategy, all with the `trials` and `max_total_time` from `config.yaml`. Like every way, it puts the experiment in the [job queue](README.md#job-queue). Create `config.yaml` first (see [Installation](README.md#installation)).
 
 ## The command
 

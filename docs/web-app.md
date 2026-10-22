@@ -125,6 +125,26 @@ Each experiment has a page with a header and a row of tabs, for example
   instances are fuzzing, and when the campaign ends. **Run a coverage round now** replays the new inputs at once;
   **Stop campaign** stops the fuzzers and runs a last round; **Cancel (no last round)** kills it at once.
 
+### Live
+
+The tab the page opens on ([demo](https://configfuzzeval.vercel.app/experiments/live_demo/live)), refreshed every
+few seconds while the experiment runs:
+
+- **Totals** over the running trials: executions per second, executions so far, crashes and hangs found; and the
+  time spent in each phase.
+- **Progress by arm:** per arm and benchmark, the trials succeeded, running and failed.
+- **Running now:** a card per running trial with the fuzzer's own statistics (run time, last new find, cycles,
+  corpus, crashes and hangs, execs/sec, pending inputs, map density, edges found, stability), how far into its
+  fuzzing time it is, and sparklines of execs/sec and edges found. Sort them by core, execs/sec or crashes.
+- **Click a card** for the trial's detail window: charts of execs/sec, edges found and crashes over the whole run,
+  every line of `fuzzer_stats`, the crash files and the trial's logs. It also opens on finished trials, from the
+  **Succeeded** and **Failed** lists.
+- **Logs:** the experiment log, every build log and every trial's log, in one viewer.
+
+The statistics are read from inside each trial's container (`fuzzer_stats`, `plot_data` and `crashes/` under
+`/fuzzer_output`, which the fuzzers based on AFL++ write), with one `docker exec` per running trial and only while
+the tab is open. A fuzzer that writes no `fuzzer_stats`, such as LibAFL, gets a card without statistics.
+
 ### Trials
 
 One row per planned trial (screenshot above), which you can filter by status and by benchmark. Each row has the
@@ -263,8 +283,8 @@ and ends with the plugins currently in the repository.
 ## Files
 
 - `webapp/app.py`: the Flask app (pages and the JSON API the pages call); `webapp/experiments.py`,
-  `webapp/superc_view.py` and `webapp/catalog.py` read the experiment folders, the SuperC report and the
-  repository's fuzzers, benchmarks and strategies.
+  `webapp/superc_view.py`, `webapp/live_view.py` and `webapp/catalog.py` read the experiment folders, the SuperC report, the running trials'
+  fuzzer statistics and the repository's fuzzers, benchmarks and strategies.
 - `webapp/static/`, `webapp/templates/`: the pages. They are plain HTML, CSS and JavaScript, with no build step and
   no external scripts.
 - `webapp/instance/`: the job queue shared with the command line (`jobs.db` and its lock files) and dry-run scratch

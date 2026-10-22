@@ -43,7 +43,8 @@
 </div>
 
 <div class="tabs" role="tablist">
-  <button data-tab="trials" class="on">Trials</button>
+  <button data-tab="live" class="on">Live</button>
+  <button data-tab="trials">Trials</button>
   <button data-tab="log">Log</button>
   <button data-tab="results">Results</button>
   <button data-tab="superc">Presence conditions</button>
@@ -52,7 +53,32 @@
   <button data-tab="file">Experiment file</button>
 </div>
 
-<section class="tab on" id="tab-trials">
+<section class="tab on" id="tab-live">
+  <div class="kpis" id="lv-kpis"></div>
+  <div class="timeline" id="lv-phases" title="Time spent in each phase"></div>
+
+  <h2 style="margin-top:14px">Progress by arm</h2>
+  <div class="card tw" id="lv-matrix"><p class="muted small">Loading…</p></div>
+
+  <div class="row" style="margin-top:18px"><h2 style="margin:0">Running now <span class="muted" id="lv-running-count"></span></h2><span class="spacer"></span>
+    <label>Sort <select onchange="live.sort=this.value; if (live.data) renderLive(live.data)"><option value="core">core</option><option value="execs">execs/sec</option><option value="crashes">crashes</option></select></label>
+    <span class="small muted">Click a trial for all of its statistics and logs.</span></div>
+  <div class="live-grid" id="lv-running" style="margin-top:10px"></div>
+
+  <div class="card" id="lv-superc" hidden><h3 style="margin-top:0">SuperC</h3><div id="lv-superc-body"></div></div>
+  <div class="card" id="lv-triage" hidden><h3 style="margin-top:0">Crash triage</h3><div id="lv-triage-body"></div></div>
+
+  <details id="lv-bad-wrap" style="margin-top:16px"><summary><b>Failed</b> <span class="muted" id="lv-bad-count"></span></summary><div id="lv-bad"></div></details>
+  <details id="lv-ok-wrap" style="margin-top:10px"><summary><b>Succeeded</b> <span class="muted" id="lv-ok-count"></span></summary><div id="lv-ok" class="card tw"></div></details>
+
+  <details id="lv-logs-wrap" style="margin-top:10px" ontoggle="loadLiveLog()"><summary><b>Logs</b> <span class="muted">experiment, builds, every trial, triage</span></summary>
+    <div class="row" style="margin:8px 0"><select id="lv-logsel" style="max-width:100%" onchange="loadLiveLog()"></select>
+      <label><input type="checkbox" id="lv-follow" checked> follow</label></div>
+    <pre class="log" id="lv-log">Choose a log.</pre></details>
+  <div id="lv-modal"></div>
+</section>
+
+<section class="tab" id="tab-trials">
   <div class="row" style="margin-bottom:8px">
     <label>Show <select id="filter"><option value="">all trials</option><option value="running">running</option>
       <option value="failure">failed</option><option value="success">finished</option><option value="queued">queued</option></select></label>
@@ -201,6 +227,7 @@
   <pre class="log">{{ experiment_text or 'No experiment file.' }}</pre>
 </section>
 
+<script src="{{ url_for('static', filename='live.js') }}"></script>
 <script>
 const NAME = {{ name | tojson }};
 const PHASES = ["building images", "building benchmarks", "fuzzing", "aggregating", "superc", "triage", "statistics"];
@@ -213,12 +240,13 @@ function showTab(t) {
   for (const b of document.querySelectorAll(".tabs button")) b.classList.toggle("on", b.dataset.tab === t);
   for (const s of document.querySelectorAll(".tab")) s.classList.toggle("on", s.id === "tab-" + t);
   history.replaceState(null, "", "#" + t);
+  if (t === "live") loadLive();
   if (t === "log") loadLog(true);
   if (t === "superc") setTimeout(loadSuperc);   // after the whole script has run
   if (t === "overtime") setTimeout(loadTimeline);
 }
 for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
-if (location.hash) showTab(location.hash.slice(1));
+if (location.hash) showTab(location.hash.slice(1)); else loadLive();
 window.addEventListener("hashchange", () => { if (document.getElementById("tab-" + location.hash.slice(1))) showTab(location.hash.slice(1)); });
 
 function renderTrials(trials) {

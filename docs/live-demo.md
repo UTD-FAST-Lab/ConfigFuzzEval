@@ -43,7 +43,6 @@ The ids `1` and `2` are short names for the two mock experiments; an experiment 
   The New experiment page still checks the experiment and shows its preview and time estimate, computed in the
   browser.
 - **Demo-only extras**, which the web app in this repository does not have:
-  - a **Live** tab, with the running trials on their cores and a trial detail window;
   - a **`configure.yaml` editor**, to change the machine configuration (cores, default trials and time) and see how
     the estimates change; it is saved in your browser only;
   - the **replay** of `live_demo`.

@@ -40,7 +40,12 @@ RUN apt-get update && apt-get install -y \
     # apt install ./automake_1.16.5-1.3_all.deb
 
 RUN apt-get install -y automake
-RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /libxml2
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources libxml2.tar.xz /fbpp_sources/
+RUN timeout 900 git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git /libxml2 || \
+    (rm -rf /libxml2 && mkdir -p /libxml2 && \
+     tar -xJf /fbpp_sources/libxml2.tar.xz -C /libxml2 --strip-components=1)
 WORKDIR /libxml2
 COPY build.sh .
 
@@ -53,8 +58,15 @@ COPY seed /seed
 COPY dict /
 COPY ranked_stubs.txt /
 COPY build.sh /
-COPY load_src.sh /
 
 COPY rt_grammar.json /
+
+# CarpetFuzz/ProphetFuzz inputs: the target's man page and CarpetFuzz's
+
+# analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
+
+COPY manpage.1 /
+
+COPY carpetfuzz /carpetfuzz_analysis
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/ && cp -r /libxml2 /benchmark_out_dir/source/"]
+CMD ["bash", "-c", "cp -r /libxml2/xmllint /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/ && cp /manpage.1 /benchmark_out_dir/ && cp -r /carpetfuzz_analysis /benchmark_out_dir/carpetfuzz  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  && cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed "]

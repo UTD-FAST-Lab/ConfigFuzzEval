@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import tempfile
 import shlex
 from pathlib import Path
 import re
@@ -20,20 +21,18 @@ def main():
     # -------------------------------
     # Load ranked_stubs.txt into an array
     # -------------------------------
-    # Determine directory of coverage binary
-    binary_path = Path(shlex.split(run_target)[0])
-    binary_dir = binary_path.parent  # directory containing the binary
-
-    # ranked_stubs.txt is in the same directory as the coverage binary
-    ranked_stubs_file = binary_dir / "ranked_stubs.txt"
+    # run.sh ranks the combinations at the start of each trial and writes the
+    # stub file it fuzzed with into the trial's output directory.
+    ranked_stubs_file = out_dir / "ranked_stubs.txt"
 
     if not ranked_stubs_file.is_file():
         raise RuntimeError(f"{ranked_stubs_file} not found")
 
-    argv_lines = []
+    # First line is the number of commands; afl-fuzz numbers the commands that
+    # follow from 0 (argv:000000 is the first command, not the count line).
     with open(ranked_stubs_file, "r") as f:
-        for line in f:
-            argv_lines.append(line.strip())
+        lines = [line.strip() for line in f]
+    argv_lines = [line for line in lines[1:int(lines[0]) + 1] if line]
 
     # -------------------------------
     # Process each queue file
@@ -46,10 +45,8 @@ def main():
 
         # Extract argv number from filename
         match = re.search(r'argv:(\d+)', seed.name)
-        if not match:
-            print(f"[!] Cannot parse argv from {seed.name}, skipping...")
-            continue
-        argv_num = int(match.group(1))
+        # Initial seeds have no argv tag; afl-fuzz runs them with the first command.
+        argv_num = int(match.group(1)) if match else 0
 
         if argv_num >= len(argv_lines):
             print(f"[!] argv {argv_num} out of range, skipping {seed.name}...")
@@ -88,13 +85,28 @@ def main():
     # Merge all profraw into a single profdata
     # -------------------------------
     merged_profdata = coverage_dir / "merged.profdata"
+    # Only merge profraw files that exist: an input killed at the timeout writes
+    # none, and one missing file fails the whole merge.
+    profraw_files = [f for f in profraw_files if Path(f).exists()]
     if profraw_files:
-        merge_cmd = ["llvm-profdata", "merge", "-sparse", "-o", str(merged_profdata)] + profraw_files
+        # Inputs go in a file list: a large corpus exceeds the kernel argv limit.
+        # Each line is "weight,path"; the explicit weight keeps commas in AFL names intact.
+        input_list = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
+        input_list.write("".join(f"1,{p}\n" for p in profraw_files))
+        input_list.close()
+        merge_cmd = ["llvm-profdata", "merge", "-sparse", "--failure-mode=warn", "-f", input_list.name,
+                     "-o", str(merged_profdata)]
         print(f"[+] Merging {len(profraw_files)} profraw files into {merged_profdata}")
         try:
             subprocess.run(merge_cmd, check=True)
         except subprocess.CalledProcessError as e:
             print(f"[!] Error merging profraw files: {e}")
+        else:
+            # merged.profdata has everything the reports need; the per-input profiles
+            # are almost all of a trial's size on disk.
+            for f in profraw_files:
+                Path(f).unlink(missing_ok=True)
+            Path(input_list.name).unlink(missing_ok=True)
     else:
         print("[!] No profraw files generated, nothing to merge.")
 
@@ -107,7 +119,11 @@ def main():
     try:
         with open(report_json, "w") as f:
             subprocess.run(
-                ["llvm-cov", "export", run_target.split()[0], f"-instr-profile={merged_profdata}"],
+                ["llvm-cov", "export", run_target.split()[0], f"-instr-profile={merged_profdata}",
+                 # LCOV, like every fuzzer: read by common/report_generation.py and the
+                 # SuperC analysis (cfg-analysis/). Unlike the JSON export it stays small
+                 # (pcre2: 71 MB of RAM instead of ~56 GB).
+                 "-format=lcov"],
                 check=True,
                 stdout=f
             )

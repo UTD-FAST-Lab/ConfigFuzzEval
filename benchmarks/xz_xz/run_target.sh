@@ -1,1 +1,1 @@
-/benchmark/xz
+/benchmark/xz -d -c @@

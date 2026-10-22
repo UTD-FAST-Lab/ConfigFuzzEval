@@ -1,0 +1,93 @@
+{
+ "synopsis": "pcre2test OPTIONS @@",
+ "options": {
+  "-C": {
+   "connector": " ",
+   "values": [
+    "backslash-C",
+    "bsr",
+    "ebcdic",
+    "ebcdic-io",
+    "ebcdic-nl25",
+    "jit",
+    "jitusable",
+    "linksize",
+    "newline",
+    "pcre2-8",
+    "pcre2-16",
+    "pcre2-32",
+    "unicode"
+   ]
+  },
+  "--color": {
+   "connector": "=",
+   "values": [
+    "always",
+    "auto",
+    "never"
+   ]
+  },
+  "--colour": {
+   "connector": "=",
+   "values": [
+    "always",
+    "auto",
+    "never"
+   ]
+  },
+  "-error": {
+   "connector": " ",
+   "values": [
+    "1",
+    "2",
+    "3",
+    "1,2",
+    "1,2,3"
+   ]
+  },
+  "-pattern": {
+   "connector": " ",
+   "values": [
+    "anchored",
+    "caseless",
+    "dotall",
+    "multiline",
+    "extended"
+   ]
+  },
+  "-subject": {
+   "connector": " ",
+   "values": [
+    "notbol",
+    "noteol",
+    "notempty",
+    "partial_soft",
+    "partial_hard"
+   ]
+  },
+  "-S": {
+   "connector": " ",
+   "values": [
+    "1",
+    "512",
+    "1024"
+   ]
+  },
+  "-t": {
+   "connector": " ",
+   "values": [
+    "0",
+    "5000",
+    "10000"
+   ]
+  },
+  "-tm": {
+   "connector": " ",
+   "values": [
+    "0",
+    "5000",
+    "10000"
+   ]
+  }
+ }
+}

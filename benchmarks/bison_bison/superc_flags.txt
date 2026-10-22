@@ -1,0 +1,5 @@
+# Build flags for the SuperC presence-condition analysis (common/superc.py), as the benchmark's
+# build uses them: -I <dir> relative to the source root (/bison-3.8 in the coverage build), -D NAME[=VALUE].
+-I .
+-I lib
+-I src

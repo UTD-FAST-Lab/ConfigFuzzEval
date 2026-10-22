@@ -1,0 +1,473 @@
+'\" t
+.\"     Title: XMLWF
+.\"    Author: Scott Bronson
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: September 22, 2026
+.\"    Manual: [FIXME: manual]
+.\"    Source: [FIXME: source]
+.\"  Language: English
+.\"
+.TH "XMLWF" "1" "September 22, 2026" "[FIXME: source]" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+xmlwf \- Determines if an XML document is well\-formed
+.SH "SYNOPSIS"
+.HP \w'\fBxmlwf\fR\ 'u
+\fBxmlwf\fR [\fIOPTIONS\fR] [\fIFILE\fR\ \&.\&.\&.]
+.HP \w'\fBxmlwf\fR\ 'u
+\fBxmlwf\fR [\fB\-h\fR] | [\fB\-\-help\fR] 
+.HP \w'\fBxmlwf\fR\ 'u
+\fBxmlwf\fR [\fB\-v\fR] | [\fB\-\-version\fR] 
+.SH "DESCRIPTION"
+.PP
+\fBxmlwf\fR
+uses the Expat library to determine if an XML document is well\-formed\&. It is non\-validating\&.
+.PP
+If you do not specify any files on the command\-line, and you have a recent version of
+\fBxmlwf\fR, the input file will be read from standard input\&.
+.SH "WELL\-FORMED DOCUMENTS"
+.PP
+A well\-formed document must adhere to the following rules:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The file begins with an XML declaration\&. For instance,
+<?xml version="1\&.0" standalone="yes"?>\&.
+\fINOTE\fR:
+\fBxmlwf\fR
+does not currently check for a valid XML declaration\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Every start tag is either empty (<tag/>) or has a corresponding end tag\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+There is exactly one root element\&. This element must contain all other elements in the document\&. Only comments, white space, and processing instructions may come after the close of the root element\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+All elements nest properly\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+All attribute values are enclosed in quotes (either single or double)\&.
+.RE
+.PP
+If the document has a DTD, and it strictly complies with that DTD, then the document is also considered
+\fIvalid\fR\&.
+\fBxmlwf\fR
+is a non\-validating parser \-\- it does not check the DTD\&. However, it does support external entities (see the
+\fB\-x\fR
+option)\&.
+.SH "OPTIONS"
+.PP
+When an option includes an argument, you may specify the argument either separately ("\fB\-d\fR
+\fIoutput\fR") or concatenated with the option ("\fB\-d\fR\fIoutput\fR")\&.
+\fBxmlwf\fR
+supports both\&.
+.PP
+\fB\-a\fR \fIfactor\fR
+.RS 4
+Sets the maximum tolerated amplification factor for protection against amplification attacks like the billion laughs attack (default: 100\&.0 for the sum of direct and indirect output and also for allocations of dynamic memory)\&. The amplification factor is calculated as \&.\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    amplification := (direct + indirect) / direct
+          
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\&.\&. with regard to use of entities and \&.\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    amplification := allocated / direct
+          
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\&.\&. with regard to dynamic memory while parsing\&. <direct> is the number of bytes read from the primary document in parsing, <indirect> is the number of bytes added by expanding entities and reading of external DTD files, combined, and <allocated> is the total number of bytes of dynamic memory allocated (and not freed) per hierarchy of parsers\&.
+.sp
+\fINOTE\fR: If you ever need to increase this value for non\-attack payload, please file a bug report\&.
+.RE
+.PP
+\fB\-b\fR \fIbytes\fR
+.RS 4
+Sets the number of output bytes (including amplification) needed to activate protection against amplification attacks like billion laughs (default: 8 MiB for the sum of direct and indirect output, and 64 MiB for allocations of dynamic memory)\&. This can be thought of as an "activation threshold"\&.
+.sp
+\fINOTE\fR: If you ever need to increase this value for non\-attack payload, please file a bug report\&.
+.RE
+.PP
+\fB\-c\fR
+.RS 4
+If the input file is well\-formed and
+\fBxmlwf\fR
+doesn\*(Aqt encounter any errors, the input file is simply copied to the output directory unchanged\&. This implies no namespaces (turns off
+\fB\-n\fR) and requires
+\fB\-d\fR
+to specify an output directory\&.
+.RE
+.PP
+\fB\-d\fR \fIoutput\-dir\fR
+.RS 4
+Specifies a directory to contain transformed representations of the input files\&. By default,
+\fB\-d\fR
+outputs a canonical representation (described below)\&. You can select different output formats using
+\fB\-c\fR,
+\fB\-m\fR
+and
+\fB\-N\fR\&.
+.sp
+The output filenames will be exactly the same as the input filenames or "STDIN" if the input is coming from standard input\&. Therefore, you must be careful that the output file does not go into the same directory as the input file\&. Otherwise,
+\fBxmlwf\fR
+will delete the input file before it generates the output file (just like running
+cat < file > file
+in most shells)\&.
+.sp
+Two structurally equivalent XML documents have a byte\-for\-byte identical canonical XML representation\&. Note that ignorable white space is considered significant and is treated equivalently to data\&. More on canonical XML can be found at http://www\&.jclark\&.com/xml/canonxml\&.html \&.
+.RE
+.PP
+\fB\-e\fR \fIencoding\fR
+.RS 4
+Specifies the character encoding for the document, overriding any document encoding declaration\&.
+\fBxmlwf\fR
+supports four built\-in encodings:
+US\-ASCII,
+UTF\-8,
+UTF\-16, and
+ISO\-8859\-1\&. Also see the
+\fB\-w\fR
+option\&.
+.RE
+.PP
+\fB\-g\fR \fIbytes\fR
+.RS 4
+Sets the buffer size to request per call pair to
+\fBXML_GetBuffer\fR
+and
+\fBread\fR
+(default: 8 KiB)\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Prints short usage information on command
+\fBxmlwf\fR, and then exits\&. Similar to this man page but more concise\&.
+.RE
+.PP
+\fB\-k\fR
+.RS 4
+When processing multiple files,
+\fBxmlwf\fR
+by default halts after the the first file with an error\&. This tells
+\fBxmlwf\fR
+to report the error but to keep processing\&. This can be useful, for example, when testing a filter that converts many files to XML and you want to quickly find out which conversions failed\&.
+.RE
+.PP
+\fB\-m\fR
+.RS 4
+Outputs some strange sort of XML file that completely describes the input file, including character positions\&. Requires
+\fB\-d\fR
+to specify an output file\&.
+.RE
+.PP
+\fB\-n\fR
+.RS 4
+Turns on namespace processing\&. (describe namespaces)
+\fB\-c\fR
+disables namespaces\&.
+.RE
+.PP
+\fB\-N\fR
+.RS 4
+Adds a doctype and notation declarations to canonical XML output\&. This matches the example output used by the formal XML test cases\&. Requires
+\fB\-d\fR
+to specify an output file\&.
+.RE
+.PP
+\fB\-p\fR
+.RS 4
+Tells
+\fBxmlwf\fR
+to process external DTDs and parameter entities\&.
+.sp
+Normally
+\fBxmlwf\fR
+never parses parameter entities\&.
+\fB\-p\fR
+tells it to always parse them\&.
+\fB\-p\fR
+implies
+\fB\-x\fR\&.
+.RE
+.PP
+\fB\-q\fR
+.RS 4
+Disable reparse deferral, and allow quadratic parse runtime on large tokens (default: reparse deferral enabled)\&.
+.RE
+.PP
+\fB\-r\fR
+.RS 4
+Normally
+\fBxmlwf\fR
+memory\-maps the XML file before parsing; this can result in faster parsing on many platforms\&.
+\fB\-r\fR
+turns off memory\-mapping and uses normal file IO calls instead\&. Of course, memory\-mapping is automatically turned off when reading from standard input\&.
+.sp
+Use of memory\-mapping can cause some platforms to report substantially higher memory usage for
+\fBxmlwf\fR, but this appears to be a matter of the operating system reporting memory in a strange way; there is not a leak in
+\fBxmlwf\fR\&.
+.RE
+.PP
+\fB\-s\fR
+.RS 4
+Prints an error if the document is not standalone\&. A document is standalone if it has no external subset and no references to parameter entities\&.
+.RE
+.PP
+\fB\-t\fR
+.RS 4
+Turns on timings\&. This tells Expat to parse the entire file, but not perform any processing\&. This gives a fairly accurate idea of the raw speed of Expat itself without client overhead\&.
+\fB\-t\fR
+turns off most of the output options (\fB\-d\fR,
+\fB\-m\fR,
+\fB\-c\fR, \&.\&.\&.)\&.
+.RE
+.PP
+\fB\-v\fR, \fB\-\-version\fR
+.RS 4
+Prints the version of the Expat library being used, including some information on the compile\-time configuration of the library, and then exits\&.
+.RE
+.PP
+\fB\-w\fR
+.RS 4
+Enables support for Windows code pages\&. Normally,
+\fBxmlwf\fR
+will throw an error if it runs across an encoding that it is not equipped to handle itself\&. With
+\fB\-w\fR,
+\fBxmlwf\fR
+will try to use a Windows code page\&. See also
+\fB\-e\fR\&.
+.RE
+.PP
+\fB\-x\fR
+.RS 4
+Turns on parsing external entities\&. (CAREFUL! This makes xmlwf vulnerable to external entity attacks (XXE)\&.)
+.sp
+Non\-validating parsers are not required to resolve external entities, or even expand entities at all\&. Expat always expands internal entities (?), but external entity parsing must be enabled explicitly\&.
+.sp
+External entities are simply entities that obtain their data from outside the XML file currently being parsed\&.
+.sp
+This is an example of an internal entity:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<!ENTITY vers \*(Aq1\&.0\&.2\*(Aq>
+            
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+And here are some examples of external entities:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<!ENTITY header SYSTEM "header\-&vers;\&.xml">  (parsed)
+<!ENTITY logo SYSTEM "logo\&.png" PNG>         (unparsed)
+            
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.RE
+.PP
+\fB\-\-\fR
+.RS 4
+(Two hyphens\&.) Terminates the list of options\&. This is only needed if a filename starts with a hyphen\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+xmlwf \-\- \-myfile\&.xml
+          
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+will run
+\fBxmlwf\fR
+on the file
+\-myfile\&.xml\&.
+.RE
+.PP
+Older versions of
+\fBxmlwf\fR
+do not support reading from standard input\&.
+.SH "OUTPUT"
+.PP
+\fBxmlwf\fR
+outputs nothing for files which are problem\-free\&. If any input file is not well\-formed, or if the output for any input file cannot be opened,
+\fBxmlwf\fR
+prints a single line describing the problem to standard output\&.
+.PP
+If the
+\fB\-k\fR
+option is not provided,
+\fBxmlwf\fR
+halts upon encountering a well\-formedness or output\-file error\&. If
+\fB\-k\fR
+is provided,
+\fBxmlwf\fR
+continues processing the remaining input files, describing problems found with any of them\&.
+.SH "EXIT STATUS"
+.PP
+For options
+\fB\-v\fR|\fB\-\-version\fR
+or
+\fB\-h\fR|\fB\-\-help\fR,
+\fBxmlwf\fR
+always exits with status code 0\&. For other cases, the following exit status codes are returned:
+.PP
+\fB0\fR
+.RS 4
+The input files are well\-formed and the output (if requested) was written successfully\&.
+.RE
+.PP
+\fB1\fR
+.RS 4
+An internal error occurred\&.
+.RE
+.PP
+\fB2\fR
+.RS 4
+One or more input files were not well\-formed or could not be parsed\&.
+.RE
+.PP
+\fB3\fR
+.RS 4
+If using the
+\fB\-d\fR
+option, an error occurred opening an output file\&.
+.RE
+.PP
+\fB4\fR
+.RS 4
+There was a command\-line argument error in how
+\fBxmlwf\fR
+was invoked\&.
+.RE
+.SH "BUGS"
+.PP
+The errors should go to standard error, not standard output\&.
+.PP
+There should be a way to get
+\fB\-d\fR
+to send its output to standard output rather than forcing the user to send it to a file\&.
+.PP
+I have no idea why anyone would want to use the
+\fB\-d\fR,
+\fB\-c\fR, and
+\fB\-m\fR
+options\&. If someone could explain it to me, I\*(Aqd like to add this information to this manpage\&.
+.SH "SEE ALSO"
+.PP
+.if n \{\
+.RS 4
+.\}
+.nf
+The Expat home page:                            https://libexpat\&.github\&.io/
+The W3 XML 1\&.0 specification (fourth edition):  https://www\&.w3\&.org/TR/2006/REC\-xml\-20060816/
+Billion laughs attack:                          https://en\&.wikipedia\&.org/wiki/Billion_laughs_attack
+      
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SH "AUTHOR"
+.PP
+This manual page was originally written by Scott Bronson
+<bronson@rinspin\&.com>
+in December 2001 for the
+Debian GNU/Linux(TM)
+system (but may be used by others)\&. Permission is granted to copy, distribute and/or modify this document under the terms of the
+GNU
+Free Documentation License, Version 1\&.1\&.
+.SH "AUTHOR"
+.PP
+\fBScott Bronson\fR
+.RS 4
+Author.
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2001 Scott Bronson
+.br

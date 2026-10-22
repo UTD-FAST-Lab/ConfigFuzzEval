@@ -1,0 +1,49 @@
+{
+ "synopsis": "xmlwf OPTIONS @@",
+ "options": {
+  "-a": {
+   "connector": " ",
+   "values": [
+    "1",
+    "500",
+    "1000"
+   ]
+  },
+  "-b": {
+   "connector": " ",
+   "values": [
+    "1",
+    "33554432",
+    "67108864"
+   ]
+  },
+  "-d": {
+   "connector": " ",
+   "values": [
+    "./output",
+    "./out",
+    "/tmp",
+    ".",
+    ".."
+   ]
+  },
+  "-e": {
+   "connector": " ",
+   "values": [
+    "UTF-8",
+    "UTF-16",
+    "ISO-8859-1",
+    "US-ASCII",
+    "windows-1252"
+   ]
+  },
+  "-g": {
+   "connector": " ",
+   "values": [
+    "1",
+    "32768",
+    "65536"
+   ]
+  }
+ }
+}

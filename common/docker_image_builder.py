@@ -1,4 +1,5 @@
 import os
+import json
 import subprocess
 import sys
 from shutil import copytree, copyfile
@@ -169,6 +170,8 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                     "-t", f"fbpp/benchmark:{benchmark_pair_name}",
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
+                    # Offline copies of the sources the Dockerfiles download (COPY --from=sources)
+                    "--build-context", f"sources={os.path.join(project_root, 'benchmarks', 'sources')}",
                     "--build-arg", "parent_image=fbpp/base",
                         "--build-arg", "CC=clang",
                         "--build-arg", "CXX=clang++",
@@ -202,6 +205,8 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                     "-t", f"fbpp/benchmark:{benchmark_pair_name}",
                     "-f", benchmark_dockerfile,
                     benchmark_dir,
+                    # Offline copies of the sources the Dockerfiles download (COPY --from=sources)
+                    "--build-context", f"sources={os.path.join(project_root, 'benchmarks', 'sources')}",
                     "--build-arg", f"parent_image=fbpp/fuzzer:{fuzzer}",
                     "--no-cache"
                 ]
@@ -218,6 +223,14 @@ def build_benchmark(fuzzer, benchmark_name, experiment_path, project_root):
                 "-v", f"{benchmark_pair_path}:/benchmark_out_dir",
                 f"fbpp/benchmark:{benchmark_pair_name}"
             ], check=True, stdout=lf, stderr=lf)
+
+            # A fuzzer build's image is only used to copy the build out above. Remove
+            # it and the build cache (which keeps its layers even with --no-cache), or
+            # hundreds of benchmark copies fill Docker's disk. Coverage images are kept:
+            # SuperC and the HTML source reports read the sources out of them.
+            if fuzzer != "coverage":
+                subprocess.run(["docker", "rmi", f"fbpp/benchmark:{benchmark_pair_name}"], stdout=lf, stderr=lf)
+            subprocess.run(["docker", "builder", "prune", "-f"], stdout=lf, stderr=lf)
 
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while building {benchmark_name}.\n")
@@ -263,29 +276,18 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
                 msg = f"[WARNING] Bug-Triaging image {existing_image} already exists. Skipping build.\n"
                 lf.write(msg)
                 logging.warning(f"Bug-Triaging image {existing_image} already exists. Skipping build.")
-                subprocess.run([
-                    "docker", "run",
-                    "--rm",
-                    "-e", "TEST_TRIAGE=1",
-                    "-v", f"{triager_path}:/triaging_output",
-                    f"fbpp/bug-triaging:{bug_triager_name}"
-                ], check=True, stdout=lf, stderr=lf)
+                triager_smoke_test(bug_triager_name, lf)
             else:
                 subprocess.run([
                     "docker", "build",
                     "-t", f"fbpp/bug-triaging:{bug_triager_name}",
                     "-f", btt_dockerfile,
-                    btt_dir,
+                    # bug-triaging/ is the context: the triagers share crash_commands.py
+                    os.path.dirname(btt_dir),
                     "--no-cache"
                 ], check=True, stdout=lf, stderr=lf)
 
-                subprocess.run([
-                    "docker", "run",
-                    "--rm",
-                    "-e", "TEST_TRIAGE=1",
-                    "-v", f"{triager_path}:/triaging_output",
-                    f"fbpp/bug-triaging:{bug_triager_name}"
-                ], check=True, stdout=lf, stderr=lf)
+                triager_smoke_test(bug_triager_name, lf)
 
         except subprocess.CalledProcessError as e:
             lf.write(f"[ERROR] Failed while building or running {bug_triager_name}.\n")
@@ -300,86 +302,92 @@ def build_bug_triager(bug_triager_name, experiment_path, project_root):
     logging.success(f"Built and ran bug-triaging tool: {bug_triager_name} (logs: {log_file})")
     return True
 
-# Build SuperC CFG analysis image
+# Build SuperC CFG analysis image (common/superc.py names it after cfg-analysis/'s contents)
 def build_superc(superc_path, experiment_path, project_root):
-    output_path = os.path.join(experiment_path, "superc")
-    os.makedirs(output_path, exist_ok=True)
-
-    # Log file
-    log_file = os.path.join(output_path, "superc_build.log")
-    with open(log_file, "w") as lf:
-        # Find the superc directory in the project
-        superc_dir = os.path.join(project_root, superc_path)
-        superc_dockerfile = os.path.join(superc_dir, "Dockerfile")
-
-        if not os.path.exists(superc_dockerfile):
-            msg = f"[ERROR] SuperC Dockerfile {superc_dockerfile} does not exist.\n"
-            lf.write(msg)
-            logging.error(msg.strip())
-            return False
-
-        msg = f"[INFO] Building SuperC runner\n"
-        lf.write(msg)
-        logging.info(msg.strip())
-
-        try:
-            # Check if build already exists
-            existing_image = "fbpp/superc_runner"
-            result = subprocess.run(["docker", "images", "-q", existing_image], check=True, stdout=subprocess.PIPE)
-            if result.stdout:
-                msg = f"[WARNING] SuperC image {existing_image} already exists. Skipping build.\n"
-                lf.write(msg)
-                logging.warning(f"SuperC image {existing_image} already exists. Skipping build.")
-            else:
-                subprocess.run([
-                    "docker", "build",
-                    "-t", "fbpp/superc_runner",
-                    "-f", superc_dockerfile,
-                    superc_dir,
-                    "--no-cache"
-                ], check=True, stdout=lf, stderr=lf)
-
-        except subprocess.CalledProcessError as e:
-            lf.write(f"[ERROR] Failed while building SuperC runner.\n")
-            lf.write(f"[ERROR] Command: {e.cmd}\n")
-            lf.write(f"[ERROR] Return code: {e.returncode}\n")
-
-            logging.error(f"Failed while building SuperC runner. See {log_file} for details.")
-            return False
-
-        lf.write(f"[SUCCESS] Built SuperC runner\n")
-
-    logging.success(f"Built SuperC runner (logs: {log_file})")
-    return True
+    import superc
+    return superc.build_image(os.path.join(experiment_path, "superc", "superc_build.log"))
 
 
+def experiment_label(experiment_path):
+    """Docker label of an experiment's trial containers, so they can be found and stopped
+    together (docker ps --filter label=fbpp.experiment=<name>, as webapp/ does)."""
+    return ["--label", f"fbpp.experiment={os.path.basename(os.path.normpath(experiment_path))}"]
+
+
+def run_label(fuzzer, rts="default"):
+    """Name of a fuzzer's runs under a runtime strategy (the fuzzer itself for default)."""
+    return fuzzer if rts == "default" else f"{fuzzer}_rts_{rts}"
+
+
+def run_coverage(fuzzer, benchmark, experiment_path, core_id, individual_data_storage,
+                 log_file, multi_config_args=(), coverage_script=None):
+    """Runs the fuzzer's coverage.py on a trial's output, in the coverage runner image.
+
+    coverage_script replaces the coverage.py copied into the experiment, e.g. to redo
+    the coverage of a finished trial with a fixed script (common/rerun_coverage.py).
+    """
+    fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
+    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
+    script_args = ["-v", f"{coverage_script}:/fuzzer/coverage.py:ro"] if coverage_script else []
+    # Settings of a fuzzer's coverage.py, e.g. VAFUZZ_COVERAGE_ARGVS, are passed on from this environment
+    for name in sorted(os.environ):
+        if name.startswith("VAFUZZ_COVERAGE_"):
+            script_args += ["-e", name]
+    subprocess.run([
+        "docker", "run", "--rm", *experiment_label(experiment_path),
+        f"--cpuset-cpus={core_id-1}-{core_id}",
+        "-v", f"{coverage_binary_location}:/benchmark",
+        "-v", f"{fuzzer_location}:/fuzzer",
+        *script_args,
+        "-v", f"{individual_data_storage}:/fuzzer_output",
+        *multi_config_args,
+        "fbpp/runner-coverage"
+    ], check=True, stdout=log_file, stderr=log_file)
 
 
 def run_benchmark(fuzzer, benchmark, coverage_binary, report_path, 
                   runtime, trials, trial_id, experiment_path, core_id, 
-                  data_storage, memory_limit, tot_cts_count):
+                  data_storage, memory_limit, tot_cts_count,
+                  rts="default", rt_config_file=None, min_config_time=60):
     # setup
-    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
+    # Results go under the run label (fuzzer + runtime strategy); the benchmark build
+    # and fuzzer folder below are the fuzzer's own, shared by all runtime strategies.
+    label = run_label(fuzzer, rts)
+    individual_data_storage = os.path.join(data_storage, f"{label}_{benchmark}_trial_{trial_id}")
     os.makedirs(individual_data_storage, exist_ok=True)
+    with open(os.path.join(individual_data_storage, "trial_info.json"), "w") as f:
+        json.dump({"fuzzer": fuzzer, "runtime_strategy": rts, "benchmark": benchmark,
+                   "trial": trial_id}, f)
+
+    # Runtime strategies: mount the shared sampling code and this trial's configurations,
+    # and set the flag that makes the runner use runtime/multi_config_*.sh.
+    multi_config_args = []
+    if rts != "default":
+        multi_config_args = [
+            "-e", "MULTI_CONFIG=1",
+            "-e", f"FUZZER_NAME={fuzzer}",
+            "-e", f"MIN_CONFIG_TIME={min_config_time}",
+            "-v", f"{os.path.join(experiment_path, 'runtime')}:/runtime:ro",
+            "-v", f"{rt_config_file}:/rt_configs.json:ro",
+        ]
     
     actual_runtime = runtime // tot_cts_count if tot_cts_count > 0 else runtime
     print(f"Total CTs: {tot_cts_count}, Adjusted runtime per CT: {actual_runtime}")
 
     benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
     fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
-    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
 
     # log file
-    log_file = os.path.join(individual_data_storage, f"{fuzzer}_{benchmark}_trial{trial_id}.log")
+    log_file = os.path.join(individual_data_storage, f"{label}_{benchmark}_trial{trial_id}.log")
 
     with open(log_file, "w") as lf:
         try:
-            lf.write(f"[INFO] Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}\n")
-            logging.info(f"Running benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}")
+            lf.write(f"[INFO] Running benchmark: {benchmark} with fuzzer: {label}, trial {trial_id}\n")
+            logging.info(f"Running benchmark: {benchmark} with fuzzer: {label}, trial {trial_id}")
 
             # Run the benchmark
             subprocess.run([
-                "docker", "run", "--rm",
+                "docker", "run", "--rm", *experiment_label(experiment_path),
                 f"--cpuset-cpus={core_id-1}-{core_id}",
                 "-m", f"{memory_limit}g",
                 f"--memory-swap={memory_limit}g",
@@ -387,6 +395,7 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
                 "-v", f"{benchmark_location}:/benchmark",
                 "-v", f"{fuzzer_location}:/fuzzer",
                 "-v", f"{individual_data_storage}:/fuzzer_output",
+                *multi_config_args,
                 "fbpp/runner"
             ], check=True, stdout=lf, stderr=lf, timeout=(actual_runtime + 600))
             
@@ -396,148 +405,78 @@ def run_benchmark(fuzzer, benchmark, coverage_binary, report_path,
 
             # Run coverage
             lf.write(f"[INFO] Calculating coverage for {benchmark}, trial {trial_id}\n")
-            subprocess.run([
-                "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id-1}-{core_id}",
-                "-v", f"{coverage_binary_location}:/benchmark",
-                "-v", f"{fuzzer_location}:/fuzzer",
-                "-v", f"{individual_data_storage}:/fuzzer_output",
-                "fbpp/runner-coverage"
-            ], check=True, stdout=lf, stderr=lf)
+            lf.flush()
+            run_coverage(fuzzer, benchmark, experiment_path, core_id, individual_data_storage,
+                         lf, multi_config_args)
 
         except subprocess.CalledProcessError as e:
-            lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id}\n")
+            lf.write(f"[ERROR] Failed while running {label} on {benchmark}, trial {trial_id}\n")
             lf.write(f"[ERROR] Command: {e.cmd}\n")
             lf.write(f"[ERROR] Return code: {e.returncode}\n")
-            logging.error(f"Failed: {fuzzer} on {benchmark}, trial {trial_id}. See {log_file} for details.")
+            logging.error(f"Failed: {label} on {benchmark}, trial {trial_id}. See {log_file} for details.")
             return False
         except subprocess.TimeoutExpired as e:
-            lf.write(f"[ERROR] Timeout expired for {fuzzer} on {benchmark}, trial {trial_id}\n")
-            logging.error(f"Timeout: {fuzzer} on {benchmark}, trial {trial_id}")
+            lf.write(f"[ERROR] Timeout expired for {label} on {benchmark}, trial {trial_id}\n")
+            logging.error(f"Timeout: {label} on {benchmark}, trial {trial_id}")
             return False
         finally:
             lf.flush()
             os.fsync(lf.fileno())
 
 
-    logging.success(f"Finished {fuzzer} on {benchmark}, trial {trial_id} (logs: {log_file})")
+    logging.success(f"Finished {label} on {benchmark}, trial {trial_id} (logs: {log_file})")
     return True
 
 
-def run_triaging(triager, fuzzer, benchmark, trials,
-                 experiment_path, core_id, data_storage, memory_limit):
+def triager_smoke_test(bug_triager_name, lf):
+    """Runs the triager's /smoke_test.sh, which checks that its tools work (raises CalledProcessError if not)."""
+    subprocess.run(["docker", "run", "--rm", "--entrypoint", "bash", f"fbpp/bug-triaging:{bug_triager_name}",
+                    "/smoke_test.sh"], check=True, stdout=lf, stderr=lf)
+
+
+def run_triaging(triager, fuzzer, rts, benchmark, trial_ids, experiment_path, core_id, data_storage, memory_limit,
+                 cpuset=None):
+    """Triages the crashes of every trial of one fuzzer under one runtime strategy on one benchmark
+    copy, pooled into <experiment>/bug-triaging/<triager>/output/<run label>_<copy>/.
+
+    Each trial's crashes are replayed on the copy's coverage build, with the command line they
+    were found with (bug-triaging/crash_commands.py); pool.json says what the folder pools.
     """
-    Runs the triager for all trials of a given fuzzer-benchmark pair,
-    pooling all crashes into a single output folder.
-    """
-
-    # --- Shared output directory for all trials ---
-    triager_base_path = os.path.join(experiment_path, "bug-triaging", triager)
-    triager_output_base = os.path.join(triager_base_path, "output")
-    pooled_output_name = f"{fuzzer}_{benchmark}"
-    trial_output_path = os.path.join(triager_output_base, pooled_output_name)
-    os.makedirs(trial_output_path, exist_ok=True)
-
-    # For backwards compatibility: keep logs directly under triager folder
-    os.makedirs(triager_base_path, exist_ok=True)
-
-    benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
-    fuzzer_location = os.path.join(experiment_path, "fuzzers", f"{fuzzer}")
-    coverage_binary_location = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
-
-    # --- Loop over all trials ---
-    for trial_id in range(trials):
-        individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
-        if not os.path.exists(individual_data_storage):
-            msg = f"[ERROR] Data storage path {individual_data_storage} does not exist for trial {trial_id}. Skipping.\n"
-            logging.error(msg.strip())
+    label = run_label(fuzzer, rts)
+    pool = os.path.join(experiment_path, "bug-triaging", triager, "output", f"{label}_{benchmark}")
+    os.makedirs(pool, exist_ok=True)
+    with open(os.path.join(pool, "pool.json"), "w") as f:
+        json.dump({"triager": triager, "fuzzer": fuzzer, "runtime_strategy": rts, "benchmark": benchmark,
+                   "trials": sorted(trial_ids)}, f)
+    coverage_build = os.path.join(experiment_path, "benchmarks", f"coverage_{benchmark}")
+    fuzzer_location = os.path.join(experiment_path, "fuzzers", fuzzer)
+    ok = True
+    for trial_id in sorted(trial_ids):
+        trial_dir = os.path.join(data_storage, f"{label}_{benchmark}_trial_{trial_id}")
+        log_file = os.path.join(pool, f"trial_{trial_id}.log")
+        if not os.path.isdir(trial_dir):
+            logging.error(f"Triage: no trial folder {trial_dir}")
+            ok = False
             continue
-
-        # Per-trial log file in shared output folder
-        log_file = os.path.join(
-            trial_output_path,
-            f"{fuzzer}_{benchmark}_{triager}_trial{trial_id}.log"
-        )
-
         with open(log_file, "w") as lf:
             try:
-                lf.write(f"[INFO] Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}\n")
-                logging.info(f"Triaging benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id} using {triager}")
-
-                # Mount trial-specific input, but shared output
+                # Root reads the fuzzer's root-owned output; OWNER gets the results back.
+                # ptrace and no seccomp let gdb turn address randomisation off, for stable stacks.
                 subprocess.run([
-                    "docker", "run", "--rm",
-                    f"--cpuset-cpus={core_id-1}-{core_id}",
-                    "-m", f"{memory_limit}g",
-                    f"--memory-swap={memory_limit}g",
-                    "-v", f"{benchmark_location}:/benchmark",
-                    "-v", f"{fuzzer_location}:/fuzzer",
-                    "-v", f"{individual_data_storage}:/fuzzer_output",
-                    "-v", f"{trial_output_path}:/triaging_output",
+                    "docker", "run", "--rm", *experiment_label(experiment_path),
+                    f"--cpuset-cpus={cpuset or f'{core_id-1}-{core_id}'}", "-m", f"{memory_limit}g",
+                    f"--memory-swap={memory_limit}g", "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined",
+                    "-e", f"FUZZER_NAME={fuzzer}", "-e", f"TRIAL={trial_id}", "-e", f"OWNER={os.getuid()}:{os.getgid()}",
+                    "-v", f"{trial_dir}:/fuzzer_output:ro", "-v", f"{coverage_build}:/benchmark:ro",
+                    "-v", f"{fuzzer_location}:/fuzzer:ro", "-v", f"{pool}:/triaging_output",
                     f"fbpp/bug-triaging:{triager}"
                 ], check=True, stdout=lf, stderr=lf)
-
             except subprocess.CalledProcessError as e:
-                lf.write(f"[ERROR] Failed while running {fuzzer} on {benchmark}, trial {trial_id} using {triager}\n")
-                lf.write(f"[ERROR] Command: {e.cmd}\n")
-                lf.write(f"[ERROR] Return code: {e.returncode}\n")
-                logging.error(f"Failed Triaging for trial {trial_id}. See {log_file} for details.")
+                lf.write(f"[ERROR] Triage failed with exit code {e.returncode}\n")
+                logging.error(f"Triage of {label} on {benchmark}, trial {trial_id} failed; see {log_file}")
+                ok = False
                 continue
+        logging.info(f"Triaged {label} on {benchmark}, trial {trial_id} ({log_file})")
+    return ok
 
-        logging.success(f"Finished triaging {fuzzer} on {benchmark}, trial {trial_id} using {triager} (log: {log_file})")
-
-    logging.success(f"✅ All trials completed for {fuzzer} on {benchmark} using {triager}. Output pooled at {trial_output_path}")
-    return True
-
-
-
-
-
-# Run SuperC CFG analysis on a benchmark
-def run_superc(fuzzer, benchmark, trial_id, experiment_path, core_id, 
-               data_storage, memory_limit):
-    # setup
-    individual_data_storage = os.path.join(data_storage, f"{fuzzer}_{benchmark}_trial_{trial_id}")
-    
-    if not os.path.exists(individual_data_storage):
-        logging.error(f"Data storage path {individual_data_storage} does not exist for trial {trial_id}")
-        return False
-
-    benchmark_location = os.path.join(experiment_path, "benchmarks", f"{fuzzer}_{benchmark}")
-
-    # log file
-    log_file = os.path.join(individual_data_storage, f"superc_{fuzzer}_{benchmark}_trial{trial_id}.log")
-
-    with open(log_file, "w") as lf:
-        try:
-            lf.write(f"[INFO] Running SuperC analysis on benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}\n")
-            logging.info(f"Running SuperC analysis on benchmark: {benchmark} with fuzzer: {fuzzer}, trial {trial_id}")
-
-            # Run SuperC
-            subprocess.run([
-                "docker", "run", "--rm",
-                f"--cpuset-cpus={core_id-1}-{core_id}",
-                "-m", f"{memory_limit}g",
-                f"--memory-swap={memory_limit}g",
-                "-v", f"{benchmark_location}:/benchmark",
-                "-v", f"{individual_data_storage}:/fuzzer_output",
-                "fbpp/superc_runner"
-            ], check=True, stdout=lf, stderr=lf)
-            
-            lf.flush()
-            os.fsync(lf.fileno())
-
-        except subprocess.CalledProcessError as e:
-            lf.write(f"[ERROR] Failed while running SuperC on {fuzzer}_{benchmark}, trial {trial_id}\n")
-            lf.write(f"[ERROR] Command: {e.cmd}\n")
-            lf.write(f"[ERROR] Return code: {e.returncode}\n")
-
-            logging.error(f"Failed: SuperC on {fuzzer}_{benchmark}, trial {trial_id}. See {log_file} for details.")
-            return False
-        finally:
-            lf.flush()
-            os.fsync(lf.fileno())
-
-    logging.success(f"Finished SuperC analysis on {fuzzer}_{benchmark}, trial {trial_id} (logs: {log_file})")
-    return True
 

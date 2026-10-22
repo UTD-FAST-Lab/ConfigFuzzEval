@@ -2,539 +2,93 @@
   "name": "binutils_objdump",
   "options": [
     {
-      "name": "system-zlib",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
-    },
-    {
-      "name": "system-readline",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
-    },
-    {
-      "name": "newlib",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
-    },
-    {
-      "name": "gnu-as",
-      "type": "bool",
-      "default": true,
-      "cli": "with"
-    },
-    {
-      "name": "gnu-ld",
-      "type": "bool",
-      "default": true,
-      "cli": "with"
-    },
-    {
-      "name": "as-accelerator-for",
-      "type": "choice",
-      "default": null,
-      "cli": "enable",
-      "choices": [
-        "x86_64-pc-linux-gnu",
-        "aarch64-linux-gnu",
-        "nvptx-none"
-      ]
-    },
-    {
-      "name": "offload-targets",
-      "type": "choice",
-      "default": null,
-      "cli": "enable",
-      "choices": [
-        "nvptx-none",
-        "amdgcn-amdhsa",
-        "x86_64-linux-gnu"
-      ]
-    },
-    {
-      "name": "gold",
-      "type": "choice",
-      "default": "no",
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "default"
-      ]
-    },
-    {
-      "name": "ld",
-      "type": "choice",
-      "default": "yes",
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "default"
-      ]
-    },
-    {
-      "name": "compressed-debug-sections",
-      "type": "choice",
-      "default": "none",
-      "cli": "enable",
-      "choices": [
-        "all",
-        "gas",
-        "gold",
-        "ld",
-        "none"
-      ]
-    },
-    {
-      "name": "libquadmath",
+      "name": "silent-rules",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "libquadmath-support",
+      "name": "dependency-tracking",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "libada",
+      "name": "fast-install",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "libssp",
+      "name": "libtool-lock",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "libstdcxx",
-      "type": "choice",
-      "default": "default",
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "default"
-      ]
-    },
-    {
-      "name": "liboffloadmic",
-      "type": "choice",
-      "default": "no",
-      "cli": "enable",
-      "choices": [
-        "no",
-        "host",
-        "target"
-      ]
-    },
-    {
-      "name": "libgomp",
+      "name": "largefile",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "libatomic",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "libitm",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "libsanitizer",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "libvtv",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "libhsail-rt",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "gdbserver",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "libgo",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "bootstrap",
-      "type": "choice",
-      "default": "default",
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "default"
-      ]
-    },
-    {
-      "name": "pgo-build",
-      "type": "choice",
-      "default": "no",
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "lto"
-      ]
-    },
-    {
-      "name": "mpc",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local",
-        "/opt/mpc",
-        "/usr"
-      ]
-    },
-    {
-      "name": "mpc-include",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/include",
-        "/opt/mpc/include"
-      ]
-    },
-    {
-      "name": "mpc-lib",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/lib",
-        "/opt/mpc/lib"
-      ]
-    },
-    {
-      "name": "mpfr",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local",
-        "/opt/mpfr",
-        "/usr"
-      ]
-    },
-    {
-      "name": "mpfr-include",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/include",
-        "/opt/mpfr/include"
-      ]
-    },
-    {
-      "name": "mpfr-lib",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/lib",
-        "/opt/mpfr/lib"
-      ]
-    },
-    {
-      "name": "gmp",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local",
-        "/opt/gmp",
-        "/usr"
-      ]
-    },
-    {
-      "name": "gmp-include",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/include",
-        "/opt/gmp/include"
-      ]
-    },
-    {
-      "name": "gmp-lib",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/lib",
-        "/opt/gmp/lib"
-      ]
-    },
-    {
-      "name": "stage1-libs",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "-lstdc++",
-        "-lm",
-        "no",
-        "yes"
-      ]
-    },
-    {
-      "name": "static-standard-libraries",
-      "type": "choice",
-      "default": "auto",
-      "cli": "with",
-      "choices": [
-        "auto",
-        "yes",
-        "no"
-      ]
-    },
-    {
-      "name": "stage1-ldflags",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "-static-libstdc++",
-        "-static",
-        "no",
-        "yes"
-      ]
-    },
-    {
-      "name": "boot-libs",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "-lstdc++",
-        "no",
-        "yes"
-      ]
-    },
-    {
-      "name": "boot-ldflags",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "-static-libstdc++",
-        "-static",
-        "no",
-        "yes"
-      ]
-    },
-    {
-      "name": "isl",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local",
-        "/opt/isl",
-        "no"
-      ]
-    },
-    {
-      "name": "lto",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "linker-plugin-configure-flags",
-      "type": "choice",
-      "default": null,
-      "cli": "enable",
-      "choices": [
-        "--verbose",
-        "--enable-lto"
-      ]
-    },
-    {
-      "name": "linker-plugin-flags",
-      "type": "choice",
-      "default": null,
-      "cli": "enable",
-      "choices": [
-        "-O2",
-        "-g"
-      ]
-    },
-    {
-      "name": "host-shared",
+      "name": "checking",
       "type": "bool",
       "default": false,
       "cli": "enable"
     },
     {
-      "name": "languages",
-      "type": "choice",
-      "default": "default",
-      "cli": "enable",
-      "choices": [
-        "c",
-        "c++",
-        "fortran",
-        "lto",
-        "objc",
-        "obj-c++",
-        "go",
-        "jit",
-        "all",
-        "default"
-      ]
-    },
-    {
-      "name": "stage1-languages",
-      "type": "choice",
-      "default": "c",
-      "cli": "enable",
-      "choices": [
-        "c",
-        "c++",
-        "go",
-        "all"
-      ]
-    },
-    {
-      "name": "objc-gc",
-      "type": "bool",
-      "default": false,
-      "cli": "enable",
-      "desc": "Requires languages to include objc"
-    },
-    {
-      "name": "target-bdw-gc",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local",
-        "/opt/bdw-gc"
-      ]
-    },
-    {
-      "name": "target-bdw-gc-include",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/include"
-      ]
-    },
-    {
-      "name": "target-bdw-gc-lib",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/usr/local/lib"
-      ]
-    },
-    {
-      "name": "build-sysroot",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/sysroot",
-        "/usr/sysroot",
-        "/"
-      ]
-    },
-    {
-      "name": "debug-prefix-map",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "/old=/new",
-        "/src=/usr/src"
-      ]
-    },
-    {
-      "name": "headers",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "yes",
-        "no",
-        "/usr/include"
-      ]
-    },
-    {
-      "name": "libs",
-      "type": "choice",
-      "default": null,
-      "cli": "with",
-      "choices": [
-        "yes",
-        "no",
-        "/usr/lib"
-      ]
-    },
-    {
-      "name": "build-config",
-      "type": "choice",
-      "default": "bootstrap-debug",
-      "cli": "with",
-      "choices": [
-        "bootstrap-debug",
-        "bootstrap-asan",
-        "bootstrap-ubsan",
-        "yes",
-        "no"
-      ]
-    },
-    {
-      "name": "vtable-verify",
+      "name": "deterministic-archives",
       "type": "bool",
       "default": false,
       "cli": "enable"
     },
     {
-      "name": "gdbtk",
+      "name": "default-strings-all",
       "type": "bool",
       "default": true,
       "cli": "enable"
     },
     {
-      "name": "serial-configure",
+      "name": "f-for-ifunc-symbols",
       "type": "bool",
       "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "follow-debug-links",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "colored-disassembly",
+      "type": "bool",
+      "default": false,
+      "cli": "enable"
+    },
+    {
+      "name": "libctf",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "build-warnings",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "nls",
+      "type": "bool",
+      "default": true,
+      "cli": "enable"
+    },
+    {
+      "name": "rpath",
+      "type": "bool",
+      "default": true,
       "cli": "enable"
     },
     {
@@ -544,159 +98,96 @@
       "cli": "enable"
     },
     {
-      "name": "stage1-checking",
-      "type": "choice",
-      "default": null,
-      "cli": "enable",
-      "choices": [
-        "yes",
-        "no",
-        "all",
-        "release",
-        "types",
-        "misc"
-      ]
-    },
-    {
-      "name": "target-optspace",
+      "name": "pic",
       "type": "bool",
       "default": false,
-      "cli": "enable"
+      "cli": "with"
     },
     {
-      "name": "build-time-tools",
+      "name": "gnu-ld",
+      "type": "bool",
+      "default": false,
+      "cli": "with"
+    },
+    {
+      "name": "system-zlib",
+      "type": "bool",
+      "default": false,
+      "cli": "with"
+    },
+    {
+      "name": "debuginfod",
       "type": "choice",
-      "default": null,
+      "default": "auto",
       "cli": "with",
       "choices": [
-        "/usr/local/bin",
-        "/opt/tools/bin"
+        "auto",
+        "no"
+      ]
+    },
+    {
+      "name": "zstd",
+      "type": "choice",
+      "default": "auto",
+      "cli": "with",
+      "choices": [
+        "auto",
+        "no"
+      ]
+    },
+    {
+      "name": "msgpack",
+      "type": "choice",
+      "default": "auto",
+      "cli": "with",
+      "choices": [
+        "auto",
+        "no"
       ]
     }
   ],
-  "constraints": [
-    {
-      "opt": "gold",
-      "val": "default",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "ld",
-          "val": "default",
-          "choice": "!="
-        }
-      ],
-      "desc": "either gold or ld can be the default ld, not both"
-    },
-    {
-      "opt": "ld",
-      "val": "default",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "gold",
-          "val": "default",
-          "choice": "!="
-        }
-      ],
-      "desc": "either gold or ld can be the default ld, not both"
-    },
-    {
-      "opt": "ld",
-      "val": "no",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "gold",
-          "val": "yes",
-          "choice": "=="
-        }
-      ],
-      "desc": "if ld is disabled, gold must be enabled"
-    },
-    {
-      "opt": "gold",
-      "val": "no",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "ld",
-          "val": "no",
-          "choice": "!="
-        }
-      ],
-      "desc": "if gold is disabled, ld must be enabled (warns otherwise)"
-    },
-    {
-      "opt": "pgo-build",
-      "val": "lto",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "bootstrap",
-          "val": "no",
-          "choice": "!="
-        }
-      ],
-      "desc": "PGO build with LTO requires bootstrapping (yes or default)"
-    },
-    {
-      "opt": "languages",
-      "val": "jit",
-      "choice": "==",
-      "then": [
-        {
-          "opt": "host-shared",
-          "val": true
-        }
-      ],
-      "desc": "Enabling language 'jit' requires --enable-host-shared"
-    },
-    {
-      "opt": "target-bdw-gc-lib",
-      "val": true,
-      "choice": "==",
-      "then": [
-        {
-          "opt": "target-bdw-gc-include",
-          "val": true,
-          "choice": "=="
-        }
-      ],
-      "desc": "if target-bdw-gc-lib is specified, target-bdw-gc-include is required"
-    },
-    {
-      "opt": "target-bdw-gc-include",
-      "val": true,
-      "choice": "==",
-      "then": [
-        {
-          "opt": "target-bdw-gc-lib",
-          "val": true,
-          "choice": "=="
-        }
-      ],
-      "desc": "if target-bdw-gc-include is specified, target-bdw-gc-lib is required"
-    }
-  ],
+  "constraints": [],
   "removed": [
     {
-      "name": "mpfr-dir This option has been removed. Use --with-mpfr=PATH or --with-mpfr-include=PATH plus --with-mpfr-lib=PATH instead.",
-      "type": "string",
-      "default": null,
-      "cli": "with"
+      "name": "plugins",
+      "reason": "build.sh sets --disable-plugins"
     },
     {
-      "name": "gmp-dir This option has been removed. Use --with-gmp=PATH or --with-gmp-include=PATH plus --with-gmp-lib=PATH instead.",
-      "type": "string",
-      "default": null,
-      "cli": "with"
+      "name": "shared",
+      "reason": "libraries come from the first, top-level build"
+    },
+    {
+      "name": "static",
+      "reason": "libraries come from the first, top-level build"
     },
     {
       "name": "werror",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "reason": "would turn clang warnings into build failures"
+    },
+    {
+      "name": "targets",
+      "reason": "bfd is built by the top-level build for the default target only"
+    },
+    {
+      "name": "libiconv-prefix",
+      "reason": "install path"
+    },
+    {
+      "name": "libintl-prefix",
+      "reason": "install path"
+    },
+    {
+      "name": "debuginfod=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
+    },
+    {
+      "name": "zstd=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
+    },
+    {
+      "name": "msgpack=yes",
+      "reason": "value yes removed: needs a library that may not be installed; only auto/no kept"
     }
-  ]
+  ],
+  "note": "options of binutils/configure (2.47), which build.sh runs with {{CT_CONFIGURATION}}; the previous grammar listed the top-level (gcc) configure options, 60 of 63 unrecognized by binutils/configure"
 }

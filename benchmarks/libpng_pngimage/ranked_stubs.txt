@@ -1,0 +1,11 @@
+10
+pngimage --exhaustive --strict --continue @@
+pngimage --fast --relaxed --skip-bugs @@
+pngimage --exhaustive --log --test-all @@
+pngimage --warnings --strict --find-bad-combos @@
+pngimage --quiet --exhaustive --log-skipped @@
+pngimage --errors --relaxed --continue --list-combos @@
+pngimage --verbose --fast --stop @@
+pngimage --exhaustive --skip-bugs --nolog-skipped --strict @@
+pngimage --log --find-bad-combos --continue @@
+pngimage --quiet --fast --nolog --test-all @@

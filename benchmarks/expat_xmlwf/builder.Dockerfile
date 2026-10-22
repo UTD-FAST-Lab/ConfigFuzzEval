@@ -31,9 +31,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zlib1g-dev liblzma-dev libbsd-dev
 
 # Build requires automake 1.16.3
-RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
+# The downloads below fall back to the copies in benchmarks/sources/ if they fail
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources automake_1.16.5-1.3_all.deb libexpat.tar.xz /fbpp_sources/
+RUN ((curl -fLO --retry 3 --max-time 300 http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
+      echo "59e3890fc8407bcf8ccc9f709d6513156346d5c942e8c624dc90435e58f6f978  automake_1.16.5-1.3_all.deb" | sha256sum -c) || \
+     cp -f /fbpp_sources/automake_1.16.5-1.3_all.deb .) && \
     apt install ./automake_1.16.5-1.3_all.deb
-RUN git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat
+RUN timeout 900 git clone --depth 1 https://github.com/libexpat/libexpat.git /libexpat || \
+    (rm -rf /libexpat && mkdir -p /libexpat && \
+     tar -xJf /fbpp_sources/libexpat.tar.xz -C /libexpat --strip-components=1)
 WORKDIR /libexpat/expat
 COPY build.sh .
 
@@ -47,7 +54,10 @@ COPY dict /
 COPY ranked_stubs.txt /
 COPY build.sh /
 COPY rt_grammar.json /
-COPY load_src.sh /
+# CarpetFuzz/ProphetFuzz inputs: the target's man page and CarpetFuzz's
+# analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
+COPY manpage.1 /
+COPY carpetfuzz /carpetfuzz_analysis
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/       && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp -r /libexpat/expat/xmlwf/xmlwf /benchmark_out_dir/       && cp /rt_grammar.json /benchmark_out_dir/ && cp /manpage.1 /benchmark_out_dir/ && cp -r /carpetfuzz_analysis /benchmark_out_dir/carpetfuzz  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed "]
 

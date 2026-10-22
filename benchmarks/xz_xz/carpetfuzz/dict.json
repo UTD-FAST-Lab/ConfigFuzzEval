@@ -1,0 +1,13 @@
+{
+ "synopsis": "xz OPTIONS -d -c @@",
+ "options": {
+  "-T": {
+   "connector": " ",
+   "values": [
+    "0",
+    "64",
+    "128"
+   ]
+  }
+ }
+}

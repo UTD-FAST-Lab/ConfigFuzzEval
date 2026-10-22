@@ -1,0 +1,830 @@
+.\" Automatically generated from an mdoc input file.  Do not edit.
+.\" $File: file.man,v 1.153 2025/07/23 18:52:08 christos Exp $
+.TH "FILE" "1" "June 17, 2025" "Debian" "General Commands Manual"
+.nh
+.if n .ad l
+.SH "NAME"
+\fBfile\fR
+\- determine file type
+.SH "SYNOPSIS"
+.HP 5n
+\fBfile\fR
+[\fB\-bcdEhiklLNnprsSvzZ0\fR]
+[\fB\-\-apple\fR]
+[\fB\-\-exclude-quiet\fR]
+[\fB\-\-extension\fR]
+[\fB\-\-mime-encoding\fR]
+[\fB\-\-mime-type\fR]
+[\fB\-e\fR\ \fItestname\fR]
+[\fB\-F\fR\ \fIseparator\fR]
+[\fB\-f\fR\ \fInamefile\fR]
+[\fB\-m\fR\ \fImagicfiles\fR]
+[\fB\-P\fR\ \fIname=value\fR]
+\fIfile\ ...\fR
+.br
+.PD 0
+.HP 5n
+\fBfile\fR
+\fB\-C\fR
+[\fB\-m\fR\ \fImagicfiles\fR]
+.br
+.HP 5n
+\fBfile\fR
+[\fB\-\-help\fR]
+.PD
+.SH "DESCRIPTION"
+This manual page documents version 5.48 of the
+\fBfile\fR
+command.
+.PP
+\fBfile\fR
+tests each argument in an attempt to classify it.
+There are three sets of tests, performed in this order:
+filesystem tests, magic tests, and language tests.
+The
+\fIfirst\fR
+test that succeeds causes the file type to be printed.
+.PP
+The type printed will usually contain one of the words
+\fItext\fR
+(the file contains only
+printing characters and a few common control
+characters and is probably safe to read on an
+\fRASCII\fR
+terminal),
+\fIexecutable\fR
+(the file contains the result of compiling a program
+in a form understandable to some
+\fRUNIX\fR
+kernel or another),
+or
+\fIdata\fR
+meaning anything else (data is usually
+\(lqbinary\(rq
+or non-printable).
+Exceptions are well-known file formats (core files, tar archives)
+that are known to contain binary data.
+When modifying magic files or the program itself, make sure to
+\fIpreserve these keywords\fR.
+Users depend on knowing that all the readable files in a directory
+have the word
+\(lqtext\(rq
+printed.
+Don't do as Berkeley did and change
+\(lqshell commands text\(rq
+to
+\(lqshell script\(rq.
+.PP
+The filesystem tests are based on examining the return from a
+stat(2)
+system call.
+The program checks to see if the file is empty,
+or if it's some sort of special file.
+Any known file types appropriate to the system you are running on
+(sockets, symbolic links, or named pipes (FIFOs) on those systems that
+implement them)
+are intuited if they are defined in the system header file
+<\fIsys/stat.h\fR>.
+.PP
+The magic tests are used to check for files with data in
+particular fixed formats.
+The canonical example of this is a binary executable (compiled program)
+\fRa.out\fR
+file, whose format is defined in
+<\fIelf.h\fR>,
+<\fIa.out.h\fR>
+and possibly
+<\fIexec.h\fR>
+in the standard include directory.
+These files have a
+\(lqmagic number\(rq
+stored in a particular place
+near the beginning of the file that tells the
+\fRUNIX\fR
+operating system
+that the file is a binary executable, and which of several types thereof.
+The concept of a
+\(lqmagic number\(rq
+has been applied by extension to data files.
+Any file with some invariant identifier at a small fixed
+offset into the file can usually be described in this way.
+The information identifying these files is read from the compiled
+magic file
+\fI/usr/local/share/misc/magic.mgc\fR,
+or the files in the directory
+\fI/usr/local/share/misc/magic\fR
+if the compiled file does not exist.
+In addition, if
+\fI$HOME/.magic.mgc\fR
+or
+\fI$HOME/.magic\fR
+exists, it will be used in preference to the system magic files.
+.PP
+If a file does not match any of the entries in the magic file,
+it is examined to see if it seems to be a text file.
+ASCII, ISO-8859-x, non-ISO 8-bit extended-ASCII character sets
+(such as those used on Macintosh and IBM PC systems),
+UTF-8-encoded Unicode, UTF-16-encoded Unicode, and EBCDIC
+character sets can be distinguished by the different
+ranges and sequences of bytes that constitute printable text
+in each set.
+If a file passes any of these tests, its character set is reported.
+ASCII, ISO-8859-x, UTF-8, and extended-ASCII files are identified
+as
+\(lqtext\(rq
+because they will be mostly readable on nearly any terminal;
+UTF-16 and EBCDIC are only
+\(lqcharacter data\(rq
+because, while
+they contain text, it is text that will require translation
+before it can be read.
+In addition,
+\fBfile\fR
+will attempt to determine other characteristics of text-type files.
+If the lines of a file are terminated by CR, CRLF, or NEL, instead
+of the Unix-standard LF, this will be reported.
+Files that contain embedded escape sequences or overstriking
+will also be identified.
+.PP
+Once
+\fBfile\fR
+has determined the character set used in a text-type file,
+it will
+attempt to determine in what language the file is written.
+The language tests look for particular strings (cf.
+<\fInames.h\fR>)
+that can appear anywhere in the first few blocks of a file.
+For example, the keyword
+\fI.br\fR
+indicates that the file is most likely a
+troff(1)
+input file, just as the keyword
+\fIstruct\fR
+indicates a C program.
+These tests are less reliable than the previous
+two groups, so they are performed last.
+The language test routines also test for some miscellany
+(such as
+tar(1)
+archives, JSON files).
+.PP
+Any file that cannot be identified as having been written
+in any of the character sets listed above is simply said to be
+\(lqdata\(rq.
+.SH "OPTIONS"
+.TP 8n
+\fB\-\-apple\fR
+Causes the
+\fBfile\fR
+command to output the file type and creator code as
+used by older MacOS versions.
+The code consists of eight letters,
+the first four describing the file type, the latter four the creator.
+This option works properly only for file formats that have the
+apple-style output defined.
+.TP 8n
+\fB\-b\fR, \fB\-\-brief\fR
+Do not prepend filenames to output lines (brief mode).
+.TP 8n
+\fB\-C\fR, \fB\-\-compile\fR
+Write a
+\fImagic.mgc\fR
+output file that contains a pre-parsed version of the magic file or directory.
+.TP 8n
+\fB\-c\fR, \fB\-\-checking-printout\fR
+Cause a checking printout of the parsed form of the magic file.
+This is usually used in conjunction with the
+\fB\-m\fR
+option to debug a new magic file before installing it.
+.TP 8n
+\fB\-d\fR
+Prints internal debugging information to stderr.
+.TP 8n
+\fB\-E\fR
+On filesystem errors (file not found etc), instead of handling the error
+as regular output as POSIX mandates and keep going, issue an error message
+and exit.
+.TP 8n
+\fB\-e\fR, \fB\-\-exclude\fR \fItestname\fR
+Exclude the test named in
+\fItestname\fR
+from the list of tests made to determine the file type.
+Valid test names are:
+.PP
+.RS 8n
+.PD 0
+.TP 10n
+apptype
+\fREMX\fR
+application type (only on EMX).
+.PD
+.TP 10n
+ascii
+Various types of text files (this test will try to guess the text
+encoding, irrespective of the setting of the
+\(oqencoding\(cq
+option).
+.TP 10n
+encoding
+Different text encodings for soft magic tests.
+.TP 10n
+tokens
+Ignored for backwards compatibility.
+.TP 10n
+cdf
+Prints details of Compound Document Files.
+.TP 10n
+compress
+Checks for, and looks inside, compressed files.
+.TP 10n
+csv
+Checks Comma Separated Value files.
+.TP 10n
+elf
+Prints ELF file details, provided soft magic tests are enabled and the
+elf magic is found.
+.TP 10n
+json
+Examines JSON (RFC-7159) files by parsing them for compliance.
+.TP 10n
+soft
+Consults magic files.
+.TP 10n
+simh
+Examines SIMH tape files.
+.TP 10n
+tar
+Examines tar files by verifying the checksum of the 512 byte tar header.
+Excluding this test can provide more detailed content description by using
+the soft magic method.
+.TP 10n
+text
+A synonym for
+\(oqascii\(cq.
+.PD 0
+.PP
+.RE
+.PD
+.TP 8n
+\fB\-\-exclude-quiet\fR
+Like \fB\-\-exclude\fR
+but ignore tests that
+\fBfile\fR
+does not know about.
+This is intended for compatibility with older versions of
+\fBfile\fR.
+.TP 8n
+\fB\-\-extension\fR
+Print a slash-separated list of valid extensions for the file type found.
+.TP 8n
+\fB\-F\fR, \fB\-\-separator\fR \fIseparator\fR
+Use the specified string as the separator between the filename and the
+file result returned.
+Defaults to
+\(oq\&:\(cq.
+.TP 8n
+\fB\-f\fR, \fB\-\-files-from\fR \fInamefile\fR
+Read the names of the files to be examined from
+\fInamefile\fR
+(one per line)
+before the argument list.
+Either
+\fInamefile\fR
+or at least one filename argument must be present;
+to test the standard input, use
+\(oq-\(cq
+as a filename argument.
+Please note that
+\fInamefile\fR
+is unwrapped and the enclosed filenames are processed when this option is
+encountered and before any further options processing is done.
+This allows one to process multiple lists of files with different command line
+arguments on the same
+\fBfile\fR
+invocation.
+Thus if you want to set the delimiter, you need to do it before you specify
+the list of files, like:
+\(lq\fB\-F\fR \fI@\fR \fB\-f\fR \fInamefile\fR\(rq,
+instead of:
+\(lq\fB\-f\fR \fInamefile\fR \fB\-F\fR \fI@\fR\(rq.
+.TP 8n
+\fB\-h\fR, \fB\-\-no-dereference\fR
+This option causes symlinks not to be followed
+(on systems that support symbolic links).
+This is the default if the environment variable
+\fRPOSIXLY_CORRECT\fR
+is not defined.
+.TP 8n
+\fB\-i\fR, \fB\-\-mime\fR
+Causes the
+\fBfile\fR
+command to output mime type strings rather than the more
+traditional human readable ones.
+Thus it may say
+\(oqtext/plain; charset=us-ascii\(cq
+rather than
+\(lqASCII text\(rq.
+.TP 8n
+\fB\-\-mime-type\fR, \fB\-\-mime-encoding\fR
+Like
+\fB\-i\fR,
+but print only the specified element(s).
+.TP 8n
+\fB\-k\fR, \fB\-\-keep-going\fR
+Don't stop at the first match, keep going.
+Subsequent matches will be
+have the string
+\(oq\[rs]012\- \(cq
+prepended.
+(If you want a newline, see the
+\fB\-r\fR
+option.)
+The magic pattern with the highest strength (see the
+\fB\-l\fR
+option) comes first.
+.TP 8n
+\fB\-l\fR, \fB\-\-list\fR
+Shows a list of patterns and their strength sorted descending by
+magic(4)
+strength
+which is used for the matching (see also the
+\fB\-k\fR
+option).
+.TP 8n
+\fB\-L\fR, \fB\-\-dereference\fR
+This option causes symlinks to be followed, as the like-named option in
+ls(1)
+(on systems that support symbolic links).
+This is the default if the environment variable
+\fRPOSIXLY_CORRECT\fR
+is defined.
+.TP 8n
+\fB\-m\fR, \fB\-\-magic-file\fR \fImagicfiles\fR
+Specify an alternate list of files and directories containing magic.
+This can be a single item, or a colon-separated list.
+If a compiled magic file is found alongside a file or directory,
+it will be used instead.
+.TP 8n
+\fB\-N\fR, \fB\-\-no-pad\fR
+Don't pad filenames so that they align in the output.
+.TP 8n
+\fB\-n\fR, \fB\-\-no-buffer\fR
+Force stdout to be flushed after checking each file.
+This is only useful if checking a list of files.
+It is intended to be used by programs that want filetype output from a pipe.
+.TP 8n
+\fB\-p\fR, \fB\-\-preserve-date\fR
+On systems that support
+utime(3)
+or
+utimes(2),
+attempt to preserve the access time of files analyzed, to pretend that
+\fBfile\fR
+never read them.
+.TP 8n
+\fB\-P\fR, \fB\-\-parameter\fR \fIname=value\fR
+Set various parameter limits.
+.TS
+l l l.
+.PP
+\fBName\fR	\fBDefault\fR	\fBExplanation\fR
+.PP
+\fRbytes\fR	1M	max number of bytes to read from file
+.PP
+\fRelf_notes\fR	256	max ELF notes processed
+.PP
+\fRelf_phnum\fR	2K	max ELF program sections processed
+.PP
+\fRelf_shnum\fR	32K	max ELF sections processed
+.PP
+\fRelf_shsize\fR	128MB	max ELF section size processed
+.PP
+\fRencoding\fR	65K	max number of bytes to determine encoding
+.PP
+\fRindir\fR	50	recursion limit for indirect magic
+.PP
+\fRname\fR	150	use count limit for name/use magic
+.PP
+\fRregex\fR	8K	length limit for regex searches
+.TE
+.TP 8n
+\fB\-r\fR, \fB\-\-raw\fR
+Don't translate unprintable characters to \eooo.
+Normally
+\fBfile\fR
+translates unprintable characters to their octal representation.
+.TP 8n
+\fB\-s\fR, \fB\-\-special-files\fR
+Normally,
+\fBfile\fR
+only attempts to read and determine the type of argument files which
+stat(2)
+reports are ordinary files.
+This prevents problems, because reading special files may have peculiar
+consequences.
+Specifying the
+\fB\-s\fR
+option causes
+\fBfile\fR
+to also read argument files which are block or character special files.
+This is useful for determining the filesystem types of the data in raw
+disk partitions, which are block special files.
+This option also causes
+\fBfile\fR
+to disregard the file size as reported by
+stat(2)
+since on some systems it reports a zero size for raw disk partitions.
+.TP 8n
+\fB\-S\fR, \fB\-\-no-sandbox\fR
+On systems where libseccomp
+(\fIhttps://github.com/seccomp/libseccomp\fR)
+is available, the
+\fB\-S\fR
+option disables sandboxing which is enabled by default.
+This option is needed for
+\fBfile\fR
+to execute external decompressing programs,
+i.e. when the
+\fB\-z\fR
+option is specified and the built-in decompressors are not available.
+On systems where sandboxing is not available, this option has no effect.
+.TP 8n
+\fB\-v\fR, \fB\-\-version\fR
+Print the version of the program and exit.
+.TP 8n
+\fB\-z\fR, \fB\-\-uncompress\fR
+Try to look inside compressed files.
+.TP 8n
+\fB\-Z\fR, \fB\-\-uncompress-noreport\fR
+Try to look inside compressed files, but report information about the contents
+only not the compression.
+.TP 8n
+\fB\-0\fR, \fB\-\-print0\fR
+Output a null character
+\(oq\e0\(cq
+after the end of the filename.
+Nice to
+cut(1)
+the output.
+This does not affect the separator, which is still printed.
+.sp
+If this option is repeated more than once, then
+\fBfile\fR
+prints just the filename followed by a NUL followed by the description
+(or ERROR: text) followed by a second NUL for each entry.
+.TP 8n
+\fB\--help\fR
+.br
+Print a help message and exit.
+.SH "ENVIRONMENT"
+The environment variable
+\fRMAGIC\fR
+can be used to set the default magic file name.
+If that variable is set, then
+\fBfile\fR
+will not attempt to open
+\fI$HOME/.magic\fR.
+\fBfile\fR
+adds
+\(lq\fI.mgc\fR\(rq
+to the value of this variable as appropriate.
+The environment variable
+\fRPOSIXLY_CORRECT\fR
+controls (on systems that support symbolic links), whether
+\fBfile\fR
+will attempt to follow symlinks or not.
+If set, then
+\fBfile\fR
+follows symlink, otherwise it does not.
+This is also controlled by the
+\fB\-L\fR
+and
+\fB\-h\fR
+options.
+.SH "FILES"
+.TP 33n
+\fI/usr/local/share/misc/magic.mgc\fR
+Default compiled list of magic.
+.PD 0
+.TP 33n
+\fI/usr/local/share/misc/magic\fR
+Directory containing default magic files.
+.PD
+.SH "EXIT STATUS"
+\fBfile\fR
+will exit with
+\fR0\fR
+if the operation was successful or
+\fR>0\fR
+if an error was encountered.
+The following errors cause diagnostic messages, but don't affect the program
+exit code (as POSIX requires), unless
+\fB\-E\fR
+is specified:
+.RS 6n
+.PD 0
+.TP 4n
+\fB\(bu\fR
+A file cannot be found
+.TP 4n
+\fB\(bu\fR
+There is no permission to read a file
+.TP 4n
+\fB\(bu\fR
+The file type cannot be determined
+.RE
+.PD
+.SH "EXAMPLES"
+.nf
+.RS 6n
+$ file file.c file /dev/{wd0a,hda}
+file.c:	  C program text
+file:	  ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
+	  dynamically linked (uses shared libs), stripped
+/dev/wd0a: block special (0/0)
+/dev/hda: block special (3/0)
+
+$ file -s /dev/wd0{b,d}
+/dev/wd0b: data
+/dev/wd0d: x86 boot sector
+
+$ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
+/dev/hda:   x86 boot sector
+/dev/hda1:  Linux/i386 ext2 filesystem
+/dev/hda2:  x86 boot sector
+/dev/hda3:  x86 boot sector, extended partition table
+/dev/hda4:  Linux/i386 ext2 filesystem
+/dev/hda5:  Linux/i386 swap file
+/dev/hda6:  Linux/i386 swap file
+/dev/hda7:  Linux/i386 swap file
+/dev/hda8:  Linux/i386 swap file
+/dev/hda9:  empty
+/dev/hda10: empty
+
+$ file -i file.c file /dev/{wd0a,hda}
+file.c:	     text/x-c
+file:	     application/x-executable
+/dev/hda:    application/x-not-regular-file
+/dev/wd0a:   application/x-not-regular-file
+
+.RE
+.fi
+.SH "SEE ALSO"
+hexdump(1),
+od(1),
+strings(1),
+magic(4)
+.SH "STANDARDS CONFORMANCE"
+This program is believed to exceed the System V Interface Definition
+of FILE(CMD), as near as one can determine from the vague language
+contained therein.
+Its behavior is mostly compatible with the System V program of the same name.
+This version knows more magic, however, so it will produce
+different (albeit more accurate) output in many cases.
+.PP
+The one significant difference
+between this version and System V
+is that this version treats any white space
+as a delimiter, so that spaces in pattern strings must be escaped.
+For example,
+.nf
+.sp
+.RS 6n
+>10	string	language impress\	(imPRESS data)
+.RE
+.fi
+.PP
+in an existing magic file would have to be changed to
+.nf
+.sp
+.RS 6n
+>10	string	language\e impress	(imPRESS data)
+.RE
+.fi
+.PP
+In addition, in this version, if a pattern string contains a backslash,
+it must be escaped.
+For example
+.nf
+.sp
+.RS 6n
+0	string		\ebegindata	Andrew Toolkit document
+.RE
+.fi
+.PP
+in an existing magic file would have to be changed to
+.nf
+.sp
+.RS 6n
+0	string		\e\ebegindata	Andrew Toolkit document
+.RE
+.fi
+.PP
+SunOS releases 3.2 and later from Sun Microsystems include a
+\fBfile\fR
+command derived from the System V one, but with some extensions.
+This version differs from Sun's only in minor ways.
+It includes the extension of the
+\(oq&\(cq
+operator, used as,
+for example,
+.nf
+.sp
+.RS 6n
+>16	long&0x7fffffff	>0		not stripped
+.RE
+.fi
+.SH "SECURITY"
+On systems where libseccomp
+(\fIhttps://github.com/seccomp/libseccomp\fR)
+is available,
+\fBfile\fR
+is enforces limiting system calls to only the ones necessary for the
+operation of the program.
+This enforcement does not provide any security benefit when
+\fBfile\fR
+is asked to decompress input files running external programs with
+the
+\fB\-z\fR
+option.
+To enable execution of external decompressors, one needs to disable
+sandboxing using the
+\fB\-S\fR
+option.
+.SH "MAGIC DIRECTORY"
+The magic file entries have been collected from various sources,
+mainly USENET, and contributed by various authors.
+Christos Zoulas (address below) will collect additional
+or corrected magic file entries.
+A consolidation of magic file entries
+will be distributed periodically.
+.PP
+The order of entries in the magic file is significant.
+Depending on what system you are using, the order that
+they are put together may be incorrect.
+If your old
+\fBfile\fR
+command uses a magic file,
+keep the old magic file around for comparison purposes
+(rename it to
+\fI/usr/local/share/misc/magic.orig\fR).
+.SH "HISTORY"
+There has been a
+\fBfile\fR
+command in every
+\fRUNIX since at least Research Version 4\fR
+(man page dated November, 1973).
+The System V version introduced one significant major change:
+the external list of magic types.
+This slowed the program down slightly but made it a lot more flexible.
+.PP
+This program, based on the System V version,
+was written by Ian Darwin
+\(laian@darwinsys.com\(ra
+without looking at anybody else's source code.
+.PP
+John Gilmore revised the code extensively, making it better than
+the first version.
+Geoff Collyer found several inadequacies
+and provided some magic file entries.
+Contributions of the
+\(oq&\(cq
+operator by Rob McMahon,
+\(lacudcv@warwick.ac.uk\(ra,
+1989.
+.PP
+Guy Harris,
+\(laguy@netapp.com\(ra,
+made many changes from 1993 to the present.
+.PP
+Primary development and maintenance from 1990 to the present by
+Christos Zoulas
+\(lachristos@astron.com\(ra.
+.PP
+Altered by Chris Lowth
+\(lachris@lowth.com\(ra,
+2000: handle the
+\fB\-i\fR
+option to output mime type strings, using an alternative
+magic file and internal logic.
+.PP
+Altered by Eric Fischer
+\(laenf@pobox.com\(ra,
+July, 2000,
+to identify character codes and attempt to identify the languages
+of non-ASCII files.
+.PP
+Altered by Reuben Thomas
+\(larrt@sc3d.org\(ra,
+2007-2011, to improve MIME support, merge MIME and non-MIME magic,
+support directories as well as files of magic, apply many bug fixes,
+update and fix a lot of magic, improve the build system, improve the
+documentation, and rewrite the Python bindings in pure Python.
+.PP
+The list of contributors to the
+\(oqmagic\(cq
+directory (magic files)
+is too long to include here.
+You know who you are; thank you.
+Many contributors are listed in the source files.
+.SH "LEGAL NOTICE"
+Copyright (c) Ian F. Darwin, Toronto, Canada, 1986-1999.
+Covered by the standard Berkeley Software Distribution copyright; see the file
+COPYING in the source distribution.
+.PP
+The files
+\fItar.h\fR
+and
+\fIis_tar.c\fR
+were written by John Gilmore from his public-domain
+tar(1)
+program, and are not covered by the above license.
+.SH "BUGS"
+Please report bugs and send patches to the bug tracker at
+\fIhttps://bugs.astron.com/\fR
+or the mailing list at
+\(lafile@astron.com\(ra
+(visit
+\fIhttps://mailman.astron.com/mailman/listinfo/file\fR
+first to subscribe).
+.SH "TODO"
+Fix output so that tests for MIME and APPLE flags are not needed all
+over the place, and actual output is only done in one place.
+This needs a design.
+Suggestion: push possible outputs on to a list, then pick the
+last-pushed (most specific, one hopes) value at the end, or
+use a default if the list is empty.
+This should not slow down evaluation.
+.PP
+The handling of
+\fRMAGIC_CONTINUE\fR
+and printing \e012- between entries is clumsy and complicated; refactor
+and centralize.
+.PP
+Some of the encoding logic is hard-coded in encoding.c and can be moved
+to the magic files if we had a !:charset annotation.
+.PP
+Continue to squash all magic bugs.
+See Debian BTS for a good source.
+.PP
+Store arbitrarily long strings, for example for %s patterns, so that
+they can be printed out.
+Fixes Debian bug #271672.
+This can be done by allocating strings in a string pool, storing the
+string pool at the end of the magic file and converting all the string
+pointers to relative offsets from the string pool.
+.PP
+Add syntax for relative offsets after current level (Debian bug #466037).
+.PP
+Make file -ki work, i.e. give multiple MIME types.
+.PP
+Add a zip library so we can peek inside Office2007 documents to
+print more details about their contents.
+.PP
+Add an option to print URLs for the sources of the file descriptions.
+.PP
+Combine script searches and add a way to map executable names to MIME
+types (e.g. have a magic value for !:mime which causes the resulting
+string to be looked up in a table).
+This would avoid adding the same magic repeatedly for each new
+hash-bang interpreter.
+.PP
+When a file descriptor is available, we can skip and adjust the buffer
+instead of the hacky buffer management we do now.
+.PP
+Fix
+\(lqname\(rq
+and
+\(lquse\(rq
+to check for consistency at compile time (duplicate
+\(lqname\(rq,
+\(lquse\(rq
+pointing to undefined
+\(lqname\(rq
+).
+Make
+\(lqname\(rq
+/
+\(lquse\(rq
+more efficient by keeping a sorted list of names.
+Special-case ^ to flip endianness in the parser so that it does not
+have to be escaped, and document it.
+.PP
+If the offsets specified internally in the file exceed the buffer size
+(
+\fRHOWMANY\fR
+variable in file.h), then we don't seek to that offset, but we give up.
+It would be better if buffer managements was done when the file descriptor
+is available so we can seek around the file.
+One must be careful though because this has performance and thus security
+considerations, because one can slow down things by repeatedly seeking.
+.PP
+There is support now for keeping separate buffers and having offsets from
+the end of the file, but the internal buffer management still needs an
+overhaul.
+.SH "AVAILABILITY"
+You can obtain the original author's latest version by anonymous FTP
+on
+\fIftp.astron.com\fR
+in the directory
+\fI/pub/file/file-X.YZ.tar.gz\fR.

@@ -58,3 +58,18 @@ report-data/
 exp_archive/
 configuration.yaml
 config.yaml
+# Old local folder for run logs and notes; logs now go to experiments/logs/ (ignored below).
+logs-reports/
+
+# Local work kept out of git (e.g. the original aflplusplus_2w prototype)
+uncommitted/
+
+# Your experiment file (see "Experiment files" in README.md); the README has an example.
+/experiment.yaml
+
+# Job queue (shared by the web app and run_experiment.py) and web app previews
+webapp/instance/
+
+# Every experiment's file with its record (start, estimated end, stop command) and every log
+# (experiments/logs/), see README.md.
+/experiments/

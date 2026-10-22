@@ -1,0 +1,201 @@
+{
+ "synopsis": "bison OPTIONS @@",
+ "options": {
+  "-p": {
+   "connector": " ",
+   "values": [
+    "yy",
+    "my",
+    "parser",
+    "lex"
+   ]
+  },
+  "-b": {
+   "connector": " ",
+   "values": [
+    "parser",
+    "output",
+    "y",
+    "prefix"
+   ]
+  },
+  "-D": {
+   "connector": " ",
+   "values": [
+    "api.prefix=yy",
+    "api.prefix=my",
+    "parse.trace",
+    "parse.error=verbose",
+    "lr.type=canonical-lr"
+   ]
+  },
+  "-F": {
+   "connector": " ",
+   "values": [
+    "api.prefix=yy",
+    "api.prefix=my",
+    "parse.trace",
+    "parse.error=verbose",
+    "lr.type=canonical-lr"
+   ]
+  },
+  "-L": {
+   "connector": " ",
+   "values": [
+    "c",
+    "c++",
+    "d",
+    "java",
+    "python"
+   ]
+  },
+  "-f": {
+   "connector": "=",
+   "values": [
+    "caret",
+    "diagnostics-show-caret",
+    "fixit",
+    "diagnostics-parseable-fixits",
+    "syntax-only",
+    "all",
+    "none"
+   ]
+  },
+  "-W": {
+   "connector": "=",
+   "values": [
+    "conflicts-sr",
+    "conflicts-rr",
+    "counterexamples",
+    "cex",
+    "dangling-alias",
+    "deprecated",
+    "empty-rule",
+    "midrule-values",
+    "precedence",
+    "yacc",
+    "other",
+    "all",
+    "none",
+    "error",
+    "no-conflicts-sr",
+    "no-conflicts-rr",
+    "no-counterexamples",
+    "no-cex",
+    "no-dangling-alias",
+    "no-deprecated",
+    "no-empty-rule",
+    "no-midrule-values",
+    "no-precedence",
+    "no-yacc",
+    "no-other"
+   ]
+  },
+  "--color": {
+   "connector": "=",
+   "values": [
+    "always",
+    "yes",
+    "never",
+    "no",
+    "auto",
+    "tty"
+   ]
+  },
+  "-r": {
+   "connector": "=",
+   "values": [
+    "states",
+    "itemsets",
+    "lookaheads",
+    "solved",
+    "counterexamples",
+    "cex",
+    "all",
+    "none"
+   ]
+  },
+  "-M": {
+   "connector": " ",
+   "values": [
+    "/old/path=/new/path",
+    "/usr=/opt",
+    "/home/user=/home/other",
+    "old=new"
+   ]
+  },
+  "--style": {
+   "connector": "=",
+   "values": [
+    "style.css",
+    "default.css",
+    "custom.css",
+    "theme.css"
+   ]
+  },
+  "-S": {
+   "connector": " ",
+   "values": [
+    "lalr1.cc",
+    "glr.cc",
+    "lalr1.java",
+    "glr.c",
+    "yacc.c"
+   ]
+  },
+  "-H": {
+   "connector": "=",
+   "values": [
+    "parser.h",
+    "header.h",
+    "output.h",
+    "y.tab.h"
+   ]
+  },
+  "--report-file": {
+   "connector": "=",
+   "values": [
+    "report.txt",
+    "output.report",
+    "parser.report",
+    "automaton.report"
+   ]
+  },
+  "-o": {
+   "connector": " ",
+   "values": [
+    "parser.c",
+    "output.c",
+    "y.tab.c",
+    "result.c"
+   ]
+  },
+  "-g": {
+   "connector": "=",
+   "values": [
+    "graph.dot",
+    "automaton.dot",
+    "parser.dot",
+    "output.dot"
+   ]
+  },
+  "--html": {
+   "connector": "=",
+   "values": [
+    "report.html",
+    "automaton.html",
+    "parser.html",
+    "output.html"
+   ]
+  },
+  "-x": {
+   "connector": "=",
+   "values": [
+    "report.xml",
+    "automaton.xml",
+    "parser.xml",
+    "output.xml"
+   ]
+  }
+ }
+}

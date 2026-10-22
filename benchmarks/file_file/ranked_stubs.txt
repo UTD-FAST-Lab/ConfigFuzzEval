@@ -1,11 +1,11 @@
 10
-file -e tokens -h -n -d -P name=150 -b -C -m /usr/share/misc/magic @@
-file -L -N -Z -n -r -0 --mime-encoding -d -s -m /usr/share/misc/magic @@
-file -S -v -k --mime-type -c -e tokens -p -m /usr/share/misc/magic @@
-file -e tokens --apple -m /usr/share/misc/magic @@
-file -z -h -Z --extension -F | -c -P name=150 -m /usr/share/misc/magic --apple -C -m /usr/share/misc/magic @@
-file -F | -r -s -0 -p -k -b -v -C --mime-encoding -m /usr/share/misc/magic @@
-file --mime-type --apple -p -m /usr/share/misc/magic @@
-file -l -k -m /usr/share/misc/magic @@
-file -F | -k -p -l -L -z --extension -m /usr/share/misc/magic @@
-file -k -F | -m /usr/share/misc/magic -S -l -h -0 -m /usr/share/misc/magic @@
+file -e tokens -h -n -d -P name=150 -b -C -m /benchmark/magic.mgc @@
+file -L -N -Z -n -r -0 --mime-encoding -d -s -m /benchmark/magic.mgc @@
+file -S -v -k --mime-type -c -e tokens -p -m /benchmark/magic.mgc @@
+file -e tokens --apple -m /benchmark/magic.mgc @@
+file -z -h -Z --extension -F | -c -P name=150 -m /benchmark/magic.mgc --apple -C -m /benchmark/magic.mgc @@
+file -F | -r -s -0 -p -k -b -v -C --mime-encoding -m /benchmark/magic.mgc @@
+file --mime-type --apple -p -m /benchmark/magic.mgc @@
+file -l -k -m /benchmark/magic.mgc @@
+file -F | -k -p -l -L -z --extension -m /benchmark/magic.mgc @@
+file -k -F | -m /benchmark/magic.mgc -S -l -h -0 -m /benchmark/magic.mgc @@

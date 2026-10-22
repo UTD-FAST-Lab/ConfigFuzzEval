@@ -1,5 +1,5 @@
 -v
--m /usr/share/misc/magic
+-m /benchmark/magic.mgc
 -z
 -Z
 -b

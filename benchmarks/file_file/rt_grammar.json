@@ -1,5 +1,6 @@
 {
-    "cmdline": "$inopts -m /usr/share/misc/magic $INPUTFILE",
+    "cmdline": "$inopts -m /benchmark/magic.mgc $INPUTFILE",
+    "exit_options": ["-v"],
     "connector": " ",
     "strmax": 3,
     "options": [
@@ -10,7 +11,7 @@
         {
             "opt": "-m",
             "type": "choice",
-            "choices": ["/usr/share/misc/magic", "/etc/magic", "./magic", "magic.mgc", "~/.magic"],
+            "choices": ["/benchmark/magic.mgc", "/etc/magic", "./magic", "magic.mgc", "~/.magic"],
             "connector": " "
         },
         {

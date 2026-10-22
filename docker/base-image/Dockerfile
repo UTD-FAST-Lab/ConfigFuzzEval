@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev liblzma-dev libbz2-dev libssl-dev libdeflate0 libjbig0 libjbig-dev \
     libxml2-dev libsqlite3-dev libpng-dev libjpeg-dev \
     llvm \
+    libasound2-dev libdeflate-dev \
     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y make cmake flex bison
 
 # Install Clang/LLVM 18
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -38,3 +40,10 @@ RUN pip3 install --no-cache-dir \
 
 # DEBUG: Print clang version on container startup
 # CMD ["clang --version"]
+
+RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
+    build-essential make autoconf libtool automake pkg-config \
+    zlib1g zlib1g-dev libjbig0 libjbig-dev \
+    libdeflate-dev liblerc-dev liblzma-dev \
+    libwebp-dev libjpeg-dev libzstd-dev && \
+    rm -rf /var/lib/apt/lists/*

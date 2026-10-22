@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% block title %}Documentation · ConfigFuzzEval{% endblock %}
+{% block content %}
+<div class="docs">
+<nav class="toc">
+  <b>On this page</b>
+  <a href="#overview">How the pieces fit</a>
+  <a href="#fuzzer">Adding a fuzzer</a>
+  <a href="#benchmark">Adding a benchmark</a>
+  <a href="#compiletime">Compile-time strategy</a>
+  <a href="#runtime">Runtime strategy</a>
+  <a href="#triage">Crash triage tool</a>
+  <a href="#post">Post-analysis tool</a>
+  <a href="#testing">Testing a plugin</a>
+</nav>
+
+<article>
+<h1>Plugin interfaces</h1>
+<p class="sub">How to add fuzzers, benchmarks, configuration generators, triage tools and post-analysis tools. Every plugin is a folder in the repository; the framework finds it by its folder name, so nothing else has to be registered unless a section says so. The repository's <code>docs/CONTRIBUTING.md</code> covers benchmarks and fuzzers in more detail, with complete sample files.</p>
+
+{% raw %}
+<section id="overview">
+<h2>How the pieces fit</h2>
+<p>An experiment runs every <b>fuzzer</b> on every <b>benchmark</b>, under every <b>compile-time strategy</b> (which builds of the benchmark) and <b>runtime strategy</b> (which command lines it is fuzzed with). Everything runs in Docker:</p>
+<ol>
+  <li><code>fbpp/base</code> (from <code>docker/base-image</code>) is the parent of every image.</li>
+  <li>Each fuzzer is built once as <code>fbpp/fuzzer:&lt;fuzzer&gt;</code>; running it copies the fuzzer into <code>&lt;experiment&gt;/fuzzers/&lt;fuzzer&gt;/</code>.</li>
+  <li>A compile-time strategy turns <code>benchmarks/&lt;benchmark&gt;</code> into one or more copies <code>benchmarks/cts_&lt;strategy&gt;_&lt;benchmark&gt;_&lt;i&gt;</code>, each with its own <code>build.sh</code>.</li>
+  <li>Each copy is built once per fuzzer (on top of <code>fbpp/fuzzer:&lt;fuzzer&gt;</code>, with the fuzzer's compiler) and once for coverage (with clang source-based coverage), into <code>&lt;experiment&gt;/benchmarks/&lt;fuzzer&gt;_cts_…</code> and <code>…/coverage_cts_…</code>.</li>
+  <li>Each trial runs the fuzzer's <code>run.sh</code> in <code>fbpp/runner</code>, then its <code>coverage.py</code> in <code>fbpp/runner-coverage</code>; output goes to <code>&lt;experiment&gt;/data/&lt;fuzzer&gt;[_rts_&lt;strategy&gt;]_cts_…_trial_&lt;k&gt;/</code>.</li>
+  <li>After all trials: aggregation, SuperC (unless turned off), crash triage (if asked for) and the statistics report.
+    Both combine each arm's trials two ways, always: the <b>union</b> (what any trial covered) and the <b>mean</b> over the trials (what a typical trial covers).
+    The statistics report links a combined coverage report of each arm in both forms, with per source line how many trials covered it; SuperC's tables give each arm's conditions covered by the union, the mean trial and every trial.</li>
+</ol>
+<div class="note"><b>Images are reused.</b> When <code>fbpp/fuzzer:&lt;name&gt;</code>, <code>fbpp/bug-triaging:&lt;name&gt;</code> or <code>fbpp/superc_runner</code> already exists, it is not rebuilt. After changing a fuzzer, triage tool or SuperC, remove the image first, for example <code>docker rmi fbpp/fuzzer:aflplusplus</code>. Benchmark images are always rebuilt.</div>
+</section>
+
+<section id="fuzzer">
+<h2>Adding a fuzzer</h2>
+<p>Folder: <code>fuzzers/&lt;name&gt;/</code>. The name is what you pass to <code>--fuzzers</code> or list in an experiment file. A fuzzer is one of two kinds:</p>
+<table>
+  <thead><tr><th></th><th>Config-agnostic</th><th>Config-aware</th></tr></thead>
+  <tbody>
+  <tr><th>What it fuzzes</th><td>the input file, under the command line it is given</td><td>the input and the program's options, which it chooses itself</td></tr>
+  <tr><th>Here</th><td>aflplusplus, libafl</td><td>vafuzz, configfuzz, carpetfuzz, prophetfuzz, zigzagfuzz</td></tr>
+  <tr><th>Runtime strategies</th><td>yes: each gives it a list of configurations, fuzzed one after another</td><td>no: it always runs with <code>default</code></td></tr>
+  <tr><th>Compile-time strategies</th><td>yes</td><td>yes</td></tr>
+  <tr><th>Registered in</th><td><code>runtime/supported_fuzzers.json</code>, and <code>run.sh</code> reads <code>${SEED_DIR:-/benchmark/seed}</code></td><td><code>fuzzers/benchmark_requirements.json</code>, for the benchmark files it reads</td></tr>
+  </tbody>
+</table>
+<p>Both kinds have the same three files:</p>
+<table>
+  <thead><tr><th>File</th><th>Required</th><th>What it does</th></tr></thead>
+  <tbody>
+  <tr><td><code>builder.Dockerfile</code></td><td>yes</td><td>Builds the fuzzer image <code>fbpp/fuzzer:&lt;name&gt;</code>.</td></tr>
+  <tr><td><code>run.sh</code></td><td>yes</td><td>Fuzzes one trial.</td></tr>
+  <tr><td><code>coverage.py</code></td><td>yes</td><td>Replays the trial's corpus on the coverage build and writes the coverage reports.</td></tr>
+  </tbody>
+</table>
+
+<h3>builder.Dockerfile</h3>
+<pre><code>ARG parent_image          # the framework passes fbpp/base
+FROM $parent_image
+
+RUN git clone https://github.com/&lt;you&gt;/&lt;fuzzer&gt; /&lt;name&gt; &amp;&amp; cd /&lt;name&gt; &amp;&amp; make
+
+# Compilers the benchmarks are built with (see below)
+ENV FUZZER_COMP=/&lt;name&gt;/afl-clang-fast
+ENV FUZZER_COMPXX=/&lt;name&gt;/afl-clang-fast++
+
+COPY run.sh /&lt;name&gt;
+COPY coverage.py /&lt;name&gt;
+CMD ["bash", "-c", "cp -r /&lt;name&gt; /fuzzer_output/"]</code></pre>
+<ul>
+  <li><b>Install into <code>/&lt;name&gt;</code></b>, with <code>run.sh</code> and <code>coverage.py</code> inside it. The framework runs the image once with <code>&lt;experiment&gt;/fuzzers</code> mounted at <code>/fuzzer_output</code>; the <code>CMD</code> copies <code>/&lt;name&gt;</code> there, and that folder is mounted at <code>/fuzzer</code> in every trial. (Only the first command of an exec-form <code>CMD</code> runs; the existing fuzzers' extra <code>"&amp;&amp;", "cp …"</code> items do nothing, which is why the files must be inside <code>/&lt;name&gt;</code>.)</li>
+  <li><b>Every <code>ENV FUZZER_*</code></b> is read from the image and passed to the benchmark builds as a <code>--build-arg</code>. Benchmarks use <code>FUZZER_COMP</code> and <code>FUZZER_COMPXX</code> as <code>CC</code> and <code>CXX</code>.</li>
+</ul>
+
+<h3>run.sh</h3>
+<p>Runs in <code>fbpp/runner</code>, pinned to two cores, with the memory limit from <code>config.yaml</code>.</p>
+<table>
+  <thead><tr><th>Given</th><th>Value</th></tr></thead>
+  <tbody>
+  <tr><td><code>/fuzzer</code></td><td>the folder your image copied out</td></tr>
+  <tr><td><code>/benchmark</code></td><td>the benchmark built with your compiler: the binary, <code>run_target.sh</code>, <code>seed/</code>, <code>dict</code>, grammars, …</td></tr>
+  <tr><td><code>$OUT</code></td><td><code>/fuzzer_output</code>, the trial's folder (write everything here)</td></tr>
+  <tr><td><code>$RUNTIME</code></td><td>seconds to fuzz (the trial's time divided by the number of compile-time copies); <b>0 in continuous mode</b>: fuzz until the container is stopped</td></tr>
+  <tr><td><code>$RUN_TARGET</code></td><td>the contents of <code>/benchmark/run_target.sh</code>, for example <code>/benchmark/pcre2test @@</code>; <code>@@</code> is the input file</td></tr>
+  <tr><td><code>$SEED_DIR</code></td><td>only under a runtime strategy: the seeds to start from (the previous configuration's corpus)</td></tr>
+  </tbody>
+</table>
+<pre><code># fuzzers/aflplusplus/run.sh (config-agnostic): fuzzes $RUN_TARGET as given, from $SEED_DIR
+LIMIT=""; [ "${RUNTIME:-0}" -gt 0 ] 2&gt;/dev/null &amp;&amp; LIMIT="-V $RUNTIME"
+export AFL_IGNORE_SEED_PROBLEMS=1
+/fuzzer/afl-fuzz -i ${SEED_DIR:-/benchmark/seed} -o $OUT $LIMIT $RUN_TARGET
+
+# fuzzers/zigzagfuzz/run.sh (config-aware): mutates the options with the benchmark's dict
+LIMIT=""; [ "${RUNTIME:-0}" -gt 0 ] 2&gt;/dev/null &amp;&amp; LIMIT="-V $RUNTIME"
+/fuzzer/afl-fuzz -i /benchmark/seed -o $OUT -K 2 -a /benchmark/dict $LIMIT $RUN_TARGET</code></pre>
+<ul>
+  <li>Stop after <code>$RUNTIME</code> seconds. The container is killed after <code>$RUNTIME</code> + 600 s and the trial counts as failed.</li>
+  <li><b>When <code>$RUNTIME</code> is 0 or unset, run without a time limit</b> (continuous mode stops the container itself), as the <code>LIMIT</code> line above does; anything else derived from the time (carpetfuzz's ranking budget) needs a fixed value then. In continuous mode the repository's <code>run.sh</code> is mounted over the one in the fuzzer image, so this works without rebuilding the image, and <code>AFL_NO_AFFINITY=1</code> is set because Docker already pins the container to its CPU.</li>
+  <li>Write the corpus to <code>$OUT/default/queue/</code> and crashes to <code>$OUT/default/crashes/</code> (AFL++'s layout), which <code>coverage.py</code> and crash triage read.</li>
+  <li>A config-aware fuzzer that changes the command line saves it for each input and crash (as <code>default/queue_argvs/</code> and <code>default/crashes_argvs/</code> in vafuzz and zigzagfuzz), so that coverage and triage replay them with the same options.</li>
+  <li>A config-agnostic fuzzer takes its seeds from <code>${SEED_DIR:-/benchmark/seed}</code> and is added to <code>runtime/supported_fuzzers.json</code> (below). Under a runtime strategy, <code>runtime/multi_config_run.sh</code> calls its <code>run.sh</code> once per configuration, with <code>$OUT</code> set to <code>$OUT/config_&lt;i&gt;</code>, <code>$RUNTIME</code> to that configuration's share and <code>$RUN_TARGET</code> to the program with the configuration's options, so <code>run.sh</code> needs nothing else for it.</li>
+</ul>
+
+<h3>coverage.py</h3>
+<p>Runs in <code>fbpp/runner-coverage</code> after fuzzing, with <code>/benchmark</code> now the <b>coverage</b> build of the same benchmark copy, <code>/fuzzer_output</code> the trial's folder, and <code>$OUT</code> and <code>$RUN_TARGET</code> as above. It must:</p>
+<ol>
+  <li>run <code>$RUN_TARGET</code> on every corpus input (replace <code>@@</code> with the input's path, or pass it on stdin) with <code>LLVM_PROFILE_FILE</code> set, each with a timeout;</li>
+  <li>merge the profiles: <code>llvm-profdata merge -sparse --failure-mode=warn -f inputs.txt -o $OUT/coverage/merged.profdata</code>. Pass the profiles in a file list, one <code>1,&lt;path&gt;</code> per line: a large queue exceeds the kernel's argument limit, and the explicit weight keeps the commas in AFL queue names from being read as one. <code>--failure-mode=warn</code> skips a truncated profile (a target killed while writing it) instead of failing the whole merge; list only profiles that exist, since a missing one fails it even then;</li>
+  <li>write <code>$OUT/coverage/report.json</code> with <code>llvm-cov export &lt;binary&gt; -instr-profile=… -format=lcov</code> (LCOV, despite the name) and <code>$OUT/coverage/report.txt</code> with <code>llvm-cov report &lt;binary&gt; -instr-profile=…</code>. The binary is the first word of <code>$RUN_TARGET</code>.</li>
+</ol>
+<p>The statistics report reads both files, aggregation copies <code>report.json</code> to <code>lcov_results/</code>, and SuperC reads that copy. Start from <code>fuzzers/aflplusplus/coverage.py</code>; if your fuzzer changes the command line per input (as zigzagfuzz and vafuzz do), replay each input with the arguments it was found with.</p>
+<div class="note"><b>Continuous mode runs the same <code>coverage.py</code> on part of the corpus.</b> Every round, <code>runtime/continuous_coverage.py</code> copies only the inputs found since the last round into a scratch <code>$OUT</code> (<code>$OUT/default/queue/</code>), together with <code>default/queue_argvs/</code> and the regular files at the top of the trial's output (such as carpetfuzz's <code>ranked_stubs.txt</code>), runs <code>coverage.py</code> on it and merges its <code>merged.profdata</code> into the trial's cumulative profile. So <code>coverage.py</code> must work on any subset of the queue, and must read nothing else from <code>$OUT</code> than those; a fuzzer that needs another side file must add its folder to <code>SIDE_DIRS</code> in that script.</div>
+
+<h3>Registering the kind</h3>
+<table>
+  <thead><tr><th>File</th><th>Entry</th><th>Effect</th></tr></thead>
+  <tbody>
+  <tr><td><code>fuzzers/benchmark_requirements.json</code></td><td><code>"&lt;name&gt;": ["dict", "rt_grammar.json"]</code></td><td>Config-aware fuzzers: files (relative to <code>benchmarks/&lt;benchmark&gt;/</code>) your <code>run.sh</code> needs. A run on a benchmark without them is refused before anything is built, and the New experiment form and the interactive setup warn about it.</td></tr>
+  <tr><td><code>runtime/supported_fuzzers.json</code></td><td><code>"&lt;name&gt;": {"corpus_dir": "default/queue"}</code></td><td>Config-agnostic fuzzers: lets the fuzzer run under non-default runtime strategies. <code>corpus_dir</code> (relative to <code>$OUT</code>) is carried to the next configuration as <code>$SEED_DIR</code>.</td></tr>
+  </tbody>
+</table>
+<p>Optionally, add a one-line description to <code>FUZZER_DESCRIPTIONS</code> in <code>common/interactive.py</code>; the interactive setup shows it next to the fuzzer.</p>
+</section>
+
+<section id="benchmark">
+<h2>Adding a benchmark</h2>
+<p>Folder: <code>benchmarks/&lt;project&gt;_&lt;binary&gt;/</code>, for example <code>pcre2_pcre2test</code>. Names starting with <code>cts_</code> or <code>coverage_</code> are reserved for the framework's copies.</p>
+<table>
+  <thead><tr><th>File</th><th>Required</th><th>Used by</th></tr></thead>
+  <tbody>
+  <tr><td><code>builder.Dockerfile</code></td><td>yes</td><td>every build; a folder without it is not a benchmark</td></tr>
+  <tr><td><code>build.sh</code></td><td>yes</td><td>the build, with <code>{{CT_CONFIGURATION}}</code> where compile-time options go</td></tr>
+  <tr><td><code>run_target.sh</code></td><td>yes</td><td>the command line fuzzed, becomes <code>$RUN_TARGET</code></td></tr>
+  <tr><td><code>seed/</code></td><td>yes</td><td>initial inputs (at least one file)</td></tr>
+  <tr><td><code>ct_grammar.json</code></td><td>yes</td><td>every compile-time strategy, including <code>default</code></td></tr>
+  <tr><td><code>rt_grammar.json</code></td><td>for runtime strategies</td><td>runtime strategies, vafuzz, configfuzz</td></tr>
+  <tr><td><code>superc_flags.txt</code></td><td>for SuperC</td><td><code>-I &lt;dir&gt;</code> (relative to the source root) and <code>-D NAME[=VALUE]</code> lines, as the build uses them (see <a href="#post">SuperC</a>)</td></tr>
+  <tr><td><code>dict</code></td><td>for zigzagfuzz</td><td>AFL dictionary of the program's options</td></tr>
+  <tr><td><code>manpage.1</code>, <code>carpetfuzz/</code></td><td>for carpetfuzz</td><td><code>carpetfuzz/combinations.txt</code> and <code>dict.json</code>, made from the man page by <code>fuzzers/carpetfuzz/analysis/generate.sh</code></td></tr>
+  <tr><td><code>ranked_stubs.txt</code></td><td>for prophetfuzz</td><td>ranked option combinations: a count line, then one command per line with <code>@@</code></td></tr>
+  </tbody>
+</table>
+
+<h3>builder.Dockerfile</h3>
+<p>Built twice for every benchmark copy and fuzzer:</p>
+<table>
+  <thead><tr><th>Build</th><th>parent_image</th><th>Build arguments</th></tr></thead>
+  <tbody>
+  <tr><td>fuzzing</td><td><code>fbpp/fuzzer:&lt;fuzzer&gt;</code></td><td>every <code>FUZZER_*</code> variable of the fuzzer image</td></tr>
+  <tr><td>coverage</td><td><code>fbpp/base</code></td><td><code>CC=clang</code>, <code>CXX=clang++</code>, <code>CFLAGS=-fprofile-instr-generate -fcoverage-mapping</code></td></tr>
+  </tbody>
+</table>
+<pre><code>ARG parent_image
+FROM $parent_image
+ARG CC=$FUZZER_COMP
+ARG CXX=$FUZZER_COMPXX
+ARG CFLAGS=""
+
+RUN apt-get update &amp;&amp; apt-get install -y build-essential autoconf …
+# A fixed version. benchmarks/sources/ (the `sources` build context) can hold a copy for offline builds:
+# COPY --from=sources pcre2.tar.xz /fbpp_sources/
+RUN git clone https://github.com/PCRE2Project/pcre2.git /pcre2 &amp;&amp; git -C /pcre2 checkout &lt;commit&gt;
+# Build in the source folder: coverage, the HTML source reports and SuperC use these paths.
+WORKDIR /pcre2
+COPY build.sh .
+RUN bash build.sh
+
+# Everything the fuzzers and tools read from /benchmark
+COPY run_target.sh dict rt_grammar.json /
+COPY seed /seed
+CMD ["bash", "-c", "cp /pcre2/pcre2test /benchmark_out_dir/ &amp;&amp; cp /run_target.sh /dict /rt_grammar.json /benchmark_out_dir/ &amp;&amp; cp -r /seed /benchmark_out_dir/seed"]</code></pre>
+<p>The framework runs the image with <code>&lt;experiment&gt;/benchmarks/&lt;fuzzer&gt;_&lt;copy&gt;</code> mounted at <code>/benchmark_out_dir</code>; that folder becomes <code>/benchmark</code> in the trials. Copy the binary and <b>every file a fuzzer or tool needs</b>. Here the <code>CMD</code> is one string, so the <code>&amp;&amp;</code> chain runs. The coverage image is kept after the build: SuperC and the HTML source reports copy the sources out of it.</p>
+
+<h3>build.sh and run_target.sh</h3>
+<pre><code># build.sh: {{CT_CONFIGURATION}} is replaced by the compile-time strategy's options ("" for default)
+./configure --disable-shared --enable-static {{CT_CONFIGURATION}} CC=$CC CXX=$CXX
+make CC=$CC CXX=$CXX
+
+# run_target.sh: one line; @@ is the input file
+/benchmark/pcre2test @@</code></pre>
+<p>Build a static binary (or copy its libraries) so it runs from <code>/benchmark</code>.</p>
+
+<h3>ct_grammar.json: the compile-time options</h3>
+<pre><code>{
+  "name": "pcre2_pcre2test",
+  "options": [
+    {"name": "jit",  "type": "bool",   "default": false, "cli": "enable"},
+    {"name": "link-size", "type": "choice", "default": 2, "cli": "with", "choices": [2, 3, 4]}
+  ],
+  "constraints": [
+    {"opt": "jit-sealloc", "val": true, "then": [{"opt": "jit", "val": true}],
+     "desc": "JIT Sealloc requires JIT to be enabled"}
+  ],
+  "removed": [{"name": "Werror", "reason": "compiler warnings would fail the build"}]
+}</code></pre>
+<p><code>cli</code> gives the configure flag form: <code>enable</code> gives <code>--enable-x</code> / <code>--disable-x</code> (or <code>--enable-x=value</code> for a choice), <code>with</code> gives <code>--with-x</code> / <code>--without-x</code> (or <code>--with-x=value</code>). <code>constraints</code> say which values imply others; strategies only produce configurations that satisfy them. <code>removed</code> documents options deliberately left out.</p>
+
+<h3>rt_grammar.json: the command-line options</h3>
+<pre><code>{
+  "cmdline": "$inopts $INPUTFILE",
+  "options": [
+    {"opt": "-i", "type": "bool"},
+    {"opt": "--color", "type": "choice", "choices": ["always", "auto", "never"], "connector": "="},
+    {"opt": "-S", "type": "intnum", "range": [1, 64]}
+  ],
+  "exit_options": ["-help", "-v"],
+  "conflict": [["-t", "-T"]],
+  "depend": [],
+  "maxcombs": 2
+}</code></pre>
+<p>Types: <code>bool</code>, <code>choice</code> (with <code>choices</code>), <code>intnum</code> and <code>realnum</code> (with <code>range</code>: the bounds and 8 values between are sampled), <code>string</code> (not sampled). <code>$inopts</code> is replaced by a configuration's options and <code>$INPUTFILE</code> by <code>@@</code>. <code>exit_options</code> make the target exit without reading its input and are never sampled; <code>conflict</code> pairs never appear together.</p>
+</section>
+
+<section id="compiletime">
+<h2>Adding a compile-time configuration generator</h2>
+<p>Folder: <code>compiletime/&lt;name&gt;/strategy.py</code>, selected with <code>--compiletime &lt;name&gt;</code> or <code>compiletime:</code> in an experiment file. A folder without <code>strategy.py</code> is not a strategy.</p>
+<pre><code>def request_configurations(grammar_file, random_seed=None):
+    """grammar_file: path to benchmarks/&lt;benchmark&gt;/ct_grammar.json.
+    Returns one string per build: the configure options that replace
+    {{CT_CONFIGURATION}} in build.sh."""
+    return ["--enable-jit", "--disable-jit --enable-unicode"]</code></pre>
+<ul>
+  <li><b>Each string is one benchmark copy</b>, <code>benchmarks/cts_&lt;name&gt;_&lt;benchmark&gt;_&lt;i&gt;</code>, built for every fuzzer and for coverage. <code>compiletime/default</code> returns <code>[""]</code>: one unchanged build.</li>
+  <li><b>A trial fuzzes every copy</b>, with the trial's time split equally between them, so 20 configurations give each 1/20 of <code>max_total_time</code>. The statistics combine a trial's copies by the union of their covered lines and branches.</li>
+  <li><b>Be deterministic for a given <code>random_seed</code></b> (from <code>config.yaml</code>): the dry run calls the function to count copies and must get the same number as the real run.</li>
+  <li><b>Respect the grammar's constraints.</b> <code>compiletime/minimum/strategy.py</code> has <code>holds()</code> and <code>enforce()</code> helpers for them.</li>
+  <li>An exception is caught and gives <b>no configurations</b>, so no copies and no trials for that benchmark: check the log for <code>Failed retrieving configurations</code>.</li>
+</ul>
+</section>
+
+<section id="runtime">
+<h2>Adding a runtime configuration generator</h2>
+<p>Folder: <code>runtime/&lt;name&gt;/strategy.py</code>, selected with <code>--runtime-strategy &lt;name&gt;</code> or <code>runtime_strategy:</code> in an experiment file. Only fuzzers in <code>runtime/supported_fuzzers.json</code> and benchmarks with <code>rt_grammar.json</code> can use it.</p>
+<pre><code>import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from rt_common import Grammar, distinct
+
+def request_configurations(grammar, rng):
+    """grammar: the benchmark's rt_grammar.json, parsed.
+    rng: a random.Random to use for all randomness.
+    Returns a list of configurations, each a list of command-line arguments."""
+    g = Grammar(grammar, rng)
+    configs = distinct([g.random_config() for _ in range(100)])
+    return [g.args(c) for c in configs if g.valid(c)][:20]</code></pre>
+<ul>
+  <li><b><code>runtime/rt_common.py</code></b> does the grammar work: <code>Grammar.random_config()</code> samples a valid configuration, <code>valid(config)</code> checks conflicts and dependencies, <code>args(config)</code> turns it into arguments following <code>cmdline</code>, and <code>distinct()</code> removes duplicates. Its docstring gives the sampling rules (from ConfigFuzz and VAFuzz).</li>
+  <li><b>Use only <code>rng</code></b>. The framework seeds it from the experiment's <code>random_seed</code>, the strategy, the benchmark and the trial, so every trial gets its own configurations and a rerun gets the same ones. It then shuffles the list and writes <code>&lt;experiment&gt;/rt_configs/&lt;name&gt;/&lt;benchmark&gt;/trial_&lt;k&gt;.json</code>.</li>
+  <li><b>How they are fuzzed</b> (<code>runtime/multi_config_run.sh</code>): one after another, at most <code>RUNTIME / min_config_time</code> of them (60 s by default, <code>min_config_time</code> in <code>config.yaml</code>), each getting an equal share of the time left and starting from the previous configuration's corpus. The framework shuffles your list per trial, so when there are more configurations than fit, each trial fuzzes a different random subset.</li>
+  <li><b>Coverage</b> (<code>runtime/multi_config_coverage.sh</code>): each configuration's new inputs are replayed with its own arguments and the profiles merged into the trial's report.</li>
+  <li><b>Return at least one configuration.</b> Only the strategy named <code>default</code> runs the normal single command line (its <code>request_configurations</code> returns <code>[]</code> and is never called); any other strategy with an empty list leaves its trials with nothing to fuzz.</li>
+</ul>
+</section>
+
+<section id="triage">
+<h2>Adding a crash triage tool</h2>
+<p>Folder: <code>bug-triaging/&lt;name&gt;/</code> with a <code>Dockerfile</code>, selected with <code>--bug-triaging &lt;name&gt;</code> or <code>bug_triaging:</code> in an experiment file. The image is <code>fbpp/bug-triaging:&lt;name&gt;</code>.</p>
+<pre><code># bug-triaging/gdb-exploitable/Dockerfile; the build context is bug-triaging/
+FROM fbpp/base
+RUN apt-get update &amp;&amp; apt-get install -y gdb git
+RUN git clone https://github.com/jfoote/exploitable.git /exploitable &amp;&amp; git -C /exploitable checkout &lt;commit&gt;
+COPY crash_commands.py gdb-exploitable/triage.py /triage/
+COPY gdb-exploitable/smoke_test.sh /smoke_test.sh
+CMD ["python3", "/triage/triage.py"]</code></pre>
+<table>
+  <thead><tr><th>When</th><th>Given</th><th>Must</th></tr></thead>
+  <tbody>
+  <tr><td>after building, and before each experiment</td><td>the image, run with <code>bash /smoke_test.sh</code></td><td>exit 0 when the tools work (for example, gdb loads its plugin)</td></tr>
+  <tr><td>after the trials, once per trial</td><td><code>/fuzzer_output</code> (the trial, read-only), <code>/benchmark</code> (the copy's <b>coverage</b> build: binary and <code>run_target.sh</code>), <code>/fuzzer</code>, <code>/triaging_output</code>, and <code>$FUZZER_NAME</code>, <code>$TRIAL</code>, <code>$OWNER</code></td><td>triage the trial's crashes into <code>/triaging_output</code>: <code>default/crashes/</code>, or <code>config_&lt;i&gt;/default/crashes/</code> under a runtime strategy</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li><code>/triaging_output</code> is shared by all trials of a fuzzer under one runtime strategy on one benchmark copy (<code>&lt;experiment&gt;/bug-triaging/&lt;name&gt;/output/&lt;run label&gt;_&lt;copy&gt;/</code>), so add to it rather than overwrite it. Results are given to <code>$OWNER</code>, the user who started the experiment.</li>
+  <li><b>Replay each crash with the command line it was found with.</b> <code>bug-triaging/crash_commands.py</code> finds it for every fuzzer (from <code>run_target.sh</code>, <code>crashes_argvs/</code>, the crash's name, or the runtime configuration it was found under); copy it into the image and use it.</li>
+  <li><b>For the statistics report's Found bugs table</b>, write a SQLite database <code>/triaging_output/crashes.db</code> with a table <code>Data</code> that has a <code>Hash</code> column (the bug key), as afl-collect does. Distinct hashes are counted.</li>
+</ul>
+</section>
+
+<section id="post">
+<h2>Adding a post-analysis tool</h2>
+<p>There are two kinds. A <b>Python analysis</b> reads the files an experiment leaves behind; this is how the statistics report works and is the simplest to add. A <b>container analysis</b> runs a tool in its own image, like SuperC; this is wired into the code rather than discovered from a folder.</p>
+
+<h3>What an experiment leaves behind</h3>
+<table>
+  <thead><tr><th>File</th><th>Contents</th></tr></thead>
+  <tbody>
+  <tr><td><code>&lt;experiment&gt;/experiment_state.pkl</code></td><td>the plan: fuzzers, benchmarks, strategies, <code>trial_tasks</code>, paths, cores</td></tr>
+  <tr><td><code>&lt;experiment&gt;/events.jsonl</code></td><td>phases and each trial's start, end, core and status</td></tr>
+  <tr><td><code>&lt;experiment&gt;/experiment.yaml</code></td><td>the experiment file it ran with</td></tr>
+  <tr><td><code>data/&lt;trial&gt;/trial_info.json</code></td><td>fuzzer, runtime strategy, benchmark copy, trial number</td></tr>
+  <tr><td><code>data/&lt;trial&gt;/coverage/report.txt</code></td><td>llvm-cov totals: regions, functions, lines, branches</td></tr>
+  <tr><td><code>data/&lt;trial&gt;/coverage/report.json</code></td><td>LCOV: covered lines (<code>DA</code>) and branches (<code>BRDA</code>) per file</td></tr>
+  <tr><td><code>data/&lt;trial&gt;/rt_run.jsonl</code>, <code>config_&lt;i&gt;/</code></td><td>runtime strategies: the configurations fuzzed, and their outputs</td></tr>
+  <tr><td><code>data/&lt;trial&gt;/default/</code></td><td>the fuzzer's own output (queue, crashes); written by root in the container</td></tr>
+  </tbody>
+</table>
+
+<h3>A Python analysis</h3>
+<ol>
+  <li>Write <code>common/&lt;tool&gt;.py</code> with a function such as <code>generate_&lt;tool&gt;_report(experiment_path, out_dir)</code>. <code>common/statistical_analysis.py</code> is the model: its <code>load_trials()</code> already reads every trial's coverage.</li>
+  <li>Add a flag to <code>common/post_analysis.py</code> (next to <code>--stats</code>) that calls it with <code>&lt;report_filestore&gt;/&lt;experiment&gt;/&lt;tool&gt;/</code>, so it runs on finished experiments.</li>
+  <li>To run it after every experiment, call it at the end of <code>common/run_experiment.py</code>, inside a <code>try</code> like the statistics, with <code>events.emit(experiment_path, "phase", phase="&lt;tool&gt;")</code> before it so the web app shows the phase.</li>
+  <li>To offer it in the web app, add a checkbox to the Post-analysis tab (<code>webapp/templates/experiment.html</code>) and pass the flag in <code>api_post</code> (<code>webapp/app.py</code>).</li>
+</ol>
+
+<h3>A container analysis, like SuperC</h3>
+<p>SuperC (<code>cfg-analysis/</code>) finds the presence condition (<code>#if</code> condition) of every source line. <code>common/superc.py</code> runs it once per benchmark build and joins the conditions with every trial's coverage, giving coverage per condition in <code>data/&lt;trial&gt;/pc_analysis/pc_coverage_summary.csv</code> and the report in <code>&lt;report_filestore&gt;/&lt;experiment&gt;/superc/</code>. It is wired in like this:</p>
+<table>
+  <thead><tr><th>Piece</th><th>SuperC</th><th>For your tool</th></tr></thead>
+  <tbody>
+  <tr><td>image</td><td><code>cfg-analysis/Dockerfile</code> → <code>fbpp/superc_runner:&lt;hash of cfg-analysis/&gt;</code>, by <code>superc.build_image()</code>, so a change to the folder builds a new image</td><td>a folder with a <code>Dockerfile</code>, and a build function modelled on it</td></tr>
+  <tr><td>inputs</td><td><code>superc.prepare_sources()</code> copies the build's sources out of the coverage image <code>fbpp/benchmark:coverage_&lt;copy&gt;</code>; <code>superc_flags.txt</code> gives the flags</td><td>read what you need from the coverage image or the experiment folder</td></tr>
+  <tr><td>run</td><td><code>superc.run_superc()</code>: once per benchmark build (copy 0 of each compile-time strategy), as the calling user, with the sources mounted read-only at their path in the build and <code>&lt;experiment&gt;/superc/&lt;copy&gt;/</code> at <code>/out</code>; the container is labelled <code>fbpp.experiment=&lt;name&gt;</code></td><td>a run function modelled on it; keep the label so Stop experiment can kill it</td></tr>
+  <tr><td>inside the container</td><td><code>run_superc.sh</code>: SuperC on every file of <code>/out/files.txt</code>, in parallel, one JVM each, writing <code>/out/pc/</code>, <code>/out/logs/</code> and <code>/out/status.tsv</code></td><td>write only under the mounted output folder</td></tr>
+  <tr><td>joining and reports</td><td><code>superc.analyse_experiment()</code>, on the host: the conditions with each trial's <code>lcov_results/</code>, then the arms per benchmark</td><td>a Python function, as in "A Python analysis" above</td></tr>
+  <tr><td>scheduling and switch</td><td><code>run_superc_on_experiments()</code> in <code>common/run_experiment.py</code>, after aggregation, with a phase event; <code>--no-superc</code> / <code>no_superc:</code>, and <code>post_analysis.py --superc</code></td><td>a call and a flag in the same places</td></tr>
+  </tbody>
+</table>
+<p><b>SuperC's contract with benchmarks:</b> <code>superc_flags.txt</code> lists the build's <code>-I</code> directories (relative to the source root) and <code>-D</code> defines, and the build runs in its source folder in the image, so the coverage report's paths point at the sources.</p>
+</section>
+
+<section id="testing">
+<h2>Testing a plugin</h2>
+<ol>
+  <li><b>Dry run.</b> <code>python3 common/run_experiment.py --config config.yaml --experiment exp.yaml --dry-run</code> (or Preview in New experiment) checks that every name exists, every strategy has a <code>strategy.py</code>, and every fuzzer has the benchmark files it needs. It also calls compile-time strategies to count their copies.</li>
+  <li><b>A short experiment</b>: one fuzzer, one benchmark, one or two trials of 120 s. The experiment's page shows each trial's status and coverage, with a link to its log.</li>
+  <li><b>Where to look when it fails</b>:
+    <ul>
+      <li>fuzzer image: <code>&lt;experiment&gt;/fuzzers/&lt;fuzzer&gt;_build.log</code></li>
+      <li>benchmark builds: <code>&lt;experiment&gt;/benchmarks/&lt;fuzzer&gt;_&lt;copy&gt;_build.log</code></li>
+      <li>a trial's fuzzing and coverage: <code>data/&lt;trial&gt;/&lt;run&gt;_&lt;copy&gt;_trial&lt;k&gt;.log</code></li>
+      <li>runtime configurations: <code>data/&lt;trial&gt;/rt_run.jsonl</code> and <code>config_&lt;i&gt;/</code></li>
+      <li>triage: <code>&lt;experiment&gt;/bug-triaging/&lt;tool&gt;/output/…/trial_&lt;k&gt;.log</code></li>
+      <li>SuperC: <code>&lt;experiment&gt;/superc/&lt;copy&gt;/superc.log</code>, a log per file in <code>logs/</code>, and <code>status.tsv</code></li>
+    </ul></li>
+  <li><b>Coverage sanity check</b>: a trial's <code>coverage/report.txt</code> should end with a <code>TOTAL</code> row whose covered branches equal the number of <code>BRDA</code> records with a non-zero count in <code>report.json</code>.</li>
+</ol>
+</section>
+{% endraw %}
+
+<section id="installed">
+<h2>In this repository now</h2>
+<table>
+  <tbody>
+  <tr><th>Fuzzers</th><td>{% for f, v in catalog.fuzzers.items() %}<code>{{ f }}</code><span class="muted small"> ({{ "config-agnostic" if v.runtime_strategies else "config-aware" }})</span>{{ ", " if not loop.last }}{% endfor %}</td></tr>
+  <tr><th>Benchmarks</th><td>{% for b in catalog.benchmarks %}<code>{{ b }}</code>{{ ", " if not loop.last }}{% endfor %}</td></tr>
+  <tr><th>Compile-time strategies</th><td>{% for s in catalog.compiletime %}<code>{{ s }}</code>{{ ", " if not loop.last }}{% endfor %}</td></tr>
+  <tr><th>Runtime strategies</th><td>{% for s in catalog.runtime %}<code>{{ s }}</code>{{ ", " if not loop.last }}{% endfor %}</td></tr>
+  <tr><th>Crash triage tools</th><td>{% for s in catalog.triagers %}<code>{{ s }}</code>{{ ", " if not loop.last }}{% endfor %}</td></tr>
+  <tr><th>Post-analysis tools</th><td><code>statistical_analysis.py</code> (statistics report), <code>cfg-analysis/</code> (SuperC)</td></tr>
+  </tbody>
+</table>
+</section>
+</article>
+</div>
+{% endblock %}

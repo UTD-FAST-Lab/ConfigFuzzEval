@@ -24,7 +24,12 @@ ARG CFLAGS=""
 # If this needs to be changed, update the Dockerfile accordingly.
 WORKDIR /
 RUN apt-get update && apt-get install -y nasm yasm make cmake flex bison
-RUN git clone https://code.videolan.org/videolan/x264.git
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources x264.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://code.videolan.org/videolan/x264.git || \
+    (rm -rf /x264 && mkdir -p /x264 && \
+     tar -xJf /fbpp_sources/x264.tar.xz -C /x264 --strip-components=1)
 WORKDIR /x264
 COPY build.sh .
 RUN bash build.sh
@@ -36,6 +41,9 @@ COPY dict /
 COPY ranked_stubs.txt /
 COPY build.sh /
 COPY rt_grammar.json /
-COPY load_src.sh /  
+# CarpetFuzz/ProphetFuzz inputs: the target's man page and CarpetFuzz's
+# analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
+COPY manpage.1 /
+COPY carpetfuzz /carpetfuzz_analysis
 # Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /x264/x264  /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed && cp -r /x264 /benchmark_out_dir/source/ && cp /load_src.sh /benchmark_out_dir/"]
+CMD ["bash", "-c", "cp -r /x264/x264  /benchmark_out_dir/    && cp /rt_grammar.json /benchmark_out_dir/ && cp /manpage.1 /benchmark_out_dir/ && cp -r /carpetfuzz_analysis /benchmark_out_dir/carpetfuzz  &&  cp /ranked_stubs.txt /benchmark_out_dir/  && cp /build.sh /benchmark_out_dir/  &&  cp /run_target.sh /benchmark_out_dir/  && cp /dict /benchmark_out_dir/ &&  cp -r /seed /benchmark_out_dir/seed "]

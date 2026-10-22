@@ -9,12 +9,7 @@ logging = get_logger(__name__)
 
 def retrieve_configs(benchmark_grammar, strategy_module, random_seed=None):
     try:
-        if strategy_module.__name__ == "randomsmart":
-            return strategy_module.request_configurations(
-                benchmark_grammar, random_seed=random_seed
-            )
-        else:
-            return strategy_module.request_configurations(benchmark_grammar)
+        return strategy_module.request_configurations(benchmark_grammar, random_seed=random_seed)
     except Exception as e:
         print(f"[ERROR] Failed retrieving configurations from {strategy_module}: {e}")
         return []
@@ -46,18 +41,28 @@ def ct_change_build(benchmark_build, ct_config):
         sys.exit(1)   # or: raise
 
 
-def apply_ct_strategy(strategy, project_root, benchmarks, random_seed=None):
-    mapping = {}
-    
-    logging.info(f"Applying compile-time strategy: {strategy}")
-    strategy_path = f"{project_root}/compiletime/{strategy}"
-    strategy_file = os.path.join(strategy_path, f"strategy.py")
-    
-    # Dynamically load the strategy module
+def load_ct_strategy(strategy, project_root):
+    strategy_file = os.path.join(f"{project_root}/compiletime/{strategy}", "strategy.py")
     spec = importlib.util.spec_from_file_location(strategy, strategy_file)
     strategy_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(strategy_module)
-    
+    return strategy_module
+
+
+def count_ct_configurations(strategy, project_root, benchmark, random_seed=None):
+    """Number of compile-time configurations (benchmark copies) a strategy yields,
+    without copying anything (for run_experiment.py --dry-run)."""
+    strategy_module = load_ct_strategy(strategy, project_root)
+    benchmark_grammar = f"{project_root}/benchmarks/{benchmark}/ct_grammar.json"
+    return len(retrieve_configs(benchmark_grammar, strategy_module, random_seed=random_seed))
+
+
+def apply_ct_strategy(strategy, project_root, benchmarks, random_seed=None):
+    mapping = {}
+
+    logging.info(f"Applying compile-time strategy: {strategy}")
+    strategy_module = load_ct_strategy(strategy, project_root)
+
     tot_cts = {}
 
     for benchmark in benchmarks:

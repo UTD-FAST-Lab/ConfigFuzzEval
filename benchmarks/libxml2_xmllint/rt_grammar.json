@@ -1,5 +1,6 @@
 {
     "cmdline":  "$inopts $INPUTFILE",
+    "exit_options": ["--relaxng", "--schema", "--dtdvalid", "--dtdvalidfpi"],
     "connector": " ",
     "strmax":   19,
     "options":  [
@@ -127,7 +128,7 @@
                    "type":    "bool"},
                   {"opt":     "--pattern",
                    "type":    "choice",
-                   "choices": ["//element", "/root/*", "//node[@attr]", "pattern"],
+                   "choices": ["//element", "/root/*", "pattern"],
                    "connector": " "},
                   {"opt":     "--relaxng",
                    "type":    "choice",
@@ -153,7 +154,7 @@
                    "connector": " "},
                   {"opt":     "--max-ampl",
                    "type":    "intnum",
-                   "range":  [0,2147483647],
+                   "range":  [1,2147483647],
                    "connector": " "}
                  ],
      "depend":   [{"opt":     "--xmlout",

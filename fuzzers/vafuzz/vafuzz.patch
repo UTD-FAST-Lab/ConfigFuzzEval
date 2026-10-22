@@ -1,0 +1,392 @@
+diff --git a/GNUmakefile b/GNUmakefile
+index 83316f5d..1b9beb23 100644
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -254,7 +254,7 @@ else
+ endif
+ 
+ ifneq "$(filter Linux GNU%,$(SYS))" ""
+-  override LDFLAGS += -ldl -lrt -lm -ljson-c -lgsl -lgslcblas -lm -I/usr/include/python3.11 -lpython3.11
++  override LDFLAGS += -ldl -lrt -lm -ljson-c -lgsl -lgslcblas -lm -I/usr/include/python3.10 -lpython3.10
+ endif
+ 
+ ifneq "$(findstring FreeBSD, $(SYS))" ""
+@@ -450,31 +450,31 @@ afl-as: src/afl-as.c include/afl-as.h $(COMM_HDR) | test_x86
+ 	@ln -sf afl-as as
+ 
+ src/afl-performance.o : $(COMM_HDR) src/afl-performance.c include/hash.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-performance.c -o src/afl-performance.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-performance.c -o src/afl-performance.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-hashmap.o : $(COMM_HDR) src/afl-hashmap.c include/afl-hashmap.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-hashmap.c -o src/afl-hashmap.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-hashmap.c -o src/afl-hashmap.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-z3.o : $(COMM_HDR) src/afl-z3.c include/afl-z3.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-z3.c -o src/afl-z3.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-z3.c -o src/afl-z3.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-presence-condition.o : $(COMM_HDR) src/afl-presence-condition.c include/afl-presence-condition.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-presence-condition.c -o src/afl-presence-condition.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-presence-condition.c -o src/afl-presence-condition.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-regression.o : $(COMM_HDR) src/afl-regression.c include/afl-regression.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-regression.c -o src/afl-regression.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-regression.c -o src/afl-regression.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-variability.o : $(COMM_HDR) src/afl-variability.c include/afl-variability.h
+-	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-variability.c -o src/afl-variability.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_OPT) -Iinclude -c src/afl-variability.c -o src/afl-variability.o -I/usr/include/python3.10 -lpython3.10
+ 	
+ src/afl-common.o : $(COMM_HDR) src/afl-common.c include/common.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-common.c -o src/afl-common.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-common.c -o src/afl-common.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-forkserver.o : $(COMM_HDR) src/afl-forkserver.c include/forkserver.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-forkserver.c -o src/afl-forkserver.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-forkserver.c -o src/afl-forkserver.o -I/usr/include/python3.10 -lpython3.10
+ 
+ src/afl-sharedmem.o : $(COMM_HDR) src/afl-sharedmem.c include/sharedmem.h
+-	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-sharedmem.c -o src/afl-sharedmem.o -I/usr/include/python3.11 -lpython3.11
++	$(CC) $(CFLAGS) $(CFLAGS_FLTO) -c src/afl-sharedmem.c -o src/afl-sharedmem.o -I/usr/include/python3.10 -lpython3.10
+ 
+ afl-fuzz: $(COMM_HDR) include/afl-fuzz.h $(AFL_FUZZ_FILES) src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o src/afl-hashmap.o src/afl-z3.o src/afl-variability.o src/afl-presence-condition.o src/afl-regression.o | test_x86
+ 	$(CC) $(CFLAGS) $(COMPILE_STATIC) $(CFLAGS_FLTO) $(AFL_FUZZ_FILES) src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o src/afl-hashmap.o src/afl-z3.o src/afl-variability.o src/afl-presence-condition.o src/afl-regression.o -o $@ $(PYFLAGS) $(LDFLAGS) -lm
+diff --git a/instrumentation/afl-compiler-rt.o.c b/instrumentation/afl-compiler-rt.o.c
+index dea9d93f..287931a7 100644
+--- a/instrumentation/afl-compiler-rt.o.c
++++ b/instrumentation/afl-compiler-rt.o.c
+@@ -2682,23 +2682,19 @@ char ** __afl_change_argv(int *argc, char **argv) {
+   char *ptr = inBuf;
+   int arg_count = 1;
+ 
+-  FILE * argv_file = fopen(argv[1], "r");
+-  if (!argv_file) {
+-    return ret;
+-  }
+-
+-  const int bytes_read = fread(inBuf, sizeof(char),
+-    MAX_CMDLINE_LEN - 2, argv_file);
+-
+-  if (bytes_read == 0) {
++  // argv[1] is the file afl-fuzz writes the options to. A missing or empty
++  // file means no options; returning the zeroed ret here crashed the target.
++  int bytes_read = 0;
++  FILE * argv_file = argv[1] ? fopen(argv[1], "r") : NULL;
++  if (argv_file) {
++    bytes_read = fread(inBuf, sizeof(char), MAX_CMDLINE_LEN - 2, argv_file);
+     fclose(argv_file);
+-    return ret;
+   }
++  inBuf[bytes_read] = '\0';
+ 
+-  if (ptr[bytes_read-1] == '\n') {
++  if (bytes_read > 0 && ptr[bytes_read-1] == '\n') {
+     ptr[bytes_read-1] = '\0';
+   }
+-  fclose(argv_file);
+ 
+   ret[0] = argv[0];
+ 
+@@ -2712,7 +2708,7 @@ char ** __afl_change_argv(int *argc, char **argv) {
+     token = strtok(NULL, " ");
+   }
+ 
+-  for (int i = 2; argv[i]; i++) {
++  for (int i = 2; argv[1] && argv[i]; i++) {
+     ret[arg_count] = argv[i];
+     arg_count++;
+   }
+diff --git a/py-src/generator_helpers.py b/py-src/generator_helpers.py
+index 01881cbf..1cf638a6 100644
+--- a/py-src/generator_helpers.py
++++ b/py-src/generator_helpers.py
+@@ -260,7 +260,8 @@ def select_structured_traces_complete(trace_tuples, k=None, min_coverage=1):
+         # Determine k for remaining traces
+         if k is None:
+             unique_patterns = len(set(tuple(x > 0) for x in remaining_trace_arrays))
+-            k = max(2, min(unique_patterns, len(remaining_trace_arrays) // 2))
++            k = min(max(2, min(unique_patterns, len(remaining_trace_arrays) // 2)),
++                    len(remaining_trace_arrays))
+         
+         # Cluster remaining traces
+         kmeans = KMeans(n_clusters=k, random_state=42)
+diff --git a/py-src/z3-solver-generator.py b/py-src/z3-solver-generator.py
+index 31b982d9..6d675307 100644
+--- a/py-src/z3-solver-generator.py
++++ b/py-src/z3-solver-generator.py
+@@ -1,6 +1,18 @@
+ import json
++import keyword
++import re
+ import sys
+ 
++
++def py_ref(name):
++    return f"globals()[{name!r}]"
++
++
++def choices_name(name):
++    if name.isidentifier() and not keyword.iskeyword(name):
++        return f"{name.capitalize()}Choices"
++    return "Opt" + re.sub(r"\W", "_", name) + "Choices"
++
+ def generate_z3_solver(grammar, output_filename):
+     """
+     Generates a Python file with Z3 declarations and constraints based on the input grammar.
+@@ -38,35 +50,35 @@ choice_dict = {} # <<<<<< Fill this manually
+ 
+             if opt_type == "bool":
+                 variables[opt_name] = f"Bool('{opt_name}')"
+-                declarations.append(f"{opt_name} = Bool('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Bool('{opt_name}')")
+ 
+             elif opt_type == "intnum":
+                 variables[opt_name] = f"Int('{opt_name}')"
+-                declarations.append(f"{opt_name} = Int('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Int('{opt_name}')")
+                 if "range" in option:
+                     low, high = option["range"]
+-                    constraints.append(f"    solver.add(And({opt_name} >= {low}, {opt_name} <= {high}))")
++                    constraints.append(f"    solver.add(And({py_ref(opt_name)} >= {low}, {py_ref(opt_name)} <= {high}))")
+                     lows[opt_name] = low
+                     highs[opt_name] = high
+ 
+             elif opt_type == "realnum":
+                 variables[opt_name] = f"Real('{opt_name}')"
+-                declarations.append(f"{opt_name} = Real('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = Real('{opt_name}')")
+                 if "range" in option:
+                     low, high = option["range"]
+-                    constraints.append(f"    solver.add(And({opt_name} >= {low}, {opt_name} <= {high}))")
++                    constraints.append(f"    solver.add(And({py_ref(opt_name)} >= {low}, {py_ref(opt_name)} <= {high}))")
+                     lows[opt_name] = low
+                     highs[opt_name] = high
+ 
+             elif opt_type == "string":
+                 variables[opt_name] = f"String('{opt_name}')"
+-                declarations.append(f"{opt_name} = String('{opt_name}')")
++                declarations.append(f"{py_ref(opt_name)} = String('{opt_name}')")
+                 
+ 
+             elif opt_type == "choice":
+                 choices = option.get("choices", [])
+                 if choices:
+-                    datatype_name = f"{opt_name.capitalize()}Choices"
++                    datatype_name = choices_name(opt_name)
+                     datatype = f"Datatype('{datatype_name}')"
+                     declarations.append(f"{datatype_name} = {datatype}")
+                     for choice in choices:
+@@ -75,25 +87,26 @@ choice_dict = {} # <<<<<< Fill this manually
+                         declarations.append(f"{datatype_name}.declare('opt{choice}')")
+                     declarations.append(f"{datatype_name} = {datatype_name}.create()")
+                     variables[opt_name] = f"Const('{opt_name}', {datatype_name})"
+-                    declarations.append(f"{opt_name} = Const('{opt_name}', {datatype_name})")
++                    declarations.append(f"{py_ref(opt_name)} = Const('{opt_name}', {datatype_name})")
++                    declarations.append(f"choice_dict['{opt_name}'] = '{datatype_name}'")
+ 
+         # Handle conflict constraints
+         if "conflict" in grammar:
+             for conflict_pair in grammar["conflict"]:
+                 opt1 = conflict_pair[0].replace('--', '').replace('-', '')
+                 opt2 = conflict_pair[1].replace('--', '').replace('-', '')
+-                if opt1 in variables and opt2 in variables:
+-                    constraints.append(f"    solver.add(Or(Not({opt1}), Not({opt2})))")
++                if variables.get(opt1, "").startswith("Bool(") and variables.get(opt2, "").startswith("Bool("):
++                    constraints.append(f"    solver.add(Or(Not({py_ref(opt1)}), Not({py_ref(opt2)})))")
+ 
+         # Handle depend constraints
+         if "depend" in grammar:
+             for depend in grammar["depend"]:
+                 opt = depend["opt"].replace('--', '').replace('-', '')
+                 dependent_opts = depend["on"]
+-                if opt in variables:
+-                    depend_constraints = [variables[d.replace('--', '').replace('-', '')] for d in dependent_opts if d.replace('--', '').replace('-', '') in variables]
++                if variables.get(opt, "").startswith("Bool("):
++                    depend_constraints = [variables[d.replace('--', '').replace('-', '')] for d in dependent_opts if variables.get(d.replace('--', '').replace('-', ''), "").startswith("Bool(")]
+                     if depend_constraints:
+-                        constraints.append(f"    solver.add(Implies({opt}, And({', '.join(depend_constraints)})))")
++                        constraints.append(f"    solver.add(Implies({py_ref(opt)}, And({', '.join(depend_constraints)})))")
+ 
+         # Write variable declarations
+         solver_file.write("# Variable declarations\n")
+@@ -143,10 +156,9 @@ def request_config_generation(constraint_file,
+ 
+     
+     # GENERATOR 3
++    if generator_number == 3 and len(pqeue) < 2:
++        generator_number = 1
+     if generator_number == 3:
+-        if len(pqeue) < 2:
+-            # print("Pqeue doesnt have enough elements")
+-            exit(1)
+         # print("PC Queue: " + str(pqeue))
+         pc_0 = None
+         random_float_0 = random.uniform(0, 1)
+@@ -159,7 +171,7 @@ def request_config_generation(constraint_file,
+         # print("PC" + str(pc_0))
+     
+     if pqeue == []:
+-        print("Empty pqeue")
++        pc = (0, "default_settings_for_all", [])
+     else:
+         # print("PC Queue: " + str(pqeue))
+ 
+@@ -399,7 +411,7 @@ def request_config_generation(constraint_file,
+ 
+         except OSError:
+             # print("No data info file found")
+-            exit(1)
++            pass
+     
+     
+     config_string_struct.append(favoured_list)
+@@ -552,6 +564,8 @@ def analyze_feedback(feedback, presence_cond, virgin_bits):
+     # each variable
+     if presence_cond != " ":
+         for each_var in vars_to_analyze:
++            if each_var not in globals():
++                continue
+             pos_idx = set()
+             
+             # Find positives
+@@ -738,6 +752,8 @@ def analyze_feedback_data(config_list,
+         # each variable
+         if presence_cond != " ":
+             for each_var in vars_to_analyze:
++                if each_var not in globals():
++                    continue
+                 # print("Analyzing variable: " + each_var + " with value: " + str(vars_to_analyze[each_var]))
+                 pos_idx = set()
+                 
+@@ -842,6 +858,8 @@ def analyze_feedback_data(config_list,
+         # each variable
+         if presence_cond != " ":
+             for each_var in vars_to_analyze:
++                if each_var not in globals():
++                    continue
+                 # print("Analyzing variable: " + each_var + " with value: " + str(vars_to_analyze[each_var]))
+                 pos_idx = set()
+                 
+@@ -941,6 +959,8 @@ def save_presence_condition(analyzed_feedback, is_negated=False, pc_vars={}, use
+                                                 is_negated=is_negated,
+                                                 pc_vars=pc_vars,
+                                                 use_pc_vars=use_pc_vars)
++    if pres_cond_str is None:
++        return
+     # pres_cond = Preseonce_Condition(energy, "somefilepath", pres_cond_str)
+     # print("Retrieved PC: " + pres_cond_str + " with energy: " + str(energy))
+     pres_cond = None
+@@ -1070,6 +1090,20 @@ def generate_presence_condition(config, is_negated=False, pc_vars={}, use_pc_var
+     # # print("BEFORE RET: " + pres_conds_str)
+     return pres_conds_str
+ 
++_generate_presence_condition_unchecked = generate_presence_condition
++
++
++def generate_presence_condition(config, *args, **kwargs):
++    # None when the config cannot be expressed as a z3 term.
++    try:
++        pres_conds_str = _generate_presence_condition_unchecked(config, *args, **kwargs)
++        if pres_conds_str is not None and pres_conds_str != "default_settings_for_all":
++            if not is_bool(eval(pres_conds_str)):
++                return None
++        return pres_conds_str
++    except Exception:
++        return None
++
+ 
+ def save_presence_condition_data_info(analyzed_feedback, 
+                                       is_negated=False, 
+@@ -1083,6 +1117,8 @@ def save_presence_condition_data_info(analyzed_feedback,
+                                                 is_negated=is_negated,
+                                                 pc_vars=pc_vars,
+                                                 use_pc_vars=use_pc_vars)
++    if pres_cond_str is None:
++        return
+     # pres_cond = Preseonce_Condition(energy, "somefilepath", pres_cond_str)
+     # print("Retrieved PC: " + pres_cond_str + " with list: " + str(favoured_ls))
+     pres_cond = None
+@@ -1157,7 +1193,7 @@ def read_pq():
+             for idx, bit in enumerate(trace):
+                 if bit != 0:
+                     print("Bit: " + str(idx), end=" ")
+-            print("\n")
++            print("\\n")
+ 
+ 
+ def clear_pq():
+@@ -1179,6 +1215,7 @@ def main():
+     # configs_to_generate = int(sys.argv[2])
+     # save_presence_condition(("-a -b", 10))
+     clear_pq()
++    clear_data_info()
+     # save_pq()
+     # save_pq_2()
+     # read_pq()
+diff --git a/src/afl-variability.c b/src/afl-variability.c
+index 4a0fe2d1..ea493f2e 100644
+--- a/src/afl-variability.c
++++ b/src/afl-variability.c
+@@ -638,9 +638,12 @@ void argv_havoc(afl_state_t *afl, u8* cur_bitmap) {
+     PFATAL("Unable to allocate memory for temp_buf");
+   }
+ 
+-  if (afl->stage_max < HAVOC_MIN) { 
+-    afl->stage_max = HAVOC_MIN; 
+-  }
++  // We are called from common_fuzz_stuff in the middle of another stage,
++  // which uses stage_cur/stage_max as offsets into its input: restore them
++  // on return, and generate a fixed number of configs, not stage_max.
++  u32 saved_stage_cur = afl->stage_cur, saved_stage_max = afl->stage_max;
++  s32 saved_stage_cur_val = afl->stage_cur_val;
++  afl->stage_max = HAVOC_CYCLES;
+ 
+   u32 stack_max = 1 << (1 + rand_below(afl, afl->havoc_stack_pow2)), rand_max;
+   u32 *mutation_array = (unsigned int *)&binary_array_argv;
+@@ -663,7 +666,29 @@ retry_havoc_step: {
+       u32 r = rand_below(afl, MUT_BIN_ARRAY_SIZE), item;
+ 
+ 
+-      switch (mutation_array[r]) {
++      // The options bitmap is a fixed-size local buffer. Mutations that resize
++      // it, or that go through AFL's shared out/out_scratch buffers (still in
++      // use by fuzz_one, which called us), corrupted the heap: flip a bit instead.
++      u32 mut = mutation_array[r];
++      switch (mut) {
++        case MUT_CLONE_COPY:
++        case MUT_CLONE_FIXED:
++        case MUT_SWITCH:
++        case MUT_DEL:
++        case MUT_DELONE:
++        case MUT_INSERTONE:
++        case MUT_ASCIINUM:
++        case MUT_INSERTASCIINUM:
++        case MUT_EXTRA_INSERT:
++        case MUT_AUTO_EXTRA_INSERT:
++        case MUT_SPLICE_INSERT:
++          mut = MUT_FLIPBIT;
++          break;
++        default:
++          break;
++      }
++
++      switch (mut) {
+ 
+         case MUT_FLIPBIT: {
+ 
+@@ -1644,6 +1669,14 @@ retry_havoc_step: {
+ 
+   // ck_free(out_buf);
+   ck_free(temp_buf);
++
++  // The chosen configs were copied into configs_to_inject_str above.
++  for (int i = 0; i < size_of_config_holder; i++) { free(config_holder[i]); }
++  ck_free(config_holder);
++
++  afl->stage_cur = saved_stage_cur;
++  afl->stage_max = saved_stage_max;
++  afl->stage_cur_val = saved_stage_cur_val;
+ }
+ 
+ 

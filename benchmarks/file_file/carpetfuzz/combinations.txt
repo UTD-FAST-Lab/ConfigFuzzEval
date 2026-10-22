@@ -1,0 +1,599 @@
+-k -p -h --help --apple -e -i -n -v -r -z -b -c -S -L -s 
+-Z -C -P -F -0 --exclude-quiet -d --extension -m -E -s -f 
+-p -N --apple --exclude-quiet -r -c -E -l -L -f 
+-k -C -h -P -N --help -i -d --extension -v -r -b -S -m -E -l 
+-Z -h -P -N -F -0 --help --apple --exclude-quiet -i -n -v -z -b -c -m -l -f 
+-k -p -Z -0 --help -d -z -b -S -m -l --mime-type -L -f 
+-P -0 --help -e -n --extension -v -c -S -l -s 
+-Z -h -P --apple -e -d -n -r -z -E --mime-type 
+-C -h -P -N -F --exclude-quiet -n --extension -v -r -z -S -L -s -f 
+-k -Z -C -N -e -i -n -b -c -m -L -s -f 
+-C -F --help --apple -d -v -b -c -E --mime-type -L 
+-k -p -Z -C -h -P -F --apple --exclude-quiet -i -d -n --extension -r -z -b -c -S -m -E -l -L -s 
+-p -Z -C -h -0 --help --apple --exclude-quiet -i --extension -v -r 
+-k -p -C -h -N -F -0 -e -d -n -v -r -c -m -E -l --mime-type -s -f 
+-p -C -h -P -e -i -d --extension -z -b -m -f 
+-k -p -h -P -N -F -0 --help --exclude-quiet -d --extension -c -S -L -f 
+-k -N -F --help --exclude-quiet -i -d -n -r -z -S -m -E -s 
+-k -p -Z -P -N -F -e --extension -v -z -b -S -E -l --mime-type 
+-k -Z -F --help --apple --exclude-quiet -n --extension -b -S -l -s -f 
+-p -C -h -N -F --help --apple --exclude-quiet -i -d -n --extension -z -E -l -L 
+-Z -C -N -0 --help --apple -e -i -d -n --extension -v -r -z -b -c -S -E -l -L -f 
+-k -C -P --help --apple --exclude-quiet -i -v -z -m -l -L -s 
+-k -p -Z -h -P -0 --exclude-quiet -i -v -r -b -c -S -m -E -f 
+-p -Z -P -N -0 --apple -i -d --extension -v -r -z -c -m -L -s 
+-k -p -Z -C -P -0 --help -e -n --extension -r -m -E --mime-type -L 
+-h -F -0 --apple --exclude-quiet -d -r -z -b -c -S -m -s 
+-k -P -N -F -0 --apple -e -n -z -b -c -S -m -E --mime-type -L -s -f 
+-p -Z -h -N -F -0 --apple -e -i --extension -S -m -E -l -L -s -f 
+-k -Z -C -h -P -N -F -0 --help --apple -e -d -v -S --mime-type -s 
+-p -Z -C -h -P -F --help -e -r -z -c -l -s -f 
+-k -p -Z -h -P -N --help --apple --exclude-quiet -d -n -v -b -E -L -s -f 
+-Z -h -N -0 --help -n --extension -r -z -b -l --mime-type -L 
+-k -p -C -F -0 --exclude-quiet -i --extension -v -z -b -c -l -s 
+-k -Z -C -h -F -0 -n -v -z -c -S -E --mime-type -L -f 
+-h -P -N -F -e --extension -v -r -b -c -m --mime-type -L 
+-k -p -N -0 --apple -e -d -n --extension -v -b -m -l --mime-type 
+-k -Z -h -P -F -0 --exclude-quiet -i -d -n -r -l -L -s 
+-p -Z -h -N --help -e -d --extension -v -z -c -S -m -E --mime-type -s -f 
+-Z -C -N -F --apple --extension -r -z -c -S -m -l --mime-type 
+-p -C -F -0 --help --apple -e -i -n -r -b -S -m -L -f 
+-h -P -0 --help --apple -d -n --extension -c -m -E -l --mime-type -L -s -f 
+-Z -C --exclude-quiet -i -d -n -v -z -S -l -f 
+-k -Z -0 --help --apple --exclude-quiet -i --extension -r -z -c -E -s -f 
+-k -p -h -F --extension -r -b -E --mime-type -s -f 
+-k -p -Z -C -N -F --help --apple -e -i -d -c -m -E -l 
+-C -h -0 --exclude-quiet -i -b -S -m -E -l -L -s 
+-p -Z -P -F --help -i -d -n -v -r -b -c -S -E -l -s 
+-k -C -P -N --apple -e -d -n --extension -r -c -S -f 
+-k -p -C -h -N --help --exclude-quiet -n -z -b -c -m 
+-p -P -F --help --apple -e -d --extension -r -z -b -m -E -l --mime-type -s -f 
+-p -C -h -P -N -0 --apple -n --extension -v -z -b -S -E --mime-type -s 
+-k -C -h -N -F -0 --help --extension -v -r -z -m -l --mime-type -L -s -f 
+-k -p -Z -C -h --apple --exclude-quiet -n --extension -v -c -S -m -l -L -f 
+-k -C -h -0 --help -e -d -r -z -b -S -E -l --mime-type -f 
+-p -Z -C -P --apple -n -v -r -b -m -l --mime-type -L -s -f 
+-Z -C -P -N --help --exclude-quiet -d -r -b -c -S -m -l -L -s 
+-C -P -N -F --help -e -i --extension -z -b -c -S -E -L 
+-k -Z -h -P -F --help --apple -v -r -c -S -m -E -l --mime-type -L 
+-F -0 -e -i -d -v -z -E -l -L -f 
+-k -p -C -h -N -F --exclude-quiet -i -v -r -S 
+-k -h -N --apple --exclude-quiet -i -d --extension -v -z -b -c -E -f 
+-p -C -P -N -0 --help --exclude-quiet -i -d -n -v -c -E -s -f 
+-k -Z -P -N -F -0 --apple --exclude-quiet -i -d -n --extension -r -b -S -E -L 
+-p -h -P -F -0 --apple --exclude-quiet -d -v -z -b -l -L 
+-k -p -Z -C -h -P -N -0 -d -n -r -z -S -m -E -l -s 
+-p -C -e -d --extension -v -r -z -c -S -E -l --mime-type -L -s 
+-k -p -C -P -N -F -0 --apple --exclude-quiet -n -S -m -l -f 
+-k -C -h -F --help --apple -e -i -n --extension -v -m -E -s -f 
+-p -Z -h -N -F -0 --help --exclude-quiet -n -v -r -b -S -m -E -L -s 
+-k -Z -C -N --help --apple -e -v -r -z -b --mime-type -s -f 
+-P -N -0 --help -v --mime-type -f 
+-p -Z -N --apple --exclude-quiet -i -d -b -c -S -s 
+-k -p -C -N -F -0 --apple --exclude-quiet -i --extension -v -r -z -b -m -E -L -f 
+-Z -h --exclude-quiet -d -n --extension -v -r -b -c -m -E -l -L -f 
+-k -Z -h -N --apple -e -i -n --extension -r -c -S -E -l -s 
+-k -Z -h -F -e -i -d -n --extension -v -z -b -m -L -s 
+-k -p -Z -h -P -F -0 --help --apple -d -n --extension -v -r -z -S -l --mime-type -f 
+-p -Z -C -N -0 --exclude-quiet -n --extension -z -b -c -E -l -L -s -f 
+-C -h -P -N -0 -e -d -n -b -c -S -l --mime-type -L 
+-k -p -Z -C -P -F -0 --help --exclude-quiet -i -n --extension -v -z -c -S -m -E -L 
+-C -P -F --apple --exclude-quiet -i -n -r -c -m -E 
+-k -p -C -P -0 --apple --exclude-quiet -i -d -r -z -S -E -L -s -f 
+-k -p -Z -C -P -F -0 --help --apple -d -n --extension -b -c --mime-type -s 
+-p -C -P -N -F --help --apple -n --extension -v -r -c -l -L -s 
+-Z -N -F -0 --help -e -d -n -v -r -S -m -E --mime-type -L -f 
+-k -p -C -P -N -F --help -e -d -n -v -r -z -b -c -S -m --mime-type -f 
+-p -Z -h -N -F --apple -e -d -r -z -m --mime-type -L -f 
+-p -C -h -F -0 --help --exclude-quiet -d --extension -v -r -z -b -c -S -m -l -f 
+--help --exclude-quiet -i --extension -r -b -m -L 
+-k -p -Z -C -h -P -0 --help --apple -e -i -d -z -c -S -m -l -L 
+-p -C -N -0 --help --apple -d -r -S -E -l --mime-type -s 
+-p -P -N --help --apple --exclude-quiet -i -d -n --extension -v -z -S -m -l -s -f 
+-p -F -0 -e -n -c -S --mime-type -s 
+-k -C -P -F -0 -e -i -d --extension -v -r -b -c -l -L -f 
+-Z -C -P -F -0 --apple -e -i -r -z -b -S -l -s 
+-k -d -n --extension -z -c -m --mime-type -L 
+-N -0 --help --apple -e -i -d -n -z -b -m -E -s 
+-k -Z -C -h -P -N -0 --apple --exclude-quiet --extension -z -b -m -L 
+-k -h -P -0 --exclude-quiet -i -n --extension -v -r -z -c -l 
+-k -p -P -N -e -i -n -r -z -E -l -L -f 
+-k -Z -P -0 -v -r -z -b -c -m -E -l --mime-type -s 
+-Z -C -h -P -N --help -n --extension -S -m -E --mime-type -f 
+-p -Z -C -h --apple -e -v -b -c -E -l --mime-type -f 
+-k -N -F --help --exclude-quiet -d -v -b -c -S -E -l -L -s -f 
+-k -p -Z -P --help --exclude-quiet -z -S -E -L -s 
+-p -C -h -P -F --help -n -z -b -c -S -m -E -l --mime-type -L -s -f 
+-Z -C -h -F --help --exclude-quiet -i -d -c -L -s 
+-Z -C -h -F -0 --apple -e -d --extension -v -b -S -m --mime-type -L -s -f 
+-k -p -h -P -N -F --help --apple -e -i -b -l -s -f 
+-k -Z -F --help -e --extension -r -c -l --mime-type -L -f 
+-k -p -Z -N -d -n --extension -v -r -S --mime-type -L -s 
+-C -h -P -N --apple -e -i -d -v -r -m -E -l -L -s 
+-Z -P -0 --help --apple --exclude-quiet -d -n --extension -v -r -z -b -c -S -L -f 
+-p -Z -F -0 --exclude-quiet -i -d -n --extension -r -z -m -l -f 
+-k -P -F -0 --help --apple --extension -v -r -z -S -m -E --mime-type 
+-p -h -N -0 -i -d -n -v -r -z -b -c -S -m -l -L -f 
+-p -Z -C -h -N -F -d -n -b -E --mime-type -L 
+-k -p -Z -h -N -F --help -e -i -n --extension -v -b -c -E -l -L 
+-Z -P -N -F --apple --exclude-quiet -i --extension -v -E -l -s 
+-p -Z -h -P -N -0 --help --apple -e --extension -r -b -c -S -m --mime-type -s -f 
+-k -p -C -h -P --help --apple -e -v -z -m -E --mime-type -L -f 
+-p -Z -0 --help --apple -e -i -n --extension -v -z -S -m -E -l 
+-k -C -h -0 --help --apple --exclude-quiet -d -n -r -c -m -s -f 
+-k -Z -C --help -e -d -n --extension -v -b -S -E --mime-type -s 
+-C -h -P -N -F -0 --help --apple -e -i -d -n --extension -r -z -c -E -s -f 
+-k -p -Z -P -N -F --help --exclude-quiet -i --extension -r -c -m -l -s -f 
+-k -p -Z -h -0 --help --exclude-quiet -i -d -v -m -E -l -s 
+-k -Z -C -P -F -d -z -l --mime-type -L -s -f 
+-k -C -h -N -F --apple --exclude-quiet -i -d -n -v -r -z -b -c -S -l -L -s -f 
+-k -Z -h -N -0 --help -e -i -d --extension -b -c -S -f 
+-h -P --apple --exclude-quiet -i -n -z -b -S -E -f 
+-p -Z -C -N -F -0 --help --exclude-quiet -i -v -z -S -L -s -f 
+-h -0 --help --apple -n -v -r -b -c -E --mime-type -L -s 
+-k -p -Z -P -F -0 --apple -e -i -n -v -c -m -L 
+-k -h -F --apple -e -d -S -m -l --mime-type 
+-C -h -N -F --help --apple -e -n --extension -z -b -c -m -l --mime-type -s 
+-p -Z -P -e -d -v -b -S -m -E -L -s -f 
+-P -N -F -0 --apple -d --extension -v -r -b -c -S -E -l --mime-type -f 
+-k -h -P -F --help --exclude-quiet -d -n -r -z -b -m -E -l 
+-p -C -h -P -N -F -0 --help -e -i -n -v -r -z -m 
+-k -p -Z -N -F -0 --help --apple -z -c -E -l --mime-type -L -s 
+-k -p -C -h -P -N --apple -d --extension -r -z -b -c -l --mime-type -L -s -f 
+-k -p -F --apple --exclude-quiet -d --extension -v -r -c -S -m -E -s 
+-h -P --help --exclude-quiet -i -d -v -r -c -S -m -L -f 
+-p -h -P -0 --help --exclude-quiet -i --extension -z -b -c -E -l -L -s -f 
+-k -P --apple --exclude-quiet --extension -v -r -b -S -m -l -L -s -f 
+-k -Z -P -N -0 --help --apple -e -i -v -r -b -S -m -E -l -L -f 
+-k -p -N -0 --help -e -n --extension -v -z -c --mime-type -L -s -f 
+-Z -C -h -P -F --help -e -i -v -r -z -b -S -m -E -s -f 
+-k -Z -h -P -0 -e -i -n --extension -z -S -L -s -f 
+-k -p -h -F -0 --help -e -i -d --extension -b -c -S -m -E -L -s 
+-k -Z -C -P -N -F --exclude-quiet -i -d -n --extension -v -z -c -m -E -l -L -s -f 
+-k -h -P -0 --apple --exclude-quiet -i -d -n --extension -r -b -S -m -l -s 
+-p -h -N -F -0 --exclude-quiet --extension -r -z -c -S -E -l 
+-Z -h -F --help -d -n -v -z -b -c -l --mime-type -s 
+-p -h -F --apple -n -v -z -c -S -m --mime-type -s -f 
+-p -h -P --exclude-quiet -d -n --extension -c -l 
+-p -C -h -P -0 --help --apple --exclude-quiet -n --extension -v -r -b -E -l -s -f 
+-0 --apple --exclude-quiet -i -n --extension -v -c -S -m -L 
+-k -p -C -P -N -0 --exclude-quiet -d --extension -v -r -z -b -E 
+-k -p -Z -C -P --help --apple -e -i -d -n --extension -v -r -l -L -f 
+-k -p -Z -0 --apple -e -i -d -n -r -b -c -E -s -f 
+-k -Z -C -h -N --apple -e -d -n --extension -r -b -S -m -E -l --mime-type -L 
+-Z -P -N --help --apple -e -d -n -z -c -S -l --mime-type -L 
+-p -P -N -F -e -d -n --extension -S -E --mime-type -L -f 
+-C -N -r -z -b -S -m -E --mime-type -s -f 
+-k -p -h -P -N -F -0 --help --apple --exclude-quiet -i -d -v -r -b -c -m -E -L 
+-p -Z -C -h -P -N -0 -e --extension -v -r -z -c -E --mime-type -L 
+-k -C -P --help --apple --exclude-quiet -i --extension -b -c -S -E -l -s -f 
+-Z -N -F --apple --exclude-quiet -n -v -r -z -c -m -E 
+-k -p -C -N --help --apple --exclude-quiet -i -n --extension -b -S -m -L -s 
+-p -Z -C -P -N -F --help --apple -e --extension -r -b -E -L -s 
+-Z -h -P -N -d -v -r -z -b -S -l --mime-type -s -f 
+-Z -N -0 --apple -e -n -v -z -m -l --mime-type -s -f 
+-k -p -h -P -N -0 -r -c -S -m -l --mime-type -L 
+-p -Z -h -F --help --apple --exclude-quiet -i -d -n -r -S -E -l -L -f 
+-k -Z -C -F -0 -e -n -r -z -b -c -m -E -l --mime-type -L 
+-p -C -F --help --exclude-quiet -d -n -v -r -b -m -l 
+-k -Z -h -N -F --help --apple -e -d --extension -r -z -c -S -E --mime-type -L -s 
+-k -p -h -F --help --exclude-quiet -i --extension -v -z -S -m -l -L -f 
+-k -Z -C -N -F -0 --help -d --extension -z -b -m -E --mime-type -f 
+-k -p -C -h -P -F -0 --help --exclude-quiet -d -n --extension -r -S -L -s 
+-p -Z -C -h -P -F -0 -e -d --extension -v -z -c -m -l --mime-type -s 
+-k -Z -C -P -N -0 -i --extension -c -S -m -l -f 
+-p -Z -C -F --help --apple --extension -v -z -b -S --mime-type -L 
+-Z -C -h -P -N -0 --apple --exclude-quiet -i -d -r -c -l -f 
+-C -P -0 --apple -e -d -v -z -c -S -m -E --mime-type -f 
+-k -Z -C -h -N -0 --help --apple --exclude-quiet -n -v -r -z -c -S -E -l -s 
+-Z -C -h -N --exclude-quiet -i -n --extension -v -r -z -b -E -s 
+-p -C -N -F -0 -e -i -d -n --extension -r -b -S -l -s 
+-k -C -P -F --apple -e -n --extension -v -r -z -b --mime-type 
+-k -h -P -N -0 --help -e -d --extension -v -r -z -m -l --mime-type -L -s 
+-p -Z -C -h -P -N -F --exclude-quiet -i -n -z -b -c -S -f 
+-k -Z -h -P -N -0 --exclude-quiet -i -d -z -c -S -m -E -L 
+-k -Z -C -P --apple -e -i -d -v -z -b -c -E 
+-k -p -C -h --help -n -l --mime-type 
+-k -p -Z -C -h -N --help -i -d --extension -r -z -m -E -L -s -f 
+-k -C -N -0 -e -i -v -r -c -S -E 
+-p -Z -C -h -F -0 --help --apple -e -i -d -n --extension -v -r -b -c -m -E 
+-k -C -h -P -F -e --extension -c -S -m -E -l --mime-type -s -f 
+-k -h -P -F -0 -e -d -n -v -r -z -b -c -S -m -l -s -f 
+-p -Z -h -P -F -0 --help -e -n -b -E -l --mime-type -L -f 
+-p --help --apple -e -n --extension -r -c -S -m -E -l --mime-type -f 
+-C -N -0 --help --apple --exclude-quiet -d --extension -v -m -E -l -L 
+-Z -C -h --help -e -v -z -m -l -L 
+-k -p -P -0 --help --apple --exclude-quiet -d -z -b -c -f 
+-k -p -Z -N -F -0 --apple --exclude-quiet -d -v -r -z -b -S -l -L 
+-p -P -F -0 --help --exclude-quiet -i -n -r -z -b -c -m -L -s -f 
+-Z -P -N -F -0 -d -n -r -b -c -m --mime-type -s 
+-k -p -h -0 --apple -e --extension -r -z -b -S -l --mime-type -L -s 
+-p -Z -N -e -i -d -r -z -b -c -m -l -L 
+-k -Z -h -0 --apple -d --extension -v -E --mime-type -L -f 
+-k -P -N -F --help -n -v -b -m -E -l --mime-type -s 
+-k -p -Z -C -h -N -0 --help --exclude-quiet -i -d -n -r -b -l -L -f 
+-k -Z -P --apple --extension -b -c -S --mime-type -L -f 
+-k -C -h -F -0 --help --apple --exclude-quiet -n -z -E -L -f 
+-C -h -N -F -0 --exclude-quiet -i --extension -b -c -m -s -f 
+-k -C -N -0 --exclude-quiet -d -n -b -L -s 
+-k -C -N -F --help --apple -e -i -d -v -c -S -m -l -L -s -f 
+-p -Z -C -P --help --apple --exclude-quiet -d --extension -z -b -c -m -E 
+-Z -h -P -N -F --help --apple -e -d -n --extension -v -z -b -c -S -m -E -l -L -f 
+-p -Z -C -h -0 --apple -d -n -r -z -S -m --mime-type -s 
+-p -Z -C -P -N -F -0 --help -e -n --extension -v -b -c -S -m -l --mime-type -L -s 
+-p -Z -C -F --exclude-quiet -i --extension -v -r -b -c -S -E -L -s -f 
+-k -p -h -P -N --apple -e -i -d --extension -v -z -c -S -s 
+-C -h -0 --help --apple -i --extension -z -c -S -l -L -f 
+-p -h -P -N --exclude-quiet -i -n -v -b -m -E -l 
+-Z -C -P -N -F -0 --help --apple -e -n -r -c -E -l --mime-type -L -s -f 
+-p -h -P -N --help --apple -n -v -r -z -c -E --mime-type -f 
+-p -P -N -F --help -d -z -m --mime-type -L -s 
+-Z -C -h -P -F -0 --help --exclude-quiet -i -d --extension -v -b -S -E -l 
+-C -0 -d -n --extension -r -b -c -S -m --mime-type -L -s -f 
+-h --help -e -i -r -c -E -L -s -f 
+-k -p -C -N -F -0 --apple -e -b -E --mime-type -f 
+-k -Z -h -F -0 --apple --exclude-quiet -i -v -r -z -m -s -f 
+-k -Z -C -h -N --help --apple -d -n -v -S -m -l --mime-type -f 
+-k -p -P -N -F -0 --apple -e -n --extension -z -m -E -l -s 
+-k -Z -C -P -N -e -S -m --mime-type -s 
+-p -F -i -n --extension -z -b -S -m -E -l -f 
+-k -p -Z -C -P -N -F -0 --apple --exclude-quiet -i -d -n -v -z -b -S -m -E -l -s -f 
+-k -F --help --apple --exclude-quiet -i -d -n --extension -v -z -b -S 
+-k -p -Z -P --help --exclude-quiet -i -d --extension -v -r -z -b -c -l -s 
+-C -P -N --help --apple --exclude-quiet -n --extension -v -r -c -S -m -E -L -s 
+-C -h -N -0 --help --apple -e -v -b -c -S -m --mime-type -L 
+-k -p -Z -C -N --help --apple -e -d -n --extension -z -c -E -l --mime-type -f 
+-k -p -Z -C -h -P -F -0 --apple -i -d -r -S -E -f 
+-p -Z -C -N -0 --apple -e -i -n --extension -r -z -L -s 
+-k -p -Z -C -N -F -0 --help --apple --exclude-quiet -d --extension -r -z -c -S -m -L -f 
+-k -p -h -P -N -F --exclude-quiet -v -z -c -m -E -L -s -f 
+-p -Z -P -N -0 --help --exclude-quiet --extension -b -S -m -l 
+-k -C -h -0 --help --exclude-quiet -i -d -n --extension -v -r -z -b -S -m -E -L -s -f 
+-k -p -Z -C -h -N --apple -e -i -v -r -z -b -S -m -E -l -s -f 
+-p -P -F --help --apple -e -i -d -v -r -S -m 
+-k -p -h -P -F -0 --help -n --extension -v -b -c -f 
+-Z -h -N -F --help --apple -i -n --extension -v -r -b -L -s -f 
+-k -p -P -F -0 --help -e -i -d -n -v -z -S -E -l -L -s 
+-k -p -P -d -n -v -b -c -S -E -l --mime-type -L 
+-C -h -P -0 --help --extension -r -c --mime-type -s 
+-k -C -h -N -F -0 -d -n --extension -z -S -E -l --mime-type -L -s 
+-p -Z -h -P -N --apple -e -i -n --extension -r -b -c -m -l -f 
+-Z -h -P -F -0 --help --apple -e -i -d --extension -v -c -L -s -f 
+-k -p -Z -C -h -0 --apple -e -d --extension -b -c -E -l -L -s 
+-Z -F -e -n --extension -r -z -S -m -f 
+-Z -h -F --help --apple --exclude-quiet --extension -v -z -c -S -E -l -s 
+-k -h -N -F -0 --help --apple -e -i --extension -r -z -b -l 
+-k -Z -C -P -0 --help --apple -d -n --extension -v -r -z -b -c -m -E -l --mime-type -L -s -f 
+-p -C -h -P -N --exclude-quiet -i -d -n --extension -r -S -m -E -L -f 
+-k -p -Z -C -P --exclude-quiet -n -v -r -c -S -s -f 
+-k -p -Z -h -N -0 --apple --exclude-quiet -i -n --extension -c -m -E -l -L -s 
+-C -N --help --exclude-quiet -i -v -r -z -c -m -E -l -f 
+-p -Z -C -h -0 --apple --exclude-quiet -n -v -z -b -c -m -E -L -s 
+-k -h -N -F -0 --apple -e -n --extension -v -r -S -E -l --mime-type -L -f 
+-p -Z -C -h -P --apple -i -n -v -l -L -s 
+-k -p -Z -C -h -P -F --help -e -d -n --extension -r -c -S --mime-type -L 
+-k -Z -C -h -P -F --apple --exclude-quiet -r -b -c -l -L 
+-k -p -C -F -0 --help --apple -i -d -n -v -z -b -c -m -l -s 
+-C -N -0 --help --exclude-quiet -i -d -n --extension -z -c -S -l -s 
+-P --apple -e -i -n --extension -b -E -l -L -s 
+-k -p -Z -N -0 --help -e -d -v -r -c 
+-k -p -C -h -N -F -e -n -v -r -b -S -E -L -f 
+-p -Z -C -h -P -F --help --apple -e -d -v -r -b -c -S -E --mime-type -L -s -f 
+-C -P -N -F --exclude-quiet -i -d -n --extension -v -b -m -L -s -f 
+-k -p -h -N --help --apple -d -z -b -c -S -m -E --mime-type -s 
+-p -Z -P --help -e -d -n -v -r -l --mime-type -s -f 
+-k -Z -h -P -N -F -0 --apple -e -n -z -b -m --mime-type 
+-k -p -Z -F --help -e -v -r -b -c -m --mime-type -s 
+-p -Z -P -N -F -0 -n --extension -r -z -S -E -l --mime-type -s -f 
+-k -h -N -F -0 --help --exclude-quiet --extension -v -l -s -f 
+-h -N --exclude-quiet -d --extension -r -z -S -s -f 
+-p -h -P -F -0 --help -e -d -v -r -z -b -E --mime-type -L -s 
+-Z -N --help --apple --exclude-quiet -i -d -b -m -E -l -L -f 
+-k -Z -C -h -P -N -F --help --apple --exclude-quiet -d --extension -v -r -z -E -l -f 
+-Z -0 --help -e --extension -z -b -c -m -E --mime-type -s 
+-k -p -Z -C -h -0 -e -n -m -l --mime-type -L -s -f 
+-k -P -N -F -0 --help -i -n -z -c -S 
+-k -C --apple -i -d -r -m -l -f 
+-k -P -0 --help -e -d -n -r -b -m --mime-type -L -f 
+-k -p -C -h -P -N -0 -e -i -n --extension -v -b -c -S -m -E -l -s -f 
+-C -F -i -d --extension -v -c -S -E -s 
+-k -p -C -P -N -F -0 --help --apple -n --extension -v -r -c -S -m --mime-type -L -f 
+-k -p --help --apple --exclude-quiet -i -n -r -z -b -c -E -l -L 
+-p -C -h -P -N -F --apple --exclude-quiet -i -z -c -S -m -E -l -L 
+-k -C -P -N -F --help --exclude-quiet -n -v -z -b -S -E -l -L 
+-k -p -Z -P --exclude-quiet -i -n -z -b -m -f 
+-Z -h -P -F -e -i -d -n -c -S -m -E -l -f 
+-p -Z -h -P -N -F --apple --extension -v -c -m -E --mime-type -L -s 
+-p --help --apple -e -d --extension -v -b --mime-type -L -f 
+-Z -F -0 --extension -v -r -b -S -m -l --mime-type 
+-C -h -N -e -i -n --extension -v -r -z -c -S -m -l -L -s -f 
+-k -Z -C -F -0 --help --exclude-quiet -i -n -v -r -S -m -E -l -L -s 
+-Z -C -h -N -0 --help -e -d -n -z -b -S -E -s -f 
+-p -Z -C -h -P -N -F -0 --help -e -d --extension -z -b -S -m -l --mime-type -L -f 
+-k -p -Z -N -F -0 --help -e -i -d --extension -v -r -z -c -S -m -s -f 
+-k -C -F -0 --help --apple -e -v -z -b -c -l -L -f 
+-k -h -P -N -0 --help --exclude-quiet -n --extension -r -b -c -S -E 
+-C -P -N --apple -e -d -n --extension -v -z -l --mime-type -L -f 
+-p -h -N --apple --exclude-quiet -n -r -z -m -l -L -s 
+-k -P -F --apple -e -d -n -v -r -c -l --mime-type -L -s 
+-k -p -Z -h -F --apple -n --extension -r -b -c -S -m -E -l --mime-type -f 
+-P -0 --help --apple -e -d -n -r -z -S -m -l --mime-type -L -s 
+-Z -C -h -P --help --apple -e -i -n --extension -r -z -S -m -L 
+-p -Z -C -h -P -F --exclude-quiet -d -n -v -z -S -m -E -l -s 
+-k -p -h -F --apple --exclude-quiet -i -d --extension -b -L -s -f 
+-p -C -0 --apple --exclude-quiet -d -n --extension -z -b -S -E -f 
+-k -Z -h -N -F -e -n -v -b -c -l --mime-type -f 
+-p -Z -C -P -N -0 --help -d -v -r -z -b -E -l --mime-type -L 
+-k -Z -h -N --help --apple -e -r -S -m -L -s 
+-P -N -F -0 --exclude-quiet -v -c -S -E -l -L -s -f 
+-p -Z -h -0 -e -d -n --extension -v -r -z -b -c -S --mime-type -f 
+-k -p -C -P -N -F --apple -e -i -d --extension -r -z -c -S -m -E -L 
+-p -N -F -0 --help -e -d -n --extension -r -z -b -c -E --mime-type 
+-Z -h -P -F --help --apple --exclude-quiet --extension -r -z -S -m -E -L -f 
+-k -p -C -P -0 -d --extension -v -S -m -E -l --mime-type -L 
+-p -Z -F -0 --apple -d -b -m -E -L 
+-C -h -F -e -i -d -n -r -z -c -E -l -s 
+-p -C -h --apple --exclude-quiet -i -d -v -c -m -s -f 
+-k -Z -C -h -N --help --exclude-quiet -d -n --extension -c -S -m 
+-k -p -Z -C -h -P -N -F --exclude-quiet -d -b -c -m -E -l -f 
+-Z -C -F -0 --help --apple -n --extension -E -l --mime-type -f 
+-k -C -F --help -e -i -d --extension -m -E -l -f 
+-k -p -Z -C -h -N --extension -v -r -z -b -c -m -E --mime-type 
+-k -Z -h -P -N -0 --help --apple -i -b -S -E -L -s 
+-Z -P -F -0 --apple --exclude-quiet -i -d -n -z -b -c -S -E -l -L -s -f 
+-p -C -P -0 --help --exclude-quiet -c -S -m -l -f 
+-Z -P --help -e --extension -v -z -b -S -m -l --mime-type -L -s -f 
+-k -p -C -h -P -N --help -e -i -d -n -b -S -s 
+-P -N -F -0 --exclude-quiet -i -d --extension -v -r -z -b -c -S -m -E -s 
+-k -p -C -h -P -F -i --extension -r -z -b -c -E -L 
+-k -p -Z -h -N -0 --apple -e -d -v -z -b -c -m -E -l --mime-type -L -s -f 
+-C -h -P -N -F --apple -i -d -z -b -s -f 
+-k -p -N -F -0 --apple -i -n -v -E -f 
+-C -h -N --help -i -d -n -r -b -c -S -l -s -f 
+-p -C -P -N -F -0 --help --apple --exclude-quiet -i --extension -r -b -S -l -L 
+-k -Z -C -N --apple -e -d --extension -v -r -c -m -E --mime-type -s 
+-Z -N -0 --apple -e --extension -v -r -z -b -c -m -E -L -s -f 
+-p -Z -h -P -N --help --apple --exclude-quiet -i --extension -v -z -b -S -L 
+-p -Z -C -N -F --apple -e -d -v -z -S -l --mime-type -s -f 
+-k -p -C -F -0 --exclude-quiet -n -r -b -c -E -f 
+-h -P -N -F -0 --help --apple --exclude-quiet -i -S -m -s 
+-p -h -F -0 --help --apple --exclude-quiet -n --extension -v -m -E -s 
+-k -Z -P --help -e -i --extension -v -r -E -s -f 
+-k -C -h -P -F -0 --help --apple -e -n --extension -z -b -c -S -E -l --mime-type 
+-p -Z -C -N -F --help --apple --exclude-quiet -i -d -n --extension -b -c -m -l -L -s -f 
+-Z -h -P -F -0 --apple -i -d -n --extension -v -r -b -m -E -l -L -f 
+-p -h -0 --help --apple -e -d -n -z -c -m -E -L 
+-p -Z -C -h -N -F -0 --help --apple -d -n --extension -v -r -m -l --mime-type -L 
+-k -h -N --help -e --extension -v -S -E -l --mime-type -L -s -f 
+-k -p -C -0 --exclude-quiet -v -z -S -m -s 
+-k -Z -C -h -P -N -0 -e -n -v -r -z -c -S --mime-type -L -s -f 
+-k -Z -N -F -0 --exclude-quiet -i -v -b -c -L 
+-k -p -C --apple -e -d -n -r -z -b -c -S -m -l --mime-type -s -f 
+-p -h -F --help -e -v -r -S -l --mime-type -L 
+-k -Z -N --help --extension -r -z -b -c -S -E -l -L -s -f 
+-h -N -F -0 --apple --exclude-quiet -d -n --extension -v -b -S -E -f 
+-k -Z -C -h -P -N -0 -e -i -d -n -v -z -E -l 
+-p -Z -C -P -F -0 --apple -e -d -v -r -S -m -E -l 
+-k -p -Z -N -0 --help --exclude-quiet -v -r -z -b -m -l -s -f 
+-C -P -N -F --help -e -d --extension -b -m -l -f 
+-C -h --apple -d --extension -v -r -z -b -S -L 
+-Z -C -P -F --help -e -d -n -r -z -b -S -m -E --mime-type -L 
+-k -C -h -P -N -F -e -d -n --extension -r -b -E --mime-type -s -f 
+-k -p -P -N --help --exclude-quiet -i -d --extension -r -z -b -S -E -l -L -f 
+-Z -h -P --help --exclude-quiet -i -n -r -z -c -S -m -l -s 
+-p -Z -C -h -0 --help -e -i --extension -v -b -c -S -l -f 
+-p -C -P -F -0 --apple -e -r -z -c --mime-type -L -f 
+-p -Z -N -F --help --apple -e -n -b -S -E --mime-type -s 
+-p -0 --exclude-quiet -i -d -n -v -r -c -S -E -l -L -s 
+-k -h -N -F -0 --apple --exclude-quiet -i -d -n --extension -z -c -m -l -L -f 
+-k -C -N -F --help -r -b -c -S --mime-type -L -s -f 
+-Z -C -h -P -0 --apple --exclude-quiet -i -d --extension -v -r -z -b -m -L -s 
+-k -Z -P -F -d -n -v -z -c -m -E -f 
+-k -P -0 --exclude-quiet -z -c -E -l -f 
+-p -Z -C -h -P -F -0 -e -i -n -v -r -b -c -S -L -s 
+-k -p -Z -h -P --help -i -d -n --extension -v -z -b -L -f 
+-p -Z -P -N -F -e -i --extension -v -r -b -S -f 
+-p -Z -C --help -n -c -S -m -E -s -f 
+-k -N --help --apple -e -z -c -S -E -l --mime-type 
+-k -p -Z -P -N -0 --apple -d --extension -c --mime-type -f 
+-k -Z -C -h -P -F -0 --help --apple -r -z -b -m -E --mime-type -s 
+-k -p -C -h -P -0 --help --apple -e -i -d -v -r -z -b -c -s -f 
+-k -p -Z -C -F -0 --help --apple --exclude-quiet -i -n -z -c -S -l 
+-k -p -C -h -P --apple --exclude-quiet -d -n --extension -v -z -c -L -s 
+-k -C -0 -e -v -r -b -S -l --mime-type 
+-Z -C -N -F --help --apple -e -i -n -v -z -c -f 
+-F -0 --apple -e -d --extension -z -b -c -m -E -l --mime-type -L 
+-p -h -N --apple -d -n --extension -v -r -z -b -m -E -l --mime-type -L -f 
+-Z -h -P -N -0 --help -e -d --extension -v -r -b -c -E -l --mime-type -s 
+-k -p -Z -h -P -N --help --apple -n --extension -z -b -l --mime-type -L -s 
+-p -P -0 --help -e -i --extension -r -z -c -S -m -E -l -s -f 
+-k -Z -F -0 --help --apple -d --extension -v -r -S -l -s -f 
+-p -h -0 --help -i -r -z -m -E 
+-k -p -Z -C -P -N --help --apple --exclude-quiet -i -n -v -r -b -c -m -E -L -f 
+-C -h -P -N -0 -e -i -d -v -m -L 
+-k -Z -C -F -e -d -n -z -b -c -L -s 
+-k -p -C -P -N -F -0 -e --extension -v -z -b -S -m --mime-type -L -s 
+-k -C -P -N -F -0 -e -d --extension -v -r -z -S -m -E -L -s -f 
+-h -N --apple -e -d --extension -v -r -b -l -s 
+-k -Z -C -N -F --help --exclude-quiet -i -d -n --extension -v -r -L 
+-C --help -i -d -n --extension -v -z -b -c -m -E -L -s -f 
+-h -N --help --apple --exclude-quiet -d -r -z -b -S -E -L -s -f 
+-p -Z -C -h -P --apple -e -d -b -S -m -E -l --mime-type 
+-Z -C --help -d --extension -v -r -z -c -l --mime-type -f 
+-k -p -Z -C -h -N -F -0 --exclude-quiet -i -d -r -z -b -c -E -s 
+-k -p -C -h -P --help --exclude-quiet --extension -v -b -c -m -L -s 
+-k -p -Z -F -e -i --extension -r -z -E -L 
+-k -Z -h -N -F -0 --help -d -b -c -S -m -l --mime-type -f 
+-P -N -F --exclude-quiet -i -r -z -b -l -s -f 
+-p -Z -h -P -N -F -0 -e -i -d -E -s 
+-k -P -F --help --apple -e -d -n --extension -z -S -m --mime-type -s -f 
+-k -p -Z -h -P -F -0 --exclude-quiet -n --extension -S -E -l -L -f 
+-Z -C -0 --apple --exclude-quiet -d -v -z -S -L -s 
+-k -C -P -F -0 -d -n -v -z -b -m --mime-type -f 
+-k -p -Z -h -0 --help --exclude-quiet -i -d -n -z -b -S -m -E -f 
+-p -C -P -N -0 --help --apple -e --extension -v -c -S -E -l -f 
+-k -Z -C -h -F -0 --apple -i -n --extension -z -b -c -S -m -E -s 
+-k -p -C -0 --exclude-quiet -i -n -r -z -b -S -m -l -L 
+-p -h -P -N -F --help --apple --exclude-quiet -d -n --extension -r -b -c -m -E -l -s 
+-k -p -Z -C -h -F --help --apple --exclude-quiet -i -d -v -r -z -c -S -E -f 
+-p -h -F --apple -i -d -r -z -c -m -E -l -L -s -f 
+-k -C -h -0 --help -e -n --extension -v -r -b -c -S -m -E --mime-type -L 
+-k -Z -C -P -N --apple -d -n -r -c -m -E --mime-type -L -s -f 
+-h -N -F --help --apple -e -i -d -n -v -z -b -c -S -E -l -f 
+-k -p -Z -C -h -P -N -0 --help --apple --exclude-quiet -i --extension -v -c -S -l -L -s -f 
+-Z -0 --apple --exclude-quiet -i -n -r -S -L -f 
+-p -C -F --apple --exclude-quiet -n --extension -r -z -c -s -f 
+-p -N -0 --apple -n -z -b -c -S -l 
+-Z -P -N -F --help --apple -d -n --extension -v -r -z -S --mime-type -L -s 
+-k -F --apple --exclude-quiet -i -d --extension -r -b -c -S -m -l 
+-C -h -F -0 -e -n --extension -r -E -l --mime-type 
+-p -Z -P -N -F --exclude-quiet -d -n --extension -z -c -L 
+-p -C -P -N -0 --apple --exclude-quiet -i -n -r -z -m -E 
+-p -C -h --help --exclude-quiet -d --extension -r -b -S -E -l -s 
+-k -Z -h -P --help -e -i -n --extension -r -b -c -m -E -l 
+-C -P -N -0 --apple -b -c -m -E -l --mime-type -f 
+-k -p -Z -C -F -0 --apple -e -d --extension -r -b -E -l --mime-type -L -s -f 
+-k -p -Z -F --apple -e -n -v -z -m -E --mime-type -L -s 
+-h -P -N -F --help --exclude-quiet -i -d -n -v -c 
+-k -p -C -h -P --help --apple --exclude-quiet -d -v -r -z -S -m -l 
+-k -Z -h -P -N -F -0 --help -e -i -d -n -r -z -c -m -l -L -s -f 
+-k -p -Z -C -h -P -N -0 --help -e -n --extension -r -z -b -S -m -l 
+-p -h -N -0 --exclude-quiet -i -n -v -b -S -l -L -s 
+-p -h -P -F --apple -e -i -n --extension -v -z -b -S -m -l -L -f 
+-C -h --help --apple -e --extension -r -z -S --mime-type -L -s -f 
+-C -h -P -N -F -0 --help -n --extension -v -z -c -S -m -E -L -f 
+-h -N --exclude-quiet -n -v -b -c -S -m -s -f 
+-C -h -0 -e -z -c -E --mime-type -L -s 
+-k -p -h -P -F -0 --apple -e -i --extension -v -S -m -E -f 
+-Z -C -h -P -F -0 --apple -e -n --extension -v -z -c -l --mime-type -L -f 
+-k -p -h -P -F -0 --help -i -v -r -z -S -m -l -L -s -f 
+-p -C -P -N -F --help --apple --extension -r -m -l --mime-type -s 
+-k -Z -C -P -N --apple -n -v -r -b -S -l --mime-type -s 
+-k -Z -C -h -F --help --apple -e -d -n --extension -v -z -c -m -l --mime-type -L -s 
+-p -Z -C -N -0 --help --apple -e -i -d --extension -c -S -E -L -s -f 
+-k -h -P -F -0 --help -d -v -c -S -E --mime-type -s -f 
+-Z -N -0 --exclude-quiet -n -r -z -m -E -L -f 
+-p -Z -P -N -e -n -r -z -c -m -E -l --mime-type 
+-Z -C -N -F -0 --help --apple --exclude-quiet -d -n -v -r -b -c -l -s -f 
+-k -p -N -0 --help --exclude-quiet -d -n -v -r -m -E -l -L -f 
+-k -Z -C -N -F -n --extension -v -c -S -m -E -l --mime-type -s -f 
+-C -P -0 -n --extension -v -r -z -b -c -S -E -l --mime-type -f 
+-k -p -Z -h -P -F -0 --help --apple --exclude-quiet -d -n -v -r -c -S -m -l 
+-p -h -N -F -0 --help --apple -i -d -n --extension -r -c -m -E -l -L -s 
+-p -Z -e -n --extension -v -S -E --mime-type -L 
+-C -h -N -F --apple -d -r -z -b -S -m --mime-type -L 
+-k -p -Z -C -h -N -F -0 --help --apple -e -d -n -v -r -z -b -S --mime-type -L 
+-k -Z -C -h -P -F -0 --help --apple --exclude-quiet -i -n --extension -z -b -m -l -L -s 
+-k -C -N --help --apple --exclude-quiet -i -d -n --extension -r -b -S -E -f 
+-p -Z -P -0 --exclude-quiet -i -d -n --extension -r -b -m -E -l -L -s 
+-p -C -0 --exclude-quiet -i -d --extension -z -c -S -l -L 
+-k --help -e -i -n -v -z -b -c -S -m -l -s 
+-k -p -N -F --help --apple -i -v -b -S -E -l -L -s 
+-p -Z -C --apple --exclude-quiet -i --extension -v -z -b -S -m -E 
+-k -h -P -N -e -v -r -z -b -c -S -m -E -l --mime-type -L -s -f 
+-p -F -0 --help --apple --exclude-quiet -i -d -v -r -c -m -E -L -s -f 
+-k -C -P -N -0 --help -e -d --extension -z -S -l --mime-type 
+-Z -h -0 --apple --exclude-quiet -d --extension -z -b -c -m -l -L -s -f 
+-p -Z -h -N -0 --exclude-quiet -i -d -v -c -S -m -E -l -L 
+-p -C -h -N -0 --help -e -d --extension -r -c -S -m -E --mime-type 
+-h --apple -e -i -d -n -S -L 
+-k -p -Z -h -P -N -F --apple --exclude-quiet -d -n --extension -r -S -m -E -s 
+-Z -C -h -P -N --help --apple -d -r -z -b -c -m --mime-type 
+-k -Z -C -h -P -F --exclude-quiet -i -n --extension -b -S -m -l -s -f 
+-k -p -P -0 --help -e -n -v -b -c -m -E --mime-type -s -f 
+-k -Z -C -h -F -0 --exclude-quiet -v -r -b -S -m -E -L -f 
+-k -Z -h -P -0 --exclude-quiet -i -d -n --extension -v -r -S -E -s -f 
+-h -N -F -0 --apple -e -i -d -n -r -b -c -S -m -E -L 
+-k -Z -C -P -F --help --apple -e -n -v -c -S -m -E -l -s 
+-h -P -N -F --help -e -i -r -l -s 
+-p -Z -h -F -0 --help -e -i -d -n -r -z -b -S -E -L -s -f 
+-Z -N -0 --help --apple --exclude-quiet -i -d --extension -z -b -S -E -l -L 
+-k -p -P -F -0 --apple --exclude-quiet -d -n -v -r -b -E -s -f 
+-p -Z -C -F -0 --apple --exclude-quiet -i -d -v -r -c -m -l -s 
+-p -h -N -F -0 --help -d -n --extension -v -b -c -m --mime-type -f 
+-p -N -F --apple --exclude-quiet -n -v -r -l -L 
+-k -h -P --exclude-quiet -i -z -E -s 
+-p -P -N -F -0 --apple --exclude-quiet -i -d -n -r -S -f 
+-p -Z -N -F -0 -i -r -z -b -c -m -l 
+-p -F --help --apple --exclude-quiet -i -n -v -r -c -S -l -L -s -f 
+-p -C -P -F --help --exclude-quiet -i -d --extension -v -z -b -E -s -f 
+-p -P -F --apple -d -v -m -E --mime-type 
+-k -C -h -P --help -e -n --extension -v -r -z -E -l -L -s 
+-Z -P -F -0 -e -d -b -c -S -E --mime-type -L -f 
+-Z -h -N -F --help -n -v -z -b -S -E -l --mime-type -L -s -f 
+-k -p -C -P -N -F --apple -e -i -z -b -c -m -s 
+-p -Z -C -N -0 --help --apple -d -v -r -b -c -S -l --mime-type -L 
+-k -Z -h -P -N -F -0 --help --apple --exclude-quiet -r -b -s 
+-k -p -Z -h -P -F -0 --apple --exclude-quiet -n --extension -v -r -z -c -S -m -s -f 
+-k -C -h -N -F -0 --apple --exclude-quiet -i -v -z -b -c -m -E -l -L 
+-p -0 --exclude-quiet --extension -v -r -z -m -E -l -L 
+-k -p -C -F --apple -e -n --extension -v -z -b -c -S -m -L -f 
+-k -h -N --help -e -i -d -n -v -r -z -E -l -f 
+-k -Z -h -N -F --help -e -n --extension -r -z -b -c -S -E -l -L -s -f 
+-k -h -P -N -F --help --apple --exclude-quiet -d --extension -v -r -b -S -m -l -L 
+-k -C -h -P -F -d -n --extension -v -r -b -S -m --mime-type -L -s 
+-C -F -0 --help --apple --exclude-quiet -i -d -r -z -b -c -L -f 
+-k -p -h -N -0 --apple -i -d -n -v -r -E -l -L -s 
+-k -p -C -N -0 --help -i -n --extension -v -r -c -l -s 
+-k -p -Z -0 --help --apple --exclude-quiet -d -v -r -z -c -E -l -L 
+-k -p -Z -C -h -N -F -0 --apple --exclude-quiet -i -r -b -m -L -f 
+-k -Z -N -F --apple --exclude-quiet -d -n -z -b -c -S -m -L -f 
+-k -p -Z -P -N -0 --apple -e -i -n --extension -v -r -z -b -c -S -m -E -L -s 
+-k -p -h -N -0 --help --apple -e -n -v -r -S --mime-type -s 
+-C -P -F -0 --help --apple -e -i -d -n --extension -b -c -m -L 
+-C -h -P -F -e -d -n --extension -c -L -s -f 
+-p -Z -C -h -F --exclude-quiet -d -z -E -l -L -f 
+-p -C --help -e -n --extension -v -r -c -m -E -l --mime-type -L -s -f 
+-Z -C --apple --exclude-quiet -d -n -v -b -c -l -L -s -f 
+-k -Z -N -0 --help --apple -e -i --extension -r -m -l -s -f 
+-k -p -Z -C -h -N -F -0 --help --apple -e -d -b -c -S -l --mime-type -L -s 
+-Z --apple -e -i -b -S -m -f 
+-k -Z -h -N -F -0 --help --apple --exclude-quiet -r -c -E -L -s 
+-p -P -N -e -i -d -n --extension -z -b -c -l -f 
+-k -p -Z -P -F -0 --help --apple --extension -r -z -c -m -l --mime-type -L -f 
+-k -p -Z -N --help -d --extension -r -S -m -E -l --mime-type 
+-Z -h -0 --help --apple -d -z -b -m --mime-type -L -f 
+-Z -C -d -E -l --mime-type -L -s 
+-k -p -Z -C -P -N -F --apple -i -d -n -r -S -m -E -L 
+-k -p -P -N -F --help --apple -e -r -c -S -l -L -s -f 
+-k -p -C -h -N -F -0 --apple -e -i -v -r -z -E -l -L -s -f 
+-p -h -P -F -0 -d -r -z -S -m -l --mime-type -f 
+-k -C -h -P -F -0 --apple -e -v -r -z -m -E -l --mime-type -s -f 
+-k -p -C -h -N -F --help -d -n --extension -r -b -c -S -l --mime-type -f 
+-k -Z -F --help --exclude-quiet -d -n -r -z -c -L -f 
+-p -Z -h -P -N -F --apple -e -i -d -n -v -z -b -c -E -L -s -f 
+-k -Z -C -h -P -N -0 -d -n -v -z -c -S -E --mime-type -s 
+-k -Z -h -P -F -0 -v -r -b -m -L -s 
+-Z -h -N -0 --help -d -n -v -r -z -S -m -E --mime-type -s 
+-p -Z -C -P -F -0 --apple -e -n --extension -z -b -S -E --mime-type -s 
+-k -p -Z -C -h -P -N -F --help -e -n -r -z -E --mime-type -s -f 
+-k -C -h -F -0 --apple --exclude-quiet -i -d -n --extension -r -b -c -S -m -E -l -s -f 
+-k -C -N -F -0 --help --apple -i -d -n -v -c -m -E -l -L 
+-F -0 --help --apple -d -n --extension -r -z -b -c -E --mime-type -L -s -f 
+-k -Z -h -N -F -0 --help -e -i --extension -m -L 
+-p -h -0 --help --apple -n --extension -v -z -b -E -L -f 
+-p -Z -C -h -P -e -d -n -z -b -c -m -E -l --mime-type -L -s -f 
+-Z -C -F --help -e -v -r -z -m --mime-type 
+-C -F --help -e -i -d -v -r -b -c -S -m -E -l -L -s 
+-C -h -P -N -d --extension -v -z -c -S --mime-type -L -s -f 
+-k -C -h -P -N -F -0 --help --apple -e -d --extension -b -m -E --mime-type -L 
+-k -p -Z -h -P -0 --help --extension -v -c -S -m -E --mime-type -L -s -f 
+-k -C -h -P -0 -e -i -n -v -r -c -S -m -E -l -L 
+-C -h -P -N -0 --apple -d -n -v -z -c -m -l --mime-type 
+-C -h -P -N -0 --apple --exclude-quiet -d -n -b -c -S -m -E -L -s 
+-Z -h -F -0 --help --exclude-quiet -i -n --extension -v -z -b -S -E -f 
+-p -Z -h -F -0 --apple -e --extension -r -z -b -L 
+-Z --help --apple -i -d -S -l -L -s -f 
+-C -N --help --apple -d -n -v -r -l --mime-type -L 
+-Z -C -h -P --help --exclude-quiet -n -r -z -b -c -S -E -L -s 
+-k -p -Z -C -e --extension -v -r -b -E --mime-type -L -s 
+-h -N -0 --apple -i --extension -r -z -c -S -m -l -L -s 
+-p -Z -C -h -F --exclude-quiet -i -d --extension -v -r -S -l 
+-p -C -h -N -F -0 --apple -e -d -r -b -c -E --mime-type -s 
+-k -Z -C -h -P --help -e -i -E -L -s 
+-k -p -Z --help --apple -e -n -v -S -f 
+-k -Z -h -P -N --apple --exclude-quiet -d --extension -v -z -c -m 
+-p -N -0 --help --apple -v -r -c -S --mime-type -s -f 
+-Z -h -P -i -d --extension -E -L -f 
+-Z -h -P -N -F -0 -e -i -d -n --extension -v -b -c -m -E -l -s 
+-h -P -N -0 -e --extension -m -E -l --mime-type -s 

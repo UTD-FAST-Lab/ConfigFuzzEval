@@ -21,21 +21,26 @@ FROM $parent_image
 ARG CC=$FUZZER_COMP
 ARG CXX=$FUZZER_COMPXX
 ARG CFLAGS=""
-
+ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+ENV AFL_SKIP_CPUFREQ=1
 # GENERAL
 # CC and CXX are set to clang-18 and clang++-18 wheb building coverage bianries
 # If this needs to be changed, update the Dockerfile accordingly.
-
 RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends \
-    build-essential make autoconf libtool automake zlib1g zlib1g-dev libjbig0 libjbig-dev
-RUN apt install -y liblerc-dev zstd libwebp-dev libjpeg-dev libjpeg-turbo8-dev
-RUN git clone https://gitlab.com/libtiff/libtiff.git /libtiff
-
+    build-essential make autoconf libtool automake \
+    zlib1g zlib1g-dev libjbig0 libjbig-dev \
+    zlib1g-dev libdeflate-dev liblerc-dev liblzma-dev \
+    libjbig-dev libwebp-dev libjpeg-dev libzstd-dev && \
+    rm -rf /var/lib/apt/lists/*
+# The download below falls back to the copy in benchmarks/sources/ if it fails
+# (the `sources` build context, passed by common/docker_image_builder.py).
+COPY --from=sources libtiff.tar.xz /fbpp_sources/
+RUN timeout 900 git clone https://gitlab.com/libtiff/libtiff.git /libtiff || \
+    (rm -rf /libtiff && mkdir -p /libtiff && \
+     tar -xJf /fbpp_sources/libtiff.tar.xz -C /libtiff --strip-components=1)
 WORKDIR /libtiff
-
 COPY build.sh .
-
-RUN bash build.sh
+RUN bash build.sh || true
 
 # GENERAL
 # Copy supporting files to the docker image
@@ -45,8 +50,23 @@ COPY dict /
 COPY ranked_stubs.txt /
 COPY build.sh /
 COPY rt_grammar.json /
-COPY load_src.sh /
+# CarpetFuzz/ProphetFuzz inputs: the target's man page and CarpetFuzz's
+# analysis of it (fuzzers/carpetfuzz/analysis/generate.sh).
+COPY manpage.1 /
+COPY carpetfuzz /carpetfuzz_analysis
 
-# Copy the binary to fuzz
-CMD ["bash", "-c", "cp -r /libtiff/tools/tiff2pdf /benchmark_out_dir/     && cp /rt_grammar.json /benchmark_out_dir/  &&  cp /build.sh /benchmark_out_dir/  && cp /ranked_stubs.txt /benchmark_out_dir/  &&  cp /dict /benchmark_out_dir/ && cp /run_target.sh /benchmark_out_dir/ && cp -r /seed /benchmark_out_dir/seed && cp -r /load_src.sh /benchmark_out_dir/"]
-
+CMD ["bash", "-c", "mkdir -p /benchmark_out_dir/lib && \
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libzstd*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/liblzma*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libdeflate*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libjbig*.so* /benchmark_out_dir/lib/ || true && \
+    cp -a /usr/lib/x86_64-linux-gnu/libLerc*.so* /benchmark_out_dir/lib/ || true && \
+    cp /rt_grammar.json /benchmark_out_dir/ && cp /manpage.1 /benchmark_out_dir/ && cp -r /carpetfuzz_analysis /benchmark_out_dir/carpetfuzz && \
+    cp /build.sh /benchmark_out_dir/ && \
+    cp /ranked_stubs.txt /benchmark_out_dir/ && \
+    cp /dict /benchmark_out_dir/ && \
+    cp /run_target.sh /benchmark_out_dir/ && \
+    cp -r /seed /benchmark_out_dir/seed && \
+    cp -r /libtiff/tools/tiff2pdf /benchmark_out_dir/"]

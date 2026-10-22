@@ -1,0 +1,1 @@
+/benchmark/ffmpeg -i @@ -f null

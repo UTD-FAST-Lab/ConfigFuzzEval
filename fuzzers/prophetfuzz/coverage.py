@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import tempfile
+import shlex
+from pathlib import Path
+import re
+
+def main():
+    out_dir = Path(os.environ.get("OUT", "/fuzzer_output"))
+    run_target = os.environ.get("RUN_TARGET")
+
+    if not run_target:
+        raise RuntimeError("RUN_TARGET environment variable not set")
+
+    queue_dir = out_dir / "default" / "queue"
+    coverage_dir = out_dir / "coverage"
+    coverage_dir.mkdir(parents=True, exist_ok=True)
+
+    # -------------------------------
+    # Load ranked_stubs.txt into an array
+    # -------------------------------
+    # Determine directory of coverage binary
+    binary_path = Path(shlex.split(run_target)[0])
+    binary_dir = binary_path.parent  # directory containing the binary
+
+    # The argv file is in the same directory as the coverage binary. Use the same
+    # file run.sh fuzzed with, so the argv:N tags in queue names map back correctly.
+    ranked_stubs_file = binary_dir / "prophet_argvs.txt"
+    if not ranked_stubs_file.is_file():
+        ranked_stubs_file = binary_dir / "ranked_stubs.txt"
+
+    if not ranked_stubs_file.is_file():
+        raise RuntimeError(f"{ranked_stubs_file} not found")
+
+    # First line is the number of commands; afl-fuzz numbers the commands that
+    # follow from 0 (argv:000000 is the first command, not the count line).
+    with open(ranked_stubs_file, "r") as f:
+        lines = [line.strip() for line in f]
+    argv_lines = [line for line in lines[1:int(lines[0]) + 1] if line]
+
+    # -------------------------------
+    # Process each queue file
+    # -------------------------------
+    profraw_files = []
+
+    for seed in sorted(queue_dir.iterdir()):
+        if not seed.is_file():
+            continue
+
+        # Extract argv number from filename
+        match = re.search(r'argv:(\d+)', seed.name)
+        # Initial seeds have no argv tag; afl-fuzz runs them with the first command.
+        argv_num = int(match.group(1)) if match else 0
+
+        if argv_num >= len(argv_lines):
+            print(f"[!] argv {argv_num} out of range, skipping {seed.name}...")
+            continue
+
+        stub_cmd = argv_lines[argv_num]
+
+        # Replace the binary with RUN_TARGET
+        stub_parts = shlex.split(stub_cmd)
+        stub_parts[0] = run_target.split()[0]  # replace binary with RUN_TARGET binary
+
+        # Replace @@ with seed
+        cmd_list = [part if part != "@@" else str(seed) for part in stub_parts]
+
+        # profraw file name corresponds to seed name
+        profraw_path = coverage_dir / f"{seed.name}.profraw"
+        profraw_files.append(str(profraw_path))
+
+        env = os.environ.copy()
+        env["LLVM_PROFILE_FILE"] = str(profraw_path)
+
+        print(f"[+] Running target on {seed} -> {profraw_path}")
+        try:
+            subprocess.run(
+                cmd_list,
+                env=env,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=30,
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            print(f"[!] Timeout on {seed}, skipping...")
+
+    # -------------------------------
+    # Merge all profraw into a single profdata
+    # -------------------------------
+    merged_profdata = coverage_dir / "merged.profdata"
+    # Only merge profraw files that exist: an input killed at the timeout writes
+    # none, and one missing file fails the whole merge.
+    profraw_files = [f for f in profraw_files if Path(f).exists()]
+    if profraw_files:
+        # Inputs go in a file list: a large corpus exceeds the kernel argv limit.
+        # Each line is "weight,path"; the explicit weight keeps commas in AFL names intact.
+        input_list = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
+        input_list.write("".join(f"1,{p}\n" for p in profraw_files))
+        input_list.close()
+        merge_cmd = ["llvm-profdata", "merge", "-sparse", "--failure-mode=warn", "-f", input_list.name,
+                     "-o", str(merged_profdata)]
+        print(f"[+] Merging {len(profraw_files)} profraw files into {merged_profdata}")
+        try:
+            subprocess.run(merge_cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"[!] Error merging profraw files: {e}")
+        else:
+            # merged.profdata has everything the reports need; the per-input profiles
+            # are almost all of a trial's size on disk.
+            for f in profraw_files:
+                Path(f).unlink(missing_ok=True)
+            Path(input_list.name).unlink(missing_ok=True)
+    else:
+        print("[!] No profraw files generated, nothing to merge.")
+
+    # -------------------------------
+    # Generate coverage report
+    # -------------------------------
+    report_json = coverage_dir / "report.json"
+    report_txt = coverage_dir / "report.txt"
+
+    try:
+        with open(report_json, "w") as f:
+            subprocess.run(
+                ["llvm-cov", "export", run_target.split()[0], f"-instr-profile={merged_profdata}",
+                 # LCOV, like every fuzzer: read by common/report_generation.py and the
+                 # SuperC analysis (cfg-analysis/). Unlike the JSON export it stays small
+                 # (pcre2: 71 MB of RAM instead of ~56 GB).
+                 "-format=lcov"],
+                check=True,
+                stdout=f
+            )
+        with open(report_txt, "w") as f:
+            subprocess.run(
+                ["llvm-cov", "report", run_target.split()[0], f"-instr-profile={merged_profdata}"],
+                check=True,
+                stdout=f
+            )
+        print(f"[+] Coverage report generated at {report_txt}")
+    except subprocess.CalledProcessError as e:
+        print(f"[!] Error generating coverage report: {e}")
+
+    print("[+] Coverage process completed.")
+    print(f"[+] Coverage data exported to {coverage_dir}")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ConfigFuzzEval{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">ConfigFuzzEval</a>
+  <nav>
+    <a href="/" class="{{ 'on' if request.path == '/' }}">Experiments</a>
+    <a href="/new" class="{{ 'on' if request.path == '/new' }}">New experiment</a>
+    <a href="/docs" class="{{ 'on' if request.path == '/docs' }}">Documentation</a>
+  </nav>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

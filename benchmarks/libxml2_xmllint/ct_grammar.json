@@ -436,68 +436,92 @@
   ],
   "removed": [
     {
-      "name": "minimum removed because it is a meta-flag that overrides all other options, making it incompatible with the grammar model",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
+      "name": "minimum",
+      "reason": "removed because it is a meta-flag that overrides all other options, making it incompatible with the grammar model",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "with"
+      }
     },
     {
-      "name": "legacy Legacy is removed because it just enables other flags and is hence misleading",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
+      "name": "legacy",
+      "reason": "Legacy is removed because it just enables other flags and is hence misleading",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "with"
+      }
     },
     {
-      "opt": "legacy",
-      "val": true,
-      "then": [
-        {
-          "opt": "schematron",
-          "val": true
-        },
-        {
-          "opt": "zlib",
-          "val": true,
-          "choice": "=="
-        }
-      ]
+      "name": "constraint: if legacy=true then schematron=true, zlib=true",
+      "reason": "refers to the removed option legacy",
+      "old": {
+        "opt": "legacy",
+        "val": true,
+        "then": [
+          {
+            "opt": "schematron",
+            "val": true
+          },
+          {
+            "opt": "zlib",
+            "val": true,
+            "choice": "=="
+          }
+        ]
+      }
     },
     {
-      "name": "shared hardcoded in build scripts",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "name": "shared",
+      "reason": "hardcoded in build scripts",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
-      "name": "static hardcoded in build scripts",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
+      "name": "static",
+      "reason": "hardcoded in build scripts",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     },
     {
-      "name": "docs hardcoded in build scripts",
-      "type": "bool",
-      "default": false,
-      "cli": "with"
+      "name": "docs",
+      "reason": "hardcoded in build scripts",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "with"
+      }
     },
     {
       "name": "zlib",
-      "type": "choice",
-      "default": false,
-      "cli": "with",
-      "choices": [
-        true,
-        false,
-        "/usr/local/zlib",
-        "/opt/zlib"
-      ]
+      "reason": "reason not recorded",
+      "old": {
+        "type": "choice",
+        "default": false,
+        "cli": "with",
+        "choices": [
+          true,
+          false,
+          "/usr/local/zlib",
+          "/opt/zlib"
+        ]
+      }
     },
     {
       "name": "python",
-      "type": "bool",
-      "default": true,
-      "cli": "with"
+      "reason": "set by build.sh (--without-python)",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "with"
+      }
     }
-
   ]
 }

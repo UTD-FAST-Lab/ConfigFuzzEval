@@ -35,8 +35,8 @@ RUN ./test.sh || true
 WORKDIR /
 
 # GENERAL
-ENV FUZZER_COMP=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast
-ENV FUZZER_COMPXX=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus-stable/afl-clang-fast++
+ENV FUZZER_COMP=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-clang-fast
+ENV FUZZER_COMPXX=/libafl/fuzzers/forkserver/libafl-fuzz/test/AFLplusplus/afl-clang-fast++
 COPY run.sh /libafl
 COPY coverage.py /libafl
 RUN chmod +x /libafl/run.sh

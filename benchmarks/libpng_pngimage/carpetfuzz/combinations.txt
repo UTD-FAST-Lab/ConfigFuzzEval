@@ -1,0 +1,773 @@
+--quiet --skip-bugs --nolist-combos --warnings --nolog --strict --fast --log-skipped --stop --nofind-bad-combos 
+--verbose --list-combos --strict --exhaustive --continue --nolog-skipped 
+--skip-bugs --nolist-combos --warnings --strict --exhaustive --continue --find-bad-combos 
+--relaxed --skip-bugs --nolog --list-combos --errors --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --nolog --errors --fast --continue --nolog-skipped --nofind-bad-combos 
+--verbose --nolog --find-bad-combos --stop 
+--relaxed --nolist-combos --log --test-all --errors --continue 
+--relaxed --skip-bugs --warnings --nolog --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --exhaustive --find-bad-combos --stop 
+--relaxed --warnings --log --exhaustive --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolog --errors --strict --exhaustive --continue --log-skipped 
+--relaxed --quiet --skip-bugs --warnings --list-combos --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--warnings --nolog --test-all --list-combos --strict --fast --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolog --test-all --list-combos --fast --continue --find-bad-combos 
+--skip-bugs --verbose --nolog --list-combos --strict --exhaustive --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --warnings --log --test-all --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --nolist-combos --log --test-all --errors --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --log --test-all --fast --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --warnings --log --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --nolist-combos --log --fast --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --warnings --nolog --test-all --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --warnings --log --list-combos --strict --exhaustive --find-bad-combos --log-skipped 
+--skip-bugs --nolist-combos --log --verbose --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --log --errors --exhaustive --continue --find-bad-combos --nolog-skipped 
+--quiet --log --test-all --list-combos --errors --stop --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --list-combos --fast --find-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --continue --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --verbose --fast --log-skipped --stop 
+--skip-bugs --log --list-combos --errors --strict --fast --continue --find-bad-combos 
+--relaxed --skip-bugs --nolist-combos --warnings --log --exhaustive --nolog-skipped --stop 
+--quiet --warnings --nolog --test-all --list-combos --strict --exhaustive --find-bad-combos --stop 
+--relaxed --skip-bugs --nolist-combos --warnings --nolog --exhaustive --find-bad-combos --log-skipped 
+--quiet --skip-bugs --log --errors --exhaustive --log-skipped --stop 
+--nolist-combos --log --verbose --test-all --strict --fast --find-bad-combos 
+--quiet --nolist-combos --log --errors --strict --fast --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolist-combos --warnings --log --test-all --exhaustive --continue --find-bad-combos 
+--relaxed --warnings --nolog --test-all --list-combos --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --errors --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --log --list-combos --errors --strict --fast --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --nolog --test-all --errors --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --skip-bugs --nolog --errors --exhaustive --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --log --verbose --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --warnings --exhaustive --nolog-skipped 
+--skip-bugs --verbose --nolog --list-combos --exhaustive --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --warnings --list-combos --fast --continue --log-skipped 
+--relaxed --nolist-combos --verbose --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --find-bad-combos --log-skipped 
+--nolist-combos --nolog --test-all --errors --exhaustive --continue --find-bad-combos 
+--nolist-combos --verbose --nolog --test-all --strict --exhaustive --stop 
+--relaxed --skip-bugs --log --list-combos --errors --fast --continue --log-skipped --nofind-bad-combos 
+--warnings --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--log --verbose --test-all --list-combos --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --errors --strict --exhaustive --nolog-skipped --nofind-bad-combos 
+--skip-bugs --verbose --nolog --list-combos --strict --fast --continue --log-skipped 
+--relaxed --quiet --warnings --log --test-all --list-combos --fast --continue --nolog-skipped 
+--skip-bugs --warnings --nolog --list-combos --exhaustive --continue --log-skipped 
+--quiet --skip-bugs --list-combos --errors --strict --continue --find-bad-combos --log-skipped 
+--log --verbose --test-all --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--warnings --log --test-all --list-combos --strict --continue --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --test-all --fast --nofind-bad-combos 
+--skip-bugs --log --verbose --strict --find-bad-combos --log-skipped --stop 
+--quiet --warnings --log --list-combos --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --errors --strict --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --nolog --continue --find-bad-combos --nolog-skipped 
+--relaxed --warnings --log --list-combos --fast --find-bad-combos --stop 
+--nolist-combos --verbose --nolog --test-all --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --log-skipped --stop 
+--test-all --list-combos --errors --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --warnings --nolog --list-combos --fast --stop --nofind-bad-combos 
+--nolist-combos --warnings --nolog --strict --fast --continue --find-bad-combos 
+--skip-bugs --nolist-combos --warnings --log --strict --exhaustive --continue --log-skipped 
+--relaxed --quiet --nolist-combos --nolog --test-all --errors --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolog --list-combos --errors --fast --find-bad-combos --log-skipped --stop 
+--relaxed --nolist-combos --log --verbose --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --log --test-all --list-combos --errors --fast --find-bad-combos --stop 
+--relaxed --verbose --test-all --fast --continue --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --nolog --fast --find-bad-combos --log-skipped --stop 
+--relaxed --quiet --log --errors --fast --find-bad-combos 
+--log --errors --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --warnings --log --strict --fast --nolog-skipped --stop 
+--quiet --nolog --list-combos --strict --nolog-skipped --stop --nofind-bad-combos 
+--nolog --test-all --list-combos --errors --fast --continue --nolog-skipped 
+--skip-bugs --nolist-combos --verbose --nolog --strict --fast --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --verbose --list-combos --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --list-combos --errors --exhaustive --continue --log-skipped 
+--quiet --warnings --log --test-all --list-combos --fast --continue --nofind-bad-combos 
+--relaxed --quiet --log --test-all --errors --continue --find-bad-combos --nolog-skipped 
+--relaxed --verbose --nolog --test-all --list-combos --exhaustive 
+--relaxed --skip-bugs --nolist-combos --log --errors --exhaustive --continue --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --exhaustive --find-bad-combos --log-skipped 
+--relaxed --quiet --skip-bugs --errors --fast --find-bad-combos --log-skipped --stop 
+--relaxed --verbose --exhaustive --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --warnings --log --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--nolist-combos --warnings --test-all --exhaustive --continue --nofind-bad-combos 
+--skip-bugs --log --verbose --fast --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --errors --exhaustive --continue --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --nolist-combos --warnings --log --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --list-combos --errors --exhaustive --nolog-skipped --stop 
+--skip-bugs --log --verbose --strict --exhaustive --nolog-skipped 
+--quiet --nolist-combos --nolog --errors --strict --fast --nofind-bad-combos 
+--nolist-combos --log --verbose --strict --fast --continue --nolog-skipped 
+--relaxed --nolist-combos --log --test-all --errors --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --test-all --list-combos --errors --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --verbose --nolog --list-combos --strict --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --log --errors --exhaustive --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --log --verbose --list-combos --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --nolog --strict --log-skipped --stop --nofind-bad-combos 
+--verbose --nolog --test-all --list-combos --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --fast --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolog --list-combos --errors --exhaustive --continue --log-skipped --nofind-bad-combos 
+--quiet --nolist-combos --warnings --nolog --test-all --exhaustive --continue 
+--quiet --warnings --nolog --test-all --strict --exhaustive --nolog-skipped --nofind-bad-combos 
+--nolist-combos --warnings --log --test-all --strict --fast --continue --nofind-bad-combos 
+--nolist-combos --verbose --test-all --exhaustive --find-bad-combos --nolog-skipped 
+--quiet --warnings --log --test-all --list-combos --strict --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --log --verbose --strict --exhaustive --log-skipped 
+--relaxed --nolist-combos --nolog --errors --exhaustive --continue --nolog-skipped 
+--relaxed --log --verbose --test-all --list-combos --fast --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --log --strict --fast --find-bad-combos --log-skipped --stop 
+--quiet --skip-bugs --nolist-combos --errors --strict --fast --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --nolog --test-all --strict --continue --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --log --verbose --exhaustive --log-skipped --stop --nofind-bad-combos 
+--quiet --nolist-combos --warnings --test-all --strict --nolog-skipped --stop 
+--relaxed --log --test-all --errors --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --list-combos --exhaustive --continue --find-bad-combos --log-skipped 
+--verbose --nolog --test-all --strict --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolog --list-combos --fast --find-bad-combos --log-skipped --stop 
+--skip-bugs --nolog --list-combos --errors --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --log --errors --continue --nofind-bad-combos 
+--quiet --nolist-combos --errors --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --warnings --log --test-all --exhaustive --continue --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --fast --continue --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --nolist-combos --log --errors --fast --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolog --test-all --list-combos --errors --exhaustive --find-bad-combos --nolog-skipped 
+--relaxed --quiet --warnings --nolog --test-all --list-combos --nofind-bad-combos 
+--relaxed --nolist-combos --log --verbose --test-all --exhaustive --continue --nofind-bad-combos 
+--quiet --warnings --log --test-all --list-combos --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --nolist-combos --warnings --log --exhaustive --find-bad-combos 
+--quiet --test-all --errors --strict --fast 
+--relaxed --quiet --skip-bugs --warnings --log --list-combos --exhaustive --continue --log-skipped --nofind-bad-combos 
+--quiet --nolist-combos --nolog --test-all --errors --strict --fast --find-bad-combos --stop 
+--relaxed --quiet --skip-bugs --log --list-combos --errors --exhaustive --find-bad-combos --log-skipped --stop 
+--quiet --nolist-combos --log --test-all --errors --exhaustive --find-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --fast --find-bad-combos --nolog-skipped 
+--log --verbose --list-combos --exhaustive --find-bad-combos --stop 
+--skip-bugs --warnings --list-combos --strict --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolist-combos --warnings --log --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --exhaustive --find-bad-combos --stop 
+--relaxed --skip-bugs --verbose --nolog --fast --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --errors --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --nolist-combos --log --errors --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --nolog --errors --fast --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --fast --continue --log-skipped 
+--relaxed --skip-bugs --nolist-combos --nolog --errors --exhaustive --log-skipped --stop 
+--relaxed --warnings --test-all --list-combos --continue --find-bad-combos 
+--nolist-combos --verbose --test-all --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --nolist-combos --warnings --log --test-all --fast --find-bad-combos --stop 
+--quiet --warnings --nolog --list-combos --strict --exhaustive --nolog-skipped --stop 
+--nolist-combos --log --verbose --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--log --test-all --errors --strict --exhaustive --continue --find-bad-combos 
+--relaxed --quiet --nolog --test-all --list-combos --errors --nolog-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --fast --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --fast --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --verbose --nolog --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --log --test-all --list-combos --errors --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --log --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --verbose --nolog --list-combos --fast --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --nolist-combos --errors --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --errors --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --nolist-combos --warnings --nolog --test-all --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --warnings --log --fast --continue --find-bad-combos --nolog-skipped 
+--verbose --test-all --list-combos --strict --fast --stop --nofind-bad-combos 
+--skip-bugs --list-combos --errors --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --warnings --nolog --fast --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --fast --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolog --errors --fast --continue --find-bad-combos --log-skipped 
+--relaxed --nolist-combos --verbose --test-all --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --log-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog --fast --continue --log-skipped 
+--relaxed --log --verbose --test-all --list-combos --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --warnings --nolog --exhaustive --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --verbose --nolog --exhaustive --nofind-bad-combos 
+--relaxed --log --list-combos --errors --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --warnings --nolog --list-combos --strict --continue --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --nolist-combos --errors --fast --nolog-skipped --stop --nofind-bad-combos 
+--verbose --nolog --test-all --list-combos --exhaustive --nolog-skipped --nofind-bad-combos 
+--quiet --nolog --test-all --errors --strict --continue --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --fast --find-bad-combos --log-skipped 
+--nolist-combos --log --verbose --test-all --strict --find-bad-combos --stop 
+--skip-bugs --warnings --nolog --list-combos --strict --exhaustive --continue --nofind-bad-combos 
+--nolist-combos --log --errors --fast --stop --nofind-bad-combos 
+--warnings --log --test-all --strict --exhaustive --stop --nofind-bad-combos 
+--skip-bugs --log --verbose --list-combos --strict --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --log --list-combos --exhaustive --find-bad-combos --log-skipped 
+--relaxed --nolist-combos --verbose --nolog --fast --continue --find-bad-combos --nolog-skipped 
+--log --verbose --list-combos --strict --fast --find-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --list-combos --log-skipped --stop 
+--relaxed --nolog --test-all --errors --fast --stop 
+--relaxed --quiet --skip-bugs --log --errors --exhaustive --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --log --list-combos --errors --fast --continue --log-skipped 
+--quiet --skip-bugs --log --strict --fast --log-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --log --test-all --errors --fast --continue --find-bad-combos 
+--quiet --warnings --log --list-combos --exhaustive --continue --find-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --strict --fast --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --errors --log-skipped --stop --nofind-bad-combos 
+--quiet --warnings --list-combos --strict --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --nolog --list-combos --errors --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--log --test-all --list-combos --errors --exhaustive --nolog-skipped --stop 
+--nolist-combos --verbose --test-all --strict --fast --continue --nolog-skipped 
+--nolist-combos --log --verbose --test-all --strict --fast --nolog-skipped --nofind-bad-combos 
+--nolist-combos --nolog --errors --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --warnings --nolog --list-combos --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --nolist-combos --warnings --log --test-all --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --nolist-combos --verbose --nolog --test-all --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --warnings --log --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --errors --strict --fast --log-skipped --stop 
+--quiet --warnings --nolog --test-all --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --list-combos --fast --find-bad-combos --log-skipped --stop 
+--skip-bugs --log --verbose --list-combos --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--log --verbose --test-all --list-combos --strict --exhaustive --continue --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --warnings --log --list-combos --fast --log-skipped 
+--skip-bugs --log --verbose --strict --exhaustive --continue --log-skipped 
+--relaxed --quiet --nolist-combos --warnings --nolog --test-all --fast --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --verbose --nolog --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --quiet --warnings --nolog --test-all --fast --nolog-skipped --stop --nofind-bad-combos 
+--quiet --log --list-combos --strict --fast --continue 
+--skip-bugs --warnings --log --list-combos --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--quiet --nolist-combos --log --test-all --errors --strict --nolog-skipped 
+--relaxed --skip-bugs --warnings --log --list-combos --fast --continue --log-skipped --nofind-bad-combos 
+--nolog --list-combos --errors --strict --continue --find-bad-combos 
+--quiet --nolog --list-combos --errors --strict --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolist-combos --nolog --test-all --errors --fast --continue --nolog-skipped 
+--nolist-combos --warnings --nolog --test-all --exhaustive --find-bad-combos --stop 
+--relaxed --log --verbose --list-combos --continue --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --errors --fast --find-bad-combos --log-skipped 
+--skip-bugs --log --verbose --list-combos --continue --find-bad-combos --log-skipped 
+--verbose --nolog --list-combos --strict --fast --continue --nofind-bad-combos 
+--relaxed --skip-bugs --errors --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --nolog --test-all --list-combos --errors --exhaustive --continue --nofind-bad-combos 
+--quiet --nolist-combos --warnings --log --test-all --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --warnings --log --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --warnings --nolog --list-combos --strict --fast --log-skipped --nofind-bad-combos 
+--log --verbose --test-all --list-combos --fast --nolog-skipped 
+--skip-bugs --nolist-combos --log --verbose --strict --fast --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --nolog --test-all --errors --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog --exhaustive --continue --find-bad-combos --log-skipped 
+--skip-bugs --nolist-combos --warnings --log --strict --fast --find-bad-combos --log-skipped 
+--quiet --skip-bugs --warnings --log --list-combos --strict --exhaustive --find-bad-combos --nolog-skipped 
+--relaxed --nolist-combos --verbose --nolog --test-all --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --warnings --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --log --verbose --fast --continue --find-bad-combos --nolog-skipped 
+--log --verbose --test-all --strict --exhaustive --continue --find-bad-combos 
+--log --test-all --list-combos --errors --strict --fast --continue --nofind-bad-combos 
+--relaxed --skip-bugs --log --list-combos --errors --fast --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolist-combos --log --verbose --fast --continue --log-skipped 
+--nolist-combos --warnings --log --test-all --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --list-combos --exhaustive --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolog --list-combos --errors --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --warnings --list-combos --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --warnings --log --test-all --list-combos --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --log --verbose --test-all --fast --find-bad-combos --stop 
+--skip-bugs --warnings --log --list-combos --strict --fast --find-bad-combos --log-skipped --stop 
+--skip-bugs --nolist-combos --warnings --nolog --strict --fast --continue --find-bad-combos --log-skipped 
+--quiet --nolog --test-all --list-combos --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --list-combos --errors --continue --nolog-skipped --nofind-bad-combos 
+--nolist-combos --log --test-all --errors --strict --exhaustive --find-bad-combos --stop 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --fast --continue --log-skipped --nofind-bad-combos 
+--relaxed --warnings --log --test-all --list-combos --exhaustive --continue --find-bad-combos 
+--quiet --skip-bugs --warnings --log --list-combos --strict --fast --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --log --test-all --errors --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --exhaustive --log-skipped --stop --nofind-bad-combos 
+--quiet --nolist-combos --warnings --nolog --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --exhaustive --continue --nolog-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --strict --find-bad-combos --log-skipped 
+--verbose --nolog --test-all --strict --fast --find-bad-combos 
+--skip-bugs --exhaustive --find-bad-combos --nolog-skipped 
+--relaxed --verbose --nolog --test-all --list-combos --fast --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --verbose --list-combos --strict --fast --continue --find-bad-combos --nolog-skipped 
+--quiet --warnings --test-all --list-combos --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --log --list-combos --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --log --list-combos --exhaustive --nolog-skipped --stop 
+--relaxed --skip-bugs --list-combos --errors --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --verbose --nolog --test-all --list-combos --exhaustive --continue --find-bad-combos 
+--log --test-all --list-combos --errors --strict --find-bad-combos --nolog-skipped 
+--quiet --nolist-combos --warnings --nolog --test-all --strict --fast --continue 
+--quiet --skip-bugs --nolist-combos --warnings --log --fast --find-bad-combos --log-skipped --stop 
+--quiet --log --test-all --list-combos --errors --strict --exhaustive --nofind-bad-combos 
+--quiet --nolog --test-all --errors --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --warnings --nolog --test-all --exhaustive --find-bad-combos 
+--skip-bugs --nolist-combos --nolog --errors --strict --fast --find-bad-combos --log-skipped --stop 
+--quiet --nolist-combos --warnings --log --test-all --strict --continue --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --continue --nolog-skipped 
+--nolist-combos --verbose --nolog --test-all --fast --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--warnings --test-all --list-combos --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --verbose --nolog --test-all --exhaustive --continue --nolog-skipped 
+--relaxed --warnings --log --list-combos --fast --continue --find-bad-combos --nolog-skipped 
+--quiet --warnings --log --test-all --strict --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --warnings --nolog --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --warnings --nolog --strict --fast --find-bad-combos --stop 
+--skip-bugs --log --verbose --list-combos --fast --find-bad-combos --log-skipped 
+--skip-bugs --verbose --strict --fast --continue --find-bad-combos --log-skipped 
+--relaxed --nolog --list-combos --errors --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --test-all --errors --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --verbose --list-combos --fast --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --fast --continue --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --warnings --log --list-combos --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --warnings --nolog --test-all --nolog-skipped 
+--quiet --log --test-all --list-combos --errors --strict --fast --nolog-skipped --stop 
+--relaxed --skip-bugs --log --verbose --list-combos --fast --continue --nolog-skipped 
+--quiet --nolist-combos --nolog --test-all --errors --strict --fast --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog --exhaustive --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --fast --continue --find-bad-combos --log-skipped 
+--quiet --warnings --test-all --list-combos --strict --exhaustive --continue 
+--relaxed --skip-bugs --warnings --nolog --list-combos --fast --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --log --test-all --strict --exhaustive --find-bad-combos --stop 
+--relaxed --skip-bugs --log --verbose --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --list-combos --fast --continue --nolog-skipped --nofind-bad-combos 
+--quiet --nolist-combos --nolog --test-all --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--nolist-combos --warnings --nolog --test-all --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --continue --log-skipped --nofind-bad-combos 
+--relaxed --verbose --nolog --test-all --list-combos --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --warnings --nolog --list-combos --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --nolist-combos --nolog --errors --fast --find-bad-combos --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --fast --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --warnings --log --log-skipped --nofind-bad-combos 
+--quiet --warnings --nolog --test-all --list-combos --continue --find-bad-combos --nolog-skipped 
+--quiet --warnings --log --list-combos --fast --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --nolog --errors --exhaustive --continue --find-bad-combos --log-skipped 
+--warnings --nolog --test-all --list-combos --strict --exhaustive --continue --find-bad-combos 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --exhaustive --log-skipped --nofind-bad-combos 
+--skip-bugs --nolog --errors --strict --fast --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --log --list-combos --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --exhaustive --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --strict --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --errors --exhaustive --find-bad-combos --log-skipped 
+--quiet --skip-bugs --warnings --log --list-combos --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --nolog --exhaustive --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --log --strict --fast --continue --nolog-skipped 
+--quiet --nolist-combos --warnings --test-all --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--nolog --list-combos --errors --strict --exhaustive 
+--nolist-combos --verbose --nolog --test-all --strict --continue --nolog-skipped --nofind-bad-combos 
+--log --test-all --list-combos --exhaustive --continue --nofind-bad-combos 
+--nolist-combos --log --verbose --test-all --strict --continue --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --log --verbose --exhaustive --nolog-skipped --stop 
+--skip-bugs --log --verbose --list-combos --strict --fast --find-bad-combos --log-skipped --stop 
+--relaxed --warnings --test-all --list-combos --fast --stop 
+--nolist-combos --verbose --nolog --test-all --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --warnings --nolog --test-all --list-combos --fast --continue --nolog-skipped 
+--relaxed --skip-bugs --warnings --log --list-combos --find-bad-combos --stop 
+--relaxed --log --verbose --test-all --exhaustive --find-bad-combos --stop 
+--nolist-combos --test-all --errors --strict --fast --continue --find-bad-combos --nolog-skipped 
+--verbose --nolog --test-all --list-combos --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --skip-bugs --log --errors --continue --find-bad-combos --log-skipped 
+--relaxed --warnings --log --test-all --list-combos --exhaustive --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --exhaustive --continue --nolog-skipped 
+--quiet --nolog --test-all --list-combos --errors --strict --fast --continue --find-bad-combos 
+--relaxed --quiet --log --test-all --exhaustive --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --log --errors --fast --continue --find-bad-combos --log-skipped 
+--quiet --nolog --test-all --list-combos --errors --fast --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolog --list-combos --errors --log-skipped --stop --nofind-bad-combos 
+--skip-bugs --log --verbose --exhaustive --continue 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --fast --continue --find-bad-combos --log-skipped 
+--log --verbose --test-all --list-combos --fast --continue --find-bad-combos 
+--warnings --log --list-combos --strict --find-bad-combos --nolog-skipped --stop 
+--relaxed --verbose --nolog --exhaustive --continue 
+--relaxed --nolist-combos --log --verbose --test-all --exhaustive --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --nolog --exhaustive --log-skipped --stop 
+--relaxed --quiet --skip-bugs --nolog --exhaustive --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --log --list-combos --errors --strict --log-skipped --stop 
+--relaxed --quiet --skip-bugs --nolog --list-combos --errors --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --warnings --nolog --list-combos --exhaustive --continue --find-bad-combos 
+--relaxed --skip-bugs --nolist-combos --find-bad-combos --log-skipped --stop 
+--skip-bugs --log --verbose --list-combos --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --nolist-combos --warnings --log --strict --exhaustive --continue --find-bad-combos 
+--quiet --warnings --log --test-all --list-combos --strict --fast --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --log --list-combos --exhaustive --log-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --fast --stop 
+--skip-bugs --nolist-combos --warnings --nolog --fast --log-skipped --nofind-bad-combos 
+--relaxed --verbose --nolog --test-all --exhaustive --continue --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --nolog --fast --nolog-skipped --stop 
+--warnings --log --test-all --list-combos --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog --exhaustive --continue --nofind-bad-combos 
+--relaxed --quiet --nolog --test-all --list-combos --errors --fast --stop --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --list-combos --exhaustive --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --exhaustive --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --strict --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --log --test-all --list-combos --errors --exhaustive --stop 
+--relaxed --nolist-combos --verbose --test-all --exhaustive --find-bad-combos --stop 
+--relaxed --nolist-combos --log --test-all --errors --fast --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --strict --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --verbose --nolog --fast --stop 
+--log --verbose --test-all --list-combos --strict --stop 
+--skip-bugs --warnings --log --list-combos --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --continue 
+--quiet --skip-bugs --nolog --list-combos --errors --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --verbose --nolog --list-combos --exhaustive --find-bad-combos --log-skipped 
+--nolist-combos --warnings --log --strict --exhaustive --stop 
+--skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --nolist-combos --nolog --test-all --fast --find-bad-combos --nolog-skipped 
+--nolist-combos --warnings --nolog --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --nolist-combos --test-all --errors --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --nolog --test-all --exhaustive --stop 
+--quiet --warnings --nolog --test-all --list-combos --strict --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolog --list-combos --errors --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --nolist-combos --log --verbose --test-all --exhaustive --nolog-skipped --stop 
+--skip-bugs --verbose --nolog --list-combos --strict --nolog-skipped 
+--skip-bugs --warnings --nolog --list-combos --strict --fast --nolog-skipped --stop 
+--quiet --skip-bugs --nolist-combos --warnings --log --exhaustive --continue --find-bad-combos --log-skipped 
+--verbose --nolog --test-all --list-combos --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --exhaustive --log-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --log --errors --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolog --list-combos --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--quiet --warnings --test-all --list-combos --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --log --verbose --find-bad-combos --log-skipped --stop 
+--quiet --skip-bugs --warnings --nolog --strict --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --log --list-combos --errors --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --log --test-all --errors --exhaustive --nolog-skipped --nofind-bad-combos 
+--warnings --nolog --test-all --fast --find-bad-combos --stop 
+--relaxed --quiet --skip-bugs --list-combos --errors --fast --continue --nofind-bad-combos 
+--skip-bugs --nolist-combos --nolog --errors --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --errors --strict --fast --find-bad-combos --nolog-skipped 
+--quiet --nolist-combos --nolog --errors --strict --exhaustive --continue --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolog --errors --fast --continue --nolog-skipped 
+--relaxed --nolist-combos --warnings --log --exhaustive --nolog-skipped --nofind-bad-combos 
+--log --verbose --list-combos --fast --continue --nolog-skipped --nofind-bad-combos 
+--nolist-combos --errors --strict --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --verbose --test-all --nolog-skipped --nofind-bad-combos 
+--nolist-combos --verbose --nolog --test-all --strict --fast --continue --find-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --strict --fast --continue --find-bad-combos --log-skipped 
+--quiet --test-all --list-combos --errors --strict --exhaustive --continue --find-bad-combos 
+--relaxed --skip-bugs --warnings --log --list-combos --exhaustive --find-bad-combos --log-skipped --stop 
+--nolist-combos --log --verbose --test-all --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --log --test-all --list-combos --errors --fast --find-bad-combos --stop 
+--quiet --skip-bugs --warnings --strict --fast --log-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --verbose --find-bad-combos --log-skipped 
+--relaxed --verbose --nolog --list-combos --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --list-combos --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolog --list-combos --errors --fast --continue --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --fast --find-bad-combos --log-skipped --stop 
+--nolog --test-all --errors --strict --exhaustive --continue --nolog-skipped 
+--log --list-combos --errors --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--nolog --test-all --list-combos --errors --strict --exhaustive --find-bad-combos --stop 
+--relaxed --nolist-combos --log --verbose --test-all --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --nolog --list-combos --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --strict --find-bad-combos --log-skipped --stop 
+--nolist-combos --verbose --test-all --strict --exhaustive --find-bad-combos --nolog-skipped 
+--skip-bugs --verbose --nolog --list-combos --strict --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --strict --fast --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --nolog --errors --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--skip-bugs --verbose --list-combos --strict --fast --continue --log-skipped --nofind-bad-combos 
+--quiet --nolist-combos --log --test-all --errors --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --nolog-skipped 
+--relaxed --nolist-combos --warnings --log --test-all --exhaustive --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --log --verbose --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --log --errors --exhaustive --continue --log-skipped 
+--relaxed --verbose --nolog --test-all --list-combos --find-bad-combos --stop 
+--quiet --log --list-combos --errors --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --verbose --test-all --list-combos --exhaustive --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --verbose --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--verbose --nolog --list-combos --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --list-combos --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --verbose --nolog --test-all --exhaustive --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --list-combos --errors --fast --find-bad-combos --nolog-skipped --stop 
+--log --test-all --list-combos --errors --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --warnings --log --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --log --test-all --exhaustive 
+--skip-bugs --log --list-combos --errors --strict --exhaustive --log-skipped --nofind-bad-combos 
+--skip-bugs --verbose --list-combos --exhaustive --nolog-skipped --stop 
+--verbose --nolog --test-all --list-combos --exhaustive --continue --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --nolog --exhaustive --stop --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolist-combos --nolog --errors --strict --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --warnings --log --test-all --fast --continue --find-bad-combos 
+--nolist-combos --nolog --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --nolog --errors --fast --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --exhaustive --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --errors --continue --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --fast --find-bad-combos --stop 
+--relaxed --nolist-combos --log --verbose --fast --find-bad-combos --stop 
+--quiet --nolist-combos --warnings --log --fast --continue 
+--nolist-combos --log --verbose --strict --exhaustive --continue --nofind-bad-combos 
+--log --verbose --strict --nofind-bad-combos 
+--quiet --skip-bugs --warnings --log --list-combos --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --log --errors --fast --find-bad-combos --log-skipped --stop 
+--skip-bugs --list-combos --errors --strict --fast --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --nolog --errors --fast --log-skipped --stop --nofind-bad-combos 
+--nolog --test-all --list-combos --errors --strict --nolog-skipped --stop --nofind-bad-combos 
+--quiet --nolist-combos --test-all --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --warnings --nolog --test-all --list-combos --exhaustive --stop --nofind-bad-combos 
+--relaxed --nolist-combos --log --errors --exhaustive --continue --find-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --log --list-combos --errors --fast --find-bad-combos --log-skipped 
+--nolist-combos --log --test-all --errors --strict --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --nolist-combos --warnings --log --test-all --strict --fast --find-bad-combos --stop 
+--skip-bugs --verbose --nolog --list-combos --strict --exhaustive --continue --nofind-bad-combos 
+--skip-bugs --log --list-combos --errors --strict --exhaustive --nolog-skipped --stop 
+--quiet --skip-bugs --nolist-combos --warnings --log --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --nolist-combos --log --test-all --errors --stop --nofind-bad-combos 
+--relaxed --quiet --log --list-combos --errors --fast --continue --nofind-bad-combos 
+--relaxed --nolist-combos --warnings --nolog --test-all --fast --continue --find-bad-combos 
+--skip-bugs --nolist-combos --nolog --errors --fast --nolog-skipped --stop 
+--warnings --log --continue --find-bad-combos --nolog-skipped 
+--nolist-combos --verbose --nolog --strict --fast --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --log --verbose --list-combos --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --nolist-combos --warnings --test-all --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --log --test-all --list-combos --continue --find-bad-combos --nolog-skipped 
+--relaxed --skip-bugs --nolog --list-combos --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --warnings --log --list-combos --exhaustive --find-bad-combos --stop 
+--relaxed --nolist-combos --nolog --test-all --errors --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --log --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --log --test-all --list-combos --errors --exhaustive --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --log-skipped --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --fast --nolog-skipped --stop 
+--relaxed --quiet --warnings --fast --continue --nofind-bad-combos 
+--quiet --log --test-all --find-bad-combos --nolog-skipped --stop 
+--nolist-combos --log --verbose --test-all --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --errors --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --fast --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --exhaustive --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --verbose --strict --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --list-combos --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --warnings --nolog --test-all --list-combos --fast --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --log --errors --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --nolist-combos --warnings --nolog --test-all --fast --continue --nofind-bad-combos 
+--log --verbose --test-all --list-combos --strict --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --warnings --log --list-combos --strict --continue --log-skipped 
+--nolist-combos --nolog --test-all --errors --strict --exhaustive --find-bad-combos 
+--nolist-combos --warnings --test-all --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolist-combos --log --verbose --fast --log-skipped --stop 
+--relaxed --skip-bugs --log --list-combos --fast --find-bad-combos --stop 
+--skip-bugs --nolist-combos --warnings --log --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --warnings --log --strict --find-bad-combos 
+--relaxed --log --verbose --test-all --list-combos --continue --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --strict --fast --find-bad-combos --log-skipped 
+--relaxed --nolist-combos --verbose --fast --stop --nofind-bad-combos 
+--skip-bugs --verbose --nolog --strict --exhaustive --nolog-skipped --stop 
+--relaxed --skip-bugs --log --verbose --fast --find-bad-combos --log-skipped --stop 
+--quiet --skip-bugs --warnings --nolog --list-combos --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --nolist-combos --verbose --nolog --test-all --fast --find-bad-combos --nolog-skipped 
+--skip-bugs --log --errors --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --exhaustive --nolog-skipped --nofind-bad-combos 
+--skip-bugs --log --errors --strict --fast --stop --nofind-bad-combos 
+--quiet --log --errors --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolist-combos --warnings --nolog --strict --find-bad-combos --nolog-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --log --errors --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --log --verbose --fast --nolog-skipped --stop 
+--warnings --nolog --test-all --strict --fast --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --warnings --nolog --list-combos --fast --continue --log-skipped --nofind-bad-combos 
+--quiet --nolog --list-combos --errors --find-bad-combos --stop 
+--verbose --test-all --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --nolist-combos --log --test-all --errors --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolog --list-combos --errors --exhaustive --find-bad-combos --log-skipped 
+--relaxed --warnings --log --test-all --list-combos --fast --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --nolist-combos --log --verbose --strict --fast --stop --nofind-bad-combos 
+--nolist-combos --log --errors --strict --fast --continue --nolog-skipped 
+--relaxed --nolist-combos --test-all --errors --stop --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --list-combos --exhaustive --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolog --list-combos --errors --strict --fast --continue --nolog-skipped 
+--quiet --warnings --nolog --test-all --list-combos --strict --exhaustive --continue --nofind-bad-combos 
+--relaxed --quiet --test-all --list-combos --errors --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --exhaustive --find-bad-combos --stop 
+--quiet --skip-bugs --warnings --nolog --list-combos --exhaustive --find-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --continue --find-bad-combos --log-skipped 
+--relaxed --quiet --warnings --log --test-all --exhaustive --continue --nofind-bad-combos 
+--quiet --nolist-combos --test-all --errors --continue --nolog-skipped --nofind-bad-combos 
+--log --verbose --test-all --list-combos --find-bad-combos --nolog-skipped --stop 
+--relaxed --nolist-combos --warnings --nolog --test-all --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--log --verbose --test-all --list-combos --fast --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --strict --exhaustive --log-skipped 
+--skip-bugs --warnings --log --list-combos --strict --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --log --strict --fast --find-bad-combos --log-skipped --stop 
+--relaxed --nolist-combos --nolog --test-all --errors --fast --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolist-combos --warnings --log --test-all --fast --stop 
+--quiet --nolist-combos --test-all --errors --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --log --errors --fast --nolog-skipped --stop 
+--quiet --skip-bugs --warnings --list-combos --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --log --strict --continue --find-bad-combos --nolog-skipped 
+--quiet --warnings --nolog --test-all --list-combos --strict --fast --find-bad-combos 
+--relaxed --skip-bugs --warnings --log --exhaustive --continue --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --nolist-combos --errors --fast --continue --nolog-skipped 
+--relaxed --quiet --nolist-combos --nolog --test-all --errors --exhaustive --continue --find-bad-combos --nolog-skipped 
+--quiet --nolog --errors --strict --find-bad-combos --stop 
+--quiet --nolist-combos --errors --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --skip-bugs --nolog --list-combos --errors --find-bad-combos --stop 
+--quiet --test-all --errors --strict --find-bad-combos --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog --exhaustive --log-skipped 
+--quiet --skip-bugs --nolist-combos --warnings --log --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --warnings --nolog --list-combos --strict --fast --log-skipped --stop 
+--skip-bugs --warnings --nolog --list-combos --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --fast --log-skipped 
+--relaxed --quiet --skip-bugs --warnings --log --log-skipped --stop 
+--quiet --skip-bugs --warnings --log --list-combos --strict --log-skipped --stop --nofind-bad-combos 
+--verbose --nolog --list-combos --strict --exhaustive --continue --find-bad-combos 
+--skip-bugs --log --list-combos --errors --fast --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --list-combos --find-bad-combos --log-skipped --stop 
+--skip-bugs --warnings --log --list-combos --strict --fast --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --log --strict --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --log --test-all --fast --stop --nofind-bad-combos 
+--relaxed --quiet --warnings --nolog --test-all --list-combos --fast --nolog-skipped --nofind-bad-combos 
+--warnings --log --test-all --list-combos --strict --exhaustive --find-bad-combos --stop 
+--relaxed --quiet --nolist-combos --test-all --errors --exhaustive --find-bad-combos --stop 
+--relaxed --quiet --warnings --log --test-all --list-combos --exhaustive --find-bad-combos --nolog-skipped 
+--nolist-combos --verbose --nolog --test-all --strict --fast --stop --nofind-bad-combos 
+--nolist-combos --warnings --log --test-all --strict --exhaustive --nofind-bad-combos 
+--nolist-combos --verbose --nolog --test-all --exhaustive --continue --find-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --log --fast --continue --find-bad-combos 
+--relaxed --quiet --skip-bugs --warnings --nolog --list-combos --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --log --verbose --list-combos --strict --exhaustive --log-skipped --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--quiet --nolist-combos --warnings --test-all --fast --find-bad-combos --stop 
+--relaxed --skip-bugs --log --verbose --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --log --errors --strict --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolist-combos --warnings --nolog --test-all --fast --nolog-skipped --nofind-bad-combos 
+--warnings --log --list-combos --strict --nofind-bad-combos 
+--skip-bugs --log --verbose --list-combos --strict --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --log --verbose --list-combos --exhaustive --find-bad-combos --nolog-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --warnings --nolog --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolog --list-combos --errors --fast --continue --log-skipped 
+--relaxed --nolist-combos --log --verbose --test-all --fast --continue 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --exhaustive --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --warnings --list-combos --exhaustive --continue --find-bad-combos --nolog-skipped 
+--relaxed --quiet --log --test-all --list-combos --fast --find-bad-combos --nolog-skipped --stop 
+--verbose --nolog --test-all --strict --exhaustive --stop --nofind-bad-combos 
+--skip-bugs --log --list-combos --errors --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --warnings --log --list-combos --fast 
+--quiet --skip-bugs --log --list-combos --errors --strict --fast --find-bad-combos --nolog-skipped 
+--skip-bugs --warnings --log --strict --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --warnings --nolog --list-combos --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --log --errors --exhaustive --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --log --verbose --exhaustive --continue 
+--skip-bugs --log --list-combos --errors --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --warnings --log --strict --fast --find-bad-combos --stop 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --fast --nolog-skipped --stop 
+--relaxed --quiet --warnings --log --test-all --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --nolog --test-all --errors --fast --find-bad-combos --nolog-skipped --stop 
+--relaxed --quiet --skip-bugs --warnings --log --fast --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --nolog --list-combos --errors --strict --fast --continue --find-bad-combos --log-skipped 
+--nolist-combos --verbose --test-all --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --nolog --errors --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--skip-bugs --warnings --nolog --list-combos --find-bad-combos --log-skipped --stop 
+--relaxed --quiet --skip-bugs --warnings --nolog --fast --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolog --list-combos --errors --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--verbose --nolog --test-all --list-combos --strict --fast --find-bad-combos --stop 
+--quiet --skip-bugs --nolist-combos --warnings --exhaustive --log-skipped --stop --nofind-bad-combos 
+--skip-bugs --log --verbose --list-combos --exhaustive --find-bad-combos --log-skipped --stop 
+--relaxed --warnings --list-combos --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --nolog --fast --find-bad-combos --log-skipped 
+--nolist-combos --verbose --strict --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --log --test-all --errors --exhaustive --nolog-skipped --stop 
+--quiet --skip-bugs --log --list-combos --errors --strict --exhaustive --continue --log-skipped 
+--relaxed --quiet --skip-bugs --nolog --list-combos --errors --fast --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --verbose --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--quiet --nolist-combos --warnings --log --test-all --strict --exhaustive --continue --nolog-skipped 
+--nolist-combos --warnings --nolog --test-all --strict --find-bad-combos --stop 
+--relaxed --quiet --nolist-combos --warnings --nolog --fast --continue --nolog-skipped --nofind-bad-combos 
+--quiet --nolist-combos --warnings --nolog --fast --find-bad-combos --nolog-skipped 
+--skip-bugs --verbose --nolog --strict --find-bad-combos --log-skipped --stop 
+--skip-bugs --nolog --list-combos --strict --fast --nofind-bad-combos 
+--relaxed --skip-bugs --log --verbose --exhaustive --continue --find-bad-combos --nolog-skipped 
+--nolist-combos --warnings --test-all --strict --exhaustive --continue 
+--quiet --skip-bugs --log --errors --strict --exhaustive --continue --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --log --errors --strict --find-bad-combos --log-skipped --stop 
+--log --verbose --list-combos --strict --fast --stop 
+--relaxed --test-all --list-combos --errors --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --log --errors --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --exhaustive --continue --log-skipped 
+--relaxed --skip-bugs --nolist-combos --warnings --nolog --fast --find-bad-combos --log-skipped --stop 
+--skip-bugs --log --errors --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--quiet --skip-bugs --nolist-combos --nolog-skipped --stop --nofind-bad-combos 
+--nolist-combos --verbose --nolog --test-all --fast --stop 
+--skip-bugs --nolist-combos --verbose --nolog --strict --fast --find-bad-combos --log-skipped 
+--relaxed --quiet --skip-bugs --log --list-combos --errors --exhaustive --nofind-bad-combos 
+--skip-bugs --log --verbose --list-combos --find-bad-combos --stop 
+--skip-bugs --warnings --log --list-combos --nofind-bad-combos 
+--quiet --nolist-combos --test-all --errors --fast --find-bad-combos --stop 
+--quiet --skip-bugs --nolist-combos --nolog --errors --strict --exhaustive --log-skipped --stop 
+--relaxed --skip-bugs --log --verbose --exhaustive --find-bad-combos --nolog-skipped 
+--relaxed --quiet --nolist-combos --nolog-skipped 
+--relaxed --skip-bugs --nolist-combos --warnings --fast --continue --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --verbose --nolog --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --warnings --log --test-all --list-combos --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --warnings --nolog --strict --exhaustive --continue --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --warnings --log --list-combos --strict --exhaustive --continue --log-skipped --nofind-bad-combos 
+--relaxed --quiet --nolist-combos --warnings --test-all --fast --nolog-skipped --stop 
+--relaxed --nolist-combos --verbose --nolog --test-all --exhaustive --nofind-bad-combos 
+--verbose --test-all --list-combos --strict --fast --find-bad-combos --nolog-skipped 
+--quiet --warnings --test-all --strict --exhaustive --nolog-skipped --stop 
+--nolist-combos --log --test-all --errors --find-bad-combos --nolog-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --warnings --log --fast --log-skipped --stop 
+--relaxed --quiet --nolist-combos --errors --fast --nolog-skipped --stop --nofind-bad-combos 
+--verbose --nolog --test-all --list-combos --strict --nolog-skipped --nofind-bad-combos 
+--quiet --test-all --list-combos --errors --exhaustive --find-bad-combos 
+--relaxed --quiet --skip-bugs --log --errors --log-skipped --nofind-bad-combos 
+--log --verbose --test-all --list-combos --exhaustive --continue 
+--quiet --nolist-combos --nolog --test-all --errors --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--skip-bugs --verbose --nolog --list-combos --strict --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --errors --fast --log-skipped --stop 
+--relaxed --skip-bugs --nolist-combos --log --verbose --fast --log-skipped --nofind-bad-combos 
+--warnings --nolog --test-all --list-combos --strict --exhaustive --stop 
+--relaxed --log --verbose --test-all --list-combos --exhaustive --stop --nofind-bad-combos 
+--quiet --warnings --log --test-all --list-combos --exhaustive 
+--relaxed --quiet --skip-bugs --warnings --nolog --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--skip-bugs --nolist-combos --verbose --exhaustive --log-skipped --stop --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --errors --strict --exhaustive --continue --nofind-bad-combos 
+--log --verbose --list-combos --strict --exhaustive --stop --nofind-bad-combos 
+--quiet --warnings --log --test-all --list-combos --strict --fast --find-bad-combos --stop 
+--nolist-combos --test-all --strict --exhaustive --nolog-skipped --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --log --exhaustive --log-skipped --stop 
+--relaxed --quiet --skip-bugs --warnings --log --list-combos --fast --log-skipped --stop --nofind-bad-combos 
+--relaxed --verbose --nolog --test-all --list-combos --fast --continue --find-bad-combos 
+--relaxed --quiet --nolog --test-all --list-combos --errors --fast --nolog-skipped --nofind-bad-combos 
+--quiet --skip-bugs --log --list-combos --errors --strict --exhaustive --log-skipped --stop --nofind-bad-combos 
+--relaxed --nolog --errors --continue --find-bad-combos --nolog-skipped 
+--skip-bugs --nolist-combos --verbose --strict --exhaustive --continue --find-bad-combos --log-skipped 
+--quiet --skip-bugs --warnings --nolog --strict --fast --continue --log-skipped 
+--relaxed --log --verbose --list-combos --exhaustive --continue --find-bad-combos 
+--relaxed --warnings --nolog --fast --continue --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolist-combos --warnings --log --continue --find-bad-combos --log-skipped 
+--quiet --nolist-combos --test-all --errors --strict --exhaustive --continue --nofind-bad-combos 
+--quiet --skip-bugs --nolist-combos --nolog --strict --exhaustive --find-bad-combos --stop 
+--relaxed --skip-bugs --log --list-combos --errors --exhaustive --log-skipped --stop --nofind-bad-combos 
+--skip-bugs --log --list-combos --errors --strict --fast --find-bad-combos --log-skipped --stop 
+--log --verbose --test-all --list-combos --strict --fast --continue --nolog-skipped 
+--skip-bugs --log --verbose --strict --exhaustive --find-bad-combos --log-skipped --stop 
+--quiet --skip-bugs --nolist-combos --errors --strict --fast --continue --log-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --nolog --exhaustive --find-bad-combos --nolog-skipped --stop 
+--verbose --test-all --list-combos --exhaustive --continue --find-bad-combos 
+--skip-bugs --nolist-combos --errors --strict --exhaustive --find-bad-combos --log-skipped 
+--quiet --warnings --test-all --list-combos --strict --fast --nofind-bad-combos 
+--skip-bugs --log --verbose --strict --exhaustive --find-bad-combos --nolog-skipped --stop 
+--nolog --errors --fast --continue --nolog-skipped --nofind-bad-combos 
+--relaxed --skip-bugs --verbose --list-combos --fast --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --warnings --nolog --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --quiet --skip-bugs --nolog --errors --fast --find-bad-combos --log-skipped --stop 
+--relaxed --skip-bugs --log --verbose --exhaustive --continue --log-skipped --nofind-bad-combos 
+--skip-bugs --verbose --nolog --list-combos --exhaustive --continue --find-bad-combos --log-skipped 
+--test-all --list-combos --strict --exhaustive --nolog-skipped --nofind-bad-combos 
+--quiet --list-combos --fast --nolog-skipped --nofind-bad-combos 
+--relaxed --nolist-combos --log --errors --fast --continue --find-bad-combos --nolog-skipped 
+--nolog --test-all --errors --exhaustive --stop --nofind-bad-combos 
+--skip-bugs --verbose --list-combos --strict --fast --find-bad-combos --log-skipped 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --fast --continue --find-bad-combos --log-skipped 
+--relaxed --skip-bugs --nolist-combos --verbose --nolog --exhaustive --find-bad-combos --log-skipped --stop 
+--skip-bugs --log --list-combos --fast --log-skipped --stop --nofind-bad-combos 
+--nolist-combos --log --errors --strict --fast --find-bad-combos 
+--relaxed --quiet --log --test-all --list-combos --errors --fast --find-bad-combos --nolog-skipped 
+--quiet --skip-bugs --nolist-combos --log --errors --strict --exhaustive --continue --nolog-skipped 
+--quiet --nolist-combos --log --test-all --errors --strict --find-bad-combos 
+--nolist-combos --warnings --nolog --test-all --strict --exhaustive 
+--skip-bugs --nolist-combos --log --verbose --strict --log-skipped --stop 
+--quiet --warnings --strict --exhaustive --stop --nofind-bad-combos 
+--relaxed --skip-bugs --nolist-combos --nolog --errors --exhaustive --continue --nofind-bad-combos 

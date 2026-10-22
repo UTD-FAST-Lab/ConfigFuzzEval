@@ -18,7 +18,6 @@
 -p
 -P
 -r
---plugin custom_plugin.so
 -S
 -s
 --quiet

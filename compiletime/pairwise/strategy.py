@@ -7,7 +7,8 @@ import random
 from z3 import *
 
 class PairwiseGenerator:
-    def __init__(self, grammar_file):
+    def __init__(self, grammar_file, rng=None):
+        self.rng = rng or random.Random()
         self.solver = Solver()
         self.z3_vars = {}
         self.options = []
@@ -162,7 +163,7 @@ class PairwiseGenerator:
                         self.solver.pop()
         
         print(f"Total valid pairs to cover: {len(pairs)}")
-        return list(pairs)
+        return sorted(pairs, key=repr)  # fixed order: a set's order changes between runs
 
     def generate(self):
         """The greedy IPOG-like generation loop."""
@@ -191,7 +192,7 @@ class PairwiseGenerator:
             # Fill the rest of the parameters
             # Shuffle order to add randomness to the greedy fill
             remaining_opts = [o['name'] for o in self.options if o['name'] not in current_config]
-            random.shuffle(remaining_opts)
+            self.rng.shuffle(remaining_opts)
             
             for opt_name in remaining_opts:
                 best_val = None
@@ -203,7 +204,7 @@ class PairwiseGenerator:
                 if opt_type == 'bool': candidates = [True, False]
                 else: candidates = self.option_map[opt_name]['choices']
                 
-                random.shuffle(candidates) # Randomized tie-breaking
+                self.rng.shuffle(candidates) # Randomized tie-breaking
 
                 for val in candidates:
                     # Check consistency
@@ -284,15 +285,16 @@ class PairwiseGenerator:
                     if val is True:
                         args.append(f"--{cli_mode}-{name}")
                     else:
-                        args.append(f"--without-{name}")
+                        negation = "disable" if cli_mode == "enable" else "without"
+                        args.append(f"--{negation}-{name}")
                 else:
                     args.append(f"--{cli_mode}-{name}={val}")
                 
         return " ".join(args)
 
 
-def request_configurations(grammar_file):
-    gen = PairwiseGenerator(grammar_file)
+def request_configurations(grammar_file, random_seed=None):
+    gen = PairwiseGenerator(grammar_file, random.Random(random_seed))
     res = gen.generate()
     
     configs = []

@@ -1,5 +1,6 @@
 {
     "cmdline": "$inopts $INPUTFILE",
+    "exit_options": ["-h", "-v"],
     "connector": " ",
     "strmax": 3,
     "options": [

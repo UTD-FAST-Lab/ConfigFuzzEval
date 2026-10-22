@@ -1,0 +1,838 @@
+--unicode -U --synthetic --target -h -s -D -t --size-sort -j -r -a --ifunc-chars --no-demangle --special-syms -p 
+-X -S --recurse-limit -C --synthetic -h -l -n -g -f -A --debug-syms -u -B -V --plugin 
+--unicode -X -U --inlines -S -C --target -l -P --size-sort --debug-syms --with-symbol-versions --ifunc-chars -B --no-demangle --plugin -p 
+--inlines --recurse-limit -n -P -W -t -A -r --ifunc-chars -B -V --no-demangle 
+--unicode -X -U --inlines --recurse-limit -C --target -h -s -n -g -P -D -A -u -j -a -V --plugin --special-syms -p 
+-U -S --recurse-limit --target -s -l -g -D -f -t --size-sort --debug-syms -r -a -B -V -p 
+--inlines -h -s -l -n -D -f --debug-syms -u -j -r --with-symbol-versions --no-demangle --plugin --special-syms 
+--unicode -U -S -C -l -n -D -f -t -A -u -a --ifunc-chars --special-syms 
+-S --recurse-limit -C --synthetic --target -s -P -W -j -r --plugin -p 
+--unicode -X --inlines -S --synthetic --target -h -W -f -t -A --size-sort -j --with-symbol-versions -V -p 
+--inlines -C --synthetic --target -g -f -A --size-sort --debug-syms -u -r -a --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin --special-syms -p 
+--unicode -X --inlines --recurse-limit --synthetic --target -s -l -g -P -t --size-sort -u -a --ifunc-chars -B --plugin --special-syms 
+-X -U --inlines -S -C --synthetic --target -h -s -n -g -t --debug-syms -u -r --with-symbol-versions --ifunc-chars --no-demangle 
+--unicode -X --inlines --recurse-limit -C --synthetic -h -s -l -W -f -A -r --ifunc-chars -B --no-demangle -p 
+-U --recurse-limit -C -h -g -P -D -A --size-sort --debug-syms -B --no-demangle --special-syms 
+--unicode -X -S -C --synthetic -s -n -P -D -t --debug-syms -u -r -a --with-symbol-versions -B -V --special-syms -p 
+--unicode -X -U --inlines -S --recurse-limit -s -D -f -A --size-sort --debug-syms -u -j -a --ifunc-chars -V --no-demangle --plugin 
+-X -C -s -l -t --size-sort -u -j -V --no-demangle --special-syms -p 
+-X -U -S --synthetic --target -h -l -g -D -u --with-symbol-versions --ifunc-chars -B -V --plugin --special-syms 
+--unicode -U -h -l -n -g -P -A --debug-syms -j -r -a --with-symbol-versions --ifunc-chars -V -p 
+--inlines -C --target -h -s -n -W -f -t --ifunc-chars -B -V --plugin 
+--unicode --recurse-limit --synthetic -h -g -D -f --size-sort -j -r -a --plugin 
+--unicode -X --recurse-limit -C --target -h -P -W -t -A --size-sort -r -V --no-demangle --plugin 
+--unicode -X -U --recurse-limit -C --synthetic --target -s -l -n -P -D -t -A --debug-syms -j --ifunc-chars 
+-U --recurse-limit --synthetic --target -n -f -t -A --debug-syms -u -j --plugin --special-syms -p 
+--unicode --inlines -S --recurse-limit -C --target -s -l -n -g -f -A -j -r -V --no-demangle --special-syms 
+--inlines -S -C --synthetic -h -l -P -W -t -A -j --with-symbol-versions --ifunc-chars --no-demangle --plugin 
+--unicode -U --inlines -S --synthetic -s -l -g -P -D -t -A -r --with-symbol-versions -B -V --no-demangle --plugin -p 
+--unicode -X -U --inlines --synthetic -n -D -f -u --with-symbol-versions -B --no-demangle -p 
+--unicode -S --recurse-limit -h -l -n -W -t -B --no-demangle --plugin -p 
+-X --inlines -S --recurse-limit --synthetic -h -s -n -D -A --debug-syms -r --ifunc-chars --plugin --special-syms -p 
+--unicode -X --inlines --synthetic -h -s -n -P -W --with-symbol-versions -V --plugin 
+-U --inlines --recurse-limit --target -h -s -l -A --size-sort --debug-syms -u -a -B 
+--unicode -X -S --target -h -s -n -g -f -t -A --debug-syms -a --with-symbol-versions -B --no-demangle --plugin --special-syms 
+--unicode -X --inlines -C --target -h -l -g -D -f -t --debug-syms -u -j -r -a --with-symbol-versions -p 
+-X -S --synthetic --target -h -s -l -P -D -A --size-sort -u -r -a --with-symbol-versions --ifunc-chars -B -V --no-demangle 
+--unicode -U -S --recurse-limit -C --target -h -s -g -D -f -t --size-sort -u -r --ifunc-chars -B --no-demangle --plugin --special-syms -p 
+--inlines -S --target -l -n -P -D -t --debug-syms -j -a --ifunc-chars -V --no-demangle --plugin --special-syms -p 
+--unicode -X --recurse-limit --synthetic --target -s -l -n -W -f -j -r --ifunc-chars -V --no-demangle --plugin -p 
+--inlines --recurse-limit -C --synthetic -h -l -n -g -P -D -a --ifunc-chars -B -V --special-syms -p 
+-X -S --target -g -P -D -A --debug-syms -u -j -r --ifunc-chars 
+--unicode -U --inlines -S --recurse-limit -C --synthetic -h -s -n -P --debug-syms -u -r -a -B -V --no-demangle --special-syms 
+-U -S -h -f --size-sort -a --with-symbol-versions --ifunc-chars -B -V --no-demangle --special-syms -p 
+--unicode -C --synthetic -s -l -g -D -f -t -A --size-sort --debug-syms -u -j --with-symbol-versions --ifunc-chars -V --plugin 
+-X --inlines -S --recurse-limit --synthetic --target -h -s -l -n -P -W -t -j -r -p 
+--unicode -X -U -C -s -n -g -P -A -u -r --with-symbol-versions --ifunc-chars -B --no-demangle --plugin -p 
+-X -S --recurse-limit --target -l -W -f --size-sort -r -B --no-demangle 
+-U --inlines -C --synthetic -s -n -g -D -f -t -A -r -a --with-symbol-versions -B --special-syms 
+--unicode -U --inlines --target -l -n -g -t -u -j -r -a --with-symbol-versions -V --no-demangle --plugin 
+-X -S -C --synthetic -n -P -W -j --with-symbol-versions -V --no-demangle 
+-X -U --inlines -h -s -P -t -A --debug-syms -u -j -a --with-symbol-versions --ifunc-chars --special-syms -p 
+--unicode -X --inlines -S -C -g -D --size-sort --debug-syms -r -a --with-symbol-versions -V --special-syms 
+--unicode -U -S --recurse-limit --synthetic --target -h -l -n -g -P -D --debug-syms -u -j -a --no-demangle --plugin --special-syms 
+-S -C --target -h -s -l -n -g -D -f -A -j -a --with-symbol-versions --ifunc-chars --plugin -p 
+--unicode --inlines -S --recurse-limit -n -g -P -D -t -A --debug-syms -u -a --ifunc-chars --no-demangle -p 
+--unicode -X -U -S --synthetic -s -g -f -u -j -r --with-symbol-versions --special-syms 
+-U --inlines -S --recurse-limit -C --target -s -P -t --size-sort --debug-syms -u -j -r --ifunc-chars -V --plugin --special-syms 
+--unicode -S -C --synthetic -s -l -n -P -W -t -r --with-symbol-versions --ifunc-chars -B 
+-X -U --recurse-limit -C --synthetic -h -D -f -t --debug-syms -u -j -r -a --ifunc-chars -V --no-demangle --plugin -p 
+--unicode -C -l -W -f -A --size-sort -r --with-symbol-versions -B --plugin -p 
+--unicode --inlines -S --recurse-limit -C --synthetic --target -n -P -A -u -j -a --ifunc-chars 
+-U --inlines -S --recurse-limit -l -n -g -P -t -A --debug-syms -u -r -B -V --plugin --special-syms -p 
+-X -U --inlines --recurse-limit -C -l -n -g -D -f -t -j --ifunc-chars --no-demangle --plugin 
+--unicode --inlines -C --synthetic --target -h -l -P -W --size-sort -j -V --no-demangle -p 
+-X -U --recurse-limit --synthetic --target -h -l -g -P -t --size-sort --debug-syms -u -B -V --no-demangle -p 
+--inlines -S -C --synthetic --target -s -l -W -f -t -A --size-sort -r --with-symbol-versions --no-demangle --plugin 
+-C --synthetic --target -h -n -g -P -D -t -A -u -r --with-symbol-versions -B -V --no-demangle -p 
+--unicode -X -S --recurse-limit --synthetic -h -n -P -W -t -A -r --ifunc-chars -B -V --plugin -p 
+--unicode --recurse-limit -C --target -h -n -f --debug-syms -u -a --ifunc-chars -B -V --special-syms -p 
+--unicode --inlines --recurse-limit -g -D -f -t --debug-syms --ifunc-chars -B -V --plugin --special-syms 
+--unicode -X -U -C --synthetic --target -l -P -A --debug-syms -r -a --with-symbol-versions -B -V --plugin --special-syms 
+-X --target -l -n -W -f -t -A --with-symbol-versions --ifunc-chars -B -V -p 
+-U --inlines -S --recurse-limit --synthetic -h -l -D -f -t -A --size-sort --debug-syms -j -a -V --special-syms 
+-X -S --recurse-limit -C -h -s -l -g -P -D -t -A --size-sort --debug-syms -j -r -a --ifunc-chars -V --no-demangle --plugin --special-syms -p 
+--unicode -X -U --inlines -S --recurse-limit -C --synthetic -l -g -f -t -A --size-sort --debug-syms -a --ifunc-chars -B --no-demangle --special-syms -p 
+--unicode -X -S --recurse-limit --target -s -n -D -A -u -B -V --special-syms 
+-U --inlines --recurse-limit --synthetic -h -s -g -P --size-sort --debug-syms -j --ifunc-chars -V --no-demangle --plugin 
+-X --synthetic -t --size-sort --debug-syms -u -a --with-symbol-versions -B --no-demangle --plugin 
+-S -s -P -W -A --size-sort --ifunc-chars -B -p 
+--unicode -X --recurse-limit -h -l -P -D -t --size-sort --debug-syms -u -r --ifunc-chars -B -V --no-demangle --special-syms 
+--synthetic -s -l -n -g -P --debug-syms --with-symbol-versions --no-demangle --special-syms -p 
+--unicode -U -S -C --target -h -g -P -t -A --size-sort -u -r -a --with-symbol-versions -B --special-syms 
+--unicode --inlines --target -s -l -P -W --size-sort -j -r --with-symbol-versions --ifunc-chars 
+-X -U --inlines -S --recurse-limit -C -l -g -P --size-sort -u -j -a -V 
+--unicode -X -C --synthetic -h -s -W -t -A --size-sort -B 
+--unicode -U --inlines -S -C --synthetic -h -n -g -D -f --debug-syms -j -r --with-symbol-versions --ifunc-chars -V --plugin --special-syms -p 
+--recurse-limit --target -s -l -n -g -P -D --debug-syms -u -r --ifunc-chars -B --no-demangle --plugin 
+--unicode --inlines -S --recurse-limit -C --synthetic -h -s -l -P -D -A --size-sort --debug-syms -u -B --plugin --special-syms -p 
+-X --inlines --recurse-limit -C --synthetic --target -s -D -f --size-sort -j -a --ifunc-chars -V --no-demangle --special-syms 
+-U -C -s -n -P -D -t --debug-syms -a --with-symbol-versions -B -V --no-demangle --plugin 
+--unicode -X --inlines --synthetic --target -h -l -n -g -P -D -A --debug-syms -r -a --with-symbol-versions --ifunc-chars -B --no-demangle --special-syms 
+--unicode -X -U --inlines -S -C --target -h -s -g -P -D -t -A --size-sort --debug-syms --with-symbol-versions --ifunc-chars -B -V -p 
+-X -U --inlines -S --recurse-limit --target -h -n -g -D -f -A -u -r -a -B --no-demangle --special-syms -p 
+-X -U --recurse-limit --synthetic -h -s -l -n -P -t -A -r -a -B --no-demangle --plugin --special-syms -p 
+-X --inlines -S -C --target -s -n -W -r --with-symbol-versions -B -V --no-demangle --plugin -p 
+--inlines --recurse-limit --synthetic -l -W -A --size-sort -j -r --ifunc-chars -V --plugin -p 
+-X --inlines -C -h -s -l -P -W -A --size-sort -r --with-symbol-versions -B -V --plugin 
+-X -U --recurse-limit -C --target -g -f --size-sort --debug-syms -r --ifunc-chars -p 
+--unicode -U --inlines -S --synthetic --target -h -s -l -n -f -t -A --debug-syms -u -r -a --with-symbol-versions --ifunc-chars -V --plugin -p 
+--synthetic --target -h -n -W -A -j -r --with-symbol-versions --ifunc-chars 
+-X --recurse-limit -h -s -n -g -f -t -A --debug-syms -u -j -a -V --no-demangle -p 
+--unicode -X -C --target -h -l -n -P -W -t -j --with-symbol-versions --ifunc-chars --no-demangle --plugin -p 
+-X --inlines --synthetic --target -s -g -D -f -t --size-sort --debug-syms --with-symbol-versions -B --plugin --special-syms -p 
+--inlines -S --synthetic -h -s -g -D -f -t --size-sort -u -a --with-symbol-versions --ifunc-chars -B -V --no-demangle --special-syms 
+-X -U -S --recurse-limit -C --synthetic --target -n -g -P -t -A --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+--unicode -X -U -S --recurse-limit -h -l -n -f -t --debug-syms -u -j -r 
+--unicode -X -U --inlines -S -C --synthetic --target -g -P -D -A --size-sort -j -r -a --with-symbol-versions --no-demangle --plugin -p 
+-X --inlines --recurse-limit -C --target -l -D -f -t -A --size-sort -u -r -a -B --plugin --special-syms -p 
+-S --recurse-limit --target -h -s -n -W -f -A -j --ifunc-chars -V --no-demangle --plugin 
+--unicode -U --inlines -C -h -s -l -g -f --size-sort --debug-syms -j -a --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms 
+-X --inlines -S --recurse-limit -C -h -l -W -f -t --ifunc-chars -V -p 
+--unicode -U -S --recurse-limit --target -h -s -P --size-sort -u -a -B -V --plugin -p 
+--unicode -U -S --recurse-limit -C --synthetic --target -D -A --size-sort -u -r -a --ifunc-chars -B -V -p 
+--unicode -X -S --recurse-limit --synthetic -s -n -g -D -f -t -a -V --no-demangle --plugin -p 
+-X -U --inlines -S -C --target -h -f --size-sort --debug-syms -u --with-symbol-versions -B --plugin --special-syms 
+--unicode -X --inlines -S -s -W -f -t --size-sort -r --with-symbol-versions --ifunc-chars -B --no-demangle --plugin 
+--unicode --inlines --recurse-limit -s -P -t -A --size-sort --debug-syms -j -r -a --no-demangle --special-syms -p 
+--unicode -X -S --recurse-limit --synthetic -s -l -P -W -t -A --size-sort -j -V --no-demangle --plugin 
+-S -C -h -s -W -f -t --size-sort -j -r --with-symbol-versions -V --no-demangle --plugin -p 
+--unicode -U --inlines -C --synthetic --target -l -P -D -t -A --size-sort -u -a --with-symbol-versions -V --no-demangle --special-syms -p 
+-U -C --synthetic --target -h -s -l -D -f -A --debug-syms -r -B -V --no-demangle 
+-U -S --synthetic -n -g -f --debug-syms -u -r -a --ifunc-chars -B -V 
+--inlines --recurse-limit -C --synthetic --target -s -l -n -W -f -t -B --no-demangle -p 
+--unicode -X -U --inlines -S --recurse-limit -C --target -h -s -l -n -P -D --debug-syms -r -a --no-demangle --plugin 
+--unicode -X --synthetic -h -l -g -f -A --size-sort -u -j -r -a --ifunc-chars -V --plugin --special-syms -p 
+-X --inlines -C --synthetic -h -l -n -W -f -A -r --with-symbol-versions --no-demangle --plugin -p 
+-X -C --target -s -g -P -u -j -a --with-symbol-versions --no-demangle --special-syms 
+-X -U --inlines -S -C --synthetic --target -s -l -g -P -D --size-sort --debug-syms -u -j -r --with-symbol-versions --ifunc-chars --special-syms -p 
+--inlines -S --recurse-limit -C --synthetic --target -h -l -n -P -t --debug-syms -r -a -B -V 
+--recurse-limit --target -h -l -P -W -t -A --size-sort -p 
+--unicode --inlines --recurse-limit -C -h -s -P -D -t -u -r -a -B --plugin 
+-U -S --recurse-limit --synthetic -s -n -g -P -D -t -u -j --ifunc-chars -V --special-syms -p 
+--unicode -S --target -h -s -l -W -A --with-symbol-versions --ifunc-chars -B -V --no-demangle -p 
+-X --inlines --synthetic --target -P -W -t --size-sort --ifunc-chars --no-demangle -p 
+--unicode -X -U --inlines --recurse-limit --synthetic --target -s -g -f -t -A -u -r -a --ifunc-chars -B -V -p 
+--inlines -S --recurse-limit --synthetic -l -P -u -r -a -B --no-demangle --special-syms 
+--unicode -U --inlines -C --synthetic -h -s -l -P -A -u -j --with-symbol-versions --ifunc-chars -V --no-demangle 
+-X -S --synthetic -s -l -W -f --size-sort --ifunc-chars -B --plugin -p 
+--unicode --recurse-limit -C -s -n -W -f -A -r -V 
+--unicode -X -S -C -l -n -P -D -A --debug-syms -u -a --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin 
+--unicode -X -U --inlines --recurse-limit --target -h -l -f -t -A --size-sort --debug-syms -r -a --ifunc-chars -B --plugin 
+-X --inlines --recurse-limit -C --synthetic --target -h -s -l -n -t -u -j --ifunc-chars -V --plugin -p 
+--unicode --inlines --recurse-limit --synthetic --target -l -P -W -t -B -V --plugin -p 
+--unicode -S -C --synthetic -h -l -n -D -f -t --debug-syms -r --with-symbol-versions --ifunc-chars -B --no-demangle --plugin --special-syms 
+--unicode -X --inlines --recurse-limit -C --synthetic -n -W -f -t -A -j --plugin 
+-X -U -s -l -n -g -D -f -r -a --with-symbol-versions --ifunc-chars -B -V --plugin --special-syms 
+--unicode -X -U -C --synthetic -h -g -P -D -t --size-sort -a --with-symbol-versions --ifunc-chars -B 
+--unicode -X -U --inlines -S --target -s -P -t -A -j -a --with-symbol-versions --ifunc-chars --plugin --special-syms 
+-X -U --inlines -S --recurse-limit --synthetic --target -l -n -f -A --debug-syms -u -j -r --ifunc-chars -V --no-demangle --special-syms 
+--unicode -U --recurse-limit --target -l -g -D -A --size-sort --no-demangle --plugin --special-syms -p 
+-X -U -S -C --target -h -s -l -n -D -f -t -A -u -j -a --with-symbol-versions --no-demangle -p 
+-U -S --synthetic --target -P -D -A --size-sort --debug-syms -a --with-symbol-versions -B --plugin -p 
+--unicode -X -U --inlines --recurse-limit -h -n -P -D -t -j -r -V --special-syms 
+--inlines -C -D --size-sort --debug-syms -r -a --ifunc-chars -B --no-demangle -p 
+--inlines -S --recurse-limit -C --synthetic -h -P -W --size-sort -r --ifunc-chars 
+--unicode --inlines --recurse-limit -C --synthetic --target -s -n -g -D -f -A --debug-syms -u -a -B --no-demangle --plugin 
+-X --recurse-limit --synthetic -l -n -P -D -A --debug-syms -a -B -p 
+-X --inlines --recurse-limit --target -h -W -f -A --size-sort -j --no-demangle --plugin -p 
+--unicode --inlines -S --synthetic --target -h -n -g -P -t -A --debug-syms -u -j -r --no-demangle --plugin --special-syms -p 
+-X --inlines -C --target -h -n -P -r -a --ifunc-chars -B --plugin --special-syms -p 
+--unicode -X -U --inlines -C --synthetic -l -g -P -D -t -A --size-sort --debug-syms -u -j -r -V --no-demangle --plugin --special-syms 
+-X -U --synthetic --target -h -s -n -g -P -D -t -A --debug-syms -u -j -r -a --with-symbol-versions -V --plugin --special-syms 
+--unicode -S --target -s -n -P -W -t -A -r --with-symbol-versions -B --no-demangle -p 
+-X --inlines -S -s -l -n -W -f -A -j --with-symbol-versions -V 
+--unicode -X -S --recurse-limit --synthetic --target -h -g -P -D --size-sort --debug-syms -u -j -a --ifunc-chars --special-syms -p 
+--unicode -X -U --inlines --target -h -s -l -n -g -D -f --debug-syms -B -V --no-demangle --special-syms -p 
+--unicode -S --recurse-limit -C --synthetic -s -l -n -g -t --debug-syms -u -r -a --ifunc-chars -B --plugin --special-syms -p 
+--unicode --inlines -S -C -W -f -A -B -V --no-demangle --plugin -p 
+--unicode -U --recurse-limit --synthetic -h -s -l -n -g -D -f -A --debug-syms -u -a --ifunc-chars -B --special-syms 
+-U -S --recurse-limit -C --synthetic --target -s -l -n -f -r -a --ifunc-chars --plugin 
+--unicode -X --inlines -S --recurse-limit -C --synthetic --target -l -n -P -W -r --ifunc-chars -B -V --no-demangle 
+-U -S -h -P -D -t -A --size-sort -u -j -r --with-symbol-versions --plugin 
+--unicode --inlines -S -C --synthetic --target -h -W -f -t -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin 
+--unicode -X --inlines -S -C --synthetic -h -s -n -f -u -j -a --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+-X -U --inlines -h -l -g -t -A --size-sort --debug-syms -u -r --with-symbol-versions -B -V --no-demangle --special-syms -p 
+--unicode -U --recurse-limit -C --synthetic --target -h -l -n -f -t -A -u --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+-U -C --synthetic --target -h -s -l -g -t --size-sort -a --with-symbol-versions -B -V --plugin -p 
+-X -S --recurse-limit -C -h -s -l -n -P -W -A --ifunc-chars --no-demangle 
+--inlines -S -C -s -l -g -D -f --size-sort --debug-syms -u -a --with-symbol-versions -B --no-demangle --plugin -p 
+-X -C --synthetic --target -s -W -f -A --size-sort --with-symbol-versions --ifunc-chars -V 
+-X --inlines --recurse-limit --target -s -l -n -P -W -t -A -r --ifunc-chars --plugin 
+--unicode -U -S -l -f -A --debug-syms -u -j -r --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms -p 
+--unicode -U --target -s -l -P -D --size-sort --debug-syms -u -r --with-symbol-versions --ifunc-chars -B -V --special-syms -p 
+-X -S -C --synthetic --target -l -f -t -A --size-sort --debug-syms -j -r -a --with-symbol-versions --special-syms 
+--recurse-limit --synthetic --target -h -s -P -W -t --size-sort --ifunc-chars -B --no-demangle --plugin 
+--unicode --inlines --recurse-limit -C -s -n -P -W -t -j --ifunc-chars -V -p 
+--unicode --inlines -C --target -s -l -n -g -P -t -A --debug-syms -u --with-symbol-versions --ifunc-chars -B -V --special-syms 
+--unicode -U --recurse-limit -C --target -n -g -P -D -t --debug-syms -j -r -a --ifunc-chars -V --no-demangle --special-syms 
+--inlines -S --recurse-limit --target -h -g -D -f -t --size-sort -u -j -V 
+--unicode -S --recurse-limit --target -h -l -g -P -A --size-sort --debug-syms -a --ifunc-chars -B -V --plugin 
+--unicode -X -U --inlines -S --recurse-limit -h -s -n -g --ifunc-chars -B --plugin --special-syms -p 
+--recurse-limit -C -s -l -n -W -t -A -r --ifunc-chars -B --no-demangle --plugin 
+--unicode -S --synthetic --target -l -n -W -f --with-symbol-versions -B -V --plugin 
+--unicode -X --inlines --recurse-limit --synthetic --target -h -s -P -D --size-sort --debug-syms -u -r -B -V --no-demangle --plugin -p 
+--unicode -X --inlines -S -C --target -s -l -W -t -A --size-sort -j -r --ifunc-chars --plugin -p 
+--synthetic --target -l -n -D -f -u -j -r -a --with-symbol-versions -V --no-demangle --special-syms -p 
+--inlines -C --synthetic --target -s -l -n -P -W -A -j -r --with-symbol-versions --ifunc-chars -V --no-demangle --plugin -p 
+-X -S --recurse-limit -C --target -s -l -n -g -P -D -t -u --plugin --special-syms 
+-X -U -h -s -g -D -f -A --size-sort -u -r --no-demangle --plugin 
+-U --inlines -C --target -n -g -D -A --debug-syms -u -j --with-symbol-versions --ifunc-chars -V --plugin -p 
+--unicode -X --inlines -h -l -n -W -f -t -r --ifunc-chars -B -V --no-demangle 
+-U --inlines --synthetic --target -h -g -P -D -A --size-sort -u -a --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+-X -U -S -C --synthetic -D -t -A --debug-syms -u --ifunc-chars -B --no-demangle --plugin --special-syms -p 
+--unicode --inlines --target -h -P -D -t -A --size-sort --debug-syms -u -a --with-symbol-versions --ifunc-chars -V --plugin --special-syms 
+--unicode -X --inlines -C -h -s -l -n -D -t -A -a --with-symbol-versions -B --special-syms -p 
+-X -U -S --recurse-limit --target -h -s -l -P --size-sort --debug-syms -j -r -V --special-syms -p 
+-U --inlines -S --synthetic --target -s -f -t --size-sort --debug-syms -u -j -a --with-symbol-versions --ifunc-chars --no-demangle -p 
+-h -n -P -W -r --with-symbol-versions --plugin -p 
+-X -U --inlines -S --recurse-limit --synthetic -h -l -P -D -t --debug-syms -u --ifunc-chars -B --no-demangle -p 
+--unicode --inlines -S --recurse-limit --synthetic --target -h -l -P -W -A --size-sort -r --ifunc-chars --no-demangle 
+-X --recurse-limit -h -s -W -f -t -r -B -V 
+-U -S -C --synthetic -h -s -g -f -A --size-sort --debug-syms -j --with-symbol-versions -V --special-syms -p 
+-U --inlines -S --recurse-limit --synthetic --target -s -n -D -f -t --debug-syms -r -a --ifunc-chars -B --plugin --special-syms 
+--unicode -X -S --recurse-limit -C -h -P -W -A --size-sort -j -r --ifunc-chars --no-demangle -p 
+--unicode -X -U --recurse-limit --target -h -l -g -P -t -A --size-sort -u -j --ifunc-chars --no-demangle --special-syms 
+-U --inlines -S --recurse-limit --synthetic --target -h -s -l -n -g -f -u -j -r -a --ifunc-chars --no-demangle -p 
+--unicode -X -U -C --target -s -n -f -t -A --debug-syms -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --special-syms 
+-X --inlines -S -C -n -g -f -t -A -u -r -a --with-symbol-versions --ifunc-chars -B --plugin -p 
+--unicode -U -S --recurse-limit -C --synthetic -s -l -g -P --size-sort -r -a -B -V --no-demangle --plugin --special-syms 
+--unicode --recurse-limit -C --synthetic --target -h -s -W -f -t --size-sort -r -V -p 
+-X --inlines -S --synthetic --target -P -W -t --size-sort -r --with-symbol-versions --ifunc-chars -V --plugin -p 
+--unicode --inlines --recurse-limit -C -P -t --size-sort --debug-syms -u -B --no-demangle -p 
+--unicode -S --recurse-limit -C --target -h -n -W -t -j -V 
+--unicode --synthetic -h -s -l -n -P -W -t -A -j --no-demangle -p 
+-X --recurse-limit -C --synthetic --target -h -s -l -g -f -t --size-sort --debug-syms -u -r -a --ifunc-chars --no-demangle --special-syms 
+-U -C --synthetic -h -l -n -P -u -j -r -a --with-symbol-versions --ifunc-chars --plugin --special-syms -p 
+--unicode -S --recurse-limit --target -s -n -g -D -f -t -A --debug-syms -j -r --plugin --special-syms -p 
+--unicode --inlines -S --recurse-limit -C -h -l -P -W --size-sort -B --plugin 
+--unicode -X -U -S --recurse-limit -C --synthetic -h -A -j -a -V --no-demangle --plugin 
+--unicode --inlines -S --recurse-limit --synthetic -h -s -l -W -f -t --size-sort -j --ifunc-chars --plugin 
+--recurse-limit -P -W -j -r -V --no-demangle 
+-S --recurse-limit -h -n -P -D -A -u -j -r -a --ifunc-chars --no-demangle --plugin --special-syms 
+--unicode -X -U --inlines -S --recurse-limit --synthetic --target -l -n -g -D -t -A --debug-syms -r -B -V 
+--unicode -U --recurse-limit --target -s -l -g -f --size-sort --debug-syms -u -j -a -V --plugin -p 
+--unicode --target -h -s -f -A --size-sort -u -r -a -B -V --plugin --special-syms 
+--unicode -X --inlines -C --synthetic -s -n -g -P -D --debug-syms -j -r -a -V 
+--unicode -X --inlines -S -C --synthetic --target -h -s -l -P -t --debug-syms -u -a --ifunc-chars -B -V --no-demangle --special-syms -p 
+--inlines -S --recurse-limit -l -g -f -t -A --size-sort -j -r -a --ifunc-chars --special-syms -p 
+--unicode -X -S --synthetic --target -g -D -f -t -A --debug-syms -j -a --with-symbol-versions --ifunc-chars -V --no-demangle 
+--unicode --inlines -S -C --synthetic --target -h -n -P -W -t -A --with-symbol-versions --ifunc-chars -B --no-demangle -p 
+--unicode -S --recurse-limit -C --synthetic -n -W -f -t -j -r --ifunc-chars --no-demangle -p 
+-X -U --inlines -S -C --synthetic -h -s -l -n -g -P -t -A --debug-syms -u -a -B --plugin 
+--unicode -U -C --synthetic -s -P --size-sort --debug-syms -u -a --special-syms -p 
+--unicode -X -s -n -P -W -j --with-symbol-versions --ifunc-chars --plugin -p 
+--unicode -U --inlines -S --recurse-limit --synthetic -s -l -n -P -D -u --ifunc-chars -B --plugin 
+--unicode -X -S -C --synthetic -h -l -W -f --size-sort -j -r --with-symbol-versions --ifunc-chars -V --plugin 
+--unicode -X --synthetic --target -n -g -a --with-symbol-versions -B -V --no-demangle --special-syms -p 
+--unicode -U --inlines --recurse-limit -C -h -g -D -f --size-sort -u -r -B -V --no-demangle -p 
+--unicode -X --inlines -S --target -h -l -g --size-sort -u --with-symbol-versions --ifunc-chars -B --no-demangle --plugin -p 
+-X -S --recurse-limit -C --target -h -n -D -f -A --debug-syms -V --no-demangle -p 
+--unicode --inlines -C --synthetic -s -l -f -t -A --size-sort --debug-syms -u -a -B -V --no-demangle 
+-X -S --synthetic -h -l -P -W -t --size-sort -r --with-symbol-versions -B -V --no-demangle -p 
+--unicode -C --synthetic -h -s -P -t -A --with-symbol-versions --ifunc-chars -V --plugin --special-syms 
+-X -S -h -l -g -P -t --debug-syms -u -a --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+-S --recurse-limit -C --target -W -f -t -A --size-sort --ifunc-chars -B -V --plugin -p 
+--inlines -g -P -A --size-sort --with-symbol-versions -B --plugin --special-syms -p 
+--unicode -X -U -S --recurse-limit -C -s -l -D -f -A --size-sort -B -V --special-syms -p 
+--inlines --synthetic -s -n -W -f -t -A --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin -p 
+-U -S -C -h -l -n -g -P -D -t -j -r --with-symbol-versions -V --no-demangle 
+-X --inlines -S --recurse-limit --target -h -s -n -W -f -A -r --ifunc-chars -B -p 
+-X -U --inlines -S --synthetic --target -h -n -g -P -D -A -a -V --special-syms -p 
+-X --inlines --recurse-limit --synthetic -s -l -g -D -A --debug-syms -u -j -a --no-demangle 
+--recurse-limit -C --synthetic --target -s -l -P -D -t -A --size-sort --debug-syms -a --ifunc-chars -B --plugin --special-syms 
+--unicode --inlines -S --recurse-limit -C --synthetic --target -h -s -l -D -t -A --size-sort -u -j -r --no-demangle --plugin --special-syms 
+-U --inlines -C --target -l -P -D -t --with-symbol-versions -B --special-syms 
+--inlines -C --target -h -s -n -P -W -t -A -j --with-symbol-versions --no-demangle 
+--unicode -X -U --inlines --target -s -n -P -D -t --debug-syms -u -j -r --with-symbol-versions --ifunc-chars --no-demangle --plugin -p 
+-X --inlines -S --recurse-limit --synthetic -s -n -W -t --no-demangle 
+-X --inlines --recurse-limit -h -s -l -g -P -A --size-sort -u -r -a --ifunc-chars -B -V 
+--unicode -U --inlines --recurse-limit -C --synthetic -h -n -g -f -t --debug-syms -a -B --plugin -p 
+-X -S -C --target -l -W -t -A --size-sort --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin 
+--inlines -S --recurse-limit --target -l -n -W -f -j --ifunc-chars --no-demangle 
+-X --inlines -s -l -P -D -t --size-sort -u -j -r -a --ifunc-chars -V --plugin -p 
+--unicode -X -S -s -D -f -A --size-sort --debug-syms -u -r -a --with-symbol-versions -B --no-demangle --plugin --special-syms -p 
+-X -U --inlines --recurse-limit -C --target -n -P --debug-syms -u -j -r --no-demangle --special-syms -p 
+--unicode -X --inlines -S --synthetic -h -s -l -P -D --size-sort --debug-syms -j --with-symbol-versions 
+--unicode -C --target -n -W -f -j --no-demangle 
+-U --recurse-limit -C --synthetic -l -P -D -A --size-sort --debug-syms -u -r --ifunc-chars --plugin 
+--unicode -U --inlines -C --synthetic --target -h -s -D -f --size-sort -r -a --with-symbol-versions -B -V --plugin 
+-X --recurse-limit --target -h -s -l -W -f -t -A -j --plugin -p 
+--unicode -U -s -n -g -D -t -A -j -a --with-symbol-versions --ifunc-chars --no-demangle -p 
+--unicode -U --inlines --recurse-limit -C --target -s -D -f -A -u -r --ifunc-chars -V --no-demangle --special-syms -p 
+-C --synthetic --target -l -n -g -P -D -t -u -r -B --plugin -p 
+--unicode -X --recurse-limit -C --synthetic --target -s -W -f -A --size-sort -j -r --no-demangle 
+--unicode --synthetic -s -P -W -A --size-sort -r --with-symbol-versions -B -V --no-demangle 
+--unicode -X -U -S --recurse-limit -C --synthetic --target -h -D -f -t --size-sort -u -j -r --ifunc-chars -V --plugin --special-syms 
+--inlines -S --recurse-limit --target -h -s -g -D -A --debug-syms -r -a -B -V --plugin --special-syms 
+--unicode -X -S --recurse-limit --synthetic --target -s -l -f --size-sort --debug-syms -u --ifunc-chars -B -V --no-demangle --plugin --special-syms -p 
+--unicode -X -g -P -t --size-sort --debug-syms -u -j --with-symbol-versions --ifunc-chars -V --no-demangle --plugin --special-syms -p 
+--unicode -X -U -S -C --target -h -s -l -g -D -f -t --debug-syms -j -a --ifunc-chars -V --plugin --special-syms 
+-X -S --recurse-limit -C --target -h -P -W -A -B -p 
+-X -U --inlines -C -h -n -g -f -t -A -j -a --with-symbol-versions --ifunc-chars -V --no-demangle --special-syms 
+-X --inlines -C --target -h -W --size-sort -j -r -V --plugin 
+--unicode -X --inlines -C -h -s -l -W -f --size-sort --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin -p 
+-U --inlines -S -s -n -P -D -A --debug-syms -r -a --with-symbol-versions --ifunc-chars -V --no-demangle --special-syms 
+-S --synthetic -h -l -g -P -D -t --size-sort -r --no-demangle --special-syms 
+--unicode -X --inlines -S --recurse-limit -C --target -h -s -n -g -P -D -t -u -r -a --ifunc-chars -B -V --no-demangle 
+--unicode -X --recurse-limit -C -h -n -g -P -D -A --debug-syms -r --ifunc-chars -B --plugin -p 
+--unicode -X -U --inlines --recurse-limit -C --synthetic -h -l -n -g -f -t --debug-syms -r -V --no-demangle --plugin --special-syms -p 
+--recurse-limit -C -h -l -n -g -D --debug-syms -u -r -B --special-syms 
+--unicode -X --inlines -S --recurse-limit --target -l -D -f -a --ifunc-chars -B -p 
+-X -U --inlines -S --recurse-limit -C --synthetic --target -h -s -n -P -D -A -r --ifunc-chars -B --no-demangle --special-syms -p 
+--unicode -U --inlines --recurse-limit --synthetic -h -l -n -g -D -f -t -A --debug-syms -u -j -r --ifunc-chars -V --no-demangle -p 
+-U --inlines --synthetic -l -g -f -A --size-sort -u -a --with-symbol-versions 
+-X -U --recurse-limit --synthetic --target -s -g -D -f -t -A --size-sort -r -B --no-demangle --plugin --special-syms 
+--unicode --inlines -h -s -l -P -W -t --size-sort -r --with-symbol-versions -B -V -p 
+--unicode -X --inlines -S --recurse-limit --synthetic --target -h -s -n -P -W -A -j -r --ifunc-chars -V --no-demangle --plugin 
+-X -U --inlines --recurse-limit -C --synthetic -h -n -g -D -t -u -a --ifunc-chars -V --plugin --special-syms 
+--unicode -X -U --recurse-limit -C --synthetic --target -h -s -n -g -A --debug-syms -j -r --special-syms -p 
+-X -U -C --synthetic -h -l -n -D -f --debug-syms -u -j --with-symbol-versions --ifunc-chars -V -p 
+--unicode -X --inlines -S -C --target -n -P -W -A --with-symbol-versions -B --plugin 
+-U --inlines -S --target -s -n -g -P -u --with-symbol-versions -B 
+--unicode -X -U --recurse-limit -P -t --debug-syms -u -a -B --no-demangle --plugin --special-syms 
+-S -C -h -s -n -g -D -f -t -A --debug-syms -u -B -V --no-demangle --plugin --special-syms -p 
+-X -C --target -h -n -D -f -A --debug-syms -j --with-symbol-versions --ifunc-chars --plugin --special-syms 
+--unicode -S -C --synthetic --target -h -s -g -P -t -A --size-sort --debug-syms -u -j -r -a --ifunc-chars --no-demangle 
+-U --inlines -S --recurse-limit -C --synthetic -s -g -t --debug-syms -j -r -a --plugin -p 
+--unicode -X -C --target -s -l -P -W --ifunc-chars -B -V --no-demangle --plugin 
+-X -U --inlines --synthetic -l -D -f -t --size-sort -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin --special-syms -p 
+--unicode -S --recurse-limit --synthetic -h -t -A --size-sort --debug-syms -u -r -B -V --special-syms 
+--unicode -X --inlines -S -h -s -l -g -D -f -t -A --size-sort -u -r --with-symbol-versions -B -V -p 
+--unicode -X -U -S --recurse-limit --synthetic --target -h -s -l -n -D -f -t -u -a -B -V --no-demangle --plugin 
+--unicode -X --recurse-limit -C --synthetic --target -n -P -W -r -B --no-demangle --plugin -p 
+--synthetic -h -P -D -A --debug-syms -u -r -a --with-symbol-versions -B --no-demangle --plugin -p 
+--unicode -X --inlines --recurse-limit -C --synthetic --target -l -n -g -P -t --debug-syms -j -a --plugin --special-syms -p 
+--unicode -U --recurse-limit -C --target -l -P -D -t -A --size-sort --debug-syms -j -a -V --no-demangle -p 
+--unicode -X -U --inlines -S --recurse-limit --synthetic -h -s -g -t -A --size-sort -u -r -a -V --plugin --special-syms -p 
+--inlines --target -h -s -g -P -D -t --size-sort -r -a --with-symbol-versions --ifunc-chars --no-demangle --plugin -p 
+--unicode -S -C -h -s -n -W -f --with-symbol-versions --ifunc-chars -B 
+--unicode -S --recurse-limit -C -l -g -P -D -A -u -j --ifunc-chars -V --no-demangle --special-syms -p 
+--unicode -X -S --synthetic --target -h -s -l -n -P -W -A -r --with-symbol-versions -B --plugin -p 
+--inlines -S -C --synthetic -h -l -W -f -t -A -j -r -V 
+--unicode -X --recurse-limit -C -s -l -W -f -t --size-sort --ifunc-chars -B -V --no-demangle 
+-X -U --inlines -S --recurse-limit -C --synthetic -s -D -t --size-sort -u -r -a --ifunc-chars -B --no-demangle 
+--inlines -S -C -s -g -D -u -j --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms 
+-S --synthetic -s -l -W -t --size-sort -j -r --with-symbol-versions --ifunc-chars -V --no-demangle -p 
+-X -C --synthetic -h -s -W -f -t -r --with-symbol-versions --ifunc-chars -B -p 
+-X -U -S -C --target -s -P -A --size-sort --debug-syms -u -r -a -B -V --no-demangle --plugin 
+-X --inlines --recurse-limit -C --synthetic -h -s -l -g -f -A --debug-syms -V --plugin --special-syms 
+-U --recurse-limit --synthetic --target -h -s -l -g -P -D -A -j -r --plugin --special-syms -p 
+-X --inlines --target -s -l -n -g -f --debug-syms -r -a --with-symbol-versions --ifunc-chars -B 
+--unicode --inlines -S --target -l -n -g -D -f -A -r -a --ifunc-chars -B --no-demangle --plugin 
+--unicode --target -h -n -D -f --debug-syms -u -j -r -a --with-symbol-versions --ifunc-chars 
+--unicode -U --inlines --recurse-limit -C -s -l -n -D -A --debug-syms -a --ifunc-chars -B -V --no-demangle --plugin --special-syms -p 
+-X --recurse-limit -C --synthetic --target -l -P -W -t -A --size-sort -j --ifunc-chars -V 
+-X -U --inlines -S -C --synthetic -s -l -n -g -D -f -A -j -r -a --no-demangle --plugin --special-syms -p 
+--inlines --recurse-limit -h -n -W -f -j -r -V --plugin -p 
+--unicode -U -S --recurse-limit --synthetic --target -D -f --size-sort --debug-syms --ifunc-chars -B --no-demangle 
+-X --inlines -S --recurse-limit -C --synthetic --target -h -g -D -f -A --size-sort --debug-syms -u -a --ifunc-chars -B -V --plugin -p 
+-X -U --recurse-limit -s -l -n -g -D --debug-syms -j -a -V --no-demangle --special-syms 
+--unicode --inlines -C --synthetic -W --size-sort --with-symbol-versions --ifunc-chars --no-demangle -p 
+-X -U -C --target -h -l -g -D -f -t -A --size-sort --debug-syms -j --with-symbol-versions --no-demangle --plugin -p 
+--inlines -W -f -t --size-sort -j --with-symbol-versions -V --plugin 
+-U -S --target -h -s -l -n -g -P -t --debug-syms -r --ifunc-chars -B -V --special-syms -p 
+-X --synthetic --target -s -n -P -D -t -A -u --with-symbol-versions --ifunc-chars -B --no-demangle --plugin --special-syms 
+--unicode -U --inlines --recurse-limit -C --synthetic --target -h -g -P -D -t -A -r -a --ifunc-chars -B --no-demangle 
+-S --recurse-limit -C --target -h -l -n -P -W -A -r -B -V --plugin -p 
+--unicode -X -U -S --target -s -l -g -P --size-sort -r -a --with-symbol-versions --ifunc-chars -V --no-demangle -p 
+--recurse-limit -C --synthetic --target -h -s -n -g -P -D --debug-syms -u -a -V -p 
+-X --inlines -C --synthetic -h -n -P -D -t -A --debug-syms -u -j --with-symbol-versions --no-demangle --special-syms 
+--unicode --inlines -S -C --synthetic --target -h -l -g -P -A --debug-syms -u -r --with-symbol-versions -B --plugin --special-syms 
+--unicode -C --synthetic --target -s -W -A --size-sort -j --with-symbol-versions --plugin -p 
+--unicode -X --inlines -S --recurse-limit --target -l -n -P -W -t -A -j -r -V --plugin -p 
+-X --inlines -S --recurse-limit --target -h -s -l -P -W --size-sort -j -V --no-demangle 
+--unicode -S --recurse-limit -C --target -s -t --debug-syms -u -j -a --ifunc-chars 
+--unicode --inlines -S -C -n -P -W -r --ifunc-chars -V --no-demangle --plugin -p 
+--unicode -X -U -C --synthetic --target -h -l -D --size-sort --debug-syms -u -j -r -a --with-symbol-versions --plugin -p 
+--unicode -U --inlines -S --synthetic --target -s -l -n -g -P -D -A -j --ifunc-chars --special-syms 
+--unicode --inlines -S --recurse-limit --target -h -l -W -f -A --size-sort -r -B -V --no-demangle -p 
+-U --inlines --target -l -g -f -t --debug-syms -r -a -B --no-demangle --special-syms -p 
+--unicode -X -S --recurse-limit --synthetic -s -P -D --debug-syms -r -a --ifunc-chars -B -V --special-syms -p 
+--unicode -X -U -S --target -h -l -n -P -A --debug-syms -u --with-symbol-versions --ifunc-chars -V --special-syms -p 
+-X -U --inlines --recurse-limit -l -g -P -D --size-sort --debug-syms -r -a --ifunc-chars -B --no-demangle --plugin -p 
+-X --recurse-limit -n -P -u -r -B -V --plugin --special-syms 
+--unicode -U --inlines -S -C -h -n -P -t -u --with-symbol-versions -B --no-demangle --plugin --special-syms -p 
+--inlines -S --recurse-limit -C -h -l -n -P -D -A --debug-syms -u -j -r -a -V --plugin 
+--unicode -X -U --inlines -S --recurse-limit -l -n -D -f -t -u -j -a --plugin --special-syms -p 
+--unicode -X --synthetic -s -l -n -D -f -t -A -u -r -a --with-symbol-versions --ifunc-chars -V --no-demangle --plugin --special-syms 
+--unicode --inlines -S --target -l -D -f -t -A --size-sort --debug-syms -u --with-symbol-versions -B -V --no-demangle --special-syms -p 
+-X -U --inlines --recurse-limit -C -h -s -l -P -A --size-sort -u -a --ifunc-chars -B --plugin --special-syms -p 
+--unicode -X --inlines -S --recurse-limit -C --target -h -s -l -n -W -f -t -r -B --plugin 
+-X --synthetic --target -s -n -P -D -t --debug-syms -u -a -B -V --plugin --special-syms 
+--unicode --recurse-limit --synthetic --target -h -W -f -A --ifunc-chars --no-demangle --plugin 
+-X --inlines -S --recurse-limit -C --synthetic --target -s -P -W -A --size-sort -B -V -p 
+-X --inlines -S --synthetic --target -h -l -n -P -W -t --with-symbol-versions -B --no-demangle --plugin 
+--unicode -X -U --inlines --synthetic --target -h -s -n -g -f -t -A --debug-syms -j -r --ifunc-chars -V --plugin 
+-S --recurse-limit --synthetic -h -n -W -f -A -B --no-demangle 
+-X -S --synthetic -h -n -g -D --debug-syms -u -j -a --ifunc-chars --no-demangle --plugin -p 
+--unicode --inlines -S -C --target -n -g -P -D -u -r -a --with-symbol-versions -V --plugin --special-syms 
+-S -C --synthetic --target -h -s -l -n -W --with-symbol-versions --ifunc-chars -B -V -p 
+--unicode -X -S --recurse-limit -s -n -P -t -A -a -B -V -p 
+-S -C -s -g -P -D -t --size-sort --debug-syms -r --with-symbol-versions --ifunc-chars -B -V 
+--unicode -X --inlines --synthetic -l -n -P -W -t -A -j -r --with-symbol-versions --ifunc-chars --no-demangle 
+--inlines --recurse-limit -C --target -h -s -g -P -A --size-sort -u -j -r --ifunc-chars -V --special-syms -p 
+-U --inlines -S -C --synthetic --target -s -n -g -P -u -B -V --no-demangle -p 
+-S -C --synthetic --target -h -l -n -g -f -t -u --with-symbol-versions --ifunc-chars -B --special-syms 
+--unicode -X -U -C --synthetic -h -s -l -n -g -f -u -r -a --ifunc-chars -B --no-demangle 
+--unicode -X --inlines -S --recurse-limit --synthetic -h -n -g -P -t -B --no-demangle 
+-X --inlines --recurse-limit -C --synthetic -h -s -P -W -t --size-sort -j -r --ifunc-chars --no-demangle --plugin -p 
+--unicode -X -C -n -D -f -r -B -V --no-demangle --plugin --special-syms -p 
+--unicode -X -U --inlines -S -s -l -n -g -D -f -t -A --debug-syms -u --with-symbol-versions -B 
+--inlines -S --synthetic --target -n -g -t --debug-syms -j -a --with-symbol-versions -V --plugin --special-syms 
+-U --recurse-limit -h -s -l -D -f -t -A --size-sort -u --ifunc-chars -B -V -p 
+--unicode -U --inlines -S --recurse-limit -C --target -n -P -A --debug-syms -r -a -B -p 
+--unicode -U --inlines --recurse-limit -C --synthetic --target -P --size-sort --debug-syms -j --ifunc-chars --no-demangle --plugin --special-syms -p 
+--unicode -X -S --recurse-limit -C -s -l -g -P -A --debug-syms -u -j -r -a --ifunc-chars --no-demangle --plugin 
+--unicode --inlines --recurse-limit --target -h -l -n -g -f --debug-syms -u -a --ifunc-chars -V --no-demangle --plugin 
+--unicode --inlines -S -C --target -h -l -W -f --size-sort -j --with-symbol-versions --no-demangle -p 
+-X -U --inlines --recurse-limit --target -h -l -D -A -j -r -a --ifunc-chars -V --no-demangle --special-syms 
+--recurse-limit --synthetic -s -W -f -A --size-sort -r -B --no-demangle -p 
+-U --inlines -S -C --synthetic -s -l -P -D -t --size-sort --debug-syms -j -r -a --with-symbol-versions -V --no-demangle --special-syms 
+--unicode -X -U -S -C --synthetic --target -n -g -f -t -A --debug-syms -u -a --with-symbol-versions -V --no-demangle --plugin -p 
+-X -S --recurse-limit -C --target -h -l -n -g -D -f -t -r -a -B -V --no-demangle --special-syms 
+--unicode -U -S --recurse-limit --synthetic -s -l -g -P -t -A --size-sort --debug-syms -u -j -r --no-demangle -p 
+-U --inlines -S --recurse-limit -C --synthetic --target -h -l -n -g -P -D -t -A -a --ifunc-chars -B -V --no-demangle --plugin -p 
+-X -h -s -l -W -f -A --with-symbol-versions -B --no-demangle 
+--inlines -C -s -l -P -W -r --with-symbol-versions --ifunc-chars -B -p 
+--unicode -X --inlines -C --synthetic -h -l -g -D -f --size-sort -u --ifunc-chars -p 
+-X -U --inlines -S --recurse-limit -l -n -D -t --debug-syms -u -r -a --ifunc-chars -B -V -p 
+-X -S --recurse-limit --synthetic --target -h -n -W -f -t -B -V --no-demangle --plugin -p 
+-U --recurse-limit -C -s -g -P -t -A --debug-syms -a --ifunc-chars -B --plugin 
+-X --inlines -S --synthetic -h -s -l -n -g -P -A --debug-syms -u -j -a --with-symbol-versions --ifunc-chars -V --no-demangle --plugin -p 
+-U -S --target -h -l -D -f -t --size-sort --debug-syms -a --with-symbol-versions --no-demangle --plugin --special-syms 
+--unicode --inlines -S --synthetic -s -W -r -B -p 
+-X -h -s -W -t -A --size-sort -r --with-symbol-versions --ifunc-chars -B 
+--unicode -U --synthetic --target -h -g -D -f --debug-syms -u -r --with-symbol-versions -V --no-demangle 
+--inlines --target -s -W -f -t -A --size-sort -r --ifunc-chars -B -V --no-demangle 
+--unicode -X -C -P -W -t -A --size-sort --with-symbol-versions --ifunc-chars -B --no-demangle --plugin 
+--unicode -U --inlines --target -h -s -g -D -f -A --size-sort -u -j --with-symbol-versions --ifunc-chars --special-syms -p 
+--inlines -S -C --synthetic --target -s -n -D -f -t --debug-syms -u -j -r --ifunc-chars --plugin -p 
+--inlines -S --synthetic -P -W -A --size-sort -j --with-symbol-versions --plugin -p 
+--unicode -S -C --target -h -s -l -n -P -W -t -A -j -r --with-symbol-versions --ifunc-chars -V --plugin 
+-X -S --recurse-limit --synthetic -g -f -A --size-sort --debug-syms -r -B -V --no-demangle --plugin 
+--unicode -X -U --inlines -S -C -h -s -P -D -t --size-sort -a -B -V --no-demangle --special-syms -p 
+--inlines -C -s -l -n -f -t --debug-syms -r -a --with-symbol-versions --ifunc-chars -B -V --plugin --special-syms -p 
+--unicode --inlines --recurse-limit -C -h -s -l -n -W -f -A -j -V --no-demangle --plugin 
+-X -S --synthetic -h -l -n -W -A -r --plugin 
+--unicode -S -C -h -l -g -A --size-sort --debug-syms -u -j -a --with-symbol-versions -V --plugin --special-syms 
+--unicode -X -U --inlines -C --synthetic -g -P --debug-syms -r -a --with-symbol-versions --ifunc-chars -B -V --special-syms -p 
+--unicode -X --recurse-limit -l -g -P -D -t --size-sort -u -j -a --no-demangle 
+-X --recurse-limit -C --synthetic --target -n -g -P -D -j -V --no-demangle --plugin --special-syms -p 
+--recurse-limit -C -s -g -D -f --size-sort --debug-syms -u -j -r -a --special-syms -p 
+--unicode -X -S --synthetic -n -W -t -A -r -B -V -p 
+--inlines --recurse-limit --synthetic --target -h -s -l -g -D -f -t -A --size-sort --debug-syms -r --ifunc-chars -B -p 
+-X -U -S --recurse-limit --synthetic -n -P -D -t -A -j -r -a --ifunc-chars -V --plugin -p 
+-U -S -C -n -g -D -A --debug-syms -u -r -a --with-symbol-versions --ifunc-chars -B --no-demangle --special-syms 
+--unicode -X -U --inlines --target -h -n --debug-syms -u -a --ifunc-chars -B --plugin 
+--unicode -U --inlines --recurse-limit --synthetic --target -l -P -D --size-sort -u -j -r -a --ifunc-chars -V --special-syms 
+--unicode -X --inlines --target -P -W -t -A -j -r --with-symbol-versions -V --no-demangle -p 
+-U --inlines -S --recurse-limit --synthetic -s -f -t --debug-syms -j --no-demangle --special-syms 
+-U --inlines -l -P -t -A --size-sort -r -B -V 
+-U --recurse-limit -C -h -s -n -g -P -t -A -u -r -a --ifunc-chars -V --no-demangle --plugin --special-syms 
+--unicode -X -U -S --synthetic -s -l -n -g -P -t -j -a --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms 
+--unicode --target -h -s -g -D -t --size-sort --debug-syms -B --no-demangle --plugin -p 
+--unicode -X -U --recurse-limit -C --synthetic -h -n -D -f -t -A --debug-syms -r -a --ifunc-chars -p 
+--unicode -X -S -s -l -W -f -t --size-sort --with-symbol-versions -p 
+--unicode -C --synthetic --target -s -l -g -P -D -A --size-sort -j -r -a --with-symbol-versions --ifunc-chars -V --no-demangle --plugin --special-syms 
+-X --inlines --recurse-limit -C --target -s -l -g -D --size-sort --debug-syms -B -V --no-demangle --plugin --special-syms 
+-X --recurse-limit --synthetic -h -W -f -t -A --size-sort -j --ifunc-chars -V --no-demangle -p 
+-X -U --inlines -S --synthetic -h -s -g -D -A --size-sort --debug-syms -r --with-symbol-versions --ifunc-chars -B --plugin --special-syms 
+-X -U --inlines -C -h -s -l -g -P -D --size-sort --debug-syms -u -r -a --with-symbol-versions -B --no-demangle 
+--inlines --target -s -l -W -f -A -r --with-symbol-versions --ifunc-chars -B --plugin 
+-X -U -S -C --synthetic -h -s -l -D -f --size-sort --with-symbol-versions -V --plugin --special-syms -p 
+--unicode -X -U --inlines -S --recurse-limit --target -g -P -t --size-sort --debug-syms -j -r -a --plugin --special-syms 
+--unicode -X -S -g -D -f -t --size-sort --debug-syms -j -r -V --special-syms -p 
+-U -S --recurse-limit -C --synthetic --target -g -D -f --size-sort -u -B -V --no-demangle --special-syms 
+-X -U -S -C --target -h -s -l -g -f -t -A -u -r -a --with-symbol-versions -B -V --no-demangle --plugin --special-syms -p 
+--unicode -X --inlines -S -h -n -W -j -r --with-symbol-versions --ifunc-chars --no-demangle 
+-U --inlines -S --recurse-limit -C --target -s -g -f -t -A -u -B -V --plugin 
+-X -S --recurse-limit --target -s -P -W -t --size-sort -j -r --plugin 
+--unicode -X -S --recurse-limit -h -l -g -P -D -A --size-sort -j --ifunc-chars --plugin --special-syms 
+--target -h -s -l -n -t -A --debug-syms -u -j --with-symbol-versions --ifunc-chars -V --no-demangle --special-syms 
+--unicode --recurse-limit --synthetic -h -s -l -P -W -A -B -V --plugin 
+-X -s -l -g -P -A --size-sort --debug-syms -u --ifunc-chars -B --special-syms 
+-X --inlines -C --synthetic --target -n -W -f -t -j -r --with-symbol-versions --ifunc-chars -p 
+--unicode -S --recurse-limit -C -s -l -P -W -t -j -r --no-demangle 
+--unicode -U -S --recurse-limit -C -h -s -n -P --debug-syms -j -a --ifunc-chars -V --plugin --special-syms 
+--unicode --synthetic -h -P -W -A --size-sort -j -r --with-symbol-versions --ifunc-chars -V --no-demangle --plugin -p 
+--unicode -X --recurse-limit --synthetic --target -l -g -D -t --size-sort -u -r --ifunc-chars -B -V --special-syms 
+-X -U --inlines --synthetic -h -P --size-sort -u -j -r -a --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+--unicode --inlines --recurse-limit -C --target -W -f -t --size-sort -r --ifunc-chars -B 
+-X -S -C --target -h -l -g -P -D -t --size-sort -u -a --with-symbol-versions --ifunc-chars -B --plugin --special-syms -p 
+-S --synthetic -h -l -n -g -D -f -A --debug-syms -r -a --with-symbol-versions -B -V --no-demangle --plugin 
+--unicode -X -U -C -h -s -g -D -f -t -A --size-sort -j -r -a --with-symbol-versions -V --no-demangle 
+-S --target -h -n -P -W -t -A -B -V --no-demangle 
+-U --inlines -C --target -h -l -n -g -f -t -u -j -r --ifunc-chars --plugin -p 
+--unicode -U --inlines --synthetic -h -s -l -D -t --debug-syms -u --with-symbol-versions -B -V 
+-X --inlines --synthetic -s -l -n -P -W -r -B --plugin 
+--unicode -U -S -C --target -s -n -P -D --debug-syms -u -j --with-symbol-versions -V --special-syms -p 
+--unicode -X --synthetic -h -P -D -t -A --size-sort --debug-syms -a --ifunc-chars -B --plugin --special-syms -p 
+--unicode --synthetic --target -h -l -n -W -f -t -A -r --with-symbol-versions -B 
+-X -U -C --target -l -D -f -A --size-sort -u -a --with-symbol-versions --ifunc-chars -B -V 
+-X -U --inlines -S --recurse-limit -l --size-sort --debug-syms -u -a --ifunc-chars --no-demangle --special-syms 
+-X -U -S --recurse-limit -C --synthetic -n -g -P -A --debug-syms -u -j --ifunc-chars --no-demangle 
+--unicode --inlines -S --recurse-limit -C --synthetic --target -h -s -g -P --size-sort -u -a -B -V --no-demangle --plugin --special-syms -p 
+-X --recurse-limit -C --synthetic -h -s -l -n -W -B -V -p 
+--recurse-limit --synthetic --target -s -n -f -t -A -u -j -a --ifunc-chars -V --plugin --special-syms 
+-X --inlines -S --recurse-limit -C -n -g -f -t --debug-syms -u -r --ifunc-chars --no-demangle --special-syms 
+--unicode -X -U --inlines -C --synthetic --target -s -l -n -g -f -A --debug-syms -u -a --with-symbol-versions -B --special-syms -p 
+-X -U --recurse-limit --target -n -g -P -A -u -r -a -B -V --no-demangle --plugin -p 
+-X --inlines -S --target -h -s -g -P --size-sort --debug-syms -j -r -a --with-symbol-versions -V --no-demangle --special-syms 
+-S -h -s -l -g -P -D -u -r -a --with-symbol-versions -B -p 
+-X -S -C --synthetic --target -l -W -f -A -j -r --ifunc-chars -V --no-demangle --plugin -p 
+--recurse-limit -C --synthetic -h -W -t -A -r --ifunc-chars -V --no-demangle --plugin -p 
+--unicode -X -U --inlines --recurse-limit -s -D -f -t --size-sort --debug-syms -u -r --plugin --special-syms 
+--unicode -X -U --inlines -S -C -h -s -l -n -D -f -A --debug-syms -u -r --ifunc-chars -B -V --plugin -p 
+--unicode -U --inlines -S --synthetic --target -s -g -f -t -A --size-sort --with-symbol-versions --ifunc-chars --no-demangle --special-syms -p 
+--unicode --inlines -S --recurse-limit --synthetic --target -l -W -f -r --ifunc-chars -V --plugin 
+--unicode --inlines -S -h -s -P -W -t -A --size-sort --with-symbol-versions --ifunc-chars -V 
+-X -U --inlines -S -h -s -g -D -f -u -a --ifunc-chars -B --no-demangle --plugin -p 
+--unicode -X -U --inlines --recurse-limit -C --synthetic -h -s -l -g -P -D -t --debug-syms -u -r --ifunc-chars -V --special-syms -p 
+-X -C -h -l -P -W -t -r -B --plugin -p 
+-S -C --synthetic --target -l -D -t -A --size-sort --debug-syms -u -r -a -V --plugin -p 
+--unicode --inlines --recurse-limit -C --synthetic -l -n -g -P -t --debug-syms -u -j -r --ifunc-chars --plugin --special-syms 
+-U --inlines --recurse-limit -C --synthetic -h -l -P -t -A --size-sort --debug-syms -r --ifunc-chars -B --special-syms -p 
+--inlines -C --target -h -n -P -W --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin -p 
+--unicode -S --recurse-limit -C -s -l -W -f -A --size-sort -j --ifunc-chars --no-demangle --plugin -p 
+--unicode -X -C --synthetic --target -h -l -P -W --size-sort --with-symbol-versions --ifunc-chars -B -p 
+-X --inlines -S --recurse-limit -C --synthetic --target -h -s -D -f -A --size-sort --debug-syms -u -j -r -V --no-demangle -p 
+--unicode -X -U --inlines -S --target -h -s -l -n -P -D -t -j -a --with-symbol-versions -V --plugin --special-syms -p 
+-S -C --target -l -n -g -t -A --debug-syms -a --with-symbol-versions --ifunc-chars -B --no-demangle -p 
+--unicode -X -U --inlines -S -C --synthetic -h -l -g -f -t --size-sort --debug-syms -u -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin 
+-X --inlines -S -h -s -n -P -W -j --ifunc-chars --no-demangle --plugin 
+-X -S --recurse-limit -C --synthetic --target -g -D -t -A --size-sort -j -r -a --ifunc-chars -V -p 
+-X --inlines --recurse-limit -C --synthetic --target -l -g -D -f --debug-syms -u -j -a -V --no-demangle --plugin --special-syms 
+--unicode --inlines -S --recurse-limit -C --synthetic -h -s -n -g -D -f -t -A -u -j -r -a --special-syms 
+--unicode -U --inlines -C --synthetic -P -D -A -j -a -p 
+-U -S --target -l -g -D -f -A --size-sort -u -j -r --with-symbol-versions --ifunc-chars -V --no-demangle --plugin 
+-U -S --recurse-limit -C --synthetic -s -g -P -D -t -A --size-sort -u -j -a --ifunc-chars --plugin -p 
+--unicode -U --inlines -S --synthetic --target -h -s -n -t -u -r -a --with-symbol-versions --ifunc-chars -B --special-syms 
+--synthetic --target -h -l -n -P -W -t -j --ifunc-chars -V --plugin -p 
+--unicode --recurse-limit -h -s -l -P --debug-syms -j -a --no-demangle --plugin -p 
+--unicode -X --inlines --recurse-limit -l -W -A --size-sort --ifunc-chars -B -V -p 
+-X --target -l -n -g -D -f -t -A -u -r --with-symbol-versions --ifunc-chars -B --special-syms -p 
+--unicode -U -n -g -f -A -a -B --no-demangle --plugin --special-syms -p 
+--unicode -C --synthetic -s -D -f -A --debug-syms -j -a --with-symbol-versions --ifunc-chars -V --no-demangle --special-syms -p 
+--unicode -X --inlines --recurse-limit -C --synthetic --target -h -s -l -W -t -A -r -B --no-demangle 
+-X -S -C --synthetic --target -h -s -n -W -f -t -r -B -V --no-demangle --plugin 
+--unicode -S --recurse-limit --target -h -s -W --size-sort -r --ifunc-chars -B -V --no-demangle --plugin 
+--synthetic --target -h -s -l -n -P -W -A -r --ifunc-chars -B --no-demangle --plugin 
+--unicode -U -S -C -h -s -l -n -g -D --with-symbol-versions -B 
+-X -U --inlines --recurse-limit -C --synthetic -h -s -n -P --debug-syms -u --ifunc-chars -B --special-syms 
+--unicode -U --inlines --synthetic --target -l -n -P -t --debug-syms -j -a --with-symbol-versions -V --no-demangle -p 
+-S --target -h -s -l -W -f --size-sort --ifunc-chars -V --no-demangle --plugin 
+--inlines -S --recurse-limit -C --synthetic -s -l -n -P -W -t -A --ifunc-chars -B -V --plugin -p 
+-U --synthetic --target -h -l -n -g -P -A --debug-syms --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+-U --inlines -S --recurse-limit -h -s -n -P -t -A --debug-syms -u -V --no-demangle -p 
+-U --inlines -C -h -P -t -A --size-sort --debug-syms -u -j -a --ifunc-chars -V --special-syms -p 
+--unicode -X -U --inlines -S --target -h -l -P -D --size-sort --debug-syms -u -j -a --no-demangle --plugin 
+--unicode --inlines --recurse-limit --synthetic --target -h -s -W -j --ifunc-chars -V -p 
+--unicode --inlines -C --target -h -l -n -P -W -t -r --with-symbol-versions -V --no-demangle -p 
+--unicode --synthetic --target -h -s -n -W -f -t -A -j -r --with-symbol-versions --no-demangle --plugin -p 
+-X --inlines -S --synthetic --target -h -s -W -t -j --with-symbol-versions -V --no-demangle --plugin 
+--unicode -X --synthetic -h -s -n -g -D -f -t --debug-syms -j -r --with-symbol-versions --no-demangle -p 
+-X -U -C --target -h -s -P -D -u -a --with-symbol-versions --ifunc-chars --no-demangle --special-syms 
+-U --inlines -S -C --synthetic --target -l -n -A --debug-syms -r -B --no-demangle --plugin --special-syms 
+--unicode -X --inlines -C -n -W -f -t -A -r --with-symbol-versions -B -V --no-demangle -p 
+--unicode -X -U --recurse-limit --synthetic -l -g -P -D -u -B -V --plugin 
+-X --synthetic --target -s -P -W -t -A --with-symbol-versions -V --no-demangle --plugin -p 
+--unicode -S -C --target -h -s -g -f -A --size-sort --debug-syms -u -r --with-symbol-versions 
+--unicode -X --inlines -S -C --target -W -f -A --size-sort -j -r --with-symbol-versions --ifunc-chars -V --no-demangle 
+-U --inlines -S -C --synthetic --target -h -g -D -f -t --size-sort -u -j --special-syms 
+--unicode -U --recurse-limit -C -h -l -f -t -u -r -a -V --no-demangle -p 
+--recurse-limit -C --synthetic -l -n -P -W -t -B --no-demangle --plugin 
+-S --synthetic --target -h -s -g -f --size-sort --debug-syms -j -r -a --ifunc-chars --no-demangle 
+--unicode -X -U --inlines -S -h -l -g -D -f -A -r --with-symbol-versions -B --special-syms 
+-X --inlines --recurse-limit --synthetic -h -s -l -D -f -t -A -u -a --ifunc-chars -B --no-demangle --plugin --special-syms -p 
+--unicode -X -S --synthetic -s -l -g -P -t --size-sort --debug-syms -u -a --with-symbol-versions --ifunc-chars -B --plugin 
+--unicode -X -U --recurse-limit -C --synthetic -g -t --size-sort --debug-syms -j --ifunc-chars --special-syms 
+--unicode -X -U --inlines --synthetic -l -n -g -P -t -A -u -r -a --with-symbol-versions -B -V --special-syms -p 
+--unicode -X -C --synthetic -h -l -n -P -W -A -j -r --with-symbol-versions -p 
+--unicode -X --inlines -C --target -l -n -P -A --debug-syms -j -r --with-symbol-versions -V --plugin --special-syms 
+-X --inlines -S --recurse-limit -C -s -l -n -W -f -A -j -r --ifunc-chars -p 
+--synthetic --target -h -l -W -f -t --size-sort -r --with-symbol-versions -B --no-demangle --plugin -p 
+--unicode -U --synthetic -n -P -D -t --debug-syms -u --with-symbol-versions --ifunc-chars --plugin -p 
+-S -C --target -W -f --with-symbol-versions --ifunc-chars -B -p 
+--unicode --inlines -C --synthetic -h -s -l -n -W -t -j --with-symbol-versions --ifunc-chars 
+--unicode -X -U -S --synthetic --target -h -n -D -f -A -u -r --with-symbol-versions --ifunc-chars -B --special-syms -p 
+-X -U --inlines -S --synthetic --target -h -s -n -g -P -D -t -j -a --with-symbol-versions --ifunc-chars --plugin 
+--recurse-limit --target -h -s -l -D -f -t --debug-syms -u -B --no-demangle --special-syms -p 
+--unicode --inlines --target -n -g -P -D -A --debug-syms --with-symbol-versions --ifunc-chars -V --no-demangle --plugin 
+--unicode -U --inlines -S -C --target -l -g --size-sort -j -r --ifunc-chars -V -p 
+--unicode -X --inlines --recurse-limit -C --synthetic -W -f --size-sort -B -V --no-demangle 
+--inlines -S -C -f -u -a --with-symbol-versions -B --plugin --special-syms 
+--unicode --inlines -S --synthetic --target -h -s -n -W -f -t -A -B --plugin -p 
+-U --inlines -S -C --target -s -D -f -t -A --debug-syms -j -r --with-symbol-versions -V 
+--unicode --recurse-limit --synthetic --target -h -g -A --debug-syms -u -B -V --no-demangle --special-syms -p 
+--unicode -X --synthetic -h -s -l -W -f -A --size-sort -r --with-symbol-versions --ifunc-chars -B --no-demangle 
+-X -U --inlines -S --recurse-limit -C -g -f -t --size-sort -u -r -a -B --no-demangle --plugin -p 
+-X --recurse-limit -C -h -s -W --size-sort -j --ifunc-chars --plugin -p 
+--unicode -X -C --synthetic -h -s -l -P -D -A --size-sort -u -r --with-symbol-versions --ifunc-chars -B --special-syms 
+-U --inlines -h -s -l -n -P -D -A -u --ifunc-chars -B -V --no-demangle --special-syms 
+-X -U --inlines -C -s -n -P -A --debug-syms -j -r -a --with-symbol-versions -V --no-demangle --plugin -p 
+--unicode -X -U --target -s -n -g -A --debug-syms -u -r -a --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms -p 
+--unicode -S -n -g -P -t -A -u -j -a --with-symbol-versions --special-syms -p 
+--unicode -h -s -l -n -W -f -t -A -j -r --ifunc-chars -V --plugin -p 
+--unicode -X --inlines --recurse-limit --synthetic --target -h -s -f -A --size-sort --debug-syms -u -j -r -a --ifunc-chars --no-demangle -p 
+--unicode -X --inlines -S --recurse-limit --target -l -P -W -t --size-sort -r --ifunc-chars -B --no-demangle --plugin -p 
+--unicode -X --recurse-limit --synthetic -h -s -n -P -W -t -B 
+--unicode -X -U --synthetic --target -s -l -g -D -t -A --size-sort -u --with-symbol-versions -B --no-demangle --special-syms 
+--inlines -S --synthetic -h -s -l -n -P -W -A --with-symbol-versions -V --no-demangle -p 
+-X -S -C --synthetic -h -s -l -n -W -f -j --with-symbol-versions --ifunc-chars -p 
+-X -U --synthetic -h -l -f -A --size-sort --debug-syms -r -a --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+--unicode --inlines --recurse-limit -C --synthetic -n -P -A --debug-syms -a --special-syms 
+--unicode -U --recurse-limit -C -s -l -n -P -u -j -r --no-demangle --plugin --special-syms -p 
+--unicode -U --inlines -S --recurse-limit -s -l -n -D -A --debug-syms -u -j -r --ifunc-chars -V --special-syms -p 
+--recurse-limit -C --synthetic --target -h -P -W -t --size-sort -j -r -V --plugin 
+--unicode --inlines -C -h -l -n -P -D -t -a --with-symbol-versions --ifunc-chars -B -V -p 
+-X -U --inlines -S --target -D -f -A --debug-syms -a --with-symbol-versions --plugin -p 
+--unicode --inlines -S --recurse-limit -C -h -s -l -g -D -f --size-sort --debug-syms -r -a --ifunc-chars -B --no-demangle --plugin --special-syms -p 
+--inlines -S -C -s -l -n -g -D -t -A -r --ifunc-chars -B --no-demangle --special-syms 
+--unicode -X -U --recurse-limit -C -h -s -g -f --size-sort -a --ifunc-chars --plugin --special-syms 
+-U --inlines --recurse-limit --target -h -g -P -D -t --debug-syms -u -j -a --ifunc-chars -V --no-demangle --plugin -p 
+-U --recurse-limit --synthetic --target -h -s -n -f -t --debug-syms -r -a -V --special-syms -p 
+--unicode -X --inlines -S -C --target -h -s -l -n -g -P -t -A -u -r -a -B -V --no-demangle --plugin --special-syms 
+--unicode -X -S --recurse-limit -C --synthetic -n -P -D --debug-syms -u -r -V --no-demangle --plugin --special-syms 
+--unicode -X -U --recurse-limit -C --synthetic --target -l -n -g -f --debug-syms -j -a --no-demangle --special-syms 
+-X -S -C --synthetic --target -s -l -g -P -D -t -A -u --with-symbol-versions -B -V 
+--unicode --target -n -g -P -D -t -j --with-symbol-versions -V --special-syms 
+-X --inlines --synthetic --target -s -l -n -P -W -A --with-symbol-versions -B -V 
+-X --inlines -C --target -s -g -P -D -t -A --size-sort -u -j -a --with-symbol-versions -V --plugin --special-syms -p 
+-U --inlines --recurse-limit -C --synthetic --target -s -l -g -P -D -t --size-sort -r -B -V --plugin -p 
+-C --synthetic -h -l -g -P -t --size-sort --debug-syms -u -j -r -a --with-symbol-versions --ifunc-chars --no-demangle 
+--unicode -X --inlines -S --target -h -f -t --size-sort --debug-syms -j -r -a --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+--unicode --inlines -S -C --synthetic --target -h -l -D --size-sort --debug-syms -a --with-symbol-versions -B -V --special-syms -p 
+--inlines -S -C --synthetic -h -s -l -n -W -f -t -A --with-symbol-versions --ifunc-chars -B -V --no-demangle 
+-X --inlines -S --synthetic -h -s -l -g -D -A --size-sort -u -j -a --with-symbol-versions --ifunc-chars --no-demangle --special-syms -p 
+-U --recurse-limit -s -n -g -f -u --ifunc-chars -V --plugin -p 
+--unicode --inlines -S -C --synthetic --target -s -l -P -W -t -A --size-sort --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin 
+-S -C --synthetic -s -l -P -W --size-sort -r --with-symbol-versions --ifunc-chars -B --no-demangle -p 
+--unicode -X -U --inlines -S --recurse-limit --synthetic -s -l -n -D -f -A -j -r -a -V -p 
+-X --inlines -S -s -n -W -f -t -j -r --with-symbol-versions --ifunc-chars -V --no-demangle 
+-U --inlines -S --recurse-limit --synthetic -h -n -g -D -t -A -u -r -B -V --no-demangle --plugin --special-syms -p 
+-h -s -n -g -f -A -u -j --with-symbol-versions -V --plugin 
+--inlines -S --recurse-limit --target -s -l -n -D -f -t -A -B -V --plugin --special-syms 
+-X -U --synthetic -s -n -f -t -A --debug-syms -j -r --ifunc-chars --plugin --special-syms 
+--unicode -S --synthetic --target -s -n -P -W --ifunc-chars -B -V --no-demangle --plugin 
+-S -C -l -n -P -W -t -A -j --ifunc-chars 
+-U -S -C --synthetic --target -s -l -n -f --debug-syms -u -j -a -V --no-demangle --plugin --special-syms 
+-X -C --synthetic --target -h -s -P -W -t -A --size-sort -j --with-symbol-versions --ifunc-chars --no-demangle --plugin 
+--unicode --inlines -S --synthetic -h -P -W -t -A --size-sort -B --no-demangle --plugin -p 
+--unicode -X -U --inlines -S --synthetic -l -n -P -D -t --debug-syms -u -r -a --with-symbol-versions -B --no-demangle --special-syms 
+--unicode -X -U -S -n -D -t -r -a --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+-X -U --inlines -S --recurse-limit -C --target -h -l -g -P -D -t -A --size-sort --debug-syms -u --ifunc-chars --no-demangle --plugin 
+--unicode -X -U --inlines --synthetic --target -h -s -l -g -P -t -A --size-sort --debug-syms -r --with-symbol-versions -B --plugin 
+--unicode -X -U --inlines -S -h -l -n -g -D -t -A --debug-syms -j --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+--unicode --inlines --synthetic -n -W -f -A -j -r --with-symbol-versions --ifunc-chars --no-demangle --plugin 
+--unicode --inlines -C --synthetic -l -g -P -D -t -A -u -r --with-symbol-versions --plugin --special-syms -p 
+--unicode -U --inlines -S -C --synthetic -h -g -P -D -t -A --debug-syms -u -j -r -a --with-symbol-versions --ifunc-chars --no-demangle --special-syms -p 
+--unicode -U --inlines -S --recurse-limit -C -n -P -D -j --no-demangle --plugin -p 
+--unicode -X -U --inlines -S --synthetic --target -s -l -g -f -t --size-sort --debug-syms -u -r -B -V --special-syms -p 
+--unicode -U -g -P -t --size-sort --debug-syms -u -r -a --with-symbol-versions -B -V 
+-X -U --recurse-limit -C --synthetic -s -l -f -A --size-sort -u -j -r --ifunc-chars --no-demangle --plugin --special-syms 
+-U --recurse-limit -n -D -f -t -A --debug-syms -a --ifunc-chars -B --special-syms 
+--unicode -X -U --inlines --synthetic --target -s -n -g -D -f -t -u -j --with-symbol-versions --ifunc-chars -V --no-demangle -p 
+--unicode -S --recurse-limit -C --synthetic --target -n -W -t -A --ifunc-chars --no-demangle -p 
+-X -U --inlines -S --recurse-limit --synthetic -h -l -n -g -f --debug-syms -u -r --ifunc-chars -B --plugin --special-syms -p 
+--unicode --inlines --recurse-limit -C --target -h -s -l -W -f -t -A --size-sort -j -r --ifunc-chars 
+--unicode -X -S -C -n -P -D -t -A --debug-syms -u -j -r -a --with-symbol-versions --ifunc-chars --special-syms -p 
+--unicode -C -l -W -j -r --with-symbol-versions -V --plugin 
+-X -U --synthetic --target -g -P -t -A --size-sort -u -j -r --with-symbol-versions --ifunc-chars -V --special-syms -p 
+--inlines --recurse-limit --target -h -s -n -W -t -A -r -B -V --no-demangle --plugin -p 
+--unicode -U --inlines -S -h -l -n -g -D -t -A --debug-syms -a --ifunc-chars --plugin 
+--unicode -U -C --target -l -n -f -t -r -a --with-symbol-versions --ifunc-chars -B --no-demangle --special-syms -p 
+--unicode --inlines --recurse-limit --synthetic -s -l -g -P -D -A --size-sort --debug-syms -a --ifunc-chars -V --special-syms -p 
+-U -S -C -l -n -g -P -D --debug-syms -u --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin --special-syms -p 
+--unicode -X -C --synthetic --target -h -l -g -P -A -j -a --ifunc-chars --plugin -p 
+-X --inlines -C -h -n -D -f -t --debug-syms -u -a --with-symbol-versions --ifunc-chars -V 
+--unicode -S -C -h -W -f -t -A --size-sort -j -r -V --no-demangle -p 
+-U --inlines -C -h -t -A --size-sort -a --with-symbol-versions -B -V --special-syms 
+--unicode -X --recurse-limit -h -s -n -f -t --debug-syms -u -r -a --ifunc-chars -B -V --plugin -p 
+--unicode -U -S --synthetic --target -l -n -P -D -t -A --debug-syms -u -B --no-demangle --plugin --special-syms -p 
+--unicode -X -S -C --target -h -l -P -D -A --size-sort -u -j -r -a --ifunc-chars --special-syms 
+-U --inlines -S -C --synthetic --target -h -l -n -g -f --debug-syms -a --with-symbol-versions --ifunc-chars -B -V 
+--unicode -S -C --synthetic --target -l -W -f -t -j -r --with-symbol-versions -V --no-demangle --plugin 
+--unicode --synthetic --target -h -s -l -g -D -f -t -A --size-sort -a --with-symbol-versions -B -V --no-demangle --plugin --special-syms -p 
+-X -S --recurse-limit --synthetic -l -P -W -r --ifunc-chars -B -V 
+--recurse-limit --synthetic --target -h -D -f -t -A --size-sort --debug-syms -u -a --ifunc-chars -B --no-demangle --plugin --special-syms 
+--unicode -X -S --recurse-limit --synthetic --target -s -l -W -f -t -A --size-sort -r -B -V --plugin -p 
+-X -U --target -s -l -D -f -t --size-sort --debug-syms -u -j --with-symbol-versions --ifunc-chars -V --plugin --special-syms 
+-S --recurse-limit --synthetic --target -s -l -g -D -f -u -r -a --ifunc-chars -V --plugin --special-syms -p 
+--unicode -S --recurse-limit -C --synthetic -h -l -f -t --size-sort -u -j -r -a --ifunc-chars -V --special-syms -p 
+--unicode -U --inlines -S -C -g -P -D -A --size-sort --debug-syms -j --with-symbol-versions --ifunc-chars -V --no-demangle --special-syms 
+-X --inlines -S --target -h -n -g --debug-syms -u -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --special-syms -p 
+--unicode -S --recurse-limit -C -h -g -t --size-sort --debug-syms -u -a --ifunc-chars -V --no-demangle --plugin -p 
+--unicode -U -C -D -f -t --size-sort --debug-syms -u -j --ifunc-chars -V --no-demangle --plugin --special-syms 
+--unicode -X --inlines -S --recurse-limit --synthetic -s -l -n -g -P -t -u -r -a -V --special-syms -p 
+-X --inlines -S --recurse-limit -C -s -l -n -g -P -D -t -A --debug-syms -u -B -V --no-demangle 
+--inlines -S --synthetic -l -W -f --size-sort --with-symbol-versions --ifunc-chars -B --plugin -p 
+--unicode -U --inlines -C --synthetic --target -s -l -P --size-sort -a --with-symbol-versions --no-demangle --plugin -p 
+--unicode -X --inlines -S --target -s -g -P -D -t -A --debug-syms -r --with-symbol-versions --ifunc-chars -B --no-demangle --plugin --special-syms 
+--inlines --synthetic --target -s -l -n -g -D -A -u -r -a --with-symbol-versions -B -V --plugin 
+-U -C --target -h -s -g -f -j -r --with-symbol-versions --ifunc-chars --no-demangle --plugin -p 
+-X --inlines -S -C -g -f -t -A --size-sort --debug-syms -a -B --special-syms 
+--inlines --recurse-limit -C -h -s -l -g -D -f --size-sort --ifunc-chars -B -V --special-syms 
+--unicode -X -S --recurse-limit --target -h -l -g -f -t --debug-syms -u -j -r --ifunc-chars -V --special-syms -p 
+--unicode -U --inlines -S --target -l -g -P -t -A --size-sort --debug-syms -r -a --ifunc-chars -V --no-demangle --plugin --special-syms 
+-S -h -l -n -W -f -A -j -r --with-symbol-versions -V --no-demangle --plugin 
+--synthetic --target -h -l -P --debug-syms -u -r --with-symbol-versions --ifunc-chars -B --plugin 
+-X --inlines --recurse-limit -C --synthetic --target -h -s -l -n -D -f --debug-syms -j -r -a --ifunc-chars --plugin --special-syms 
+--unicode -U -C --synthetic -h -s -l -P -t -A --size-sort --debug-syms -a --with-symbol-versions --ifunc-chars -V --no-demangle 
+-X --recurse-limit --target -s -l -n -g -f -t -u -r -B -V --no-demangle --plugin --special-syms 
+--unicode -X -S --recurse-limit --target -n -W -f -A -V --plugin 
+-X -U -S --target -h -n -D -t --debug-syms -r -a --with-symbol-versions --ifunc-chars -B -V -p 
+--unicode -X --inlines -S --recurse-limit -C --target -h -n -g -D -f -u -j -r --ifunc-chars -V 
+--inlines --recurse-limit -C --synthetic --target -l -n -D -f -t -A --debug-syms -u -r --plugin -p 
+-X -U --synthetic --target -s -P -D -A --size-sort -u --ifunc-chars -V --plugin 
+--unicode -X -S -C -s -P -W -t --size-sort -r --with-symbol-versions -B -V -p 
+--unicode -U --inlines -S --target -s -l -n -f -A -j -a --with-symbol-versions -V --special-syms 
+--unicode -X --inlines -C --synthetic --target -h -D -f --size-sort -u -r --with-symbol-versions -B --no-demangle --special-syms 
+-U -S -C --synthetic -h -s -l -g -f -t --size-sort --debug-syms -u -r --with-symbol-versions -B --plugin -p 
+--inlines -S --recurse-limit -l -W -f -t -A --size-sort -r --ifunc-chars -V --no-demangle --plugin -p 
+-U -S -s -l -g -D -t --size-sort --debug-syms -j -a --with-symbol-versions --ifunc-chars -V --plugin -p 
+-S -C --target -s -l -W --size-sort --with-symbol-versions --ifunc-chars -V --no-demangle -p 
+--unicode -X -U --inlines --synthetic --target -h -s -l -f -A --size-sort --debug-syms -u -a --with-symbol-versions -B -V --no-demangle --special-syms -p 
+--unicode -S --recurse-limit -C --synthetic --target -D -t -u -r -a -B --no-demangle --plugin -p 
+-S --recurse-limit -C -s -P -W -t --size-sort -B -V --no-demangle --plugin -p 
+-U --inlines -S -s -l -P -D -t -A --size-sort --debug-syms -j -r -a --no-demangle --plugin 
+-X -U --inlines -S --synthetic --target -l -g -D -f -t -A -u -j -a --ifunc-chars -V 
+--inlines -S --synthetic --target -s -l -n -D -f -A --debug-syms -u --ifunc-chars -V --no-demangle --special-syms 
+--recurse-limit -C --synthetic --target -W -t --size-sort -j -r --no-demangle 
+-X --inlines -S -C --target -g -P -A --size-sort -r --ifunc-chars -V --no-demangle --special-syms -p 
+--unicode --inlines -S -C -l -g -f -t --size-sort -u -j -a --with-symbol-versions --ifunc-chars -V --no-demangle -p 
+--unicode -X -S --synthetic -s -P -W -t -A --ifunc-chars --no-demangle --plugin 
+--unicode -X --recurse-limit -C --target -h -s -n -D -t --debug-syms -u -j -r -a --no-demangle --plugin --special-syms -p 
+-C --target -h -s -D -t --size-sort --debug-syms -j -r -a --with-symbol-versions --ifunc-chars --plugin --special-syms 
+--unicode -X --recurse-limit --synthetic -h -W -f -B --plugin 
+--unicode -X -S --recurse-limit --synthetic --target -W -f --size-sort -j --ifunc-chars --plugin -p 
+-X --inlines --recurse-limit -C -h -s -n -P -W -r --ifunc-chars -B -V 
+--unicode -X -U -S --recurse-limit --synthetic --target -h -t -A --size-sort -j --no-demangle --special-syms 
+--inlines -S --recurse-limit --synthetic --target -h -s -l -g -f -t --size-sort --debug-syms -u -j --no-demangle --plugin --special-syms -p 
+--unicode -X --inlines -S --recurse-limit -n -W -j -V --plugin -p 
+-X --synthetic -s -P -W -A --size-sort -j -r -V -p 
+-X -S --recurse-limit -C -n -g -P -D --debug-syms -u -a -B -V -p 
+--unicode -X --recurse-limit --synthetic -h -W -f --size-sort -r -B -V 
+-X --recurse-limit -C -h -l -P -W -j --ifunc-chars --no-demangle -p 
+--inlines -C -h -s -l -n -g -P -t --debug-syms -u -r -a --with-symbol-versions -B --special-syms -p 
+-U --inlines --recurse-limit -C --synthetic -h -l -P -D -t -A --size-sort -j -a --ifunc-chars --no-demangle -p 
+--unicode -U --inlines -S -C --synthetic -h -s -l -g -P -D -t -A --size-sort -r --with-symbol-versions -B --special-syms -p 
+--unicode -U -S --recurse-limit -C --synthetic -h -s -P -D -A --debug-syms -u -j -r -V --no-demangle --special-syms -p 
+--unicode -X -U --inlines --recurse-limit -C --synthetic --target -h -g -P -t --size-sort -u -j --plugin --special-syms 
+--unicode -X --inlines -S -C --synthetic --target -s -l -n -g -P -D --debug-syms -u -j --with-symbol-versions --special-syms -p 
+--unicode --inlines -C --synthetic -P -D -t --size-sort --debug-syms -u -j -a --with-symbol-versions --plugin 
+-X -U -C --target -h -l -t -A --debug-syms -u -r -a -V --no-demangle -p 
+--unicode -U --inlines -S -C --target -l -g -P -t -A --size-sort -r -a --with-symbol-versions --ifunc-chars -B -V --plugin --special-syms -p 
+-X -S --recurse-limit -n -W -A -j -r -V --no-demangle 
+-X --inlines -S -C -s -l -P -W -A --size-sort --with-symbol-versions -V -p 
+--unicode -U --recurse-limit -C -l -D -f -A --size-sort --debug-syms -j -r --ifunc-chars -V --no-demangle -p 
+-X -S --recurse-limit --synthetic --target -s -l -W -A --size-sort -r -B -V --plugin 
+-S --recurse-limit --synthetic --target -h -s -P -W -t -A --size-sort -j -V -p 
+--unicode -U --inlines -S --recurse-limit --target -h -g -P -D -t --size-sort -r -a -B --no-demangle --special-syms 
+--unicode -U --inlines --synthetic -g -D -f -t -A --size-sort -r -a -B --plugin --special-syms 
+-X -S --synthetic -n -g -P -t -A --debug-syms -j -r --with-symbol-versions --ifunc-chars --plugin 
+--target -s -l -P -W -t -A --with-symbol-versions -B -V --plugin -p 
+-X -S --target -s -n -g -A -u -j -r -a --with-symbol-versions --special-syms 
+--unicode --recurse-limit -h -s -g -f -t -A --size-sort --debug-syms -a --ifunc-chars -V -p 
+--unicode -S --recurse-limit -C --target -l -g -D -f -A --size-sort -u -j -a -V --plugin --special-syms -p 
+-S -C -h -l -g -D -f -A -r -a --with-symbol-versions --ifunc-chars --special-syms 
+--unicode -X --inlines -C --target -s -n -P -W -A -r -p 
+--unicode -X -U --inlines -C -s -l -g -P --debug-syms -j -r -V --no-demangle -p 
+-X --inlines -C --synthetic --target -s -n -W -f -j -r --with-symbol-versions -V --plugin -p 
+--unicode -X -U --recurse-limit -C --synthetic --target -h -s -D --size-sort --debug-syms -u -j --ifunc-chars -V --no-demangle --plugin 
+--unicode -X -S --recurse-limit -s -l -n -P -D -A --debug-syms -j --no-demangle --special-syms -p 
+--unicode -X -U --inlines -C --synthetic -s -f --size-sort --debug-syms -u -r -a --with-symbol-versions -B -V -p 
+-X --inlines --synthetic --target -s -l -P -W -A --size-sort -j -r --plugin 
+-X --recurse-limit -s -l -P -W -A --size-sort -V --no-demangle -p 
+-X --inlines -s -l -P -W -A --size-sort -j --with-symbol-versions --ifunc-chars -V --no-demangle 
+--unicode -X -U --recurse-limit --synthetic -s -n -P -t -A --debug-syms -j -r --no-demangle --special-syms -p 
+-U --inlines --recurse-limit --synthetic -s -l -n -D -f --debug-syms -j -a --ifunc-chars --no-demangle --plugin 
+-X -U --inlines -C --synthetic -h -f -t -A -u -j -r -a --with-symbol-versions -V --special-syms 
+--recurse-limit --target -s -l -n -P -W -A -j 
+-S -C -s -l -D -f -A --size-sort -u -j -a --ifunc-chars --no-demangle --plugin -p 
+-X --inlines -S --synthetic -l -g -P -D --size-sort -u --with-symbol-versions --ifunc-chars -B --no-demangle --special-syms -p 
+-X --recurse-limit -l -n -g -f -A --debug-syms -r -a --ifunc-chars -B -V --no-demangle --plugin --special-syms 
+--unicode -X --inlines -S --recurse-limit --target -s -f -A --size-sort -u -a -V --no-demangle 
+--unicode -X -S -C --target -h -s -l -g -P -D --size-sort --debug-syms -r --with-symbol-versions -B -V --no-demangle --special-syms -p 
+--unicode -X -U -S --recurse-limit -C -h -s -l -P -t -A --size-sort -a -B --special-syms -p 
+--inlines -S --recurse-limit -C --synthetic --target -s -l -n -W -f -A -r -B --plugin 
+--unicode -X --inlines -S -C --target -l -n -P -W -t -A --with-symbol-versions --ifunc-chars --plugin 
+--unicode -C --synthetic --target -h -W -f -A -j -r --ifunc-chars --plugin 
+--unicode -U --inlines -C --synthetic -n -D -f -t --debug-syms -u -r -a -B 
+--unicode -X --inlines -C --target -s -l -g -P -D -t --size-sort -j --with-symbol-versions --special-syms -p 
+--unicode --inlines --recurse-limit -C --target -s -W -f -t --size-sort -V --no-demangle 
+--unicode -U -C --synthetic --target -s -l -P -t -u -j -a -V --plugin -p 
+--unicode -U --inlines --recurse-limit -C --synthetic -h -s -l -g -f -t --debug-syms -u -B --special-syms 
+-X --inlines -S --recurse-limit --synthetic --target -h -l -g -P -t -r -a -B --no-demangle --plugin --special-syms 
+--unicode -X -U --inlines --recurse-limit -h -s -l -n -g -P -t -A -u -j --no-demangle 
+--unicode -U --inlines -S --synthetic -s -l -n -f -t --debug-syms -u -j -r --with-symbol-versions --special-syms -p 
+-X --inlines --recurse-limit --target -l -g -D -f -A --size-sort --debug-syms -j -r -V --no-demangle --plugin 
+--unicode -X --inlines -S -C --target -s -P --size-sort --debug-syms -u -r --with-symbol-versions -V --plugin --special-syms -p 
+--unicode -X -U --inlines -S -C --target -h -s -l -P --size-sort -u -j -r -a --with-symbol-versions -V --no-demangle -p 
+-X --inlines --synthetic --target -h -W -A --size-sort --with-symbol-versions -B --no-demangle 
+-U --inlines -S --recurse-limit --synthetic -s -n -P -D -A -u -r -a -B --no-demangle --plugin 
+--unicode -X -U -S -l -n -g -D -f -A --with-symbol-versions --no-demangle --plugin 
+-U -S -s -l -P -D -A --size-sort -j -r --with-symbol-versions --ifunc-chars --no-demangle --plugin --special-syms 
+-U --inlines -S -C --target -s -l -D -A --size-sort -u -r -a -B --plugin --special-syms -p 
+--unicode -X --inlines --synthetic --target -h -n -D -A --debug-syms -u -a --with-symbol-versions -B -V --no-demangle 
+-X -U --inlines -S --recurse-limit -C --target -s -g -P -t -A --debug-syms -r -a --ifunc-chars -V --no-demangle 
+-X --inlines --synthetic --target -h -l -W -f -t --size-sort -r --ifunc-chars -B 
+--unicode -U --inlines -S --synthetic --target -h -l -g -f -t -A --size-sort --debug-syms -j -r -a --with-symbol-versions --no-demangle 
+--unicode -X --inlines -C --synthetic --target -h -l -W -f --with-symbol-versions -B --no-demangle --plugin 
+-X -h -l -W -f -t --size-sort -j -r --with-symbol-versions -V 
+-U -S --recurse-limit -s -n -g -P -D -t -A --debug-syms -r --no-demangle --plugin --special-syms -p 
+-U --inlines -S --synthetic -h -g -A --size-sort --debug-syms -u -j -r -V --no-demangle 
+--unicode -X -S --synthetic -h -P -A --debug-syms -a --with-symbol-versions --ifunc-chars -B --no-demangle --plugin 
+-U --synthetic -h -s -n -P -D -A -u -j -r -a --ifunc-chars -V --no-demangle --special-syms -p 
+-X -U -S --recurse-limit -l -D -f --debug-syms -u -a --ifunc-chars -B -V 
+--unicode --inlines --recurse-limit -C --synthetic --target -l -W -f -A -B --no-demangle --plugin -p 
+--unicode --inlines -S --recurse-limit -C --synthetic --target -h -s -n -W -f -t -r --ifunc-chars --plugin 
+--unicode -U --recurse-limit --synthetic -n -g -D -f -u -j -r -a --no-demangle --plugin --special-syms 
+-X --inlines -S -C --synthetic -h -l -W -t -A --size-sort -r --ifunc-chars --no-demangle --plugin 
+--unicode -S --target -h -l -g -D -A --debug-syms -r -a --with-symbol-versions -B -V --no-demangle --special-syms 
+-X --inlines --recurse-limit --synthetic --target -h -l -n -D -A -u -j -r -V --no-demangle --plugin 
+--recurse-limit -C --target -n -W -f -B -V --plugin 
+--unicode -X -S --synthetic --target -h -s -n -D -f -t --debug-syms -u -j -r -a --with-symbol-versions --no-demangle --plugin 
+-X -U --inlines -S -C --target -l -n -g -f --debug-syms -j -r --with-symbol-versions --no-demangle --plugin --special-syms 
+--unicode -S --recurse-limit -h -s -l -P -D -A --size-sort --debug-syms --ifunc-chars -V --special-syms 
+--unicode -X -h -s -l -n -g -P -D --debug-syms -u --with-symbol-versions -B -V --no-demangle --plugin --special-syms -p 
+--unicode -h -s -n -D -f -j -a --with-symbol-versions -V --plugin --special-syms 
+--inlines -s -D -f --size-sort --debug-syms -j -a --with-symbol-versions --no-demangle --plugin -p 
+--unicode -S --recurse-limit -s -P -W -A -j -V --plugin -p 
+-X -U -S -C -h -l -f -A -u -j -r -V --no-demangle --special-syms -p 
+--inlines -S --recurse-limit --synthetic --target -s -l -P -W -t -A --size-sort -B -V --no-demangle -p 
+--unicode --inlines -C --target -s -P -W --size-sort --with-symbol-versions -B -V --no-demangle --plugin -p 
+-S -C -h -s -g -f --debug-syms -u -a --with-symbol-versions -B -V --plugin 
+-U --inlines --recurse-limit -C --target -h -s -l -n -f -u -r -a -B -V 
+--unicode --inlines -S --recurse-limit -C --target -h -s -n -P -t --debug-syms -u -B --no-demangle --plugin --special-syms 
+-S --recurse-limit -C --target -s -l -n -W -f -j -r -V -p 
+--unicode -X -U --inlines -C --synthetic -n -g -f -A --debug-syms -u -j -r --with-symbol-versions -V --no-demangle 
+--target -s -n -P -W -A -r --with-symbol-versions --ifunc-chars -B -V --no-demangle --plugin -p 
+-X -S -C -h -g -D -f --size-sort -r --with-symbol-versions -V --no-demangle --plugin -p 
+--unicode --synthetic -s -l -g -D -f -j -r --with-symbol-versions -V --no-demangle --plugin --special-syms -p 
+--unicode -X --inlines -S -C --target -h -n -f -t -A --debug-syms -u -a --with-symbol-versions -B -V --plugin --special-syms 
+-X --inlines -S --target -s -l -W -f -A --with-symbol-versions --ifunc-chars -B --no-demangle --plugin 
+-U --inlines --synthetic -h -s -l -g -P -D -u -j -a --with-symbol-versions --plugin --special-syms 
+--inlines -S --recurse-limit --target -s -g -f --size-sort --debug-syms -u -r -a --ifunc-chars --no-demangle --plugin --special-syms -p 
+-X --inlines -S --recurse-limit -C --target -h -s -l -n -g -t -r -a --ifunc-chars -B -V --special-syms 
+--unicode -X -U -C --synthetic -h -l -g -f --size-sort --debug-syms -u -j -r --with-symbol-versions -V --no-demangle --special-syms -p 

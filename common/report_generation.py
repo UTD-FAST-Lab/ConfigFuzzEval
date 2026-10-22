@@ -103,7 +103,61 @@ def get_covered_lines(export):
     # Convert sets to sorted lists
     return {fn: sorted(lines) for fn, lines in results.items()}
 
+def get_covered_lines_lcov(content):
+    """
+    Return ({filename: sorted_list_of_executed_line_numbers}, branches_covered) from an
+    LCOV report (llvm-cov export -format=lcov).
+
+    A line is executed when its DA:<line>,<count> record has count > 0; llvm-cov derives
+    these from the same per-line logic that get_covered_lines() applies to the JSON
+    export, and both give the same lines. branches_covered is the sum of the BRH:
+    records, or None if the report has none.
+    """
+    results = defaultdict(set)
+    branches_covered = None
+    filename = None
+    for line in content.splitlines():
+        if line.startswith("SF:"):
+            filename = line[3:]
+        elif line.startswith("DA:") and filename is not None:
+            line_no, count = line[3:].split(",")[:2]
+            if int(count) > 0:
+                results[filename].add(int(line_no))
+        elif line.startswith("BRH:"):
+            branches_covered = (branches_covered or 0) + int(line[4:])
+        elif line == "end_of_record":
+            filename = None
+    return {f: sorted(lines) for f, lines in results.items() if lines}, branches_covered
+
+
 # Generate benchmark level reports: Individual and Average
+
+CTS_BENCHMARK = re.compile(r"^cts_(?P<cts>[^_]+)_(?P<benchmark>.+)_(?P<bin_no>\d+)$")
+
+
+def trial_metadata(entry, trial_dir):
+    """fuzzer, cts, benchmark, bin_no and trial_no of a trial directory.
+
+    Read from the trial's trial_info.json (written by run_benchmark) when present;
+    the fuzzer of a non-default runtime strategy is reported as "<fuzzer>[<strategy>]".
+    Older trial directories without it fall back to splitting the directory name.
+    """
+    info_path = os.path.join(trial_dir, "trial_info.json")
+    if os.path.isfile(info_path):
+        with open(info_path, "r", encoding="utf-8") as f:
+            info = json.load(f)
+        match = CTS_BENCHMARK.match(info["benchmark"])
+        rts = info.get("runtime_strategy", "default")
+        return {
+            "fuzzer": info["fuzzer"] if rts == "default" else f"{info['fuzzer']}[{rts}]",
+            "cts": match.group("cts") if match else "default",
+            "benchmark": match.group("benchmark") if match else info["benchmark"],
+            "bin_no": match.group("bin_no") if match else "0",
+            "trial_no": str(info["trial"]),
+        }
+    x = entry.split("_")
+    return {"fuzzer": x[0], "cts": x[2], "benchmark": "_".join(x[3:5]), "bin_no": x[5], "trial_no": x[7]}
+
 
 def generate_benchmark_level_reports(path_to_trial_data):
     results = []
@@ -125,17 +179,22 @@ def generate_benchmark_level_reports(path_to_trial_data):
 
         try:
             with open(report_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            items = data.get("data") or []
-            if items:
-                totals = (items[0].get("totals") or {})
-                lines = totals.get("lines") or {}
-                branches = totals.get("branches") or {}
-                # Branches
-                if "count" in branches and "covered" in branches:
-                    branches_covered = int(branches.get("covered") or 0)
-            # Covered lines list
-            covered_lines_ls = get_covered_lines(data)
+                content = f.read()
+            if content.lstrip().startswith("{"):
+                # llvm-cov JSON export (reports from before all fuzzers used LCOV)
+                data = json.loads(content)
+                items = data.get("data") or []
+                if items:
+                    totals = (items[0].get("totals") or {})
+                    branches = totals.get("branches") or {}
+                    # Branches
+                    if "count" in branches and "covered" in branches:
+                        branches_covered = int(branches.get("covered") or 0)
+                # Covered lines list
+                covered_lines_ls = get_covered_lines(data)
+            else:
+                # LCOV (llvm-cov export -format=lcov), written by every fuzzer's coverage.py
+                covered_lines_ls, branches_covered = get_covered_lines_lcov(content)
         except Exception:
             logging.critical(
                 f"Failed to read/parse coverage report: {report_path}"
@@ -147,6 +206,7 @@ def generate_benchmark_level_reports(path_to_trial_data):
         results.append(
             {
                 "trial": entry,
+                **trial_metadata(entry, trial_dir),
                 "lines": {
                     "covered": sum(len(lines) for lines in covered_lines_ls.values()),
                 },
@@ -229,6 +289,8 @@ def results_json_records(data):
     for file,lines in data["covered_lines_ls"].items():
         record = {}
         record['trial'] = data['trial']
+        for key in ("fuzzer", "cts", "benchmark", "bin_no", "trial_no"):
+            record[key] = data[key]
         record['lines_covered'] = data['lines_covered']
         record['branches_covered'] = data['branches_covered']
         record['file'] = file
@@ -254,12 +316,6 @@ def records_to_dataframe(raw_results):
         records += results_json_records(formatted_result)    
 
     df = pd.DataFrame(records)
-    df['trial_split'] = df['trial'].apply(lambda x: x.split('_'))
-    df['fuzzer'] = df['trial_split'].apply(lambda x: x[0])
-    df['cts'] = df['trial_split'].apply(lambda x: x[2])
-    df['benchmark'] = df['trial_split'].apply(lambda x: "_".join(x[3:5]))
-    df['bin_no'] = df['trial_split'].apply(lambda x: x[5])
-    df['trial_no'] = df['trial_split'].apply(lambda x: x[7])
 
     # Rearrange the columns in the specified order
     df = df[

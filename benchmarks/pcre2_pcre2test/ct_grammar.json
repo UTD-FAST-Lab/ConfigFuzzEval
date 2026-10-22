@@ -2,12 +2,6 @@
   "name": "pcre2_pcre2test",
   "options": [
     {
-      "name": "pcre2-8",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
       "name": "pcre2-16",
       "type": "bool",
       "default": false,
@@ -53,12 +47,6 @@
       "name": "pcre2grep-callout-fork",
       "type": "bool",
       "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "rebuild-chartables",
-      "type": "bool",
-      "default": false,
       "cli": "enable"
     },
     {
@@ -116,24 +104,6 @@
       "cli": "enable"
     },
     {
-      "name": "ebcdic",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "ebcdic-nl25",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "ebcdic-ignoring-compiler",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
       "name": "pcre2grep-libz",
       "type": "bool",
       "default": false,
@@ -150,14 +120,23 @@
       "type": "choice",
       "default": 20480,
       "cli": "with",
-      "choices": [8192, 20480, 40960, 81920]
+      "choices": [
+        8192,
+        20480,
+        40960,
+        81920
+      ]
     },
     {
       "name": "pcre2grep-max-bufsize",
       "type": "choice",
       "default": 1048576,
       "cli": "with",
-      "choices": [1048576, 2097152, 5242880]
+      "choices": [
+        1048576,
+        2097152,
+        5242880
+      ]
     },
     {
       "name": "pcre2test-libedit",
@@ -176,51 +155,71 @@
       "type": "choice",
       "default": 2,
       "cli": "with",
-      "choices": [2, 3, 4]
+      "choices": [
+        2,
+        3,
+        4
+      ]
     },
     {
       "name": "max-varlookbehind",
       "type": "choice",
       "default": 255,
       "cli": "with",
-      "choices": [255, 512, 1024, 65535]
+      "choices": [
+        255,
+        512,
+        1024,
+        65535
+      ]
     },
     {
       "name": "parens-nest-limit",
       "type": "choice",
       "default": 250,
       "cli": "with",
-      "choices": [250, 500, 1000, 2000]
+      "choices": [
+        250,
+        500,
+        1000,
+        2000
+      ]
     },
     {
       "name": "heap-limit",
       "type": "choice",
       "default": 20000000,
       "cli": "with",
-      "choices": [10000000, 20000000, 40000000]
+      "choices": [
+        10000000,
+        20000000,
+        40000000
+      ]
     },
     {
       "name": "match-limit",
       "type": "choice",
       "default": 10000000,
       "cli": "with",
-      "choices": [1000000, 10000000, 20000000]
+      "choices": [
+        1000000,
+        10000000,
+        20000000
+      ]
     },
     {
       "name": "match-limit-depth",
       "type": "choice",
       "default": 10000000,
       "cli": "with",
-      "choices": [1000000, 10000000, 20000000]
+      "choices": [
+        1000000,
+        10000000,
+        20000000
+      ]
     },
     {
       "name": "valgrind",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "coverage",
       "type": "bool",
       "default": false,
       "cli": "enable"
@@ -242,30 +241,6 @@
       "type": "bool",
       "default": true,
       "cli": "enable"
-    },
-    {
-      "name": "Werror",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "errwarn",
-      "type": "bool",
-      "default": false,
-      "cli": "enable"
-    },
-    {
-      "name": "shared",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
-    },
-    {
-      "name": "static",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
     }
   ],
   "constraints": [
@@ -273,8 +248,14 @@
       "opt": "diff-fuzz-support",
       "val": true,
       "then": [
-        { "opt": "fuzz-support", "val": true },
-        { "opt": "jit", "val": true }
+        {
+          "opt": "fuzz-support",
+          "val": true
+        },
+        {
+          "opt": "jit",
+          "val": true
+        }
       ],
       "desc": "Differential fuzzing support requires fuzzing support and JIT"
     },
@@ -282,7 +263,10 @@
       "opt": "jit-sealloc",
       "val": true,
       "then": [
-        { "opt": "jit", "val": true }
+        {
+          "opt": "jit",
+          "val": true
+        }
       ],
       "desc": "JIT Sealloc requires JIT to be enabled"
     },
@@ -290,7 +274,10 @@
       "opt": "pcre2grep-jit",
       "val": true,
       "then": [
-        { "opt": "jit", "val": true }
+        {
+          "opt": "jit",
+          "val": true
+        }
       ],
       "desc": "pcre2grep JIT requires JIT to be enabled"
     },
@@ -298,49 +285,21 @@
       "opt": "pcre2grep-callout-fork",
       "val": true,
       "then": [
-        { "opt": "pcre2grep-callout", "val": true }
+        {
+          "opt": "pcre2grep-callout",
+          "val": true
+        }
       ],
       "desc": "pcre2grep callout fork support requires callout support"
-    },
-    {
-      "opt": "fuzz-support",
-      "val": true,
-      "then": [
-        { "opt": "pcre2-8", "val": true }
-      ],
-      "desc": "Fuzzer support requires the 8-bit library"
-    },
-    {
-      "opt": "ebcdic",
-      "val": true,
-      "then": [
-        { "opt": "unicode", "val": false },
-        { "opt": "pcre2-16", "val": false },
-        { "opt": "pcre2-32", "val": false }
-      ],
-      "desc": "EBCDIC is incompatible with Unicode, 16-bit, and 32-bit libraries"
-    },
-    {
-      "opt": "ebcdic-nl25",
-      "val": true,
-      "then": [
-        { "opt": "ebcdic", "val": true }
-      ],
-      "desc": "Setting EBCDIC NL to 0x25 implies EBCDIC support"
-    },
-    {
-      "opt": "ebcdic-ignoring-compiler",
-      "val": true,
-      "then": [
-        { "opt": "ebcdic", "val": true }
-      ],
-      "desc": "Forcing EBCDIC 1047 implies EBCDIC support"
     },
     {
       "opt": "pcre2test-libedit",
       "val": true,
       "then": [
-        { "opt": "pcre2test-libreadline", "val": false }
+        {
+          "opt": "pcre2test-libreadline",
+          "val": false
+        }
       ],
       "desc": "Cannot use both libedit and libreadline for pcre2test"
     },
@@ -348,7 +307,10 @@
       "opt": "pcre2test-libreadline",
       "val": true,
       "then": [
-        { "opt": "pcre2test-libedit", "val": false }
+        {
+          "opt": "pcre2test-libedit",
+          "val": false
+        }
       ],
       "desc": "Cannot use both libedit and libreadline for pcre2test"
     },
@@ -356,11 +318,26 @@
       "opt": "newline-is-cr",
       "val": true,
       "then": [
-        { "opt": "newline-is-lf", "val": false },
-        { "opt": "newline-is-crlf", "val": false },
-        { "opt": "newline-is-anycrlf", "val": false },
-        { "opt": "newline-is-any", "val": false },
-        { "opt": "newline-is-nul", "val": false }
+        {
+          "opt": "newline-is-lf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-crlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-anycrlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-any",
+          "val": false
+        },
+        {
+          "opt": "newline-is-nul",
+          "val": false
+        }
       ],
       "desc": "Only one newline format can be selected (Mutually Exclusive)"
     },
@@ -368,11 +345,26 @@
       "opt": "newline-is-lf",
       "val": true,
       "then": [
-        { "opt": "newline-is-cr", "val": false },
-        { "opt": "newline-is-crlf", "val": false },
-        { "opt": "newline-is-anycrlf", "val": false },
-        { "opt": "newline-is-any", "val": false },
-        { "opt": "newline-is-nul", "val": false }
+        {
+          "opt": "newline-is-cr",
+          "val": false
+        },
+        {
+          "opt": "newline-is-crlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-anycrlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-any",
+          "val": false
+        },
+        {
+          "opt": "newline-is-nul",
+          "val": false
+        }
       ],
       "desc": "Only one newline format can be selected (Mutually Exclusive)"
     },
@@ -380,11 +372,26 @@
       "opt": "newline-is-crlf",
       "val": true,
       "then": [
-        { "opt": "newline-is-cr", "val": false },
-        { "opt": "newline-is-lf", "val": false },
-        { "opt": "newline-is-anycrlf", "val": false },
-        { "opt": "newline-is-any", "val": false },
-        { "opt": "newline-is-nul", "val": false }
+        {
+          "opt": "newline-is-cr",
+          "val": false
+        },
+        {
+          "opt": "newline-is-lf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-anycrlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-any",
+          "val": false
+        },
+        {
+          "opt": "newline-is-nul",
+          "val": false
+        }
       ],
       "desc": "Only one newline format can be selected (Mutually Exclusive)"
     },
@@ -392,11 +399,26 @@
       "opt": "newline-is-anycrlf",
       "val": true,
       "then": [
-        { "opt": "newline-is-cr", "val": false },
-        { "opt": "newline-is-lf", "val": false },
-        { "opt": "newline-is-crlf", "val": false },
-        { "opt": "newline-is-any", "val": false },
-        { "opt": "newline-is-nul", "val": false }
+        {
+          "opt": "newline-is-cr",
+          "val": false
+        },
+        {
+          "opt": "newline-is-lf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-crlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-any",
+          "val": false
+        },
+        {
+          "opt": "newline-is-nul",
+          "val": false
+        }
       ],
       "desc": "Only one newline format can be selected (Mutually Exclusive)"
     },
@@ -404,11 +426,26 @@
       "opt": "newline-is-any",
       "val": true,
       "then": [
-        { "opt": "newline-is-cr", "val": false },
-        { "opt": "newline-is-lf", "val": false },
-        { "opt": "newline-is-crlf", "val": false },
-        { "opt": "newline-is-anycrlf", "val": false },
-        { "opt": "newline-is-nul", "val": false }
+        {
+          "opt": "newline-is-cr",
+          "val": false
+        },
+        {
+          "opt": "newline-is-lf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-crlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-anycrlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-nul",
+          "val": false
+        }
       ],
       "desc": "Only one newline format can be selected (Mutually Exclusive)"
     },
@@ -416,41 +453,139 @@
       "opt": "newline-is-nul",
       "val": true,
       "then": [
-        { "opt": "newline-is-cr", "val": false },
-        { "opt": "newline-is-lf", "val": false },
-        { "opt": "newline-is-crlf", "val": false },
-        { "opt": "newline-is-anycrlf", "val": false },
-        { "opt": "newline-is-any", "val": false }
-      ],
-      "desc": "Only one newline format can be selected (Mutually Exclusive)"
-    },
-    {
-      "opt": "pcre2-8",
-      "val": false,
-      "then": [
         {
-          "or": [
-            { "opt": "pcre2-16", "val": true },
-            { "opt": "pcre2-32", "val": true }
-          ]
+          "opt": "newline-is-cr",
+          "val": false
+        },
+        {
+          "opt": "newline-is-lf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-crlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-anycrlf",
+          "val": false
+        },
+        {
+          "opt": "newline-is-any",
+          "val": false
         }
       ],
-      "desc": "If pcre2-8 is disabled, at least one of pcre2-16 or pcre2-32 must be enabled"
+      "desc": "Only one newline format can be selected (Mutually Exclusive)"
     }
   ],
   "removed": [
     {
       "name": "stack-for-recursion",
-      "type": "bool",
-      "default": true,
-      "cli": "enable"
+      "reason": "not an option of this pcre2 version's configure",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     },
     {
       "name": "match-limit-recursion",
-      "type": "choice",
-      "default": 10000000,
-      "cli": "with",
-      "choices": [1000000, 10000000, 20000000]
+      "reason": "not an option of this pcre2 version's configure",
+      "old": {
+        "type": "choice",
+        "default": 10000000,
+        "cli": "with",
+        "choices": [
+          1000000,
+          10000000,
+          20000000
+        ]
+      }
+    },
+    {
+      "name": "Werror",
+      "reason": "adds -Werror to CFLAGS: compiler warnings would fail the build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "errwarn",
+      "reason": "adds -errwarn=%all to CFLAGS (Sun cc): not for clang",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "coverage",
+      "reason": "gcov code coverage reports, separate from the framework's own coverage build",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable",
+        "desc": "Using afl-clang-fast (LLVM-based), but the system also has GCC 11 installed. When both coverage runtimes get linked together, the symbols collide. The coverage feature is unnecessary for fuzzing anyway — AFL instruments the binary its own way."
+      }
+    },
+    {
+      "name": "ebcdic",
+      "reason": "EBCDIC instead of ASCII (configure: use only in EBCDIC environments); incompatible with --enable-unicode",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "ebcdic-nl25",
+      "reason": "implies --enable-ebcdic",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "ebcdic-ignoring-compiler",
+      "reason": "implies --enable-ebcdic",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "pcre2-8",
+      "reason": "set by build.sh (--enable-pcre2-8): pcre2test needs the 8-bit library",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "shared",
+      "reason": "set by build.sh",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "static",
+      "reason": "set by build.sh",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
+    },
+    {
+      "name": "rebuild-chartables",
+      "reason": "set by build.sh (--disable-rebuild-chartables)"
     }
   ]
 }

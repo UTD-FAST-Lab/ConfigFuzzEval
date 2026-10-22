@@ -1,0 +1,584 @@
+{% extends "base.html" %}
+{% block title %}{{ name }} · ConfigFuzzEval{% endblock %}
+{% block content %}
+<div class="row">
+  <div>
+    <h1>{{ name }} <span id="status-badge"></span></h1>
+    <p class="sub" id="subline">
+      {% if state %}{{ state.fuzzers | join(', ') }} · {{ state.benchmarks | join(', ') }} · runtime {{ state.runtime_strategies | join(', ') }} · compile-time {{ state.compiletime | join(', ') }}{% else %}No experiment state yet.{% endif %}
+    </p>
+  </div>
+  <span class="spacer"></span>
+  <span id="actions"></span>
+  <a class="btn" href="/new?from={{ name }}">Run again…</a>
+</div>
+
+<div class="card">
+  <div class="kpis">
+    <div class="kpi"><div class="v" id="k-done">–</div><div class="l">trials done</div></div>
+    <div class="kpi"><div class="v" id="k-running">–</div><div class="l">running now</div></div>
+    <div class="kpi"><div class="v" id="k-failed">–</div><div class="l">failed</div></div>
+    <div class="kpi"><div class="v" id="k-elapsed">–</div><div class="l">elapsed</div></div>
+    <div class="kpi"><div class="v" id="k-eta">–</div><div class="l">estimated left</div></div>
+  </div>
+  <div class="progress" style="height:10px"><span id="bar" style="width:0"></span></div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<div class="card" id="campaign" hidden>
+  <div class="row">
+    <b>Continuous campaign</b> <span class="small muted" id="cp-line"></span>
+    <span class="spacer"></span>
+    <button id="cp-round" onclick="campaignAction('round', this)" title="Replay the new inputs and update the analyses now, without waiting for the next round">Run a coverage round now</button>
+    <button id="cp-stop" class="danger" onclick="campaignAction('stop', this)" title="Stop the fuzzers, then a last round takes every remaining input">Stop campaign</button>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="v" id="cp-round-no">–</div><div class="l">coverage rounds</div></div>
+    <div class="kpi"><div class="v" id="cp-next">–</div><div class="l">next round in</div></div>
+    <div class="kpi"><div class="v" id="cp-fuzzing">–</div><div class="l">instances fuzzing</div></div>
+    <div class="kpi"><div class="v" id="cp-ends">–</div><div class="l">ends</div></div>
+  </div>
+  <div id="cp-exited"></div>
+  <p class="small muted" id="cp-msg"></p>
+</div>
+
+<div class="tabs" role="tablist">
+  <button data-tab="trials" class="on">Trials</button>
+  <button data-tab="log">Log</button>
+  <button data-tab="results">Results</button>
+  <button data-tab="superc">Presence conditions</button>
+  <button data-tab="overtime" id="tab-btn-overtime" hidden>Coverage over time</button>
+  <button data-tab="analyse">Post-analysis</button>
+  <button data-tab="file">Experiment file</button>
+</div>
+
+<section class="tab on" id="tab-trials">
+  <div class="row" style="margin-bottom:8px">
+    <label>Show <select id="filter"><option value="">all trials</option><option value="running">running</option>
+      <option value="failure">failed</option><option value="success">finished</option><option value="queued">queued</option></select></label>
+    <label>Benchmark <select id="bfilter"><option value="">all</option></select></label>
+  </div>
+  <div class="card tw"><table>
+    <thead><tr><th>Arm</th><th>Benchmark</th><th>Compile-time</th><th class="num">Trial</th><th>Status</th><th class="num">Core</th><th class="num">Duration</th><th class="num">Branches covered</th><th class="num">Lines covered</th><th>Log</th></tr></thead>
+    <tbody id="trials"><tr><td colspan="10" class="empty">Loading…</td></tr></tbody>
+  </table></div>
+</section>
+
+<section class="tab" id="tab-log">
+  <div class="row" style="margin-bottom:8px">
+    <select id="logsel"></select>
+    <label><input type="checkbox" id="follow" checked> follow</label>
+  </div>
+  <pre class="log" id="log">Loading…</pre>
+</section>
+
+<section class="tab" id="tab-results">
+  <div id="results-none" class="card empty" {% if stats_files %}hidden{% endif %}>No statistics report yet. It is written when the experiment ends, or run it from <a href="#analyse" onclick="showTab('analyse')">Post-analysis</a>.</div>
+  {% if stats_files %}
+  <div class="row" style="margin-bottom:8px">
+    <a class="btn" href="/reports/{{ name }}/statistics/index.html" target="_blank">Open the report in a new tab</a>
+    {% if 'html' in stats_files %}<a class="btn" href="/reports/{{ name }}/statistics/html/index.html" target="_blank" title="Every arm's trials combined: union (what any trial covered) and mean (averaged over the trials, per line how many trials covered it)">Combined coverage: union &amp; mean</a>{% endif %}
+    {% for f in stats_files if f.endswith('.csv') %}<a href="/reports/{{ name }}/statistics/{{ f }}">{{ f }}</a>{% endfor %}
+  </div>
+  <iframe class="report" src="/reports/{{ name }}/statistics/index.html" title="Statistics report"></iframe>
+  {% endif %}
+  {% if superc_report %}
+  <p class="small muted" style="margin-top:12px">SuperC's presence-condition results are in the <a href="#superc" onclick="showTab('superc')">Presence conditions</a> tab.</p>
+  {% endif %}
+</section>
+
+<section class="tab" id="tab-overtime">
+  <div class="row" style="margin-bottom:8px">
+    <label>Metric <select id="ot-metric"><option>branches</option><option>lines</option><option>regions</option><option>functions</option></select></label>
+    <span class="small muted">After every coverage round: the median trial of each arm (line) and the range from its worst to its best trial (band).</span>
+  </div>
+  <div id="ot-charts"><div class="card empty">No coverage round yet.</div></div>
+</section>
+
+<section class="tab" id="tab-superc">
+  <div id="sc-none" class="card empty" {% if superc_report %}hidden{% endif %}>
+    {% if no_superc %}SuperC was turned off for this experiment (<code>no_superc</code>).{% else %}No SuperC report yet. It is written when the experiment ends, after aggregation.{% endif %}
+    You can run it from <a href="#analyse" onclick="showTab('analyse')">Post-analysis</a> ("SuperC presence conditions").
+  </div>
+  <div id="sc-body" hidden>
+    <p class="muted" style="max-width:85ch">SuperC gives every source line the <code>#if</code> condition under which it is compiled.
+      A condition is <b>in the build</b> when the coverage build instrumented at least one of its lines, and <b>covered</b> when a trial executed one.
+      Unconditional code (condition <code>1</code>) and code no configuration compiles (<code>0</code>) are left out.
+      An arm's trials are combined two ways: the <b>union</b> (what any of its trials covered) and the <b>mean</b> over its trials (± standard deviation: what a typical trial covers); <b>every trial</b> counts the conditions all of them covered.</p>
+    <div class="row" style="margin-bottom:6px">
+      <label id="sc-build-wrap" hidden>Benchmark build <select id="sc-build"></select></label>
+      <span class="spacer"></span>
+      <span class="small" id="sc-links"></span>
+    </div>
+    <div id="sc-status"></div>
+    <h3>Arms</h3>
+    <div class="card tw"><table>
+      <thead><tr><th>Arm</th><th class="num">Trials</th><th title="Conditions any of the arm's trials covered, against the conditions in the build">Covered (union) / in build</th>
+        <th class="num" title="Conditions covered: mean over the arm's trials ± standard deviation (median trial in the tooltip)">Mean trial</th>
+        <th class="num" title="Conditions every one of the arm's trials covered">Every trial</th>
+        <th class="num" title="Conditions this arm covered and no other arm did (union)">Only this arm</th>
+        <th class="num" title="Lines of conditional code covered by any of the arm's trials, against those in the build">Cond. lines (union)</th>
+        <th class="num" title="Lines of conditional code covered: mean over the arm's trials ± standard deviation">Cond. lines (mean)</th>
+        <th class="num" title="Covered lines in headers, or past the end of SuperC's tree, out of all covered lines: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
+      <tbody id="sc-arms"></tbody>
+    </table></div>
+    <p class="small muted" id="sc-uncovered"></p>
+
+    <div id="cs" hidden>
+      <h3>Across compile-time strategies <span class="small muted" id="cs-bench"></span></h3>
+      <p class="small muted" style="max-width:90ch">The same benchmark under each compile-time strategy it ran with. <b>Only this strategy</b>: conditions covered under it and under no other.
+        <b>Missed</b>: conditions another strategy covered and this one did not; <b>not compiled</b> of those are conditions none of this strategy's builds compiled, so no fuzzer could reach them under it.
+        Gained and lost are against the default build.</p>
+      <div class="row" style="margin-bottom:8px">
+        <label>Arm <select id="cs-arm"></select></label>
+        <span class="spacer"></span><span class="small" id="cs-links"></span>
+      </div>
+      <div class="card tw"><table>
+        <thead><tr><th>Compile-time strategy</th><th>Conditions in build</th><th>Covered / in build</th>
+          <th class="num" title="Covered under this strategy and under no other">Only this strategy</th>
+          <th class="num" title="Covered under another strategy, not under this one">Missed</th>
+          <th class="num" title="Of the missed: not compiled by any build of this strategy">not compiled</th>
+          <th class="num" title="Covered under this strategy and not under the default build">Gained vs default</th>
+          <th class="num" title="Covered under the default build and not under this strategy">Lost vs default</th></tr></thead>
+        <tbody id="cs-rows"></tbody>
+      </table></div>
+      <div class="row" style="margin:10px 0 8px">
+        <label>Show <select id="cs-show">
+          <option value="only">covered only under…</option><option value="missed">missed under… (another strategy covered it)</option>
+          <option value="not_built">not compiled under… (another strategy covered it)</option>
+          <option value="gained">gained over default by…</option><option value="lost">lost against default by…</option>
+          <option value="uncovered">compiled somewhere, covered under none</option><option value="all">all</option></select></label>
+        <label id="cs-strategy-wrap">strategy <select id="cs-strategy"></select></label>
+        <input type="text" id="cs-q" placeholder="Search conditions" style="min-width:200px">
+        <span class="small muted" id="cs-count"></span>
+      </div>
+      <div class="card tw"><table class="conds"><thead id="cs-head"></thead><tbody id="cs-conds"></tbody></table></div>
+      <button id="cs-more" hidden onclick="loadStrategyConditions(false)">Show more</button>
+    </div>
+
+    <h3>Conditions</h3>
+    <div class="row" style="margin-bottom:8px">
+      <label>Show <select id="sc-show">
+        <option value="in_build">in the build</option><option value="covered">covered by some arm</option>
+        <option value="uncovered">in the build, covered by no arm</option><option value="only">covered only by…</option>
+        <option value="missed">missed by… (another arm covered it)</option><option value="all">all</option></select></label>
+      <label id="sc-arm-wrap" hidden>arm <select id="sc-arm"></select></label>
+      <label title="Union: the lines any of the arm's trials covered. Mean: the mean over its trials, and how many trials covered the condition.">Trials <select id="sc-combine"><option value="union">union</option><option value="mean">mean</option></select></label>
+      <label>Sort <select id="sc-sort"><option value="instrumented">most instrumented lines</option>
+        <option value="missed">most lines no arm covered</option><option value="arm">most lines covered by the arm</option>
+        <option value="condition">condition (A–Z)</option></select></label>
+      <input type="text" id="sc-q" placeholder="Search conditions, e.g. SUPPORT_JIT" style="min-width:240px">
+      <span class="small muted" id="sc-count"></span>
+    </div>
+    <div class="card tw"><table class="conds">
+      <thead id="sc-head"></thead><tbody id="sc-conds"></tbody>
+    </table></div>
+    <button id="sc-more" hidden onclick="loadConditions(false)">Show more</button>
+  </div>
+</section>
+
+<section class="tab" id="tab-analyse">
+  <div class="card">
+    <p class="muted">Runs <code>common/post_analysis.py</code> on this experiment as a queued job. The report is rewritten in place.</p>
+    <label class="chip on"><input type="checkbox" id="pa-stats" checked> statistics report</label>
+    <div class="row" style="margin:10px 0 4px 4px">
+      <label class="field"><span>Rank by</span><select id="pa-metric"><option>branches</option><option>lines</option><option>regions</option><option>functions</option></select></label>
+      <label class="field"><span>Baseline fuzzer</span><select id="pa-baseline"><option value="">default (aflplusplus)</option>{% for f in fuzzers %}<option>{{ f }}</option>{% endfor %}</select></label>
+      <label class="field"><span>Compare with (reproducibility)</span><select id="pa-compare"><option value="">none</option>{% for o in others %}<option>{{ o }}</option>{% endfor %}</select></label>
+    </div>
+    <div class="chips" style="margin:6px 0 12px">
+      <label class="chip"><input type="checkbox" id="pa-perconfig"> per-configuration coverage first <span class="hint">runtime strategies: union vs best configuration (Docker)</span></label>
+      <label class="chip"><input type="checkbox" id="pa-superc"> SuperC presence conditions <span class="hint">which #if conditions the trials covered (Docker)</span></label>
+      {% if triagers %}<label class="chip"><input type="checkbox" id="pa-triage"> crash triage <span class="hint">{{ triagers | join(', ') }}</span></label>{% endif %}
+    </div>
+    <button class="primary" onclick="runPost()" id="pa-btn">Queue analysis</button> <span id="pa-msg" class="small"></span>
+  </div>
+  <h3>Jobs for this experiment</h3>
+  <div class="card tw"><table><thead><tr><th>#</th><th>Job</th><th>Status</th><th>Started</th><th class="num">Exit code</th><th></th></tr></thead><tbody id="jobs"></tbody></table></div>
+</section>
+
+<section class="tab" id="tab-file">
+  <pre class="log">{{ experiment_text or 'No experiment file.' }}</pre>
+</section>
+
+<script>
+const NAME = {{ name | tojson }};
+const PHASES = ["building images", "building benchmarks", "fuzzing", "aggregating", "superc", "triage", "statistics"];
+let status = null, logOffset = -1, logJob = "", pollTimer = null;
+
+for (const c of document.querySelectorAll(".chip input")) {
+  c.addEventListener("change", () => c.parentElement.classList.toggle("on", c.checked));
+}
+function showTab(t) {
+  for (const b of document.querySelectorAll(".tabs button")) b.classList.toggle("on", b.dataset.tab === t);
+  for (const s of document.querySelectorAll(".tab")) s.classList.toggle("on", s.id === "tab-" + t);
+  history.replaceState(null, "", "#" + t);
+  if (t === "log") loadLog(true);
+  if (t === "superc") setTimeout(loadSuperc);   // after the whole script has run
+  if (t === "overtime") setTimeout(loadTimeline);
+}
+for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
+if (location.hash) showTab(location.hash.slice(1));
+window.addEventListener("hashchange", () => { if (document.getElementById("tab-" + location.hash.slice(1))) showTab(location.hash.slice(1)); });
+
+function renderTrials(trials) {
+  const f = document.getElementById("filter").value, bf = document.getElementById("bfilter").value;
+  const bsel = document.getElementById("bfilter");
+  for (const b of [...new Set(trials.map(t => t.bench))])
+    if (![...bsel.options].some(o => o.value === b)) bsel.add(new Option(b, b));
+  const rows = trials.filter(t => (!f || t.status === f || (f === "failure" && ["failure", "interrupted", "skipped"].includes(t.status)))
+                                && (!bf || t.bench === bf));
+  const cov = c => c ? `${c[0].toLocaleString()} <span class="muted">/ ${c[1].toLocaleString()} · ${(100 * c[0] / c[1]).toFixed(1)}%</span>` : "–";
+  document.getElementById("trials").innerHTML = rows.length ? rows.map(t => `<tr>
+    <td>${esc(t.arm)}</td><td>${esc(t.bench)}</td><td>${esc(t.cts)}${t.copy ? ` <span class="muted">copy ${t.copy}</span>` : ""}</td><td class="num">${t.trial}</td><td>${badge(t.status)}</td>
+    <td class="num">${t.core ?? "–"}</td><td class="num">${duration(t.seconds)}</td>
+    <td class="num">${cov(t.branches)}</td><td class="num">${cov(t.lines)}</td>
+    <td>${t.log ? `<a href="/experiments/${encodeURIComponent(NAME)}/files/${t.log}" target="_blank">log</a>` : ""}${t.pc ? ` · <a href="/experiments/${encodeURIComponent(NAME)}/files/${t.pc}" target="_blank" title="This trial's presence-condition coverage (SuperC)">conditions</a>` : ""}</td></tr>`).join("")
+    : `<tr><td colspan="10" class="empty">No trials match.</td></tr>`;
+}
+
+function renderJobs(jobs) {
+  document.getElementById("jobs").innerHTML = jobs.length ? jobs.map(j => `<tr><td class="num">${j.id}</td><td>${esc(j.title)}</td>
+    <td>${badge(j.status)}</td><td>${j.started ? new Date(j.started * 1000).toLocaleString() : "–"}</td>
+    <td class="num">${j.returncode ?? "–"}</td>
+    <td class="num">${["queued", "running"].includes(j.status) ? `<button class="small danger" onclick="cancelJob(${j.id}, this)">${j.status === "queued" ? "Remove" : "Stop"}</button>` : ""}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="empty">No jobs from the web app.</td></tr>`;
+  const sel = document.getElementById("logsel"), cur = sel.value;
+  sel.innerHTML = `<option value="">experiment log</option>` + jobs.filter(j => j.kind === "post").map(j => `<option value="${j.id}">job ${j.id}: ${esc(j.title)}</option>`).join("");
+  sel.value = cur;
+}
+
+async function refresh() {
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/status`);
+  if (!r || !r.summary) return;
+  const s = r.summary, trials = r.trials;
+  status = s.status;
+  document.getElementById("status-badge").innerHTML = badge(s.status) + (s.phase && s.status === "running" ? ` <span class="small muted">${esc(s.phase)}</span>` : "");
+  const planned = s.planned || trials.length, done = trials.filter(t => ["success", "failure", "skipped"].includes(t.status)).length;
+  const running = trials.filter(t => t.status === "running").length, failed = trials.filter(t => ["failure", "skipped", "interrupted"].includes(t.status)).length;
+  document.getElementById("k-done").textContent = planned ? `${done} / ${planned}` : "–";
+  document.getElementById("k-running").textContent = running;
+  document.getElementById("k-failed").textContent = failed;
+  document.getElementById("bar").style.width = planned ? `${100 * done / planned}%` : "0";
+  const end = s.ended || (s.status === "running" ? r.now : null);
+  document.getElementById("k-elapsed").textContent = s.started && end ? duration(end - s.started) : "–";
+  const times = trials.filter(t => t.status === "success" && t.seconds).map(t => t.seconds);
+  if (s.status === "running" && times.length && running) {
+    const avg = times.reduce((a, b) => a + b, 0) / times.length;
+    const left = planned - done;
+    document.getElementById("k-eta").textContent = "~" + duration(Math.ceil(left / Math.max(running, 1)) * avg);
+  } else document.getElementById("k-eta").textContent = s.status === "running" ? "…" : "–";
+  const seen = r.phases.map(p => p.phase || "finished");
+  const phases = s.mode === "continuous" ? ["building images", "building benchmarks", "fuzzing", "stopping"] : PHASES;
+  document.getElementById("timeline").innerHTML = phases.concat(["finished"]).filter(p => seen.includes(p) || phases.includes(p))
+    .map(p => `<span class="step ${s.phase === p && s.status === "running" ? "cur" : ""}" style="${seen.includes(p) ? "" : "opacity:.45"}">${esc(p)}</span>`).join("")
+    + (seen.includes("cancelled") ? `<span class="step" style="color:var(--bad-ink)">cancelled</span>` : "");
+  const active = r.jobs.find(j => ["running", "cancelling"].includes(j.status) && j.kind === "experiment");
+  document.getElementById("actions").innerHTML = active ? `<button class="danger" onclick="cancelJob(${active.id}, this)"
+    ${s.mode === "continuous" ? `title="Kill the campaign now: no last coverage round"` : ""}>${s.mode === "continuous" ? "Cancel (no last round)" : "Stop experiment"}</button>` : "";
+  if (s.mode === "continuous") renderCampaign(s, r.now);
+  renderTrials(trials); renderJobs(r.jobs);
+  if (s.has_superc && !sc.loaded && document.getElementById("tab-superc").classList.contains("on")) loadSuperc();
+  if (r.stats && document.getElementById("results-none") && !document.querySelector("iframe.report") && s.status !== "running") {
+    document.getElementById("results-none").innerHTML = `The statistics report is ready. <a href="#results" onclick="location.reload()">Reload to show it</a>.`;
+  }
+  const busy = s.status === "running" || r.jobs.some(j => ["queued", "running", "cancelling"].includes(j.status));
+  clearTimeout(pollTimer);
+  pollTimer = setTimeout(refresh, busy ? 3000 : 30000);
+}
+
+async function loadLog(reset) {
+  const sel = document.getElementById("logsel").value;
+  if (reset || sel !== logJob) { logOffset = -1; logJob = sel; document.getElementById("log").textContent = ""; }
+  const q = `offset=${logOffset}` + (logJob ? `&job=${logJob}` : "");
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/log?${q}`);
+  const pre = document.getElementById("log");
+  if (logOffset < 0) pre.textContent = r.text || "No log.";
+  else if (r.text) pre.textContent += r.text;
+  logOffset = r.offset;
+  if (document.getElementById("follow").checked) pre.scrollTop = pre.scrollHeight;
+}
+document.getElementById("logsel").addEventListener("change", () => loadLog(true));
+setInterval(() => { if (document.getElementById("tab-log").classList.contains("on")) loadLog(false); }, 2000);
+document.getElementById("filter").addEventListener("change", refresh);
+document.getElementById("bfilter").addEventListener("change", refresh);
+
+async function runPost() {
+  const v = id => document.getElementById(id);
+  const body = {stats: v("pa-stats").checked, metric: v("pa-metric").value, baseline: v("pa-baseline").value,
+                compare_to: v("pa-compare").value, per_config: v("pa-perconfig").checked,
+                superc: v("pa-superc").checked,
+                triage: v("pa-triage") ? v("pa-triage").checked : false};
+  v("pa-btn").disabled = true;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/post`, body);
+  v("pa-btn").disabled = false;
+  v("pa-msg").innerHTML = r.ok ? `Queued as job ${r.job_id}. Follow it in the log tab.` : `<span style="color:var(--bad-ink)">${esc(r.error)}</span>`;
+  refresh();
+}
+
+// ---- Continuous campaign ----
+let campaignRound = null;
+function cpuRanges(cpus) {        // [0,1,2,5] -> "0–2, 5"
+  const out = [];
+  for (const c of [...cpus].sort((a, b) => a - b)) {
+    const last = out[out.length - 1];
+    if (last && c === last[1] + 1) last[1] = c; else out.push([c, c]);
+  }
+  return out.map(([a, b]) => a === b ? `${a}` : `${a}–${b}`).join(", ");
+}
+function renderCampaign(s, now) {
+  const c = s.continuous || {};
+  document.getElementById("campaign").hidden = false;
+  document.getElementById("tab-btn-overtime").hidden = false;
+  document.getElementById("k-done").nextElementSibling.textContent = "instances ended";
+  document.getElementById("k-eta").nextElementSibling.textContent = "next coverage round";
+  const live = s.status === "running";
+  document.getElementById("cp-round-no").textContent = c.round ?? 0;
+  const next = live && c.next_round && !c.stopping ? Math.max(0, c.next_round - now) : null;
+  document.getElementById("cp-next").textContent = c.step ? `running (${c.step})` : next != null ? duration(next) : "–";
+  document.getElementById("k-eta").textContent = document.getElementById("cp-next").textContent;
+  document.getElementById("cp-fuzzing").textContent = c.instances ? `${c.fuzzing} / ${c.instances}` : "–";
+  document.getElementById("cp-ends").textContent = c.ends ? new Date(c.ends * 1000).toLocaleString() : (live ? "when stopped" : "–");
+  // The bar is the campaign's time when it has a duration; without one there is nothing to fill.
+  document.getElementById("bar").style.width = c.duration && c.started ? `${Math.min(100, 100 * ((s.ended || now) - c.started) / c.duration)}%` : "0";
+  if (c.started) document.getElementById("k-elapsed").textContent = duration((s.ended || now) - c.started);
+  document.getElementById("cp-line").textContent = [
+    c.interval ? `a round every ${duration(c.interval)}` : "",
+    c.fuzz_cpus ? `fuzzing on CPU ${cpuRanges(c.fuzz_cpus)}` : "", c.coverage_cpus ? `coverage on CPU ${cpuRanges(c.coverage_cpus)}` : "",
+    c.stopping ? "stopping: last round" : ""].filter(Boolean).join(" · ");
+  document.getElementById("cp-exited").innerHTML = (c.exited || []).length ? `<div class="warnbox"><b>${c.exited.length} instance(s) stopped on their own</b> and are not restarted;
+    their inputs so far still count: ${c.exited.map(i => `${esc(i.label)} on ${esc(i.benchmark)}, trial ${i.trial} (exit code ${i.exit_code})`).join("; ")}.
+    Their <code>fuzzing.log</code> says why.</div>` : "";
+  for (const id of ["cp-round", "cp-stop"]) document.getElementById(id).disabled = !live || c.stopping;
+  if (campaignRound !== null && c.round !== campaignRound && document.getElementById("tab-overtime").classList.contains("on")) loadTimeline();
+  campaignRound = c.round;
+}
+
+async function campaignAction(action, btn) {
+  if (action === "stop" && !confirm("Stop the campaign? The fuzzers stop now; a last coverage round then takes every remaining input, and the analyses are updated once more.")) return;
+  btn.disabled = true;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/continuous/${action}`, {});
+  document.getElementById("cp-msg").innerHTML = r.ok ? (action === "round" ? "A coverage round starts within a few seconds." : "Stopping: the last round runs next.")
+    : `<span style="color:var(--bad-ink)">${esc(r.error || "failed")}</span>`;
+  setTimeout(refresh, 1500);
+}
+
+function lineChart(byArm, metric) {
+  const arms = Object.keys(byArm), W = 760, H = 300, L = 64, R = 16, T = 12, B = 40;
+  const pts = arms.flatMap(a => byArm[a]);
+  if (!pts.length) return "";
+  const xMax = Math.max(...pts.map(p => p[0]), 0.01), yMax = Math.max(...pts.map(p => p[3]), 1) * 1.05;
+  const x = h => L + (W - L - R) * h / xMax, y = v => T + (H - T - B) * (1 - v / yMax);
+  const ticks = (max, n) => { const step = Math.pow(10, Math.floor(Math.log10(max / n))); const m = [1, 2, 5, 10].find(k => max / (k * step) <= n) * step; const out = []; for (let v = 0; v <= max; v += m) out.push(v); return out; };
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(metric)} covered over time">`;
+  for (const v of ticks(yMax, 5)) svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" class="tick">${v.toLocaleString()}</text>`;
+  for (const v of ticks(xMax, 6)) svg += `<text x="${x(v)}" y="${H - B + 16}" text-anchor="middle" class="tick">${v}</text>`;
+  svg += `<line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" class="axis"/>`;
+  svg += `<text x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle" class="tick">hours since the campaign started</text>`;
+  arms.forEach((arm, i) => {
+    const c = i < 8 ? `var(--cat-${i + 1})` : "var(--muted)", p = byArm[arm];
+    const band = p.map(q => `${x(q[0])},${y(q[3])}`).concat([...p].reverse().map(q => `${x(q[0])},${y(q[2])}`)).join(" ");
+    svg += `<polygon points="${band}" fill="${c}" opacity="0.15"/>`;
+    svg += `<polyline points="${p.map(q => `${x(q[0])},${y(q[1])}`).join(" ")}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round"/>`;
+    for (const q of p) svg += `<circle cx="${x(q[0])}" cy="${y(q[1])}" r="7" fill="transparent"><title>${esc(arm)} after ${q[0].toFixed(1)} h: median ${Math.round(q[1]).toLocaleString()} (${q[2].toLocaleString()}–${q[3].toLocaleString()}, ${q[4]} trials)</title></circle><circle cx="${x(q[0])}" cy="${y(q[1])}" r="3" fill="${c}" stroke="var(--surface)" stroke-width="1.5" pointer-events="none"/>`;
+  });
+  svg += `</svg>`;
+  const legend = `<div class="legend-row">${arms.map((a, i) => `<span><i style="background:${i < 8 ? `var(--cat-${i + 1})` : "var(--muted)"}"></i>${esc(a)}</span>`).join("")}</div>`;
+  return svg + legend;
+}
+
+async function loadTimeline() {
+  const metric = document.getElementById("ot-metric").value;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/timeline?metric=${metric}`);
+  const root = document.getElementById("ot-charts");
+  if (!r.ok) { root.innerHTML = `<div class="card empty">No coverage round yet: the first one runs after the first interval.</div>`; return; }
+  root.innerHTML = Object.entries(r.benchmarks).map(([b, byArm]) => {
+    const rows = Object.entries(byArm).map(([a, p]) => { const q = p[p.length - 1];
+      return `<tr><td>${esc(a)}</td><td class="num">${p.length}</td><td class="num">${q[0].toFixed(1)}</td><td class="num">${Math.round(q[1]).toLocaleString()}</td><td class="num">${q[2].toLocaleString()}</td><td class="num">${q[3].toLocaleString()}</td><td class="num">${q[4]}</td></tr>`; }).join("");
+    return `<div class="card"><h3 style="margin-top:0">${esc(b)}</h3>${lineChart(byArm, metric)}
+      <div class="tw"><table><thead><tr><th>Arm</th><th class="num">Rounds</th><th class="num">Hours</th><th class="num">Median ${esc(metric)}</th><th class="num">Min</th><th class="num">Max</th><th class="num">Trials</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }).join("");
+}
+document.getElementById("ot-metric").addEventListener("change", loadTimeline);
+
+// ---- Presence conditions across compile-time strategies ----
+const cs = {data: null, offset: 0, timer: null};
+
+async function loadStrategies() {
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/strategies`);
+  cs.data = r.ok ? r.benchmarks : null;
+  renderStrategies();
+}
+
+function currentStrategyBenchmark() {
+  if (!cs.data || !sc.data) return null;
+  const b = currentBuild();
+  return b ? cs.data[b.benchmark] || null : null;
+}
+
+function renderStrategies() {
+  const c = currentStrategyBenchmark();
+  document.getElementById("cs").hidden = !c;
+  if (!c) return;
+  document.getElementById("cs-bench").textContent = `· ${c.benchmark}: ${c.strategies.join(", ")}`;
+  const armSel = document.getElementById("cs-arm"), cur = armSel.value;
+  armSel.innerHTML = c.arms.map(a => `<option>${esc(a)}</option>`).join("");
+  armSel.value = c.arms.includes(cur) ? cur : (c.arms.includes("all fuzzers") ? "all fuzzers" : c.arms[0]);
+  const stSel = document.getElementById("cs-strategy"), curSt = stSel.value;
+  stSel.innerHTML = c.strategies.map(x => `<option>${esc(x)}</option>`).join("");
+  stSel.value = c.strategies.includes(curSt) ? curSt : (c.strategies.find(x => x !== "default") || c.strategies[0]);
+  const base = `/reports/${encodeURIComponent(NAME)}/superc/`;
+  document.getElementById("cs-links").innerHTML = `<a href="${base}cross_strategy.csv">cross_strategy.csv</a> · <a href="${base}${encodeURIComponent(c.file)}">${esc(c.file)}</a>`;
+  renderStrategyRows();
+  loadStrategyConditions(true);
+}
+
+function renderStrategyRows() {
+  const c = currentStrategyBenchmark(), arm = document.getElementById("cs-arm").value;
+  const rows = c.rows.filter(r => r.arm === arm);
+  const maxBuilt = Math.max(...rows.map(r => r.conditions_in_build), 1);
+  const best = Math.max(...rows.map(r => r.conditions_covered));
+  const opt = v => v == null ? `<span class="muted">–</span>` : v.toLocaleString();
+  document.getElementById("cs-rows").innerHTML = rows.map(r => `<tr>
+    <td style="white-space:nowrap">${esc(r.compiletime)}${r.conditions_covered === best && rows.length > 1 ? ` <span class="badge success" title="Covered the most conditions">most</span>` : ""}</td>
+    <td title="Bars are relative to the strategy whose builds compile the most conditions"><div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:100px;min-width:100px"><span style="width:${(100 * r.conditions_in_build / maxBuilt).toFixed(1)}%"></span></div><span class="num">${r.conditions_in_build.toLocaleString()}</span></div></td>
+    <td>${meter(r.conditions_covered, r.conditions_in_build)}</td>
+    <td class="num">${r.only_this_strategy.toLocaleString()}</td><td class="num">${r.missed.toLocaleString()}</td>
+    <td class="num">${r.missed_not_in_build.toLocaleString()}</td>
+    <td class="num">${opt(r.gained_over_default)}</td><td class="num">${opt(r.lost_against_default)}</td></tr>`).join("");
+}
+
+async function loadStrategyConditions(reset) {
+  const c = currentStrategyBenchmark();
+  if (!c) return;
+  const show = document.getElementById("cs-show").value;
+  document.getElementById("cs-strategy-wrap").hidden = ["all", "uncovered"].includes(show);
+  if (reset) cs.offset = 0;
+  const q = new URLSearchParams({arm: document.getElementById("cs-arm").value, show, strategy: document.getElementById("cs-strategy").value,
+                                 q: document.getElementById("cs-q").value, offset: cs.offset, limit: 100});
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/strategies/${encodeURIComponent(c.benchmark)}/conditions?${q}`);
+  if (!r.ok) return;
+  document.getElementById("cs-head").innerHTML = `<tr><th>Condition</th>` + r.strategies.map(x => `<th class="num">${esc(x)}</th>`).join("") + `<th>Covered under</th></tr>`;
+  const rows = r.rows.map(x => `<tr><td class="cond"><code>${esc(x.condition)}</code></td>` + r.strategies.map(st => {
+      const p = x.per[st];
+      if (!p) return `<td class="num muted" title="No build of ${esc(st)} compiled this condition">not compiled</td>`;
+      const f = p[1] ? p[0] / p[1] : 0;
+      return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(st)}: ${p[0]} of ${p[1]} instrumented lines covered">${p[0] ? `${p[0].toLocaleString()} <span class="muted">/ ${p[1].toLocaleString()}</span>` : `<span class="muted">0 / ${p[1].toLocaleString()}</span>`}</td>`;
+    }).join("") + `<td class="small">${x.covered_under.length ? (x.only ? `only <b>${esc(x.only)}</b>` : x.covered_under.length === r.strategies.length ? "all strategies" : x.covered_under.map(esc).join(", ")) : `<span class="muted">none</span>`}</td></tr>`).join("");
+  const tbody = document.getElementById("cs-conds");
+  if (reset) tbody.innerHTML = rows || `<tr><td colspan="${r.strategies.length + 2}" class="empty">No conditions match.</td></tr>`;
+  else tbody.insertAdjacentHTML("beforeend", rows);
+  cs.offset = r.offset + r.rows.length;
+  document.getElementById("cs-more").hidden = cs.offset >= r.matching;
+  document.getElementById("cs-count").textContent = `${r.matching.toLocaleString()} of ${r.total.toLocaleString()} conditions`;
+}
+document.getElementById("cs-arm").addEventListener("change", () => { renderStrategyRows(); loadStrategyConditions(true); });
+for (const id of ["cs-show", "cs-strategy"]) document.getElementById(id).addEventListener("change", () => loadStrategyConditions(true));
+document.getElementById("cs-q").addEventListener("input", () => { clearTimeout(cs.timer); cs.timer = setTimeout(() => loadStrategyConditions(true), 250); });
+
+// ---- Presence conditions (SuperC) ----
+const sc = {data: null, build: null, offset: 0, loaded: false, timer: null};
+const pct = (a, b) => b ? (100 * a / b) : 0;
+function meter(a, b) {
+  return `<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="progress" style="width:100px;min-width:100px"><span style="width:${pct(a, b).toFixed(1)}%"></span></div>
+    <span class="num" style="white-space:nowrap">${a.toLocaleString()} <span class="muted">/ ${b.toLocaleString()} · ${pct(a, b).toFixed(1)}%</span></span></div>`;
+}
+
+async function loadSuperc(force) {
+  if (sc.loaded && !force) return;
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc`);
+  if (!r.ok || !r.builds || !r.builds.length) {
+    document.getElementById("sc-none").hidden = false; document.getElementById("sc-body").hidden = true; return;
+  }
+  sc.data = r; sc.loaded = true;
+  loadStrategies();
+  document.getElementById("sc-none").hidden = true; document.getElementById("sc-body").hidden = false;
+  const sel = document.getElementById("sc-build");
+  sel.innerHTML = r.builds.map(b => `<option value="${esc(b.key)}">${esc(b.benchmark)}${b.compiletime !== "default" ? ` (compile-time ${esc(b.compiletime)})` : ""}</option>`).join("");
+  document.getElementById("sc-build-wrap").hidden = r.builds.length < 2;
+  if (sc.build && r.builds.some(b => b.key === sc.build)) sel.value = sc.build;
+  renderBuild();
+}
+
+// Reports from before the mean have no mean columns: shown as "–".
+function meanSd(mean, sd) {
+  if (mean === undefined || mean === "") return `<span class="muted">–</span>`;
+  const f = v => Number(v).toLocaleString(undefined, {maximumFractionDigits: 1});
+  return `${f(mean)} <span class="muted">± ${f(sd)}</span>`;
+}
+
+function currentBuild() { return sc.data.builds.find(b => b.key === document.getElementById("sc-build").value) || sc.data.builds[0]; }
+
+function renderBuild() {
+  const b = currentBuild(); sc.build = b.key;
+  const base = `/reports/${encodeURIComponent(NAME)}/superc/`;
+  document.getElementById("sc-links").innerHTML = [
+    `<a href="${base}index.html" target="_blank">SuperC report</a>`, `<a href="${base}pc_summary.csv">pc_summary.csv</a>`,
+    b.comparison_file ? `<a href="${base}${encodeURIComponent(b.comparison_file)}">${esc(b.comparison_file)}</a>` : ""].filter(Boolean).join(" · ");
+  const st = b.superc, statusEl = document.getElementById("sc-status");
+  if (!st) statusEl.innerHTML = "";
+  else {
+    const bad = st.timed_out + st.failed;
+    statusEl.innerHTML = `<div class="${bad ? "warnbox" : "okbox"}">SuperC analysed <b>${st.ok.toLocaleString()} of ${st.files.toLocaleString()}</b> .c files of this build
+      (${duration(st.seconds)} summed over the files)${bad ? `; <b>${st.timed_out} timed out and ${st.failed} failed</b>, so their lines have no condition and are left out` : ""}.
+      ${bad ? `<details><summary>Files without a result</summary><div class="tw"><table><thead><tr><th>File</th><th>Result</th><th class="num">Seconds</th></tr></thead><tbody>` +
+        st.problems.map(p => `<tr><td><code>${esc(p.file)}</code></td><td>${esc(p.reason)}</td><td class="num">${p.seconds}</td></tr>`).join("") + `</tbody></table></div></details>` : ""}</div>`;
+  }
+  sc.trials = Object.fromEntries(b.rows.map(r => [r.arm, r.trials]));
+  const best = Math.max(...b.rows.map(r => r.conditions_covered_union));
+  document.getElementById("sc-arms").innerHTML = [...b.rows].sort((x, y) => y.conditions_covered_union - x.conditions_covered_union).map(r => `<tr>
+    <td style="white-space:nowrap">${esc(r.arm)}${r.conditions_covered_union === best && b.rows.length > 1 ? ` <span class="badge success" title="Covered the most conditions">most</span>` : ""}</td>
+    <td class="num">${r.trials}</td><td>${meter(r.conditions_covered_union, r.conditions_in_build)}</td>
+    <td class="num" title="median trial: ${Number(r.conditions_covered_median_trial).toLocaleString()}">${meanSd(r.conditions_covered_mean, r.conditions_covered_sd)}</td>
+    <td class="num">${r.conditions_covered_every_trial === undefined ? "–" : r.conditions_covered_every_trial.toLocaleString()}</td>
+    <td class="num">${(b.only[r.arm] || 0).toLocaleString()}</td>
+    <td class="num">${r.conditional_lines_covered_union.toLocaleString()} <span class="muted">/ ${r.conditional_lines_in_build.toLocaleString()} · ${pct(r.conditional_lines_covered_union, r.conditional_lines_in_build).toFixed(1)}%</span></td>
+    <td class="num">${meanSd(r.conditional_lines_covered_mean, r.conditional_lines_covered_sd)}${r.conditional_lines_covered_mean === undefined ? "" : ` <span class="muted">· ${pct(r.conditional_lines_covered_mean, r.conditional_lines_in_build).toFixed(1)}%</span>`}</td>
+    <td class="num" title="${r.covered_lines_in_headers.toLocaleString()} in headers, ${r.covered_lines_without_condition.toLocaleString()} in .c files past SuperC's tree">${(r.covered_lines_in_headers + r.covered_lines_without_condition).toLocaleString()} <span class="muted">/ ${r.covered_lines_union.toLocaleString()}</span></td></tr>`).join("");
+  document.getElementById("sc-uncovered").textContent = b.comparison_file ?
+    `${b.uncovered.toLocaleString()} of the ${b.in_build.toLocaleString()} conditions in the build were covered by no arm.` : "";
+  const armSel = document.getElementById("sc-arm"), cur = armSel.value;
+  armSel.innerHTML = b.arms.map(a => `<option>${esc(a)}</option>`).join("");
+  if (b.arms.includes(cur)) armSel.value = cur;
+  loadConditions(true);
+}
+
+async function loadConditions(reset) {
+  const b = currentBuild();
+  const tbody = document.getElementById("sc-conds"), more = document.getElementById("sc-more");
+  if (!b.comparison_file) { tbody.innerHTML = `<tr><td class="empty">No comparison table for this build.</td></tr>`; more.hidden = true; return; }
+  const show = document.getElementById("sc-show").value, combine = document.getElementById("sc-combine").value;
+  let sort = document.getElementById("sc-sort").value;
+  if (sort === "arm" && combine === "mean") sort = "arm_mean";
+  const needsArm = ["only", "missed"].includes(show) || sort.startsWith("arm");
+  document.getElementById("sc-arm-wrap").hidden = !needsArm;
+  if (reset) sc.offset = 0;
+  const q = new URLSearchParams({show, sort, q: document.getElementById("sc-q").value, offset: sc.offset, limit: 100});
+  if (needsArm) q.set("arm", document.getElementById("sc-arm").value);
+  const r = await api(`/api/experiments/${encodeURIComponent(NAME)}/superc/${encodeURIComponent(b.key)}/conditions?${q}`);
+  if (!r.ok) return;
+  document.getElementById("sc-head").innerHTML = `<tr><th>Condition</th><th class="num">Instrumented lines</th>` +
+    r.arms.map(a => `<th class="num">${esc(a)}</th>`).join("") + `<th>Covered by</th></tr>`;
+  const rows = r.rows.map(c => `<tr><td class="cond"><code>${esc(c.condition)}</code></td><td class="num">${c.instrumented.toLocaleString()}</td>` +
+    r.arms.map(a => {
+      if (combine === "mean") {
+        if (!c.mean) return `<td class="num muted" title="This report has no mean columns; rerun SuperC">–</td>`;
+        const m = c.mean[a] || 0, k = c.trials[a] || 0, n = sc.trials[a] || 0, f = c.instrumented ? m / c.instrumented : 0;
+        return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(a)}: ${m} of ${c.instrumented} lines on average; covered by ${k} of ${n} trials">${m ? Number(m).toLocaleString(undefined, {maximumFractionDigits: 1}) : `<span class="muted">0</span>`} <span class="muted small">${k}/${n}</span></td>`;
+      }
+      const n = c.lines[a] || 0, f = c.instrumented ? n / c.instrumented : 0;
+      return `<td class="num heat" style="--f:${(f * 70).toFixed(0)}%" title="${esc(a)}: ${n} of ${c.instrumented} lines">${n ? n.toLocaleString() : `<span class="muted">0</span>`}</td>`; }).join("") +
+    `<td class="small">${c.covered_by.length ? (c.only ? `only <b>${esc(c.only)}</b>` : c.covered_by.length === r.arms.length ? "all arms" : c.covered_by.map(esc).join(", ")) : `<span class="muted">none</span>`}</td></tr>`).join("");
+  if (reset) tbody.innerHTML = rows || `<tr><td colspan="${r.arms.length + 3}" class="empty">No conditions match.</td></tr>`;
+  else tbody.insertAdjacentHTML("beforeend", rows);
+  sc.offset = r.offset + r.rows.length;
+  more.hidden = sc.offset >= r.matching;
+  document.getElementById("sc-count").textContent = `${r.matching.toLocaleString()} of ${r.total.toLocaleString()} conditions`;
+}
+
+document.getElementById("sc-build").addEventListener("change", () => { renderBuild(); renderStrategies(); });
+for (const id of ["sc-show", "sc-sort", "sc-arm", "sc-combine"]) document.getElementById(id).addEventListener("change", () => loadConditions(true));
+document.getElementById("sc-q").addEventListener("input", () => { clearTimeout(sc.timer); sc.timer = setTimeout(() => loadConditions(true), 250); });
+refresh();
+</script>
+{% endblock %}

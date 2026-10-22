@@ -1,0 +1,52 @@
+-f 3dostr
+-f 4xm
+-f aa
+-f aac
+-f aax
+-t 3600
+-to 3600
+-fs 52428800
+-ss 3600
+-sseof 3600
+-target vcd
+-target pal-vcd
+-target ntsc-vcd
+-target film-vcd
+-target svcd
+-apad
+-frames 216000
+-reinit_filter
+-discard
+-disposition
+-vframes 216000
+-r 30
+-aspect 4:3
+-aspect 16:9
+-bits_per_raw_sample 16
+-vn
+-vcodec h264
+-vcodec hevc
+-vcodec mpeg4
+-vcodec vp9
+-vcodec copy
+-pass 2
+-b:v 45000000
+-b:a 200000
+-dn
+-aframes 176947200
+-ar 44100
+-ac 2
+-an
+-acodec aac
+-acodec mp3
+-acodec flac
+-acodec opus
+-acodec copy
+-vol 256
+-sn
+-scodec ass
+-scodec subrip
+-scodec mov_text
+-scodec webvtt
+-scodec copy
+-fix_sub_duration

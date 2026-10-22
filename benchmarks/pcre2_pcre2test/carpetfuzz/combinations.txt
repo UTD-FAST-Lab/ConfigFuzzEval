@@ -1,0 +1,732 @@
+-LP -tm -AC -LS -q -error -dfa -ac -help -E -malloc -subject 
+-C -pattern -t -16 -AC -unittest --colo -LM -i -S -d -q -T -jitverify -jit 
+-LP -pattern -unittest -8 -i -S -q -b -jitfast -jitverify -jit -ac -E -malloc -TM 
+-C -version -t -16 -LS --colo -LM -d -jitfast -error -jitverify -dfa -jit -ac -help -E -malloc -TM 
+-version -t -tm --colo -32 -i -S -b -T -error -jit -help -subject 
+-LP -C -unittest -LS --colo -32 -d -T -error -E 
+-C -pattern -version -tm -16 -AC -unittest -LS -i -b -jitfast -T -dfa -malloc -subject 
+-LP -pattern -version -16 -LS -LM -S -d -q -T -dfa -jit -ac -subject 
+-LP -C -version -t -AC -LS -LM -8 -i -S -b -jitverify -E -subject 
+-version -AC -unittest --colo -LM -32 -q -b -jitfast -jitverify -dfa -help -malloc 
+-pattern -tm -16 -AC -LS --colo -LM -b -error -jitverify -jit -E -TM 
+-C -tm -AC -unittest -8 -S -d -jitfast -error -jitverify -dfa -jit -help -TM -subject 
+-LP -C -pattern -t -tm -LS --colo -8 -i -d -q -jitfast -T -jitverify -dfa -ac -help 
+-LP -pattern -version -16 -unittest --colo -S -help -E -malloc -TM -subject 
+-LP -C -pattern -version -tm -AC -LM -32 -S -d -jitfast -T -error -jitverify -ac -help -E -malloc 
+-pattern -t -tm -AC -unittest -LS -LM -32 -d -q -jitfast -ac -TM 
+-LP -C -pattern -t -unittest --colo -LM -32 -i -b -jitfast -T -error -dfa -jit -E -malloc -subject 
+-LP -C -version -t -tm -16 -AC -d -q -jit -E -malloc -TM 
+-C -t -16 -unittest -i -q -b -error -dfa -ac -help -TM 
+-t -LS --colo -8 -S -b -jitfast -jit -ac -malloc -subject 
+-LP -t -tm -16 -unittest -LS --colo -LM -i -S -d -jitfast -dfa -help -E -TM -subject 
+-tm -unittest -LS -LM -32 -i -S -T -jitverify -dfa -jit -ac -help -malloc 
+-LP -C -pattern -version -AC -LS --colo -32 -i -S -q -b -jitfast -error -jit -ac -help -E -TM -subject 
+-LP -C -pattern -version -t -16 -unittest -LS -LM -i -S -q -jitfast -T -error -ac -E -malloc 
+-LP -version -t -AC -32 -i -d -jitfast -T -jitverify -dfa -jit 
+-LP -pattern -t -tm -16 -AC -unittest --colo -S -q -b -jitfast -T -error -jitverify -dfa -jit -ac -help -malloc -subject 
+-LP -tm -AC -unittest --colo -LM -8 -i -d -q -T -error -dfa -jit -ac -E -subject 
+-LP -C -version -tm -16 -unittest --colo -LM -i -d -error -jitverify -ac -malloc -TM -subject 
+-version -AC -unittest -LS --colo -LM -8 -S -d -q -jitfast -T -error -jitverify -E -malloc -subject 
+-C -t -tm -AC -LS -32 -S -q -b -T -jitverify -dfa -E -malloc 
+-version -t -16 -AC -unittest -LS -LM -b -T -error -jit -ac -help -E 
+-C -pattern -t -32 -d -jitverify -ac -help -malloc -TM -subject 
+-pattern -version -t -tm -unittest --colo -32 -i -S -d -q -jitverify -dfa -jit -E -malloc -TM -subject 
+-C -pattern -version -t -tm -LS -LM -32 -q -b -jitfast -error -jitverify -dfa -jit -help -TM -subject 
+-pattern -version -t -AC -unittest -LS --colo -8 -i -d -jitfast -dfa -jit -ac -help -E -TM 
+-version -16 --colo -i -d -q -T -jitverify -ac -help -E -subject 
+-pattern -version -tm -16 -i -jitfast -error -dfa -jit -ac -E -TM -subject 
+-C -version -LM -32 -i -S -d -q -jitfast -error -malloc -TM 
+-LP -pattern -version -t -tm -AC -unittest -LM -8 -S -b -error -dfa -TM 
+-LP -C -AC -LS -LM -32 -i -S -d -dfa -jit -ac -help -malloc -TM -subject 
+-C -pattern -version -unittest -8 -d -q -T -error -dfa -jit -help -malloc 
+-LP -pattern -version -t -tm -AC --colo -LM -32 -i -q -b -T -jitverify -ac -E -malloc 
+-C -pattern -version -t -tm -unittest --colo -LM -8 -S -q -b -jitfast -T -ac -help -E -subject 
+-C -pattern -16 -LS --colo -i -S -q -b -jitfast -T -jitverify -dfa -jit -help -E -malloc 
+-LP -tm --colo -LM -8 -b -jitfast -T -jitverify -dfa -help -E 
+-LP -pattern -tm -AC -unittest -LS --colo -32 -S -b -jitverify -ac -help -TM -subject 
+-LP -C -version -t -AC -unittest --colo -32 -S -d -q -jitfast -error -jitverify -dfa -ac -E -TM -subject 
+-LP -C -version -tm -LS --colo -8 -S -d -jitfast -T -dfa -jit -malloc -subject 
+-C -tm -16 -unittest -LM -S -q -b -jitfast -error -jitverify -jit -E -subject 
+-C -pattern -tm -LS --colo -LM -8 -i -q -error -malloc -TM 
+-version -tm -16 -AC -LM -i -S -d -q -jitfast -jitverify -jit -ac -help -malloc -TM 
+-LP -version -t -tm -AC -unittest -LS -LM -8 -i -d -q -jitfast -error -jitverify -jit -malloc 
+-LP -C -16 -AC -unittest -LS --colo -LM -i -q -b -dfa -jit -E -malloc -TM 
+-LP -C -version -tm -AC -unittest -LM -32 -i -q -b -T -jit -help -subject 
+-pattern -tm -16 -unittest -LS -S -d -q -error -jitverify -dfa -help -E -TM 
+-LP -version -t -16 -AC -LS --colo -i -S -b -jitfast -T -error -jitverify -help -malloc 
+-C -version -tm -AC -unittest -LS -8 -i -b -error -jitverify -dfa -ac -help -E -malloc -TM 
+-LP -C -pattern -t -AC -unittest -LS -LM -8 -d -q -error -jitverify -jit -ac -help -E -TM -subject 
+-C -pattern -unittest -LS --colo -LM -8 -i -S -d -jitfast -T -error -jitverify -jit -ac -help -subject 
+-C -version -t -tm -16 -unittest -LS --colo -LM -T -jitverify -dfa -subject 
+-C -pattern -version -t -tm -16 -AC -LS --colo -S -d -T -error -dfa -ac -help 
+-LP -t -16 -AC -unittest -d -jitfast -T -ac -malloc -subject 
+-C -AC --colo -32 -i -b -jitfast -T -error -jitverify -ac 
+-pattern -version -AC -LM -8 -i -S -b -T -dfa -ac -help -malloc -subject 
+-C -t -16 -AC -LS -LM -i -d -jitfast -T -error -help -E -subject 
+-LP -C -pattern -version -16 -AC -unittest --colo -q -b -jitverify -dfa -jit -ac -TM 
+-LP -pattern -version -tm -LS -8 -q -b -T -error -jitverify -jit 
+-LP -version -t -unittest -LS --colo -LM -32 -i -S -q -b -error -jitverify -dfa -ac -malloc -TM -subject 
+-LP -t -LS -32 -i -S -d -q -jitfast -error -jit -help -TM 
+-pattern -version -t -unittest -LS -32 -jitfast -error -jitverify -subject 
+-LP -version -tm -16 -LM -S -b -T -error -dfa -jit -help -E -malloc 
+-LP -C -pattern -version -t -tm -16 -unittest -LS -i -d -T -jit -ac -help -E -malloc -subject 
+-LP -AC -LM -8 -q -b -jitfast -T -error -jit -ac -help -malloc 
+-pattern -16 -AC -unittest --colo -LM -i -S -d -jitfast -error -dfa -malloc -TM 
+-pattern -t -tm -LM -8 -i -S -d -jitfast -T -error -jitverify -dfa -E -malloc -subject 
+-LP -C -pattern -tm -16 -AC -i -S -d -q -jitfast -T -error -help -subject 
+-pattern -t -tm -16 --colo -LM -d -q -jitfast -jit -help -E -malloc 
+-C -tm --colo -8 -S -d -q -dfa -ac -E -TM 
+-LP -t -tm -AC --colo -LM -32 -d -error -jit -malloc -TM -subject 
+-LS -LM -32 -q -b -T -E -subject 
+-LP -C -t -16 -unittest -LM -i -S -b -jitfast -jitverify -dfa -jit -ac -help -E -TM -subject 
+-LP -C -pattern -version -32 -S -b -T -jitverify -dfa -jit -ac -E -subject 
+-version -t -tm -AC -8 -q -jitfast -T -jitverify -jit -ac -E -subject 
+-C -t -tm -unittest --colo -32 -i -jitfast -jit -ac -help -E -malloc -TM 
+-t -16 -unittest -LS --colo -S -d -q -error -jitverify -jit -ac -malloc -TM -subject 
+-pattern -version -AC -unittest --colo -LM -32 -S -d -T -jitverify -jit -help -E 
+-LP -C -t -tm --colo -LM -8 -i -S -q -b -error -jitverify -dfa -jit -help -malloc -TM -subject 
+-LP -version -16 -AC -LS -d -jitfast -jitverify -dfa -E -TM 
+-C -version -unittest -LM -8 -i -d -jit -E -TM -subject 
+-LP -pattern -t -unittest --colo -8 -d -q -dfa -help -subject 
+-C -pattern -version -t -tm -AC -unittest -LS --colo -LM -32 -i -S -d -error -dfa -help -E -malloc -subject 
+-LP -C -pattern -t -AC --colo -8 -S -jitfast -T -dfa -E -malloc 
+-LP -pattern -16 -AC -i -T -error -jitverify -jit -malloc -subject 
+-LP -C -pattern -t -tm -AC -unittest -LS --colo -8 -i -b -jitfast -error -ac -TM -subject 
+-LP -tm -LS --colo -32 -i -d -q -jitfast -jitverify -dfa -jit -ac -malloc -subject 
+-LP -pattern -version -tm -AC -LS --colo -LM -8 -i -d -jitfast -jitverify -help -TM -subject 
+-C -tm -16 -LM -d -T -jitverify -dfa -ac -malloc 
+-LP -pattern -version -t --colo -LM -32 -d -q -error -dfa -ac -help -E -TM 
+-LP -C -pattern -tm -LM -32 -i -S -d -q -T -jitverify -dfa -help -E 
+-LP -version -16 -AC -unittest -i -S -d -q -error -dfa -ac -help -E -malloc -TM 
+-C -AC -LS -8 -i -d -q -jitfast -T -dfa -jit -ac -E -malloc -subject 
+-LP -C -pattern -version -tm -unittest --colo -32 -S -d -jitfast -dfa -jit -ac 
+-LP -C -pattern -tm -16 -unittest -LS -LM -S -b -jitfast -ac -help -malloc -TM 
+-t -AC -unittest -LS -LM -8 -q -b -jitfast -jitverify -dfa -help -E -malloc -TM -subject 
+-C -pattern -version -t -16 --colo -LM -i -S -b -ac -TM 
+-AC -LS --colo -LM -32 -i -d -q -error -jitverify -dfa -jit -help -E 
+-LP -C -t -16 --colo -q -b -error -jitverify -help -E -malloc -subject 
+-LP -pattern -t -AC -LS -32 -i -S -b -T -error -dfa -jit -ac -E 
+-C -version -t -AC -LS --colo -LM -8 -d -q -ac -help -malloc -TM 
+-version -tm -16 -unittest -LS --colo -i -S -q -b -jitfast -E -TM 
+-LP -C -version -t -unittest -8 -i -S -d -jitfast -T -error -jitverify -dfa -ac -help -malloc 
+-pattern -version -tm -LS -32 -i -help -E -malloc -TM 
+-LP -version -t -tm -unittest -32 -b -jitfast -error -dfa -ac -E -malloc -TM -subject 
+-LP -C -pattern -t -16 -AC -LS -LM -S -q -jitfast -jitverify -dfa -jit -malloc -TM -subject 
+-16 -LM -S -b -jitfast -error -jitverify -ac -help -TM -subject 
+-LP -pattern -version -t -LS --colo -LM -8 -i -S -q -T -error -dfa -jit -help -E 
+-LP -C -version -16 -AC -LS --colo -LM -S -q -b -T -error -dfa -ac -subject 
+-version -t -unittest --colo -8 -S -b -error -jitverify -jit -E -malloc -TM 
+-C -pattern -tm -unittest -32 -i -d -q -jitfast -error -jitverify -ac -E -malloc -TM -subject 
+-C -pattern -t -LS -LM -8 -b -T -error -jitverify -jit -ac -malloc 
+-LP -version -t -tm -unittest -LS --colo -32 -S -d -q -jitfast -T -help -malloc 
+-LP -C -pattern -version -t -tm -AC -LS -32 -i -S -d -q -T -error -jitverify -jit -ac -malloc -subject 
+-C -pattern -version -AC -unittest -LS -LM -32 -S -b -jitfast -dfa -jit -ac -E -malloc -TM 
+-LP -C -t -tm -unittest -LS -8 -S -d -q -T -error -dfa -jit -E 
+-t -tm -AC -unittest --colo -8 -i -S -q -b -T -help -malloc 
+-pattern -t -tm -AC --colo -8 -i -S -d -error -jitverify -jit -ac -help -E -malloc 
+-C -t -tm -AC -unittest -LS -32 -i -d -T -jitverify -dfa -jit -help -E -subject 
+-LP -pattern -16 -unittest -LS --colo -LM -i -q -b -jitfast -T -error -jitverify -dfa -ac -help 
+-pattern -t -tm -16 -AC -LM -i -q -b -T -error -dfa -ac -E -subject 
+-C -pattern -version -tm -AC --colo -8 -q -b -jitfast -error -jit -help -E -malloc -TM -subject 
+-version -t -tm -16 -LS -i -S -q -b -jitfast -T -jitverify -dfa -jit -ac 
+-pattern -version -tm -unittest -LS --colo -LM -8 -d -q -T -jitverify -dfa -jit -ac -E -malloc -subject 
+-LP -C -pattern -tm -AC -LS -LM -8 -d -jitfast -error -dfa -jit -ac -E 
+-version -t -16 -AC --colo -LM -i -d -q -jitfast -T -error -dfa -jit -subject 
+-LP -C -pattern -AC -unittest --colo -LM -8 -jitverify -dfa -jit -help -malloc -TM 
+-LP -pattern -version -t -16 -AC -unittest -LM -i -S -d -jitfast -jitverify -jit -help -E -subject 
+-LP -pattern -version -tm -unittest -LM -32 -i -d -jitfast -T -error -dfa -jit -ac -help -subject 
+-C -pattern -t -AC -unittest -LS --colo -32 -i -q -T -error -jitverify -dfa -ac -help -malloc 
+-LP -pattern -tm -unittest -LS -8 -b -dfa -jit -help -malloc -subject 
+-pattern --colo -LM -32 -S -q -b -jitfast -dfa -jit -ac -TM -subject 
+-pattern -version -t -16 -AC -LS -i -S -d -error -jitverify -dfa -malloc -TM -subject 
+-LP -tm -unittest -LS -8 -S -jitfast -error -jitverify -ac -help -E -TM 
+-LP -C -pattern -t -tm -16 -LS --colo -i -S -d -jitfast -error -jitverify -jit -E -TM 
+-LP -C -version -t -LS --colo -LM -32 -d -q -jitfast -T -jitverify -jit -ac -help -E -malloc -subject 
+-C -t -AC -unittest -LM -32 -S -T -error -jitverify -dfa -jit -ac -E 
+-C -version -t -tm -AC -unittest --colo -LM -32 -i -S -d -jitfast -jitverify -dfa -TM 
+-LP -C -tm -16 -AC -LS --colo -i -S -d -q -T -jitverify -jit -ac -help -E 
+-pattern -t -16 -unittest -LS -LM -i -q -b -error -jit -help -malloc -TM -subject 
+-LP -C -version -tm -LS --colo -LM -32 -b -error -dfa -help -TM 
+-C -version -16 -AC -unittest --colo -i -S -jitfast -error -jit -ac -help -E -malloc -subject 
+-C -pattern -version -16 -AC -unittest -d -q -jitfast -T -jitverify -dfa -help -E -subject 
+-LP -C -pattern -t -AC -unittest -32 -i -S -d -q -E -TM 
+-LP -t -tm -AC -unittest -LS --colo -LM -32 -S -b -jitfast -T -jitverify -jit -E -malloc -subject 
+-C -pattern -t -tm -unittest -LS -32 -i -S -q -b -jitfast -T -jit -help 
+-tm -16 -AC -unittest --colo -d -dfa -jit -ac -help -TM -subject 
+-LP -C -pattern -t -tm -16 -AC -unittest --colo -LM -b -T -help -E 
+-LP -pattern -tm -AC -LS --colo -8 -i -S -d -q -T -ac -malloc -subject 
+-LP -t -LM -8 -i -d -q -jitverify -dfa -ac -TM 
+-C -version -t -tm -LS -8 -i -S -d -q -error -ac -help -subject 
+-LP -C -pattern -version -t -tm -LS -LM -8 -i -jitfast -jitverify -dfa -ac -E -malloc -TM -subject 
+-version -t -tm -unittest -LS -LM -8 -i -b -jitfast -T -jit -ac 
+-LP -pattern -AC -LM -32 -i -S -q -jitfast -error -jitverify -E -TM -subject 
+-LP -pattern -version -16 -unittest -LS --colo -d -q -jitfast -error -jit -malloc -TM 
+-LP -C -version -LS -8 -S -q -b -jitfast -T -jitverify -help -subject 
+-LP -C -version -t -tm -AC -LM -8 -S -d -T -jitverify -jit -help -malloc -subject 
+-tm -AC -32 -S -d -q -jitfast -T -error -dfa -ac -help -E -malloc -subject 
+-pattern -version -t -AC -32 -q -b -jitfast -T -dfa -help -E 
+-LP -version -t -tm -16 -AC -i -b -jitverify -dfa -jit -ac -help -malloc -TM -subject 
+-C -pattern -version -tm -16 -AC -LS --colo -LM -S -d -q -jitfast -jitverify -ac -E -malloc -TM -subject 
+-LP -tm -16 -AC --colo -i -S -b -jitfast -T -dfa -ac -E -malloc 
+-LP -C -version -t -AC -unittest --colo -8 -i -q -b -jitfast -error -dfa -jit 
+-pattern -AC -LS -8 -S -d -error -jit -TM 
+-LP -C -t -tm -16 -AC -unittest -LS -LM -d -q -jitfast -T -error -jitverify -dfa -help -malloc 
+-C -version -AC -LS --colo -32 -d -jitfast -T -jit -malloc 
+-LP -version -tm -AC -unittest -LS -32 -i -S -q -b -jitfast -T -error -jitverify -dfa -jit -help -E -subject 
+-LP -C -pattern -unittest -LS --colo -LM -32 -S -d -q -error -jitverify -ac -malloc 
+-version -tm -LS --colo -LM -8 -i -S -q -jitfast -error -dfa -jit -ac -help -malloc -TM 
+-LP -C -AC -unittest --colo -8 -i -d -T -jitverify -E -malloc -subject 
+-LP -C -pattern -version -tm -16 -unittest --colo -i -q -T -error -jitverify -dfa -jit -E 
+-t -AC -LS --colo -LM -8 -i -S -T -jitverify -dfa -ac -E -subject 
+-LP -C -pattern -version -8 -i -b -error -dfa -help -E -TM -subject 
+-C -pattern -tm -AC -unittest --colo -LM -32 -S -q -b -T -error -dfa -jit -ac -malloc -subject 
+-pattern -t -unittest -LM -32 -S -d -jitfast -T -dfa -help -E -malloc 
+-LP -C -pattern -version -t -unittest -LS --colo -8 -S -b -T -jitverify -dfa -ac -help -E -malloc 
+-version -AC -unittest -LS -32 -d -q -T -error -jit -ac -subject 
+-tm -unittest --colo -8 -i -d -jitfast -error -jitverify -help -malloc -TM 
+-LP -C -pattern -version -tm --colo -LM -32 -q -jitfast -T -subject 
+-pattern -AC -unittest -LM -8 -i -q -b -jitverify -ac -subject 
+-version -AC --colo -32 -S -error -jitverify -dfa -jit -malloc -TM 
+-LP -C -unittest -32 -i -S -b -T -error -jitverify -help -malloc -subject 
+-C -pattern -t -tm -AC -unittest -LS --colo -LM -8 -S -d -q -jitfast -T -error -jit -help -E 
+-C -pattern -version -t -tm -16 -AC -unittest -LM -S -d -jitfast -error -jit -ac -TM -subject 
+-LP -version -unittest -LM -8 -q -b -jitfast -T -error -jitverify -dfa -ac -E -malloc -subject 
+-pattern -version -AC -unittest -LS --colo -32 -i -b -jitfast -jitverify -ac -help -E -malloc -subject 
+-LP -C -pattern -version -t -tm -16 -AC -LM -i -q -b -jitfast -error -jitverify -jit -ac -help -E -TM 
+-C -t -LM -8 -jitfast -T -error -help 
+-C -t -tm -16 -AC -unittest -LS --colo -LM -i -S -q -jitfast -dfa -ac -help -subject 
+-C -pattern -t -tm -unittest -8 -i -S -b -T -jitverify -jit -E -subject 
+-LP -version -t -16 -AC -unittest -LS -LM -S -q -jitverify -ac -help -E -malloc -TM 
+-LP -C -version -t -AC -8 -S -q -jitfast -dfa -jit -ac -help -TM -subject 
+-t -tm -unittest --colo -32 -d -q -T -error -jitverify -dfa -jit -ac -help -E 
+-pattern -t -16 -AC -unittest -LS --colo -d -dfa -jit -E -malloc -subject 
+-LP -pattern -AC -unittest --colo -32 -i -d -jitfast -jitverify -dfa -jit -malloc -TM 
+-pattern -tm -AC --colo -32 -S -d -jitfast -T -error -jitverify -subject 
+-LP -C -16 -LS -d -q -jitfast -jit -ac -help -E -TM -subject 
+-LP -pattern -tm -16 --colo -i -b -T -jit -ac -help 
+-LP -C -t -tm -16 -AC -unittest -LS -S -b -error -ac -E -malloc -TM -subject 
+-C -pattern -version -t -tm -16 -LS --colo -q -b -jitverify -dfa -malloc -TM -subject 
+-LP -pattern -t -tm -unittest -LS --colo -LM -32 -i -S -q -b -jitfast -error -ac -help -E -malloc -TM 
+-version -tm -LS -LM -32 -i -S -d -T -error -jitverify -ac -E 
+-C -version -tm -unittest -LS --colo -LM -32 -i -q -b -dfa -jit -ac -E -malloc 
+-LP -t -16 -AC -unittest -S -q -b -jitfast -T -jit 
+-LP -C -version -AC -LS --colo -8 -i -S -d -q -error -jitverify -dfa -jit -help -E -malloc -TM -subject 
+-LP -pattern -tm -LS -LM -32 -S -d -jitfast -jitverify -jit -help -E -malloc -subject 
+-LP -pattern -version -t -tm -AC -LS --colo -LM -8 -S -q -b -dfa -jit -ac -E -TM -subject 
+-LP -pattern -version -unittest --colo -LM -8 -i -d -q -jitfast -T -ac -help -E -malloc 
+-pattern -version -tm -LM -32 -i -b -jitfast -error -jitverify -jit -ac -malloc 
+-16 -unittest -LS -S -b -T -jitverify -dfa -jit 
+-LP -t -AC -unittest --colo -LM -8 -i -S -d -jitfast -error -ac -help -E -TM -subject 
+-t -AC -LM -32 -i -b -jitfast -ac -help -E -malloc -TM -subject 
+-C -pattern -version -t -tm -unittest -LS -8 -S -q -jitfast -jitverify -jit -help -malloc -TM 
+-pattern -version -t -16 -AC -S -q -b -jitfast -error -dfa -E -malloc -TM 
+-pattern -tm -AC -LS -LM -8 -i -S -q -b -jitfast -T -error -jitverify -dfa -help 
+-C -version -t -unittest -LS -i -d -q -jitfast -T -jitverify -E -malloc 
+-LP -C -pattern --colo -LM -d -jitfast -T -error -jitverify -dfa -jit -ac -subject 
+-C -version -tm -16 -LS -LM -i -S -q -T -error -jit -help -malloc -subject 
+-unittest --colo -32 -i -S -d -dfa -ac -malloc -subject 
+-LP -pattern -version -t -tm -AC -32 -S -d -q -jitverify -dfa -ac -help 
+-LP -pattern -version -16 --colo -LM -q -jitfast -error -jitverify -dfa -help -E -TM -subject 
+-pattern -version -t -AC -unittest --colo -8 -i -jitfast -T -error -jitverify -dfa -ac 
+-LP -version -AC -unittest -LS -8 -S -d -T -dfa -ac -help 
+-C --colo -LM -8 -i -S -d -q -jitfast -jitverify -dfa -jit 
+-C -version -t -tm -AC --colo -32 -i -d -q -jitfast -error -dfa -E -malloc 
+-LP -C -t -tm -LS --colo -32 -b -jitfast -error -jitverify -dfa -jit -ac -help 
+-C -pattern -t --colo -8 -i -d -T -error -dfa -jit -ac -E -malloc -subject 
+-LP -C -version -t -AC -unittest -LS -LM -32 -jit -help -TM 
+-C -version -t -16 -unittest --colo -i -b -jitfast -T -error -jitverify -dfa -E -malloc -subject 
+-pattern -t -tm -AC -8 -i -d -q -dfa -jit -help -malloc -TM -subject 
+-pattern -tm -AC -LS --colo -LM -32 -i -d -jitfast -T -dfa -ac -help -E -subject 
+-C -pattern -version -tm -AC -unittest --colo -LM -i -q -b -jitverify -jit -help -TM -subject 
+-C -pattern -version -unittest -LS --colo -32 -i -d -error -jitverify -dfa -jit -ac -help -TM -subject 
+-LP -C -version -tm -AC -LM -32 -S -b -jitfast -jitverify -malloc -TM 
+-pattern -version -t -tm -16 -unittest -S -d -jitfast -error -jitverify -dfa -ac -E -malloc 
+-LP -pattern -version -tm -AC -unittest -8 -i -S -q -T -E 
+-LP -version -tm -16 -AC -LS --colo -LM -d -error 
+-pattern -version -16 -AC -LS -q -b -T -jitverify -jit -ac -help -E -malloc -subject 
+-LP -C -version -t -tm --colo -S -d -T -error -ac -E -subject 
+-version -tm -AC -unittest --colo -LM -8 -b -T -error -jitverify -ac -help -malloc -subject 
+-pattern -t -AC -unittest -LS --colo -LM -S -b -jitfast -T -error -dfa -help -malloc -subject 
+-C -pattern -16 -LM -i -S -d -T -error -jitverify -dfa -jit -ac -help -E -malloc 
+-LP -C -version -t -unittest -LS -32 -i -d -jitfast -T -dfa -ac 
+-C -pattern -t -16 -AC -LS -i -b -jitfast -jitverify -dfa -ac -help 
+-LP -C -pattern -version -16 -LS -i -S -d -q -dfa -E -subject 
+-C -tm -unittest -LS --colo -LM -32 -d -q -jitfast -error -dfa -jit -E -TM -subject 
+-LP -C -pattern -version -t -AC -unittest -LM -8 -i -S -q -b -jitfast -T -error -jitverify -jit -help -E -malloc -subject 
+-C -t -AC -unittest -LS --colo -LM -32 -i -S -q -b -error -jitverify -jit -TM 
+-C -pattern -version -tm -AC --colo -LM -8 -i -S -d -T -error -jit -ac -E 
+-LP -C -t -tm -AC -8 -q -b -T -dfa -ac -malloc -subject 
+-LP -version -unittest -LM -i -d -T -error -jitverify -dfa -jit -help -malloc 
+-LP -C -pattern -version -t -AC -unittest --colo -32 -S -q -b -error -jit -help -E -malloc 
+-C -version -tm -16 -LM -i -S -d -jitverify -dfa -jit -help -TM 
+-LP -tm -AC -32 -i -q -b -dfa -jit -E -TM 
+-LP -C -t -tm -16 -LS -LM -i -b -jitfast -T -jit -malloc -subject 
+-LP -pattern -16 -LS --colo -LM -i -d -T -error -jitverify -E -malloc -subject 
+-LP -pattern -version -t --colo -8 -i -b -jitfast -T -error -jit -malloc -subject 
+-C -pattern -16 -AC -LS --colo -LM -S -T -jit -ac -help -E -subject 
+-LP -C -version -AC -unittest -LS --colo -LM -8 -S -d -jitfast -jitverify -ac -malloc -TM 
+-LP -version -t -tm -unittest -LM -32 -d -q -jitverify -jit -help -E -TM 
+-LP -C -pattern -version -t -8 -d -jitfast -jitverify -ac -E -TM 
+-unittest -LS -LM -8 -S -d -error -dfa -ac -E -malloc -TM -subject 
+-pattern -version -t -AC -LS -LM -8 -d -q -jitfast -T -jitverify -dfa -jit -E -malloc 
+-C -version --colo -LM -32 -i -S -jitfast -T -jitverify -dfa -help -E -malloc -subject 
+-C -AC -LS --colo -LM -8 -i -S -b -jitfast -error -dfa -E -malloc 
+-LP -pattern -t -tm -AC -LS --colo -32 -d -jitfast -error -jitverify -dfa -ac -help -E -malloc -TM 
+-LP -version -16 -AC -unittest -LS --colo -LM -i -b -jitfast -jitverify -jit -ac -TM -subject 
+-C -pattern -version -t -AC -unittest -LM -8 -i -S -d -q -jitfast -error -dfa -ac -malloc -TM -subject 
+-LP -pattern -unittest -LS -32 -q -error -dfa -jit -ac -malloc -TM 
+-LS --colo -8 -q -b -jitverify -ac -help -E -malloc -TM 
+-LP -C -t -tm -unittest -LM -i -S -q -jitfast -T -dfa -jit -ac -malloc 
+-LP -pattern -t -tm -16 -unittest -LM -S -d -q -T -error -jitverify -ac -subject 
+-C -pattern -tm -32 -i -S -b -error -dfa -help -malloc -TM -subject 
+-LP -pattern -version -t -tm -AC -unittest -LS --colo -32 -i -d -T -error -jitverify -help -subject 
+-LP -pattern -t -unittest -LS --colo -LM -8 -S -d -error -jitverify -dfa -jit -help -TM -subject 
+-C -pattern -version -16 -unittest -LS --colo -LM -S -d -q -jitfast -T -dfa -jit -help 
+-LP -C -16 -unittest -LS -i -d -jitfast -T -error -dfa -jit -ac -malloc 
+-version -t -tm -16 -unittest -LS --colo -LM -i -S -b -error -jitverify -dfa -jit -ac -help -E -subject 
+-LP -C -t -16 --colo -S -d -jitfast -T -jitverify -dfa -help -malloc -subject 
+-C -version -tm -unittest -LS -LM -8 -d -q -jitverify -TM -subject 
+-LP -pattern -AC --colo -8 -S -d -q -jitfast -T -error -jitverify -ac -help -E -subject 
+-LP -version -AC -LS --colo -32 -d -T -error -dfa -help -E -malloc -subject 
+-pattern -version -t -tm -AC -LS -LM -i -S -d -jit -ac -E -malloc 
+-version -t -LS -8 -i -S -d -dfa -help -E -malloc -TM 
+-pattern -tm -unittest -LM -8 -d -jitfast -error -help -E -malloc -subject 
+-LP -C -pattern -t -16 --colo -d -q -jitfast -error -dfa -ac -malloc -TM 
+-LP -C -tm -16 -AC -unittest --colo -LM -d -jitfast -T -error -jitverify -jit -ac -E -malloc 
+-LP -C -pattern -tm -AC -unittest -LS -LM -32 -i -d -q -jitfast -T -jitverify -dfa -malloc -subject 
+-LP -C -tm -unittest -LS --colo -LM -8 -i -q -b -jitfast -ac -help -E 
+-t -tm -LS -8 -i -b -jitfast -error -dfa -jit -E -TM -subject 
+-C -tm -16 --colo -i -S -q -jitverify -TM -subject 
+-LP -C -pattern -AC -unittest -32 -q -b -jitfast -error -jitverify -jit -help -E -malloc -TM 
+-t -tm -16 -AC -LS --colo -d -q -jitfast -T -error -jitverify -ac -E 
+-LP -C -pattern -version -16 -LM -i -b -T -jitverify -E -malloc 
+-C -pattern -version -AC -unittest -LS -8 -i -q -T -error -ac -E -malloc -subject 
+-LP -pattern -version -t -tm -16 -AC --colo -LM -i -d -q -T -dfa -help -malloc 
+-LP -C -pattern -t -unittest -LS --colo -32 -q -b -jitverify -dfa -E -TM -subject 
+-version -tm -16 -AC -unittest --colo -LM -S -q -b -jitfast -T -jit -help -malloc -subject 
+-LP -t -tm -AC -unittest -LS --colo -8 -S -d -jitfast -T -jitverify -dfa -jit -ac 
+-t -AC --colo -i -q -jitfast -error -jitverify -jit -ac -TM 
+-pattern -version -t -AC -unittest -LS -LM -32 -i -S -d -q -jitfast -T -error -jitverify -jit -ac -help -malloc 
+-LP -C -pattern -AC -LS -LM -8 -i -S -q -b -jit -help -TM 
+-C -version -t -tm --colo -LM -8 -S -b -jitfast -jitverify -dfa -ac -TM 
+-C -AC -LS -S -b -T -jit -ac -help -E 
+-C -version -t -tm -16 -AC -LM -d -jitverify -dfa -ac -help -E -malloc -subject 
+-LP -C -pattern -version -tm -AC -unittest --colo -LM -8 -i -S -d -jitfast -T -dfa -jit -help -E -malloc -subject 
+-LP -pattern -version -t -tm -unittest -LS -q -b -jitfast -T -error -dfa -ac -help -E -subject 
+-C -tm -AC -LS -LM -32 -S -d -jitfast -error -ac -help -TM -subject 
+-version -tm -AC -unittest -LS --colo -32 -S -q -jitfast -T -error -jit -ac -help -E 
+-LP -C -pattern -version -t -AC --colo -LM -32 -i -S -b -T -dfa -ac -help -malloc -subject 
+-LP -C -t -tm -LM -32 -i -S -d -q -error -jit -ac -E -subject 
+-LP -pattern -tm -16 -LS --colo -LM -jitfast -T -error -dfa -jit -ac -help -E -malloc -subject 
+-LP -pattern -tm -LS --colo -i -S -d -q -jitverify -dfa -malloc -TM 
+-pattern -version -unittest -LS --colo -32 -b -T -error -jitverify -jit -ac -E -malloc 
+-LP -version -t -tm -16 -unittest -i -q -error 
+-t -tm -unittest --colo -LM -8 -S -q -T -error -jit -ac -malloc -subject 
+-LP -pattern -version -t -LS --colo -LM -8 -d -jitfast -T -error -ac -help -subject 
+-LP -t -tm -AC -LS --colo -LM -32 -i -S -jitfast -T -error -dfa 
+-C -pattern -version -tm -AC -unittest -LS -LM -8 -i -b -jitfast -T -jitverify -dfa -jit 
+-C -pattern -t -LS --colo -LM -32 -i -S -d -jitfast -T -jitverify -jit -ac -E 
+-C -version -t -32 -i -q -b -T -jit -ac -help -malloc 
+-LP -pattern -t -tm -unittest -8 -i -d -T -error -jitverify -jit -ac -help -malloc 
+-LP -pattern -t -tm -16 -AC -unittest --colo -i -d -q -jitverify -ac -help -E -malloc -TM 
+-LP -AC -unittest --colo -LM -32 -S -d -q -dfa -ac -help -E -malloc -TM -subject 
+-pattern -version -tm -unittest --colo -8 -S -b -jitfast -error -jitverify -dfa -jit -ac -help -TM -subject 
+-C -16 -AC --colo -LM -S -d -q -error -dfa -jit -ac -help -E -TM 
+-LP -C -pattern -t -unittest -LS -LM -i -d -error -help -E -malloc -TM 
+-LP -C -version -tm -16 -unittest -LS -q -b -jitfast -error -jitverify -dfa -jit -ac -help -malloc -TM -subject 
+-C -pattern -version -AC -LS --colo -8 -i -S -q -b -T -error -jitverify -dfa -jit -ac -subject 
+-LP -pattern -version -t -AC -LS -LM -32 -S -d -T -jit -malloc -subject 
+-LP -C -t -unittest -LS --colo -8 -i -d -q -jitfast -jit -malloc -TM -subject 
+-C -pattern -version -unittest -LS -8 -S -d -q -jitfast -error -jitverify -dfa -E 
+-LP -pattern -version -t -tm -16 -unittest --colo -LM -S -q -b -jitfast -T -jitverify -dfa -E -subject 
+-LP -C -version -t -tm -LM -8 -d -q -error -jitverify -dfa -help -E -malloc 
+-version -t -tm -AC -LS -32 -i -d -q -error -jitverify -ac -E -TM -subject 
+-pattern -t -tm -16 -AC -unittest -LM -S -T -jitverify -help -malloc 
+-LP -C -t -tm -AC --colo -LM -8 -S -d -jitfast -jit -E -malloc -TM 
+-LP -C -pattern -version -t -16 -LS --colo -LM -S -b -jitfast -T -error -jit -E -subject 
+-LP -C -version -t -unittest -LM -32 -S -b -jitfast -T -error -jitverify -ac -help -subject 
+-LP -C -tm -AC -unittest -32 -i -T -jit -ac -E -malloc -subject 
+-LP -pattern -tm -LM -8 -S -d -q -jitfast -T -jit -subject 
+-version -unittest -LS -32 -S -b -jitfast -jitverify -jit -help -E -TM -subject 
+-LP -t -tm -AC -unittest -LS --colo -LM -8 -i -d -T -error -dfa -help -E -malloc 
+-LP -C -pattern -version -tm -16 -AC -LS -LM -i -d -q -error -dfa -ac -help -TM -subject 
+-pattern -version -t -tm -AC -unittest -32 -i -S -b -jitverify -dfa -jit -help -malloc -TM 
+-LP -pattern -version -tm -16 -AC --colo -b -jitfast -error -help -TM -subject 
+-C -t -tm -AC --colo -LM -32 -i -d -q -jitverify -dfa -jit -ac -help -E -TM -subject 
+-t -AC -8 -d -q -error -jitverify -TM -subject 
+-C -tm -unittest -LS -8 -i -S -b -jitfast -T -error -jit -ac -help -E -malloc -subject 
+-LP -C -pattern -tm -AC -LS -LM -32 -i -b -T -error -ac -help -E 
+-LP -pattern -version -t -tm -16 -AC -LM -S -q -b -jitfast -dfa -jit -ac -malloc 
+-C -pattern -version -16 -unittest --colo -LM -jit -ac -malloc 
+-LP -C -tm -LS -LM -32 -i -S -q -b -jitfast -jitverify -dfa -ac -E -TM 
+-LP -pattern -t -16 -S -T -dfa -ac -help 
+-C -pattern -tm -16 -AC -unittest -LS --colo -i -S -q -b -T -error -ac -malloc 
+-LP -pattern -version -t -tm -unittest --colo -32 -i -S -d -q -jitfast -jit -ac -TM -subject 
+-LP -t --colo -LM -32 -i -d -q -T -jitverify -help -malloc -subject 
+-LP -16 -AC -unittest -LS -i -q -jitfast -jitverify -dfa -jit -help -E -malloc -subject 
+-C -version -unittest -LM -32 -S -d -q -jitfast -T -error -dfa -jit -help -malloc -subject 
+-C -pattern -t -LS --colo -LM -8 -S -b -jitfast -error -jitverify -help -E -TM -subject 
+-C -version -t --colo -32 -i -S -q -b -jitfast -T -error -dfa -ac -help -E -subject 
+-C -tm -16 -AC -LS --colo -LM -i -b -jitfast -T -error -jitverify -dfa -jit -help -malloc -subject 
+-pattern -t --colo -LM -8 -i -q -b -T -jitverify -dfa -malloc 
+-tm -AC -unittest --colo -LM -8 -i -b -dfa -jit -ac -E -malloc -TM 
+-LP -C -pattern -version -AC -unittest -S -q -jitfast -error -jitverify -dfa -E -TM -subject 
+-LP -t -tm -AC -LS --colo -32 -q -T -jitverify -jit -ac -help -subject 
+-C -version -tm --colo -b -jitfast -dfa -E -malloc -subject 
+-LP -version -tm -AC -unittest --colo -8 -S -d -q -jitverify -jit -ac -help -E 
+-pattern -version -t -tm -LS --colo -LM -32 -b -T -dfa 
+-pattern -16 -AC -unittest -LS -i -S -d -jitfast -T -error -jit -ac -E 
+-pattern -t -16 -AC -LS --colo -i -jitfast -jit -help -TM 
+-LP -C -pattern -version -tm -unittest -LS --colo -8 -i -S -q -jitverify -dfa -ac -E -TM -subject 
+-LP -version -t -tm -AC -8 -i -d -error -jit -ac -help -E -malloc -TM 
+-C -version -AC -unittest -LS -32 -q -b -error -malloc -TM -subject 
+-LP -pattern --colo -8 -S -q -b -error -dfa -ac -E 
+-t -16 -AC -LS -S -d -T -error -jitverify -dfa -jit -help -E -subject 
+-C -t -tm -AC -unittest -LM -8 -i -S -d -q -jitfast -jitverify -dfa -ac -help -E -TM 
+-C -pattern -version -tm -16 -AC -LS --colo -LM -i -jitfast -error -jitverify -dfa -help -E -malloc -TM 
+-C -version -t -AC -unittest -LS -LM -8 -i -S -q -T -dfa -jit -help -E -subject 
+-pattern -t -tm -unittest -LS -32 -S -q -b -T -ac -help -E -malloc -subject 
+-C -pattern -t -16 -unittest -LM -d -dfa -jit -E -TM -subject 
+-C -t -tm -AC -LS --colo -32 -S -d -q -jitfast -jitverify -dfa -jit -help -malloc -TM -subject 
+-LP -version -tm -8 -i -S -b -T -jitverify -ac -malloc 
+-LP -pattern -version -tm -unittest -LM -32 -i -d -jitverify -jit -ac -E -malloc -TM -subject 
+-LP -C -version -t -16 -AC -unittest -LS -S -d -jitfast -T -error -jitverify -dfa -jit -ac -E -subject 
+-tm -unittest --colo -32 -i -q -b -jitfast -T -jitverify -subject 
+-C -version -t -tm -16 -unittest --colo -S -d -q -T -jit -ac -E -malloc 
+-LP -version -unittest -LS --colo -LM -8 -i -b -T -error -jit -help -E 
+-C -pattern --colo -32 -d -q -T -jit -help -malloc 
+-LP -C -pattern -t -16 -AC --colo -LM -d -error -jitverify -dfa -jit -ac -subject 
+-version -t -16 -AC -unittest --colo -LM -S -q -b -error -jitverify -dfa -help -TM 
+-C -pattern -version -16 -LM -i -q -b -jitfast -T -ac -help -E -malloc -subject 
+-LP -pattern -t -AC -LS -8 -S -b -jitfast -T -jit -help -E -malloc 
+-LP -C -pattern -version -t -tm -LS --colo -LM -8 -i -q -b -jitfast -error -jitverify -E -malloc -subject 
+-LP -C -version -t -AC -LS --colo -LM -S -d -q -jitfast -jitverify -dfa -jit -help -E 
+-pattern -version -LS -LM -8 -jit -ac -E -malloc -TM -subject 
+-LP -pattern -version -tm -LM -8 -S -d -q -jitfast -error -dfa -E -malloc -TM 
+-C -AC -unittest -32 -d -dfa -E 
+-LP -t -LS --colo -32 -S -jitfast -T -error -jitverify -dfa -ac -E -malloc -subject 
+-LP -C -pattern -16 -AC -unittest -i -S -b -error -jitverify -help -E -TM -subject 
+-LP -version -tm -unittest --colo -8 -d -q -error -jit -help -TM -subject 
+-C -version -tm -LS --colo -32 -S -q -jitverify -ac -help -E -malloc -TM 
+-t -AC -LS --colo -LM -8 -q -b -T -error -dfa -jit -help -subject 
+-C -t -LM -S -d -q -T -error -jitverify -ac -help -malloc -subject 
+-LP -C -version -t -16 -LS -i -S -d -q -error -jitverify -jit -help -TM 
+-LP -pattern -t -16 -unittest -LS -LM -b -error -dfa -ac -E -malloc 
+-LP -pattern -t -LS -LM -32 -q -b -jitfast -T -jitverify -dfa -jit -help -malloc 
+-pattern -LM -32 -i -d -T -error -jit -E -malloc 
+-C -pattern -version -t -tm -AC -LM -32 -jitfast -T -error -dfa -jit -ac -E -malloc -subject 
+-LP -C -AC --colo -8 -b -jitfast -jitverify -dfa -jit -ac -E -malloc -TM -subject 
+-version -tm -AC -unittest -LS -LM -d -jitfast -dfa -jit -ac -help -malloc -TM -subject 
+-pattern -version -tm -AC -unittest -LS --colo -LM -32 -i -q -b -jitfast -error -dfa -TM 
+-LP -C -t -LS --colo -LM -32 -i -d -error -jitverify -E -TM -subject 
+-version -t -tm -AC -LS --colo -8 -b -T -error -jitverify -dfa -E -subject 
+-version -t -16 -unittest -LS -LM -d -q -jitfast -T -jitverify -malloc 
+-C -version -16 -AC -S -b -jit -help -malloc 
+-t -tm -AC -unittest --colo -32 -S -b -error -ac -E -TM 
+-C -pattern -tm -AC -8 -i -jitfast -T -jitverify -jit -ac -help 
+-LP -pattern -version -t -tm --colo -LM -32 -i -S -d -jitfast -jitverify -jit -help -E -TM 
+-LP -tm -16 -AC -unittest -LS -LM -i -S -d -q -T -jitverify -dfa -jit -ac -E -malloc -subject 
+-C -t -tm -16 -AC -unittest -LS -i -S -d -q -jitfast -dfa -jit -E -malloc -TM 
+-LP -version -t -LM -32 -i -S -dfa -jit -help -subject 
+-pattern -version -tm -AC -LS -8 -q -b -jitfast -ac -malloc -TM 
+-LP -C -unittest -LS -LM -8 -S -q -b -error -ac -help -TM 
+-C -pattern -version -t -unittest -LS -8 -i -q -b -jitverify -jit -ac -help -TM 
+-LP -C -pattern -tm -16 -unittest -LS --colo -b -jitfast -T -error -jitverify -ac -E -subject 
+-LP -16 -unittest --colo -i -d -q -jitfast -T -jitverify -dfa -jit -ac -help -malloc 
+-C -pattern -t -tm -AC --colo -LM -8 -b -T -jit -help -E 
+-LP -C -t -tm -16 -LS -LM -d -q -help -malloc -TM -subject 
+-LP -t -16 --colo -LM -i -S -d -q -error -jit -ac -E -malloc -TM -subject 
+-LP -pattern -tm -16 -i -S -q -b -jitfast -jitverify -dfa -malloc -TM -subject 
+-LP -C -pattern -version -t -AC -unittest -LS --colo -LM -8 -b -jitfast -error -dfa -jit -malloc -TM 
+-LP -C -tm -AC -unittest --colo -LM -32 -d -T -error -jitverify -dfa -ac -help 
+-C -pattern -t -tm -AC --colo -LM -8 -S -q -error -jitverify -dfa -ac -help -malloc 
+-version -16 -unittest -LM -d -q -dfa -E -malloc -TM -subject 
+-pattern -version -tm -AC -LS -32 -S -d -q -dfa -jit -E -TM -subject 
+-LP -C -pattern -tm -16 -AC -LM -S -d -jitverify -jit 
+-LP -C -16 -AC -unittest -LS --colo -i -S -d -error -jitverify -ac -help -E -malloc 
+-LP -C -pattern -version -t -tm -16 -AC -unittest -LS --colo -LM -i -S -q -b -T -jitverify -dfa -ac -help -E -malloc -subject 
+-LP -version -t -AC -unittest --colo -32 -i -S -d -q -jitfast -T -error -jit -E -malloc -subject 
+-version -LM -8 -i -d -q -jitfast -T -error -jitverify -jit -ac -help -E 
+-C -pattern -version -tm -unittest --colo -8 -i -d -jitverify -dfa -help -subject 
+-LP -C -t -tm -LM -32 -S -q -error -jitverify -dfa -jit -ac -TM 
+-LP -C -pattern -version -t -tm -unittest -32 -S -q -b -T -error -jitverify -dfa -malloc 
+-version -16 -LS -i -S -q -b -jitfast -error -jit -ac -subject 
+-C -pattern -version -tm -AC --colo -LM -32 -i -d -q -error -jitverify -jit -help -malloc -TM 
+-LP -version -16 -unittest -LS -LM -i -S -d -jitfast -error -jit -malloc -TM 
+-LP -pattern -unittest --colo -LM -8 -i -jitfast -T -jitverify -jit -help -subject 
+-LP -C -pattern -t -tm -LS --colo -LM -32 -d -dfa -jit -ac -malloc -TM 
+-t -16 -AC -unittest -LM -i -d -q -error -jitverify -ac -help -malloc -subject 
+-LP -t -16 -AC -unittest -d -q -jitfast -T -error -dfa -jit -help -E -subject 
+-LP -version -unittest --colo -LM -i -S -b -jitfast -T -jitverify -ac -E 
+-LP -t -tm -16 -AC -unittest -LS --colo -i -b -T -dfa -jit -help -E -subject 
+-LP -C -version -16 -AC --colo -LM -jitfast -T -jitverify -ac 
+-LP -pattern -version -16 -LS --colo -i -S -q -b -error -dfa -jit -help -E -malloc -TM 
+-LP -pattern -t -tm -AC -unittest --colo -32 -i -b -jitfast -jit -ac -help -subject 
+-LP -C -16 -AC -unittest --colo -LM -i -S -q -b -jitfast -dfa -ac -malloc -subject 
+-C -version -16 -unittest -LM -i -S -b -T -error 
+-LP -C -pattern -tm -unittest -LS --colo -32 -i -S -b -jitfast -T -E -malloc 
+-C -16 -AC -LM -b -jitfast -T -dfa -help -E 
+-pattern -t -tm -unittest -b -error -jitverify -jit -malloc -TM 
+-pattern -t -unittest -LS -8 -i -S -d -q -jitfast -T -error -dfa -subject 
+-pattern -t -unittest -LM -32 -i -b -error -jitverify -dfa -ac -help -E -TM 
+-LP -C -t -tm -LS -LM -i -S -b -jitfast -error -jitverify -jit -ac -E -malloc -TM -subject 
+-LP -pattern -version -AC -LS -LM -32 -S -q -b -T -error -jitverify -ac -help -malloc -subject 
+-C -t -tm -16 -AC -LS -jitfast -T -error -jitverify -jit -E -malloc 
+-C -version -t -AC -8 -i -S -q -b -jitfast -T -error -jitverify -dfa -jit -ac -help -E 
+-LP -version -t -AC --colo -LM -32 -i -q -jitfast -dfa -ac -E -malloc 
+-LP -C -pattern -version -t -tm -AC -unittest --colo -i -d -jitfast -T -jit -ac -help -E -malloc -subject 
+-C -version -tm -16 -LS --colo -LM -q -b -jitfast -dfa -jit -ac -help -E -malloc -TM -subject 
+-LP -C -t -AC --colo -32 -S -b -jit -help -malloc -TM 
+-LP -version -tm -LM -8 -i -q -b -jitfast -jitverify -help -E -malloc -TM -subject 
+-pattern -t -tm -16 -unittest -LS -LM -i -d -q -jitfast -T -error -dfa -jit -ac -help -malloc -subject 
+-C -tm -unittest --colo -LM -32 -q -b -jitfast -T -jitverify -dfa -jit -ac -help -E -malloc 
+-C -pattern -tm -16 -AC -unittest -LS -LM -q -jitfast -T -error -dfa -E 
+-C -pattern -t -tm -16 -AC -unittest --colo -LM -i -S -error -dfa -jit -ac -E -malloc -TM -subject 
+-C -pattern -version -t -tm -AC -unittest --colo -LM -8 -i -S -d -q -jitverify -jit -ac -malloc -TM -subject 
+-version -t -tm -unittest -LS -LM -32 -i -d -jitfast -error -jitverify -dfa -jit -help -E -malloc -TM 
+-LP -unittest -LS -LM -8 -T -error -jitverify -dfa -jit -subject 
+-C -version -tm -AC -8 -S -b -jitfast -error -jitverify -jit -ac -E -subject 
+-LP -C -pattern -version -t -AC -LS -32 -i -d -q -jitverify -jit -E -malloc -subject 
+-LP -pattern -version -t -tm -AC -unittest --colo -LM -32 -S -q -T -jitverify -dfa -help -E -subject 
+-LP -pattern -t -tm -LS --colo -8 -S -q -b -jitfast -jitverify -jit -ac -help -E -malloc -TM -subject 
+-pattern -version -16 -AC -unittest -LM -i -q -b -jitfast -error -jitverify -jit -help 
+-C -version -AC -unittest -LS --colo -8 -q -jitfast -T -help -malloc -subject 
+-LP -C -16 -unittest -LS --colo -q -b -jitfast -error -help -malloc -TM 
+-LP -version -AC -LS --colo -LM -32 -i -S -b -jitfast -T -error -jit -ac -malloc 
+-pattern -version -AC -LS -LM -8 -d -jitfast -dfa -ac -help -malloc -subject 
+-LP -C -t -tm -AC -unittest -LS -8 -i -S -q -jitverify -jit -E -malloc 
+-pattern -t -tm -AC -unittest -LS -8 -d -jitverify -E -malloc 
+-pattern -version --colo -8 -i -S -d -q -jitfast -E -TM 
+-version -t -tm -16 -unittest --colo -i -b -jitfast -jitverify -jit -malloc -TM 
+-LP -C -pattern -AC -unittest -LS -8 -d -T -error -jitverify -dfa -ac -malloc -subject 
+-pattern -version -tm -16 -unittest -LS --colo -LM -i -d -T -jitverify -jit -ac -help 
+-LP -C -version -t -tm -unittest -LS --colo -8 -d -q -jitfast -T -error -jitverify -ac -E -malloc 
+-C -version -AC -LS --colo -LM -32 -S -b -jitfast -help -E -subject 
+-pattern -t -unittest -LS -LM -32 -i -S -q -jitfast -jit -help -E -subject 
+-16 -LS -q -b -T -E -subject 
+-LP -version -t -tm -AC -unittest -32 -i -q -jitfast -error -dfa -help -malloc -TM -subject 
+-C -pattern -unittest --colo -LM -8 -S -q -b -jitfast -T -dfa -E 
+-LP -tm -16 -LS -i -S -b -error -dfa -help -malloc 
+-C -pattern -version -t -16 -AC -unittest -LS -i -S -b -jitfast -jitverify -dfa -ac -E -TM -subject 
+-LP -C -pattern -tm -AC -LM -8 -i -d -q -jitfast -error -jitverify -dfa -ac -malloc -TM 
+-LP -version -t -unittest --colo -8 -i -S -error -dfa -malloc -TM -subject 
+-t -tm -unittest -LS -LM -32 -S -q -b -error -malloc -subject 
+-LP -C -version -t -tm -unittest -32 -b -jitverify -ac -subject 
+-LP -LS -8 -i -S -d -T -jitverify -dfa -ac -help -E -malloc 
+-C -version -t -16 -LS --colo -i -d -jitfast -dfa -ac -help -TM -subject 
+-C -pattern -version -tm -unittest -8 -S -b -ac -help -malloc -TM -subject 
+-LP -C -AC -unittest --colo -LM -i -S -d -q -T -error 
+-LP -C -pattern -version -tm -LS --colo -LM -8 -i -S -d -error -jitverify -jit -ac -help -E -malloc -TM 
+-LP -version -t -16 -AC -unittest -S -d -q -jitverify -help -TM -subject 
+-LP -C -pattern -version -tm -16 -AC -unittest -LS --colo -S -d -jitfast -T -jitverify -dfa -jit -help -E -malloc 
+-LP -pattern -AC -unittest -LS --colo -8 -q -b -jitfast -T -jitverify -dfa -jit -ac -help -subject 
+-LP -version --colo -32 -i -S -q -b -T -error -jitverify -dfa -jit -E 
+-LP -C -pattern -t -tm -AC -unittest -LS -32 -S -d -jitfast -error -dfa -jit -TM -subject 
+-C -pattern -t -AC -LS --colo -32 -q -b -jitfast -T -error -dfa -ac -malloc -subject 
+-t -tm -LS -LM -32 -i -b -jitverify -dfa -jit -ac -malloc -TM -subject 
+-C -tm -16 -AC -unittest -LM -S -b -T -jitverify -dfa -ac -subject 
+-version -t -16 -LM -b -jitverify -jit -ac -E -malloc -TM 
+-LP -pattern -version -t -16 -LS --colo -i -S -q -jitfast -jitverify -jit -ac -malloc -subject 
+-C -pattern -unittest -8 -q -T -error -jitverify -ac -help -E 
+-C -version -tm -16 -unittest --colo -d -jitfast -T -error -help -subject 
+-C -pattern -tm -AC -unittest --colo -LM -32 -jitfast -jitverify -E -TM -subject 
+-LP -version -unittest -LM -32 -i -S -q -b -jitfast -jitverify -dfa -ac -help -E 
+-C -AC -LS -LM -32 -d -q -jitfast -jitverify -dfa -help -E -TM 
+-LP -C -version -t -tm -16 --colo -i -S -q -b -error -dfa -jit -TM -subject 
+-LP -version -t -AC --colo -8 -i -q -b -dfa -help -E -TM 
+-version -16 -LS -i -q -b -jitfast -ac -help -TM 
+-LP -C -pattern -16 -unittest -LS -LM -i -error -jitverify -dfa -jit -ac -help -TM 
+-pattern -tm -16 -AC -LS --colo -S -d -q -jitfast -dfa -help -malloc -subject 
+-C -pattern -version -tm -AC --colo -i -S -q -b -T -error -dfa -jit -help 
+-C -pattern -t -tm -16 -AC -unittest -jitfast -jitverify -ac -help -E -TM -subject 
+-LP -pattern -t -tm -16 -LS --colo -LM -S -d -dfa -ac -E -TM 
+-pattern -version -16 -AC -unittest -LS -S -q -T -error -jitverify -dfa -ac -malloc 
+-version -tm -unittest -LS -8 -i -jitfast -error -jitverify -dfa -jit -ac -help -malloc -subject 
+-LP -C -pattern -t -unittest -LM -8 -i -b -jitfast -T -dfa -ac -help -subject 
+-LP -pattern -version -t -tm -16 -AC -LS --colo -i -S -d -T -error -jitverify -jit -E -malloc -subject 
+-LP -C -version -AC -LM -8 -q -T -error -jit -ac -E -subject 
+-C -tm -16 -AC -unittest -LS -S -q -b -jitfast -error -jitverify -dfa -jit -ac -E -malloc -TM 
+-LP -C -pattern -version -tm -AC -LS --colo -8 -i -d -jit 
+-pattern -version -t -LS -LM -32 -q -jitfast -dfa -jit -help -E -malloc -TM -subject 
+-C -pattern -version -32 -S -q -jitfast -T -error -jitverify -ac 
+-LP -C -pattern -tm -AC -unittest -LS -LM -32 -S -q -b -jitfast -error -jitverify -dfa -jit -ac -help -E -malloc -subject 
+-AC -LS --colo -8 -i -S -q -b -error -jitverify -jit -ac -TM -subject 
+-version -t -LS -LM -S -d -q -dfa -help -TM 
+-pattern -AC -unittest -8 -S -d -q -dfa -jit -ac -help -E -TM -subject 
+-t -AC -unittest --colo -LM -32 -q -jitfast -T -error -jitverify -jit -ac -help -malloc -subject 
+-LP -C -pattern -version -t -tm -unittest -LS --colo -32 -i -d -q -jitfast -T -jitverify -jit -ac -E 
+-LP -C -tm --colo -LM -32 -i -S -d -q -jitfast -T -error -dfa -jit -ac 
+-C -version -tm -AC -LS -LM -8 -S -error -E -TM -subject 
+-LP -C -version -unittest -LS --colo -32 -i -S -d -dfa -ac -help -E -TM 
+-pattern -AC -unittest -LS -32 -i -S -d -jitfast -T -error -dfa -subject 
+-pattern -t -tm -16 --colo -S -d -jitfast -T -error -jit -ac -help -malloc 
+-LP -C -version -t -tm --colo -32 -i -d -jitfast -T -error -help -E 
+-pattern -version -t -AC -LS --colo -32 -b -jitfast -error -jitverify -jit -E -TM -subject 
+-t -tm -unittest -LS -LM -8 -S -d -T -dfa -jit -ac -help 
+-pattern -AC -unittest --colo -LM -32 -i -S -b -error -jit -help -E -TM -subject 
+-LP -C -pattern -version -t -tm -AC -unittest -LS -8 -i -S -q -b -jitfast -T -jitverify -dfa -jit -ac -help -malloc -subject 
+-C -version -t -AC -LM -8 -S -b -jitfast -error -jit -ac -help -E -malloc 
+-C -version -t -tm -AC -unittest -LS -LM -32 -S -b -T -error -dfa -jit -help -E 
+-LP -tm -LS -32 -jitfast -T -error -jitverify -jit -help -malloc -subject 
+-LP -C -t -AC -unittest -LS --colo -LM -8 -d -T -jitverify -help -E 
+-LP -pattern -version -16 --colo -d -jitfast -T -error -jitverify -jit -ac 
+-pattern -version -t -16 -LM -i -S -d -q -jitfast -T -jitverify -dfa -jit -ac -help -E -malloc -subject 
+-C -pattern -t -tm --colo -32 -i -S -d -q -jitfast -T -dfa -ac -subject 
+-C -pattern -t -tm -16 -unittest --colo -i -d -dfa -jit -E 
+-LP -pattern -version -AC --colo -i -S -d -jitfast -jitverify -help -E -malloc -TM -subject 
+-pattern -tm -16 --colo -LM -S -b -error -dfa -jit -ac -help -malloc -TM 
+-LP -version -unittest --colo -32 -q -b -jitfast -jit -ac -TM 
+-t -16 -AC -unittest -LS -LM -S -q -b -jitfast -T -jitverify -E -malloc 
+-LP -C -pattern -version -t -unittest -LM -8 -S -q -b -dfa -jit -ac -E -malloc -subject 
+-pattern -version -16 -AC -unittest -LS --colo -LM -i -d -q -T -ac -subject 
+-C -tm -LS --colo -8 -i -d -q -jitfast -T -error -jitverify -help -malloc 
+-pattern -tm -LM -8 -b -error -jitverify -dfa -jit -ac -E -TM 
+-LP -pattern -version -tm -16 -AC -unittest -LS -i -q -b -help -E -subject 
+-LP -pattern -version -t -AC -LS --colo -32 -i -S -jitfast -jitverify -dfa -jit -ac -help -TM -subject 
+-LP -C -16 -AC -unittest --colo -i -d -q -jitfast -error -jitverify -dfa -jit -help -E -TM -subject 
+-LP -version -unittest -LS --colo -LM -8 -i -q -jitfast -dfa -TM 
+-LP -pattern -t -tm -16 -i -S -q -jitfast -dfa -ac -help -TM 
+-LP -C -pattern -t -LS -8 -i -S -d -jitfast -error -jitverify -dfa -jit -help -TM 
+-LP -C -pattern -t -tm -AC -unittest -LS --colo -LM -32 -i -S -d -jitfast -error -jitverify -jit -ac -help -malloc -TM -subject 
+-LP -C -pattern -version -t -unittest --colo -LM -8 -S -d -error -TM 
+-LP -C -t -tm -16 --colo -LM -S -q -b -T -error -jitverify -jit -help -E 
+-LP -AC -unittest -LS -32 -i -S -d -q -T -jitverify -ac -help -malloc 
+-LP -version -tm -16 -AC -LS -LM -i -S -jitfast -T -dfa -jit -ac -E 
+-LP -pattern -version -16 -AC -unittest -LM -i -S -q -b -T -error -jitverify -jit -ac -malloc -subject 
+-C -pattern -version -t -tm -AC -unittest --colo -8 -i -S -d -q -jitfast -T -ac -help -malloc 
+-t -16 -AC --colo -S -d -jitfast -error -jit -ac 
+-C -t -tm -16 -jitfast -error -dfa -jit -ac -TM 
+-LP -tm -AC -8 -jitfast -E -malloc -TM -subject 
+-LP -C -pattern -version -t -16 -AC -unittest --colo -LM -i -d -jitfast -help -E -malloc -TM -subject 
+-LP -pattern -version --colo -8 -i -S -d -jitfast -jitverify -dfa -subject 
+-LP -pattern -version -t -tm -LS -LM -8 -i -S -b -error -dfa -ac -help -E -malloc -subject 
+-LP -C -pattern -version -tm -AC -unittest -LM -8 -i -S -q -b -T -error -jitverify -dfa -ac -E 
+-C -version -16 -unittest -LS --colo -LM -i -q -b -T -error -jit -ac -E -malloc -subject 
+-LP -version -AC -unittest -LS --colo -LM -8 -i -S -q -b -T -jitverify -jit -E -malloc -subject 
+-C -t --colo -32 -i -b -jitfast -jitverify -dfa -help -E -malloc -TM 
+-LP -C -pattern -version -t -tm -16 -unittest -LS --colo -b -jit -help -E -malloc -TM 
+-C -version -LM -8 -i -S -q -b -jitfast -error -jit -TM -subject 
+-pattern -version -t -unittest -32 -d -q -T -ac -subject 
+-t -AC --colo -LM -32 -S -d -error -jitverify -jit -ac -E -malloc 
+-C -pattern -t -16 -AC --colo -i -d -q -T -ac -malloc -subject 
+-LP -t -tm -AC -unittest -8 -S -q -b -error -jitverify -dfa -E -malloc -TM 
+-LP -C -pattern -t -tm -LS -32 -S -b -error -ac -help -malloc -TM -subject 
+-C -t -tm -AC --colo -8 -d -jitfast -T -jit -help -E -subject 
+-LP -version -unittest -LS -8 -d -dfa -jit -ac -E -TM -subject 
+-pattern -AC -unittest -LS -LM -8 -i -S -b -T -error -E -malloc 
+-LP -AC -LM -32 -i -q -b -error -dfa -malloc -subject 
+-pattern -version -AC -unittest -LS -LM -32 -S -q -b -error -jitverify -dfa -ac -help -E -malloc -TM -subject 
+-C -pattern -LS --colo -32 -i -S -jitfast -dfa -jit -subject 
+-t -tm -AC -unittest --colo -LM -32 -d -q -T -error -jitverify -dfa -subject 
+-LP -version -tm -16 -LS -i -S -q -b -jitfast -error -jitverify -jit -help -E -TM -subject 
+-C -pattern -t -16 -d -T -error -dfa -malloc 
+-LP -C -version -t -tm -16 -AC -unittest --colo -LM -i -S -q -jitfast -error -ac -help -E 
+-pattern -tm -16 -AC -i -d -jitfast -jitverify -malloc -TM -subject 
+-LP -C -pattern -version -tm -16 -AC -unittest --colo -LM -S -d -q -jitfast -error -ac -E -TM 
+-LP -C -pattern -AC -unittest -LS --colo -b -ac -TM -subject 
+-LP -version -LS -32 -i -q -T -error -jit -help -E -subject 
+-LP -C -version -tm -AC -unittest --colo -8 -S -error -jit -help -E -malloc -subject 
+-LP -pattern -tm -16 -LS --colo -LM -S -q -T -error -jitverify -help 
+-LP -C -t -tm -unittest -LS --colo -LM -8 -b -jitfast -T -jitverify -dfa -jit -subject 
+-C -pattern -version -t -tm -16 -AC -unittest -LS --colo -q -b -jitfast -T -error -dfa -jit -ac -help -E 
+-version -AC -unittest -LS -LM -8 -i -S -jitfast -error -jitverify -dfa -jit -E -TM 
+-tm -16 -AC -LS -i -q -b -jitverify -dfa -jit -ac -help -malloc -TM 
+-pattern -t -16 --colo -i -d -q -jitverify -ac -help -E -TM 
+-LP -C -version -AC --colo -LM -32 -d -q -jitfast -error -dfa -jit -ac -help -E -malloc -TM -subject 
+-C -pattern -version -t -tm -AC -LS -8 -S -d -T -error -help -E -malloc -subject 
+-C -pattern -8 -S -T -error -jitverify -dfa -help -malloc -subject 
+-C -pattern -version -t -tm -16 -unittest -LM -q -b -jitfast -T -jitverify -dfa -help -malloc 
+-LP -C -version -tm -16 --colo -LM -d -q -jitfast -ac -subject 
+-tm -LS --colo -8 -i -S -b -jitfast -dfa -TM 
+-LP -C -pattern -version -t -tm -LM -32 -S -q -b -jitfast -T -error -jit -ac -E -malloc 
+-LP -version -t -AC -unittest -LM -8 -i -d -jitverify -jit -ac -help -malloc -subject 
+-LP -pattern -tm -AC -LS -LM -i -q -b -T -error -jitverify -dfa -jit -E -subject 
+-AC -unittest -32 -i -S -d -q -jitfast -error -jitverify -dfa -help -TM 
+-C -version -t -tm -AC -LM -32 -i -S -q -b -T -jitverify -ac -help -subject 
+-LP -C -pattern -version -t -tm -unittest -LS -8 -i -d -error -dfa -jit -ac -TM 
+-pattern -t -16 -AC --colo -LM -i -b -error -dfa -subject 
+-C -pattern -t -tm -AC -unittest --colo -32 -i -S -q -b -jitfast -T -jitverify -ac -help 
+-C -pattern -version -AC -unittest -LM -32 -d -q -dfa -ac -E -malloc -TM -subject 
+-LP -C -pattern -t -tm -AC -unittest --colo -8 -i -T -error -jitverify -dfa -jit -subject 
+-LP -pattern -t -tm -16 -AC -LS --colo -S -q -b -error -dfa -ac -help -E -malloc -TM -subject 
+-LP -tm -LS --colo -32 -i -q -error -help -E 
+-LP -C -version -tm -unittest -LS --colo -LM -32 -i -S -d -T -dfa -jit -E -subject 
+-C -version -tm -16 -AC -unittest -LS -d -q -error -jitverify -jit 
+-pattern -version -tm -unittest -LS -8 -i -q -b -jitfast -T -error -dfa -help -E 
+-LP -version -tm -16 -AC --colo -q -T -error -jit -ac -malloc 
+-pattern -t -tm -AC --colo -LM -8 -q -jitfast -jitverify -help -E -TM -subject 
+-LP -C -version -t -tm -LS -32 -i -b -jitfast -jit -E -malloc -TM -subject 
+-C -AC -32 -i -q -b -jitfast -jitverify -dfa -jit -ac -E -malloc 
+-C -version -AC -unittest --colo -LM -8 -d -q -jitfast -error -dfa -jit -ac -help -TM 
+-LP -pattern -unittest -LS -32 -S -d -dfa -malloc -TM 
+-LP -C -pattern -version -AC -unittest -8 -i -S -d -q -jitfast -jitverify -E -malloc -TM -subject 
+-LS --colo -LM -32 -i -d -jitfast -error -help -subject 
+-LP -C -t -tm -AC -8 -i -d -error -dfa -ac -malloc -TM -subject 
+-C -version -16 -unittest --colo -LM -S -d -T -error -jitverify -dfa -E -subject 
+-LP -C -pattern -tm -AC -unittest -LS --colo -8 -S -d -q -jitfast -error -jit -help -E -malloc -TM -subject 
+-C -pattern -version -t -AC -unittest -LM -32 -S -d -q -jitverify -jit -TM 
+-LP -C -pattern -AC -unittest --colo -8 -i -q -b -jitfast -jitverify -help -malloc -TM 
+-LP -C -16 --colo -LM -b -jitverify -ac -help -malloc -TM 
+-C -pattern -t --colo -q -b -jitfast -jitverify -dfa -help -E -malloc -TM -subject 
+-LP -t -16 -AC -LS -LM -d -jitfast -error -jitverify -dfa -jit -ac -TM 
+-pattern -version -t -tm -16 -unittest -LM -S -b -jitverify -dfa -jit -help -subject 
+-LP -C -AC -unittest -32 -i -S -q -b -jitfast -T -dfa -ac -E -subject 
+-LP -t -tm -16 -LS -LM -i -q -b -jitfast -T -error -dfa -E -malloc 
+-LP -pattern -version -t -tm -16 -unittest -LM -q -T -jitverify -ac -help 
+-LP -version -tm -AC -LS -32 -i -b -T -error -jitverify -dfa -ac -help -malloc 
+-C -version -t -tm -AC -unittest -LM -32 -i -S -q -b -jitverify -jit -ac -TM -subject 
+-LP -version -LS --colo -8 -i -d -q -T -error -jitverify -jit -ac -help -E -subject 
+-LP -pattern -version -t -16 -unittest -LS -LM -q -b -jitverify -help -E -TM 
+-LP -pattern -version -t -LS -LM -8 -i -S -d -jitfast -error -dfa -help -malloc -TM -subject 
+-LP -version -tm -AC -unittest -LS --colo -LM -32 -i -S -q -b -jitfast -jitverify -jit -ac -help -TM 
+-C -version --colo -32 -S -jitfast -jit -ac -help -malloc -TM 
+-pattern -version -unittest -LS --colo -LM -32 -S -T -ac -malloc 
+-C -version -t -tm -AC -unittest -LS -32 -i -d -q -error -dfa -jit -ac -help 
+-LP -C -version -t -16 -unittest -LS -LM -q -error -ac -E -TM -subject 
+-pattern -LS --colo -LM -32 -i -b -error -jitverify -dfa -jit -ac -E 
+-LP -version -tm -unittest --colo -LM -d -q -jitfast -malloc 
+-LP -version -tm -AC -LS --colo -8 -i -S -d -q -jitfast -error -jitverify -dfa -jit -ac -malloc -TM -subject 
+-LP -version -t -unittest -8 -i -b -jit -help -TM 
+-LP -version -tm -unittest --colo -LM -8 -i -S -q -b -T -error -dfa -ac -malloc 
+-pattern -version -t -AC -unittest -LS -32 -i -q -b -jitfast -help -TM 
+-version -AC -LS -8 -i -error -ac -help -E -subject 
+-LP -C -version -unittest -LS -LM -32 -i -S -T -error -jit -help -malloc 
+-LP -C -version -tm -AC -unittest --colo -LM -32 -S -d -error -jit -ac -help -E -malloc -TM 
+-C -AC --colo -S -d -q -jitfast -error -dfa -jit -help -E -malloc -TM -subject 
+-LP -AC --colo -8 -q -T -dfa -jit -ac -E -malloc 
+-LP -version -t -unittest --colo -LM -8 -i -S -b -error -jitverify -dfa -ac -help 
+-LP -C -version -tm -AC -unittest --colo -8 -S -q -b -jitfast -T -error -jitverify -dfa -jit -E 
+-C -pattern -version -16 -AC -unittest --colo -LM -S -q -b -jitfast -dfa -jit -help -E -TM -subject 
+-LP -C -pattern -AC -LS --colo -LM -8 -i -q -b -T -error -jitverify -dfa -ac -malloc 
+-LP -C -pattern -t -AC -LS --colo -LM -8 -i -S -b -jitfast -error -jitverify -dfa -ac -E -TM 
+-C -pattern -version -t -tm -AC --colo -8 -S -d -q -T -dfa -ac -E -malloc -subject 
+-LP -C -tm --colo -LM -S -q -b -T -error -jitverify -dfa -jit -ac -subject 
+-pattern -t -AC -unittest --colo -32 -q -T -dfa -help -subject 
+-LP -C -pattern -version -t -16 --colo -S -b -T -error -dfa -jit -malloc -subject 
+-C -pattern -tm -AC --colo -32 -q -b -dfa -ac -help -E -malloc -TM 
+-LP -pattern -version -AC -LM -jitfast -T -error -dfa -help 
+-LP -version -tm -AC -unittest -LS --colo -8 -q -error -dfa -jit -ac -E -TM -subject 
+-version -tm -16 -AC -unittest -LS --colo -i -S -d -jitfast -error -jitverify -dfa -jit -E -malloc -TM 
+-version -t -AC -unittest -LS -32 -S -error -ac -help -malloc -TM -subject 
+-C -t -AC -unittest -LS --colo -32 -i -d -q -error -dfa -jit -E -malloc -TM 
+-C -version -t -tm -16 -AC -unittest --colo -i -S -b -error -jitverify -dfa -jit -malloc -TM 
+-LP -C -pattern -version -tm -AC -unittest -LS --colo -32 -d -q -T -error -jitverify -dfa -jit -help -E -malloc -subject 
+-version -t -16 -AC -LS -LM -q -error -dfa -jit -help -malloc -TM 
+-LP -C -version -16 -unittest -LS --colo -i -S -d -q -jit -TM -subject 
+-LP -C -pattern -tm -AC -LM -32 -q -b -jitfast -error -jitverify -dfa -E -malloc -TM -subject 
+-tm -AC -LS -LM -8 -i -d -jitfast -T -jitverify -jit -ac -help -E -subject 
+-LP -pattern -version -t -16 -unittest -S -q -b -jitfast -T -error -jitverify -jit -ac -help -E -malloc 
+-C -pattern -version -unittest -LS --colo -LM -8 -S -q -b -error -jitverify -ac -malloc 
+-LP -pattern -version -t -tm -AC -unittest -LS -LM -8 -S -d -jitverify -ac -help -E -TM 
+-version -tm -AC -LS --colo -LM -8 -i -d -q -jitfast -T -jitverify -dfa -help -subject 
+-LP -C -t -unittest -LM -8 -S -error -jitverify -help -E -subject 
+-LP -C -pattern -version -t -tm -AC -unittest -LS --colo -LM -8 -b -jitverify -dfa -ac -E -TM 
+-C -pattern -version -t -AC -unittest --colo -8 -i -q -b -jitfast -error -jitverify -jit -ac -E -TM -subject 
+-version -tm -AC -LS -LM -8 -i -S -q -jitfast -T -error -dfa -jit -ac -help 
+-LP -C -version -t -AC -unittest -32 -i -S -q -help -E -malloc 
+-C -pattern -version -tm -16 -AC --colo -LM -S -d -q -jitfast -error -jitverify -dfa -ac -E -subject 
+-LP -C -pattern -version -tm -AC -unittest -LS --colo -LM -32 -i -S -q -b -jitfast -T -error -jitverify -help -E -malloc 
+-pattern -version --colo -LM -8 -q -b -jitfast -error -jitverify -dfa -jit -ac -help -E -TM 
+-LP -C -pattern -version -t -tm -16 -AC -LS -LM -d -q -jitfast -jit -ac -help -E -malloc -TM -subject 
+-LS --colo -LM -32 -i -S -jitfast -ac -help -malloc -TM 
+-LP -pattern -16 -unittest -LS --colo -b -error -dfa -jit -ac -malloc 

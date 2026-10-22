@@ -2,68 +2,6 @@
   "name": "x264_x264",
   "options": [
     {
-      "name": "prefix",
-      "type": "choice",
-      "default": "/usr/local",
-      "cli": "",
-      "choices": [
-        "/usr/local",
-        "/usr",
-        "/opt/x264",
-        "/home/user/x264"
-      ]
-    },
-    {
-      "name": "exec-prefix",
-      "type": "choice",
-      "default": "PREFIX",
-      "cli": "",
-      "choices": [
-        "PREFIX",
-        "/usr/local",
-        "/usr"
-      ]
-    },
-    {
-      "name": "bindir",
-      "type": "choice",
-      "default": "EPREFIX/bin",
-      "cli": "",
-      "choices": [
-        "EPREFIX/bin",
-        "/usr/local/bin",
-        "/bin"
-      ]
-    },
-    {
-      "name": "libdir",
-      "type": "choice",
-      "default": "EPREFIX/lib",
-      "cli": "",
-      "choices": [
-        "EPREFIX/lib",
-        "/usr/local/lib",
-        "/lib"
-      ]
-    },
-    {
-      "name": "includedir",
-      "type": "choice",
-      "default": "PREFIX/include",
-      "cli": "",
-      "choices": [
-        "PREFIX/include",
-        "/usr/local/include",
-        "/usr/include"
-      ]
-    },
-    {
-      "name": "system-libx264",
-      "type": "bool",
-      "default": false,
-      "cli": ""
-    },
-    {
       "name": "shared",
       "type": "bool",
       "default": false,
@@ -79,79 +17,43 @@
       "name": "bashcompletion",
       "type": "bool",
       "default": true,
-      "cli": "disable"
-    },
-    {
-      "name": "bashcompletionsdir",
-      "type": "choice",
-      "default": "auto",
-      "cli": "",
-      "choices": [
-        "auto",
-        "/usr/share/bash-completion/completions",
-        "/etc/bash_completion.d",
-        "none"
-      ]
+      "cli": "enable"
     },
     {
       "name": "opencl",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "gpl",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "thread",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "win32thread",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "interlaced",
       "type": "bool",
       "default": true,
-      "cli": "disable"
-    },
-    {
-      "name": "bit-depth",
-      "type": "choice",
-      "default": "all",
-      "cli": "",
-      "choices": [
-        "8",
-        "10",
-        "all"
-      ]
-    },
-    {
-      "name": "chroma-format",
-      "type": "choice",
-      "default": "all",
-      "cli": "",
-      "choices": [
-        "400",
-        "420",
-        "422",
-        "444",
-        "all"
-      ]
+      "cli": "enable"
     },
     {
       "name": "asm",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "lto",
@@ -184,140 +86,51 @@
       "cli": "enable"
     },
     {
-      "name": "host",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "x86_64-linux-gnu",
-        "i686-w64-mingw32",
-        "arm-linux-gnueabihf"
-      ]
-    },
-    {
-      "name": "cross-prefix",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "x86_64-linux-gnu-",
-        "arm-none-eabi-"
-      ]
-    },
-    {
-      "name": "sysroot",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "/opt/sysroot",
-        "/usr/lib/sysroot"
-      ]
-    },
-    {
       "name": "avs",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "swscale",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "lavf",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "ffms",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "gpac",
       "type": "bool",
       "default": true,
-      "cli": "disable"
+      "cli": "enable"
     },
     {
       "name": "lsmash",
       "type": "bool",
       "default": true,
-      "cli": "disable"
-    },
-    {
-      "name": "vsx",
-      "type": "bool",
-      "default": true,
-      "cli": "disable"
-    },
-    {
-      "name": "extra-asflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-fPIC",
-        "-g"
-      ]
-    },
-    {
-      "name": "extra-cflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-O3",
-        "-march=native",
-        "-g"
-      ]
-    },
-    {
-      "name": "extra-ldflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-static",
-        "-Wl,-z,defs"
-      ]
-    },
-    {
-      "name": "extra-rcflags",
-      "type": "choice",
-      "default": "",
-      "cli": "",
-      "choices": [
-        "",
-        "-DDEBUG"
-      ]
+      "cli": "enable"
     }
   ],
   "constraints": [
     {
-      "opt": "system-libx264",
-      "val": true,
-      "then": [
-        { "opt": "static", "val": false }
-      ],
-      "desc": "System libx264 cannot be used with static build"
-    },
-    {
       "opt": "shared",
       "val": true,
       "then": [
-        { "opt": "pic", "val": true }
+        {
+          "opt": "pic",
+          "val": true
+        }
       ],
       "desc": "Shared library build requires Position Independent Code (PIC)"
     },
@@ -325,7 +138,10 @@
       "opt": "lavf",
       "val": true,
       "then": [
-        { "opt": "swscale", "val": true }
+        {
+          "opt": "swscale",
+          "val": true
+        }
       ],
       "desc": "libavformat (lavf) support requires swscale support"
     },
@@ -333,39 +149,307 @@
       "opt": "ffms",
       "val": true,
       "then": [
-        { "opt": "swscale", "val": true }
+        {
+          "opt": "swscale",
+          "val": true
+        }
       ],
       "desc": "ffmpegsource (ffms) support requires swscale support"
-    },
-    {
-      "opt": "bit-depth",
-      "val": "10",
-      "choice": "==",
-      "then": [
-        { "opt": "opencl", "val": false }
-      ],
-      "desc": "OpenCL is not supported with 10-bit depth"
     }
   ],
   "removed": [
-        {
-      "name": "cli hardcoded in build.sh because it is needed for command line use",
-      "type": "bool",
-      "default": true,
-      "cli": "disable"
+    {
+      "name": "cli",
+      "reason": "hardcoded in build.sh because it is needed for command line use",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "disable"
+      }
     },
     {
-      "opt": "cli",
-      "val": false,
-      "then": [
-        { "opt": "avs", "val": false },
-        { "opt": "lavf", "val": false },
-        { "opt": "ffms", "val": false },
-        { "opt": "gpac", "val": false },
-        { "opt": "lsmash", "val": false },
-        { "opt": "swscale", "val": false }
-      ],
-      "desc": "Disabling CLI disables all video input/output libraries (avs, lavf, ffms, gpac, lsmash, swscale)"
+      "name": "constraint: if cli=false then avs=false, lavf=false, ffms=false, gpac=false, lsmash=false, swscale=false",
+      "reason": "refers to the removed option cli",
+      "old": {
+        "opt": "cli",
+        "val": false,
+        "then": [
+          {
+            "opt": "avs",
+            "val": false
+          },
+          {
+            "opt": "lavf",
+            "val": false
+          },
+          {
+            "opt": "ffms",
+            "val": false
+          },
+          {
+            "opt": "gpac",
+            "val": false
+          },
+          {
+            "opt": "lsmash",
+            "val": false
+          },
+          {
+            "opt": "swscale",
+            "val": false
+          }
+        ],
+        "desc": "Disabling CLI disables all video input/output libraries (avs, lavf, ffms, gpac, lsmash, swscale)"
+      }
+    },
+    {
+      "name": "prefix",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "prefix",
+        "type": "choice",
+        "default": "/usr/local",
+        "cli": "",
+        "choices": [
+          "/usr/local",
+          "/usr",
+          "/opt/x264",
+          "/home/user/x264"
+        ]
+      }
+    },
+    {
+      "name": "exec-prefix",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "exec-prefix",
+        "type": "choice",
+        "default": "PREFIX",
+        "cli": "",
+        "choices": [
+          "PREFIX",
+          "/usr/local",
+          "/usr"
+        ]
+      }
+    },
+    {
+      "name": "bindir",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "bindir",
+        "type": "choice",
+        "default": "EPREFIX/bin",
+        "cli": "",
+        "choices": [
+          "EPREFIX/bin",
+          "/usr/local/bin",
+          "/bin"
+        ]
+      }
+    },
+    {
+      "name": "libdir",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "libdir",
+        "type": "choice",
+        "default": "EPREFIX/lib",
+        "cli": "",
+        "choices": [
+          "EPREFIX/lib",
+          "/usr/local/lib",
+          "/lib"
+        ]
+      }
+    },
+    {
+      "name": "includedir",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "includedir",
+        "type": "choice",
+        "default": "PREFIX/include",
+        "cli": "",
+        "choices": [
+          "PREFIX/include",
+          "/usr/local/include",
+          "/usr/include"
+        ]
+      }
+    },
+    {
+      "name": "system-libx264",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "system-libx264",
+        "type": "bool",
+        "default": false,
+        "cli": ""
+      }
+    },
+    {
+      "name": "bashcompletionsdir",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "bashcompletionsdir",
+        "type": "choice",
+        "default": "auto",
+        "cli": "",
+        "choices": [
+          "auto",
+          "/usr/share/bash-completion/completions",
+          "/etc/bash_completion.d",
+          "none"
+        ]
+      }
+    },
+    {
+      "name": "bit-depth",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "bit-depth",
+        "type": "choice",
+        "default": "all",
+        "cli": "",
+        "choices": [
+          "8",
+          "10",
+          "all"
+        ]
+      }
+    },
+    {
+      "name": "chroma-format",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "chroma-format",
+        "type": "choice",
+        "default": "all",
+        "cli": "",
+        "choices": [
+          "400",
+          "420",
+          "422",
+          "444",
+          "all"
+        ]
+      }
+    },
+    {
+      "name": "host",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "host",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "x86_64-linux-gnu",
+          "i686-w64-mingw32",
+          "arm-linux-gnueabihf"
+        ]
+      }
+    },
+    {
+      "name": "cross-prefix",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "cross-prefix",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "x86_64-linux-gnu-",
+          "arm-none-eabi-"
+        ]
+      }
+    },
+    {
+      "name": "sysroot",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "sysroot",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "/opt/sysroot",
+          "/usr/lib/sysroot"
+        ]
+      }
+    },
+    {
+      "name": "extra-asflags",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "extra-asflags",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-fPIC",
+          "-g"
+        ]
+      }
+    },
+    {
+      "name": "extra-cflags",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "extra-cflags",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-O3",
+          "-march=native",
+          "-g"
+        ]
+      }
+    },
+    {
+      "name": "extra-ldflags",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "extra-ldflags",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-static",
+          "-Wl,-z,defs"
+        ]
+      }
+    },
+    {
+      "name": "extra-rcflags",
+      "reason": "plain --name=value option: not expressible with the enable/with grammar format",
+      "old": {
+        "name": "extra-rcflags",
+        "type": "choice",
+        "default": "",
+        "cli": "",
+        "choices": [
+          "",
+          "-DDEBUG"
+        ]
+      }
+    },
+    {
+      "name": "vsx",
+      "reason": "PowerPC VSX instructions: no effect on an x86_64 build, and x264's configure only has an undocumented --disable-vsx (--enable-vsx is ignored)",
+      "old": {
+        "type": "bool",
+        "default": true,
+        "cli": "enable"
+      }
     }
   ]
 }

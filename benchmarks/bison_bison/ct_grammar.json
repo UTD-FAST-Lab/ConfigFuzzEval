@@ -5,108 +5,134 @@
       "name": "largefile",
       "type": "bool",
       "default": true,
-      "cli": "--enable-largefile"
+      "cli": "enable"
     },
     {
       "name": "year2038",
       "type": "bool",
       "default": true,
-      "cli": "--enable-year2038"
+      "cli": "enable"
     },
     {
       "name": "threads",
-      "type": "enum",
-      "default": null,
-      "values": [
+      "type": "choice",
+      "default": "isoc",
+      "cli": "enable",
+      "choices": [
         "isoc",
         "posix",
         "isoc+posix",
         "windows",
         "no"
-      ],
-      "cli": "--enable-threads"
+      ]
     },
     {
       "name": "rpath",
       "type": "bool",
       "default": true,
-      "cli": "--enable-rpath"
+      "cli": "enable"
     },
     {
       "name": "yacc",
       "type": "bool",
       "default": true,
-      "cli": "--enable-yacc"
+      "cli": "enable"
     },
     {
       "name": "cross-guesses",
-      "type": "enum",
-      "default": null,
-      "values": [
+      "type": "choice",
+      "default": "conservative",
+      "cli": "enable",
+      "choices": [
         "conservative",
         "risky"
-      ],
-      "cli": "--enable-cross-guesses"
+      ]
     },
     {
       "name": "assert",
       "type": "bool",
       "default": true,
-      "cli": "--enable-assert"
+      "cli": "enable"
     },
     {
       "name": "relocatable",
       "type": "bool",
       "default": false,
-      "cli": "--enable-relocatable"
-    },
-    {
-      "name": "nls",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-nls"
-    },
-    {
-      "name": "gcc-warnings",
-      "type": "bool",
-      "default": false,
-      "cli": "--enable-gcc-warnings"
-    },
-    {
-      "name": "dependency-tracking",
-      "type": "bool",
-      "default": true,
-      "cli": "--enable-dependency-tracking"
+      "cli": "enable"
     },
     {
       "name": "silent-rules",
       "type": "bool",
       "default": true,
-      "cli": "--enable-silent-rules"
-    },
-    {
-      "name": "libtextstyle-prefix",
-      "type": "string",
-      "default": null,
-      "cli": "--with-libtextstyle-prefix"
+      "cli": "enable"
     },
     {
       "name": "gnu-ld",
       "type": "bool",
       "default": false,
-      "cli": "--with-gnu-ld"
+      "cli": "with"
+    }
+  ],
+  "constraints": [],
+  "removed": [
+    {
+      "name": "nls",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "nls",
+        "type": "bool",
+        "default": true,
+        "cli": "--enable-nls"
+      }
+    },
+    {
+      "name": "dependency-tracking",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "dependency-tracking",
+        "type": "bool",
+        "default": true,
+        "cli": "--enable-dependency-tracking"
+      }
+    },
+    {
+      "name": "libtextstyle-prefix",
+      "reason": "set by build.sh",
+      "old": {
+        "name": "libtextstyle-prefix",
+        "type": "string",
+        "default": null,
+        "cli": "--with-libtextstyle-prefix"
+      }
     },
     {
       "name": "libiconv-prefix",
-      "type": "string",
-      "default": null,
-      "cli": "--with-libiconv-prefix"
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "libiconv-prefix",
+        "type": "string",
+        "default": null,
+        "cli": "--with-libiconv-prefix"
+      }
     },
     {
       "name": "libintl-prefix",
-      "type": "string",
-      "default": null,
-      "cli": "--with-libintl-prefix"
+      "reason": "no default value (install path)",
+      "old": {
+        "name": "libintl-prefix",
+        "type": "string",
+        "default": null,
+        "cli": "--with-libintl-prefix"
+      }
+    },
+    {
+      "name": "gcc-warnings",
+      "reason": "turns compiler warnings into errors (-Werror): clang warns about bison's own code, so the build fails",
+      "old": {
+        "type": "bool",
+        "default": false,
+        "cli": "enable"
+      }
     }
   ]
 }

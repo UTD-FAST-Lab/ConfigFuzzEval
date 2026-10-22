@@ -215,8 +215,8 @@ def combine_mean(per_trial):
 CSS = """body{font:13px system-ui,sans-serif;margin:20px;color:#222}table{border-collapse:collapse}
 td,th{border:1px solid #ddd;padding:3px 8px;text-align:right}th{background:#f4f4f4}td:first-child,th:first-child{text-align:left}
 .src td{border:none;padding:0 8px;font:12px ui-monospace,monospace;white-space:pre;text-align:right}.src td.code{text-align:left}
-.all{background:#d9f2d9}.some{background:#fff1c2}.none{background:#f8d4d4}.muted{color:#777}
-@media (prefers-color-scheme:dark){body{background:#1b1b1b;color:#ddd}th{background:#2a2a2a}td,th{border-color:#333}
+.all{background:#d9f2d9}.some{background:#fff1c2}.none{background:#f8d4d4}.muted{color:#777}a{color:#0b57d0}
+@media (prefers-color-scheme:dark){body{background:#1b1b1b;color:#ddd}th{background:#2a2a2a}td,th{border-color:#333}a{color:#8ab4f8}
 .all{background:#1f3d23}.some{background:#4a3f17}.none{background:#4a1f1f}.muted{color:#999}}"""
 
 

@@ -119,7 +119,7 @@
         <th class="num" title="Conditions this arm covered and no other arm did (union)">Only this arm</th>
         <th class="num" title="Lines of conditional code covered by any of the arm's trials, against those in the build">Cond. lines (union)</th>
         <th class="num" title="Lines of conditional code covered: mean over the arm's trials ± standard deviation">Cond. lines (mean)</th>
-        <th class="num" title="Covered lines in headers, or past the end of SuperC's tree: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
+        <th class="num" title="Covered lines in headers, or past the end of SuperC's tree, out of all covered lines: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
       <tbody id="sc-arms"></tbody>
     </table></div>
     <p class="small muted" id="sc-uncovered"></p>
@@ -534,7 +534,7 @@ function renderBuild() {
     <td class="num">${(b.only[r.arm] || 0).toLocaleString()}</td>
     <td class="num">${r.conditional_lines_covered_union.toLocaleString()} <span class="muted">/ ${r.conditional_lines_in_build.toLocaleString()} · ${pct(r.conditional_lines_covered_union, r.conditional_lines_in_build).toFixed(1)}%</span></td>
     <td class="num">${meanSd(r.conditional_lines_covered_mean, r.conditional_lines_covered_sd)}${r.conditional_lines_covered_mean === undefined ? "" : ` <span class="muted">· ${pct(r.conditional_lines_covered_mean, r.conditional_lines_in_build).toFixed(1)}%</span>`}</td>
-    <td class="num" title="${r.covered_lines_in_headers.toLocaleString()} in headers, ${r.covered_lines_without_condition.toLocaleString()} in .c files past SuperC's tree">${(r.covered_lines_in_headers + r.covered_lines_without_condition).toLocaleString()} <span class="muted">of ${r.covered_lines_union.toLocaleString()} covered</span></td></tr>`).join("");
+    <td class="num" title="${r.covered_lines_in_headers.toLocaleString()} in headers, ${r.covered_lines_without_condition.toLocaleString()} in .c files past SuperC's tree">${(r.covered_lines_in_headers + r.covered_lines_without_condition).toLocaleString()} <span class="muted">/ ${r.covered_lines_union.toLocaleString()}</span></td></tr>`).join("");
   document.getElementById("sc-uncovered").textContent = b.comparison_file ?
     `${b.uncovered.toLocaleString()} of the ${b.in_build.toLocaleString()} conditions in the build were covered by no arm.` : "";
   const armSel = document.getElementById("sc-arm"), cur = armSel.value;

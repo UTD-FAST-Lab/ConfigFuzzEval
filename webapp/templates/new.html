@@ -109,7 +109,7 @@ function renderGroups() {
       compiletime: CATALOG.compiletime, runtime_strategy: CATALOG.runtime,
     };
     const hints = {
-      fuzzers: f => CATALOG.fuzzers[f].runtime_strategies ? "runtime strategies" : "",
+      fuzzers: f => CATALOG.fuzzers[f].runtime_strategies ? "config-agnostic" : "config-aware",
       benchmarks: b => (CATALOG.benchmarks[b].files.includes("rt_grammar.json") ? "" : "no rt grammar"),
     };
     for (const el of div.querySelectorAll("[data-k]")) {

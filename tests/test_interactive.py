@@ -71,9 +71,8 @@ class AskTest(StoresTest):
         ui = ScriptedUI([
             "same1",                                      # name
             True,                                         # same benchmarks
-            ["default", "random", "zigzag"],              # strategies
-            ["aflplusplus", "libafl"],                    # engines for default
-            ["aflplusplus"],                              # engines for random
+            ["aflplusplus", "zigzagfuzz"],                # fuzzers
+            ["default", "random"],                        # runtime strategies (asked for aflplusplus)
             ["binutils_objdump", "libxml2_xmllint"],      # benchmarks
             None,                                         # compile-time: default ticked
             "4",                                          # cores
@@ -84,8 +83,7 @@ class AskTest(StoresTest):
         experiment = ia.ask_experiment(ui, self.config)
         self.assertEqual(ui.answers, [])
         self.assertEqual([(g["fuzzers"], g["runtime_strategy"]) for g in experiment["groups"]],
-                         [(["aflplusplus"], ["default"]), (["libafl"], ["default"]),
-                          (["aflplusplus"], ["random"]), (["zigzagfuzz"], ["default"])])
+                         [(["aflplusplus"], ["default", "random"]), (["zigzagfuzz"], ["default"])])
         for group in experiment["groups"]:
             self.assertEqual(group["benchmarks"], ["binutils_objdump", "libxml2_xmllint"])
             self.assertEqual((group["compiletime"], group["trials"], group["max_total_time"]), (["default"], 2, 900))
@@ -93,13 +91,13 @@ class AskTest(StoresTest):
         # SuperC and triage are applied.
         self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (False, ["gdb-exploitable"]))
         self.assertNotIn("not_applied", experiment)
-        # zigzag has one engine, so it is not asked.
-        self.assertFalse(any("zigzag" in m for m in ui.asked))
+        # Only the config-agnostic fuzzer is asked for runtime strategies.
+        self.assertIn("Runtime strategies (for aflplusplus):", ui.asked)
 
     def test_different_benchmarks_with_own_trials(self):
         ui = ScriptedUI([
             "diff1", False,
-            ["carpet", "variability aware"],
+            ["carpetfuzz", "vafuzz"],                         # config-aware: no runtime question
             ["binutils_objdump"], ["default", "maximum"],     # carpetfuzz
             ["libxml2_xmllint"], None,                        # vafuzz
             None,                                             # cores from config
@@ -117,7 +115,7 @@ class AskTest(StoresTest):
         self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (True, []))
 
     def test_benchmarks_a_choice_cannot_run_are_disabled(self):
-        ui = ScriptedUI(["dis1", True, ["carpet"], ["binutils_objdump"], None, None, None, None, False, None])
+        ui = ScriptedUI(["dis1", True, ["carpetfuzz"], ["binutils_objdump"], None, None, None, None, False, None])
         ia.ask_experiment(ui, self.config)
         offered = ui.offered["Benchmarks:"]
         for benchmark, reason in offered.items():
@@ -158,7 +156,7 @@ class MainTest(StoresTest):
         config_path = os.path.join(self.tmp.name, "config.yaml")
         with open(config_path, "w") as f:
             yaml.safe_dump(self.config, f)
-        return [os.path.relpath(config_path), "main1", True, ["zigzag"], ["binutils_objdump"],
+        return [os.path.relpath(config_path), "main1", True, ["zigzagfuzz"], ["binutils_objdump"],
                 None, None, None, None, False, None, action]
 
     def run_main(self, action, dry_run_code=0, extra=()):
@@ -173,7 +171,8 @@ class MainTest(StoresTest):
                 mock.patch.object(ia.jobs, "queue_experiment", queued), \
                 mock.patch.object(ia.jobs, "queue", mock.Mock()), \
                 mock.patch.object(ia.jobs, "queue_message", return_value="it starts now."), \
-                mock.patch.object(ia, "strategies", return_value=[("zigzag", "", [("zigzagfuzz", "zigzagfuzz", "default")])]), \
+                mock.patch.object(ia, "available_fuzzers", return_value=["zigzagfuzz"]), \
+                mock.patch.object(ia, "takes_runtime_strategies", return_value=False), \
                 mock.patch.object(ia, "available_benchmarks", return_value=["binutils_objdump"]), \
                 mock.patch.object(ia, "available_compiletime", return_value=["default"]), \
                 mock.patch.object(ia, "available_triagers", return_value=[]), \
@@ -227,13 +226,16 @@ class HelpersTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             ia.parse_duration("soon")
 
-    def test_strategies(self):
-        table = {name: engines for name, _, engines in ia.strategies()}
-        self.assertEqual(table["default"], [("aflplusplus", "aflplusplus", "default"), ("libafl", "libafl", "default")])
-        self.assertEqual(table["prophet"], [("carpetfuzz", "prophetfuzz", "default")])
-        self.assertEqual(table["variability aware"], [("aflplusplus", "vafuzz", "default")])
-        self.assertEqual(table["config based"], [("aflplusplus", "configfuzz", "default")])
-        self.assertEqual([e for e, _, _ in table["random"]], ["aflplusplus", "libafl"])
+    def test_fuzzers_and_runtime_strategies(self):
+        self.assertEqual([f for f in ia.available_fuzzers() if ia.takes_runtime_strategies(f)], ["aflplusplus", "libafl"])
+        self.assertIn("prophetfuzz", ia.available_fuzzers())
+        self.assertEqual(ia.available_runtime()[0], "default")
+
+    def test_config_aware_fuzzers_run_with_default(self):
+        ui = ScriptedUI([["default", "pairwise"]])
+        self.assertEqual(ia.ask_runtime(ui, ["libafl", "vafuzz"]),
+                         [("libafl", ["default", "pairwise"]), ("vafuzz", ["default"])])
+        self.assertEqual(ia.ask_runtime(ScriptedUI([]), ["vafuzz"]), [("vafuzz", ["default"])])
 
 
 if __name__ == "__main__":

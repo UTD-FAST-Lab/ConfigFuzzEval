@@ -6,9 +6,10 @@ a dry run and then adds it to the job queue (common/jobs.py, shared with the web
 where it runs in the background, or only keeps the file. The saved file runs the same
 experiment again with `run_experiment.py --config CONFIG --experiment experiments/<name>.yaml`.
 
-A fuzzer is chosen in two steps: its strategy (how it chooses command-line
-options), then the engine that fuzzes underneath. Each (strategy, engine) is a
-folder in fuzzers/ with a runtime strategy, see strategies().
+It asks for the same four things as the command line and the web app: fuzzers,
+runtime strategies, benchmarks and compile-time strategies. Runtime strategies apply
+to the config-agnostic fuzzers (runtime/supported_fuzzers.json); a config-aware
+fuzzer chooses its own options, so it runs with the default runtime strategy.
 
 What can run comes from webapp/catalog.py, the same rules the web app and
 validation.validate_runs use; runs are named like statistical_analysis.arm_name.
@@ -32,17 +33,18 @@ import jobs
 from experiments import valid_name
 from statistical_analysis import arm_name
 
-# Strategies that are their own fuzzer: (name, description, [(engine, fuzzer folder)]).
-FUZZER_STRATEGIES = [
-    ("carpet", "CarpetFuzz: option combinations mined from the man page", [("carpetfuzz", "carpetfuzz")]),
-    ("prophet", "ProphetFuzz: option combinations predicted by an LLM", [("carpetfuzz", "prophetfuzz")]),
-    ("variability aware", "VAFuzz: each input under a batch of option configurations", [("aflplusplus", "vafuzz")]),
-    ("config based", "ConfigFuzz: options encoded in the first bytes of each input", [("aflplusplus", "configfuzz")]),
-    ("zigzag", "ZigZagFuzz: fuzzes the input and the command line together", [("zigzagfuzz", "zigzagfuzz")]),
-]
-# Fuzzers that run with the benchmark's fixed command line, the default strategy.
-DEFAULT_ENGINES = ["aflplusplus", "libafl"]
+# Shown next to the fuzzers in fuzzers/; a fuzzer without an entry is listed by its name.
+FUZZER_DESCRIPTIONS = {
+    "aflplusplus": "AFL++",
+    "libafl": "LibAFL",
+    "carpetfuzz": "CarpetFuzz: option combinations mined from the man page",
+    "prophetfuzz": "ProphetFuzz: option combinations predicted by an LLM",
+    "vafuzz": "VAFuzz: each input under a batch of option configurations",
+    "configfuzz": "ConfigFuzz: options encoded in the first bytes of each input",
+    "zigzagfuzz": "ZigZagFuzz: fuzzes the input and the command line together",
+}
 RUNTIME_DESCRIPTIONS = {
+    "default": "the benchmark's fixed command line",
     "random": "50 random valid option configurations",
     "pairwise": "a 2-way covering array of the options",
     "diversity": "50 configurations as different from each other as possible",
@@ -84,21 +86,18 @@ def available_triagers():
     return sorted(get_catalog()["triagers"])
 
 
-def strategies():
-    """[(name, description, [(engine, fuzzer, runtime strategy)])], only with fuzzers that exist."""
-    fuzzers = get_catalog()["fuzzers"]
-    rt_engines = sorted(f for f, info in fuzzers.items() if info["runtime_strategies"])
-    result = [("default", "the benchmark's fixed command line",
-               [(e, e, "default") for e in DEFAULT_ENGINES])]
+def available_fuzzers():
+    return sorted(get_catalog()["fuzzers"])
+
+
+def available_runtime():
     order = list(RUNTIME_DESCRIPTIONS)
-    for rts in sorted(get_catalog()["runtime"], key=lambda r: (order.index(r) if r in order else len(order), r)):
-        if rts != "default":
-            result.append((rts, f"runtime strategy: {RUNTIME_DESCRIPTIONS.get(rts, rts)}",
-                           [(e, e, rts) for e in rt_engines]))
-    for name, description, engines in FUZZER_STRATEGIES:
-        result.append((name, description, [(e, f, "default") for e, f in engines]))
-    return [(n, d, [e for e in engines if e[1] in fuzzers]) for n, d, engines in result
-            if any(e[1] in fuzzers for e in engines)]
+    return sorted(get_catalog()["runtime"], key=lambda r: (order.index(r) if r in order else len(order), r))
+
+
+def takes_runtime_strategies(fuzzer):
+    """Config-agnostic: listed in runtime/supported_fuzzers.json, with a run.sh that reads $SEED_DIR."""
+    return get_catalog()["fuzzers"].get(fuzzer, {}).get("runtime_strategies", False)
 
 
 def label(fuzzer, rts):
@@ -199,35 +198,38 @@ def ask_name(ui, config):
                f"  {name} is already queued or running; choose another name.")
 
 
-def ask_choices(ui):
-    """Strategies, then the engines of each: [(strategy, engine, fuzzer, rts)]."""
-    options = strategies()
-    picked = ui.checkbox("Which strategies should run?",
-                         [(f"{n:<18} {d}", n, False, None) for n, d, _ in options])
-    selections = []
-    for name, _, engines in options:
-        if name not in picked:
-            continue
-        if len(engines) == 1:
-            engine, fuzzer, rts = engines[0]
-            ui.say(f"  {name} runs on {engine}.")
-            selections.append((name, engine, fuzzer, rts))
-            continue
-        chosen = ui.checkbox(f"Engines for {name}:",
-                             [(engine, engine, False, None) for engine, _, _ in engines])
-        selections += [(name, e, f, r) for e, f, r in engines if e in chosen]
-    return selections
+def ask_fuzzers(ui):
+    def title(fuzzer):
+        kind = "config-agnostic" if takes_runtime_strategies(fuzzer) else "config-aware"
+        return f"{fuzzer:<12} {kind:<16} {FUZZER_DESCRIPTIONS.get(fuzzer, '')}".rstrip()
+    return ui.checkbox("Fuzzers:", [(title(f), f, False, None) for f in available_fuzzers()])
+
+
+def ask_runtime(ui, fuzzers):
+    """The runtime strategies of each fuzzer: [(fuzzer, [rts])]. Only config-agnostic fuzzers are asked;
+    the others run with default."""
+    agnostic = [f for f in fuzzers if takes_runtime_strategies(f)]
+    chosen = ["default"]
+    if agnostic:
+        chosen = ui.checkbox(f"Runtime strategies (for {', '.join(agnostic)}):",
+                             [(f"{r:<13} {RUNTIME_DESCRIPTIONS.get(r, '')}".rstrip(), r, r == "default", None)
+                              for r in available_runtime()])
+    aware = [f for f in fuzzers if f not in agnostic]
+    if aware and chosen != ["default"]:
+        ui.say(f"  {', '.join(aware)}: config-aware (chooses its own options), so only the default runtime strategy.")
+    return [(f, chosen if f in agnostic else ["default"]) for f in fuzzers]
 
 
 def ask_benchmarks(ui, message, selections):
-    """Benchmarks every selection can run on; the others are listed but cannot be ticked."""
+    """Benchmarks every (fuzzer, runtime strategies) selection can run on; the others are listed but
+    cannot be ticked."""
     choices = []
     for benchmark in available_benchmarks():
-        reasons = [f"{label(f, r)}: {reason}" for _, _, f, r in selections
+        reasons = [f"{label(f, r)}: {reason}" for f, strategies in selections for r in strategies
                    for reason in run_problems(f, benchmark, r)]
         choices.append((benchmark, benchmark, False, reasons[0] if reasons else None))
     if all(c[3] for c in choices):
-        raise Cancelled(f"no benchmark can run {', '.join(label(f, r) for _, _, f, r in selections)}")
+        raise Cancelled(f"no benchmark can run {', '.join(label(f, r) for f, rs in selections for r in rs)}")
     return ui.checkbox(message, choices)
 
 
@@ -248,30 +250,29 @@ def ask_experiment(ui, config):
     name = ask_name(ui, config)
     same = ui.select("Benchmarks:", [("Same benchmarks for the whole experiment", True),
                                      ("Different benchmarks for different fuzzers", False)])
-    selections = ask_choices(ui)
+    selections = ask_runtime(ui, ask_fuzzers(ui))
 
     groups = []
     if same:
         benchmarks = ask_benchmarks(ui, "Benchmarks:", selections)
         compiletime = ask_compiletime(ui, "Compile-time strategies:")
-        for _, _, fuzzer, rts in selections:
+        for fuzzer, rts in selections:
             groups.append({"fuzzers": [fuzzer], "benchmarks": benchmarks,
-                           "compiletime": compiletime, "runtime_strategy": [rts]})
+                           "compiletime": compiletime, "runtime_strategy": rts})
     else:
         for selection in selections:
-            _, _, fuzzer, rts = selection
-            what = label(fuzzer, rts)
-            benchmarks = ask_benchmarks(ui, f"Benchmarks for {what}:", [selection])
-            compiletime = ask_compiletime(ui, f"Compile-time strategies for {what}:")
+            fuzzer, rts = selection
+            benchmarks = ask_benchmarks(ui, f"Benchmarks for {fuzzer}:", [selection])
+            compiletime = ask_compiletime(ui, f"Compile-time strategies for {fuzzer}:")
             groups.append({"fuzzers": [fuzzer], "benchmarks": benchmarks,
-                           "compiletime": compiletime, "runtime_strategy": [rts]})
+                           "compiletime": compiletime, "runtime_strategy": rts})
 
     cores = int(ui.text("Cores to use:", config["cores_to_use"],
                         validate=lambda t: _positive(t, os.cpu_count())))
     if len(groups) > 1 and not same and not ui.confirm("Same trials and fuzzing time for every fuzzer?"):
         for group in groups:
             group["trials"], group["max_total_time"] = ask_trials_and_time(
-                ui, config, f" of {label(group['fuzzers'][0], group['runtime_strategy'][0])}")
+                ui, config, f" of {group['fuzzers'][0]}")
     else:
         trials, time = ask_trials_and_time(ui, config)
         for group in groups:

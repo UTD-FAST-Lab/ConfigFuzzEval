@@ -2,9 +2,8 @@
 
 [ConfigFuzzEval](../README.md) › [Documentation](README.md) › Web app
 
-`webapp/` is a browser front end for the whole ConfigFuzzEval workflow, and the fourth way to run an experiment,
-next to the [command line](run-command-line.md), the [interactive setup](run-interactive.md) and an
-[experiment file](run-experiment-file.md). It covers everything, from configuring an experiment to reading its
+`webapp/` is a browser front end for the whole ConfigFuzzEval workflow, and the third way to run an experiment,
+next to the [command line](run-command-line.md) and an [experiment file](run-experiment-file.md). It covers everything, from configuring an experiment to reading its
 results. It starts the same commands as the command line (`run_experiment.py` with an experiment file, and
 `post_analysis.py`) and reads the files they write, so the web app and the terminal can be used side by side.
 

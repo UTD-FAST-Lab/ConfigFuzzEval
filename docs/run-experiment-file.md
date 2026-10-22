@@ -2,7 +2,7 @@
 
 [ConfigFuzzEval](../README.md) › [Documentation](README.md) › Experiment file
 
-An experiment file says exactly what to run. It is one of three ways to start an experiment from the terminal, next to [command-line flags](run-command-line.md) and the [interactive setup](run-interactive.md), which writes one for you; the [web app](web-app.md) writes one too. Because a file can be kept in a repository and checked with `--dry-run`, it is also the way to run experiments from scripts and CI/CD pipelines.
+An experiment file says exactly what to run. It is one of the three ways to run an experiment, next to [command-line flags](run-command-line.md) and the [web app](web-app.md), which writes one too. You can write the file by hand, or let the [interactive setup](#writing-a-file-interactively) write it for you by asking questions in the terminal. Because a file can be kept in a repository and checked with `--dry-run`, it is also the way to run experiments from scripts and CI/CD pipelines.
 
 ## What a file contains
 
@@ -115,6 +115,18 @@ A list with one name can also be written as a plain name (`fuzzers: vafuzz`). `r
 - A copy of the experiment file is saved in the experiment folder as `experiment.yaml` (or `.json`). Runs started with flags save their single group there in the same format, so every experiment records what it ran.
 - Result folders are named as before (`<fuzzer>[_rts_<strategy>]_cts_<strategy>_<benchmark>_<n>_trial_<k>`), so `common/post_analysis.py` and the report scripts work the same (see [Result names](README.md#result-names)).
 
+## Writing a file interactively
+
+The interactive setup is the experiment file made easy: run `run_experiment.py` with no flags and it asks what to run, one question at a time (arrow keys to move, space to tick, enter to continue, Ctrl-C to cancel):
+
+```bash
+python3 common/run_experiment.py
+```
+
+It asks for the config file and the experiment name, then the fuzzers (each marked config-agnostic or config-aware), the [runtime strategies](../README.md#runtime-strategies) for the config-agnostic ones (config-aware fuzzers always run with `default`), the benchmarks with their [compile-time strategies](../README.md#compile-time-strategies), the cores, trials and fuzzing time, and [SuperC](superc.md) and [crash triage](crash-triage.md). It can use the same benchmarks for every fuzzer or different ones per fuzzer, which become groups. Benchmarks a fuzzer cannot run on are greyed out with the reason, by the same rules as the [web app](web-app.md).
+
+The answers are saved as `experiments/<name>.yaml`, a file in the format above, and checked with `--dry-run`. Then you add it to the [queue](README.md#job-queue), only keep the file (to edit it or queue it later with `--experiment`), or cancel.
+
 ## Checking a file
 
 Check a file with `--dry-run` before starting it. It prints every run with its trials and time, the number of builds and trials, and the total fuzzing hours:
@@ -129,6 +141,5 @@ An experiment file can also start a long-running campaign instead of a fixed-len
 
 ## See also
 
-- [Interactive setup](run-interactive.md): writes a file by asking questions.
 - [Job queue](README.md#job-queue): the `record` that is added to every experiment's file, and following, listing and stopping it.
 - [Experiments, runs, trials and arms](../README.md#experiments-runs-trials-and-arms) and the strategies, in the main README.

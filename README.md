@@ -1,6 +1,6 @@
 # ConfigFuzzEval
 
-![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/images/architecture.png)
+![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/images/architecture.jpg)
 
 ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating configuration-aware and configuration-agnostic fuzzers, and (2) orchestrating fuzzing campaigns across sampled compile-time and runtime configurations. It provides statistical coverage analyses, crash triaging, and integration with SuperC for compile-time analysis. It is extensible through plugin interfaces for fuzzers, sampling strategies, triaging tools, compile-time analysis tools and target programs. Experiments run from a web application ([docs/web-app.md](docs/web-app.md), [live demo](docs/live-demo.md) at https://configfuzzeval.vercel.app/), or from CI/CD pipelines through the CLI or experiment files.
 
@@ -95,7 +95,7 @@ How the configurations are generated, fuzzed and replayed, the grammar format, a
 | | |
 |---|---|
 | **Using ConfigFuzzEval** | [User guide](docs/README.md): installation, running an experiment, the job queue, continuous mode, strategies in depth, tests |
-| **Running an experiment** | [Command line](docs/run-command-line.md) · [Interactive setup](docs/run-interactive.md) · [Experiment file](docs/run-experiment-file.md) |
+| **Running an experiment** | [Command line](docs/run-command-line.md) · [Experiment file](docs/run-experiment-file.md) (also written for you by the interactive setup) · [Web app](docs/web-app.md) |
 | **Web app** | [The web app](docs/web-app.md): starting it, and every page and tab · [Live demo](docs/live-demo.md): https://configfuzzeval.vercel.app/ |
 | **Contributing** | [Contributing](docs/CONTRIBUTING.md): adding a benchmark or a fuzzer |
 | **Results and analyses** | [Statistics report](docs/statistics-report.md) · [Coverage reports](docs/coverage-reports.md) · [SuperC](docs/superc.md) · [Crash triage](docs/crash-triage.md) |

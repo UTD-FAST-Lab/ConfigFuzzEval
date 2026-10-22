@@ -1,5 +1,7 @@
 # FuzzBenchPlusPlus
 
+![FuzzBench++ architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/architecture.png)
+
 ## Build instructions
 
 ### 0. Install the Python packages

@@ -1,4 +1,4 @@
-"""The job queue of FuzzBench++: experiments and post-analyses, run one at a time.
+"""The job queue of ConfigFuzzEval: experiments and post-analyses, run one at a time.
 
 Every experiment goes through it, however it is started: run_experiment.py (with flags,
 an experiment file or no flags) and the web app queue it here. A job is a command line
@@ -369,7 +369,7 @@ def worker(config):
 
 def main():
     import yaml
-    parser = argparse.ArgumentParser(description="The FuzzBench++ job queue.")
+    parser = argparse.ArgumentParser(description="The ConfigFuzzEval job queue.")
     parser.add_argument("--config", default=os.path.join(PROJECT_ROOT, "config.yaml"),
                         help="Configuration file (for the result folders; default config.yaml)")
     sub = parser.add_subparsers(dest="command", required=True)

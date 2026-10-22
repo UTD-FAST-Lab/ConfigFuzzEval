@@ -1,6 +1,6 @@
 # The web app
 
-`webapp/` is a browser front end for the whole FuzzBench++ workflow, from configuring an experiment to reading its
+`webapp/` is a browser front end for the whole ConfigFuzzEval workflow, from configuring an experiment to reading its
 results. It starts the same commands as the command line (`run_experiment.py` with an experiment file, and
 `post_analysis.py`) and reads the files they write, so the web app and the terminal can be used side by side.
 

@@ -1,4 +1,4 @@
-"""FuzzBench++ web app: configure, run and follow experiments, and read their results.
+"""ConfigFuzzEval web app: configure, run and follow experiments, and read their results.
 
     python3 webapp/app.py [--config config.yaml] [--host 127.0.0.1] [--port 8800] [--token SECRET]
 
@@ -485,7 +485,7 @@ def when(ts):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="FuzzBench++ web app")
+    parser = argparse.ArgumentParser(description="ConfigFuzzEval web app")
     parser.add_argument("--config", default="config.yaml", help="Configuration file (relative to the project root)")
     parser.add_argument("--host", default="127.0.0.1", help="Address to listen on (default: localhost only)")
     parser.add_argument("--port", type=int, default=8800)
@@ -502,7 +502,7 @@ def main():
     STATE["jobs"] = Jobs(DB_PATH, PROJECT_ROOT, STATE["config"], logging)
     STATE["jobs"].start_worker()        # ticks the shared queue while the app runs
     ensure_worker(STATE["config_path"])  # and the background worker, for jobs queued while it was down
-    logging.info(f"FuzzBench++ web app on http://{args.host}:{args.port}/" + ("?token=..." if args.token else ""))
+    logging.info(f"ConfigFuzzEval web app on http://{args.host}:{args.port}/" + ("?token=..." if args.token else ""))
     app.run(host=args.host, port=args.port, threaded=True, debug=False, use_reloader=False)
 
 

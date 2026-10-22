@@ -292,7 +292,7 @@ def write_experiment_file(path, experiment, record=None):
     name = experiment.get("experiment_name", "")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
-        f.write("# FuzzBench++ experiment file. Run it again (with a new experiment_name) with\n"
+        f.write("# ConfigFuzzEval experiment file. Run it again (with a new experiment_name) with\n"
                 f"#   python3 common/run_experiment.py --config CONFIG --experiment {os.path.relpath(path, PROJECT_ROOT)}\n"
                 "# record is written by run_experiment.py and ignored when the file is read.\n")
         yaml.dump(experiment, f, Dumper=_PlainDumper, sort_keys=False, default_flow_style=None, width=120)

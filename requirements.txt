@@ -1,4 +1,4 @@
-# Python packages the host side of FuzzBenchPlusPlus imports (Python 3.10+):
+# Python packages the host side of ConfigFuzzEval imports (Python 3.10+):
 #   python3 -m pip install -r requirements.txt
 # Keep this complete: add a package here in the same change that first imports it.
 # Everything that runs inside the Docker images installs its own packages in its Dockerfile.

@@ -1,6 +1,8 @@
-# FuzzBenchPlusPlus
+# ConfigFuzzEval
 
-![FuzzBench++ architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/architecture.png)
+![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/architecture.png)
+
+ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating configuration-aware and configuration-agnostic fuzzers, and (2) orchestrating fuzzing campaigns across sampled compile-time and runtime configurations. It provides statistical coverage analyses, crash triaging, and integration with SuperC for compile-time analysis. It is extensible through plugin interfaces for fuzzers, sampling strategies, triaging tools, compile-time analysis tools and target programs. Experiments run from a web application ([webapp/README.md](webapp/README.md), demo at https://configfuzzeval.vercel.app/), or from CI/CD pipelines through the CLI or experiment files.
 
 ## Build instructions
 
@@ -420,7 +422,7 @@ Only the source files the coverage build uses are copied out of its Docker image
 
 #### Limits of the analyses
 
-Some analyses are computed, but do not mean what their names suggest for typical FuzzBench++ experiments. The report warns at the top when items 1 and 2 apply. The numbers below are from a test run with 5 arms (aflplusplus with 4 runtime strategies, and zigzagfuzz), 2 benchmarks and 5 trials of 300 s.
+Some analyses are computed, but do not mean what their names suggest for typical ConfigFuzzEval experiments. The report warns at the top when items 1 and 2 apply. The numbers below are from a test run with 5 arms (aflplusplus with 4 runtime strategies, and zigzagfuzz), 2 benchmarks and 5 trials of 300 s.
 
 1. **Full pairwise heatmaps need many trials.** With n trials per arm, an exact two-sided Mann-Whitney U test cannot go below 2 / C(2n, n): 0.1 for 3 trials and 0.008 for 5. Holm multiplies the smallest p-value by the number of pairs. With 5 trials and 5 arms (10 pairs), no cell of the two-sided heatmap can reach p < 0.05, whatever the data.
    - **What has power:** the **Against the default** table only compares each runtime strategy with its fuzzer's default, and each fuzzer with the baseline, so Holm covers a few tests. There, 5 trials can show a significant difference.

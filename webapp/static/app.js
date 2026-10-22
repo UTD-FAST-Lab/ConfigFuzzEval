@@ -1,4 +1,4 @@
-// Shared helpers for the FuzzBench++ web app pages.
+// Shared helpers for the ConfigFuzzEval web app pages.
 async function api(url, body) {
   const opts = body === undefined ? {} : {
     method: "POST", headers: {"Content-Type": "application/json", "X-FBPP": "1"}, body: JSON.stringify(body),

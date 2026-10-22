@@ -76,7 +76,7 @@ EOF
 There are four ways to say what to run. All of them put the experiment in the same job queue, where it runs in the background (see "How experiments run" below):
 
 - **Interactive setup** (no flags, see "Interactive setup" below): asks what to run in the terminal, saves it as an experiment file and queues it.
-- **Web app** (see "Web app" below): the same in a browser, with live progress.
+- **Web app** (see "Web app" below and [webapp/README.md](webapp/README.md)): the same in a browser, with live progress.
 - **Command-line flags** (below): every fuzzer runs on every benchmark with every listed strategy, all with the `trials` and `max_total_time` from `config.yaml`.
 - **An experiment file** (`--experiment` or `--groups`, see "Experiment files" below): groups of fuzzers and benchmarks, so specific fuzzers run on specific benchmarks, each group with its own strategies and optionally its own `trials` and `max_total_time`, plus optional per-benchmark strategies.
 
@@ -376,112 +376,16 @@ The web app's New experiment form has the same choice (Mode: continuous).
 
 ### Web app
 
-`webapp/` is a browser front end for the same workflow, from configuring an experiment to reading its results. It starts the same commands as this README (`run_experiment.py` with an experiment file, and `post_analysis.py`) and reads the files they write. You can use the web app and the command line side by side.
-
-#### Starting it
-
-Start the app on the fuzzing machine, from the root of the project:
+`webapp/` is a browser front end for the same workflow, from configuring an experiment to reading its results. Start it on the fuzzing machine, from the root of the project:
 
 ```bash
 python3 webapp/app.py --config config.yaml                 # http://127.0.0.1:8800/
 mkdir -p experiments/logs && setsid nohup python3 webapp/app.py --config config.yaml \
   > experiments/logs/webapp.log 2>&1 < /dev/null &            # or in the background
+ssh -L 8800:localhost:8800 <fuzzing-machine>                # from another computer, then open http://localhost:8800/
 ```
 
-Options:
-
-- `--config`: the configuration file. The default is `config.yaml`.
-- `--port`: the port. The default is 8800.
-- `--host`: the address to listen on. The default is localhost only.
-- `--token`: a secret the app asks for (also read from `FBPP_WEBAPP_TOKEN`).
-
-**Access.** Anyone who can reach the app can run Docker containers, which is root-equivalent, so it listens on localhost only. From another computer, tunnel the port over SSH and open http://localhost:8800/:
-
-```bash
-ssh -L 8800:localhost:8800 <fuzzing-machine>
-```
-
-The app only listens on other addresses (`--host 0.0.0.0`) when started with `--token SECRET`. Each browser then opens it once with `?token=SECRET`, and a cookie keeps it signed in.
-
-**Before the first experiment**, run `run_as_sudo.sh` as root. The Experiments page shows a red check when `core_pattern` is not `core` or the CPU governor is not `performance`. Experiments still run without these settings, but AFL++ warns, and the coverage numbers are noisier.
-
-#### Running an experiment
-
-1. **Open New experiment.** Give the experiment a name; it becomes the folder name, so use letters, digits, `.`, `_` and `-`. Choose any crash triage, and whether to run SuperC.
-2. **Fill in one or more groups.** Each group runs every chosen fuzzer on every chosen benchmark, with every chosen compile-time and runtime strategy (see "Experiment files" above).
-   - **Fuzzer chips:** "runtime strategies" marks the fuzzers that can use a non-default runtime strategy.
-   - **Benchmark chips:** "no rt grammar" marks the benchmarks that cannot use one.
-   - **Trials and fuzzing time:** leave them empty to use `config.yaml`.
-   - **Warnings:** a yellow box lists runs that cannot run, and the cost line shows the fuzzing hours.
-3. **Check the experiment file** on the right. The form writes it as you go, and you can also edit it directly, for example to add a top-level `benchmarks` section. After a hand edit the form stops overwriting the file; "rewrite from the form" switches it back.
-4. **Click Preview (dry run).** This runs `run_experiment.py --dry-run` on the file, which checks every name and combination without building anything. A green box means the experiment can run; it is followed by the trials, the fuzzing hours, the shortest possible run time on your cores, the builds, and one row per run. A red box shows the dry run's errors.
-5. **Click Queue experiment.** You can only queue after a preview passes, and after any change you have to preview again. The file is saved to `experiments/<name>.yaml`, as for an experiment queued from a terminal, and the log to `experiments/logs/<name>.log`. The browser then opens the experiment's page, which shows the saved file with its record.
-
-Jobs (experiments and post-analyses) go into the same queue as experiments queued from a terminal and run **one at a time** (see "How experiments run"). Jobs run as their own processes, so they keep going if the web app is stopped or restarted, and the background worker starts queued jobs while the web app is down. **Run again…** on an experiment's page opens the form with that experiment's file and a new name.
-
-#### Reading the pages
-
-**Experiments** (the home page):
-
-- **Checks:** a row of host checks, red when something needs attention.
-- **Running and queued:** what is running or waiting, including experiments started from a terminal.
-- **All experiments:** every experiment in the experiment filestore, with its status, its progress (trials done out of planned, and failures in red) and a link to its statistics. The status is one of:
-  - **queued:** waiting for the machine.
-  - **running:** with its current phase.
-  - **finished:** the experiment reached its end.
-  - **stopped:** it ended early, because it failed or was stopped.
-  - **incomplete:** an experiment from before `events.jsonl` existed that has fewer coverage reports than planned trials.
-
-**An experiment's page:**
-
-- **Header:**
-  - The trials done, running and failed; the time elapsed; and, while fuzzing, an estimate of the time left from the trials finished so far.
-  - The phases in order: building images, building benchmarks, fuzzing, aggregating, SuperC, triage, statistics. The current phase is highlighted.
-  - **Stop experiment:** shown while the experiment runs. It kills the experiment's processes and every trial container labelled `fbpp.experiment=<name>`. Finished trials are kept, and the experiment then shows as stopped.
-- **Trials:** one row per planned trial, which you can filter by status or benchmark. Each row has the arm (`fuzzer[strategy]`), benchmark, compile-time strategy, status, core, duration, the branches and lines covered (covered / instrumented, %, from the trial's `coverage/report.txt`) and a link to the trial's log. The status is one of:
-  - **queued:** not started yet.
-  - **running:** on the core shown.
-  - **success:** fuzzing and coverage finished.
-  - **failure:** the trial's log says why.
-  - **skipped:** its coverage binary did not build.
-  - **interrupted:** it started but the experiment stopped.
-- **Log:** the experiment's log, updating live with "follow" on. The menu also shows the log of each post-analysis job.
-- **Results:** the statistics report embedded in the page, with links to open it in a new tab, to its CSV files, and to the combined coverage reports, union and mean (see "Statistics report" below).
-- **Presence conditions:** the SuperC report (see `common/superc.py`), once the experiment's SuperC step or a SuperC post-analysis has run. For each benchmark build (pick one when there are several compile-time strategies) it shows:
-  - **SuperC's result per file:** how many `.c` files SuperC analysed, and which ones timed out or failed. Those files' lines have no condition and are left out of every count.
-  - **Arms:** per arm, its trials combined both ways. The **union** is the conditions any trial covered, against the conditions in the build (with a bar). The **mean trial** is the average over its trials ± standard deviation, with the median in the tooltip. **Every trial** is the conditions all of its trials covered. The table also has the conditions only that arm covered, the conditional lines covered (union and mean), and the covered lines not attributed to any condition (in headers, or past the end of SuperC's tree).
-  - **Conditions:** every condition with its instrumented lines and each arm's covered lines (shaded by the share covered). The **Trials** menu switches between the union (lines any trial covered) and the mean (mean covered lines, and how many of the arm's trials covered the condition, such as `2/3`). You can show the conditions in the build, those covered by some arm, those covered by none, those covered only by one arm, or those another arm covered but one arm missed. You can search conditions (for example `SUPPORT_JIT`) and sort them. It loads 100 at a time.
-  - **Across compile-time strategies:** shown when the benchmark ran under two or more strategies. For one arm, or all fuzzers together, each strategy's row has:
-    - **Conditions in build:** what its builds compiled.
-    - **Covered:** what its trials covered.
-    - **Only this strategy:** conditions covered under it and under no other strategy.
-    - **Missed:** conditions another strategy covered and this one didn't. "Not compiled" counts those its builds didn't even compile, so no fuzzer could have reached them under it.
-    - **Gained and lost:** against the default build.
-
-    Under the table, every condition is listed with its covered lines under each strategy, or "not compiled". You can filter it to the conditions covered only under one strategy, missed or not compiled under one, gained or lost against default, or covered under none.
-  - **Links:** SuperC's own `index.html`, `pc_summary.csv`, the build's `<benchmark>_pc_comparison.csv`, and the cross-strategy CSVs.
-
-  The Trials tab links each trial's own `pc_analysis/pc_coverage_summary.csv`, and the Experiments page links "presence conditions" for experiments that have a report.
-- **Post-analysis:** queues `post_analysis.py` on a finished experiment:
-  - **Statistics report:** the metric to rank by, the baseline fuzzer, and optionally another experiment for the reproducibility section.
-  - **Per-configuration coverage:** runtime strategies only. Needed before the "union against best single configuration" table.
-  - **SuperC presence conditions:** runs the SuperC analysis (see below) on the experiment, also one that ran without it.
-  - **Crash triage:** only when the experiment built a triage tool.
-
-  Below the options, the experiment's jobs are listed with their status and exit code.
-- **Experiment file:** the file the experiment ran with.
-
-**Documentation** explains the plugin interfaces: how to add a fuzzer, a benchmark, a compile-time or runtime configuration generator, a crash triage tool, or a post-analysis tool like SuperC. It covers the files each needs, what the framework mounts and sets for it, and what it must produce. It ends with the plugins currently in the repository.
-
-For a first look at results: start with **Overall ranking** in the report, then each benchmark's **Against the default** table, which has the most statistical power. Then use the box plots to see how much the trials vary. Read "Limits of the analyses" below before quoting a p-value or a critical-difference diagram.
-
-#### Files
-
-- `webapp/instance/`: the job queue shared with the command line (`jobs.db` and its lock files) and dry-run scratch files. It is not tracked by git. Deleting it empties the queue and the job history; experiments, experiment files and reports are kept.
-- `experiments/<name>.yaml`: every experiment's file with its record, and `experiments/logs/`: every log (see "How experiments run"). The `experiments/` folder is not tracked by git.
-- `<experiment>/events.jsonl`: written by `run_experiment.py`. It records the phases, each trial's start and end with its core and status, and the end of the experiment. Experiments from before this file existed still show, with their progress counted from the coverage reports.
-- `run_experiment.py --dry-run --plan-json FILE`: writes the dry-run plan as JSON. The preview uses it.
-- `webapp/static/`, `webapp/templates/`: the pages. They are plain HTML, CSS and JavaScript, with no build step and no external scripts.
+Everything else (options, access, every page and feature, with screenshots) is in [webapp/README.md](webapp/README.md). A demo with example experiments runs at https://configfuzzeval.vercel.app/.
 
 ### Statistics report
 

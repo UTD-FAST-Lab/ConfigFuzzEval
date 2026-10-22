@@ -113,11 +113,12 @@
     <div id="sc-status"></div>
     <h3>Arms</h3>
     <div class="card tw"><table>
-      <thead><tr><th>Arm</th><th class="num">Trials</th><th>Conditions covered (union) / in build</th>
-        <th class="num" title="Mean over the arm's trials ± standard deviation (median trial in the tooltip)">Mean trial</th>
+      <thead><tr><th>Arm</th><th class="num">Trials</th><th title="Conditions any of the arm's trials covered, against the conditions in the build">Covered (union) / in build</th>
+        <th class="num" title="Conditions covered: mean over the arm's trials ± standard deviation (median trial in the tooltip)">Mean trial</th>
         <th class="num" title="Conditions every one of the arm's trials covered">Every trial</th>
         <th class="num" title="Conditions this arm covered and no other arm did (union)">Only this arm</th>
-        <th class="num">Conditional lines covered (union)</th><th class="num">Conditional lines (mean trial)</th>
+        <th class="num" title="Lines of conditional code covered by any of the arm's trials, against those in the build">Cond. lines (union)</th>
+        <th class="num" title="Lines of conditional code covered: mean over the arm's trials ± standard deviation">Cond. lines (mean)</th>
         <th class="num" title="Covered lines in headers, or past the end of SuperC's tree: not attributed to any condition, and left out of the other columns">Not attributed</th></tr></thead>
       <tbody id="sc-arms"></tbody>
     </table></div>

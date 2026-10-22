@@ -270,7 +270,7 @@ if __name__ == "__main__":
     # Process arguments
     parser = argparse.ArgumentParser(
         description="Run experiments. What to run comes either from an experiment file (--experiment) "
-                    "or from --fuzzers/--benchmarks/--compiletime/--runtime-strategy; see README.md. "
+                    "or from --fuzzers/--benchmarks/--compiletime/--runtime-strategy; see docs/README.md. "
                     "Without any flags, it asks what to run instead.")
     parser.add_argument("--config", type=str, required=True, help="Path to the configuration file (machine settings, default trials and max_total_time).")
     parser.add_argument("--experiment", "--groups", type=str, help="Experiment file (YAML, or JSON if it ends in .json) with groups of fuzzers, benchmarks and strategies. Replaces --fuzzers/--benchmarks/--compiletime/--runtime-strategy.")

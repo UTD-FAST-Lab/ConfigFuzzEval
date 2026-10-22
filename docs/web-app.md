@@ -1,22 +1,16 @@
 # The web app
 
-`webapp/` is a browser front end for the whole ConfigFuzzEval workflow, from configuring an experiment to reading its
+[ConfigFuzzEval](../README.md) › [Documentation](README.md) › Web app
+
+`webapp/` is a browser front end for the whole ConfigFuzzEval workflow, and the fourth way to run an experiment,
+next to the [command line](run-command-line.md), the [interactive setup](run-interactive.md) and an
+[experiment file](run-experiment-file.md). It covers everything, from configuring an experiment to reading its
 results. It starts the same commands as the command line (`run_experiment.py` with an experiment file, and
 `post_analysis.py`) and reads the files they write, so the web app and the terminal can be used side by side.
 
-**Try it without installing anything:** the demo at **https://configfuzzeval.vercel.app/** is a copy of this web
-app with no server behind it. Every page works, but nothing runs: queueing shows a notice instead. It has two
-finished experiments with mock data, and a short real experiment replayed as if it were running now:
-
-- [`/experiments/1`](https://configfuzzeval.vercel.app/experiments/1): AFL++ under every runtime strategy, plus VAFuzz, on six benchmarks (mock data).
-- [`/experiments/2`](https://configfuzzeval.vercel.app/experiments/2): AFL++ and VAFuzz under every compile-time strategy (mock data).
-- [`/experiments/live_demo`](https://configfuzzeval.vercel.app/experiments/live_demo): a real 14-trial run with SuperC, crash triage and statistics, replayed about 5× faster than it ran.
-
-Every tab has its own address, for example
-[`/experiments/2/superc`](https://configfuzzeval.vercel.app/experiments/2/superc) or
-[`/experiments/1/results`](https://configfuzzeval.vercel.app/experiments/1/results). The screenshots below are
-from the demo. The demo has a few extras of its own that this web app does not: a **Live** tab with a trial
-detail window, a `configure.yaml` editor, and the replay.
+**Try it without installing anything:** the [live demo](live-demo.md) at **https://configfuzzeval.vercel.app/** is a
+copy of this web app with example experiments and no server behind it. The screenshots on this page are from the
+demo, and each section links to the same page there.
 
 Contents: [Starting it](#starting-it) · [Experiments page](#experiments-page) ·
 [New experiment](#new-experiment) · [An experiment's page](#an-experiments-page) ·
@@ -49,7 +43,7 @@ ssh -L 8800:localhost:8800 <fuzzing-machine>
 The app only listens on other addresses (`--host 0.0.0.0`) when started with `--token SECRET`. Each browser then
 opens it once with `?token=SECRET`, and a cookie keeps it signed in.
 
-**Before the first experiment**, run `run_as_sudo.sh` as root. The Experiments page shows a red check when
+**Before the first experiment**, run `run_as_sudo.sh` as root (see [Host settings](README.md#host-settings)). The Experiments page shows a red check when
 `core_pattern` is not `core` or the CPU governor is not `performance`. Experiments still run without these
 settings, but AFL++ warns, and the coverage numbers are noisier.
 
@@ -58,7 +52,7 @@ settings, but AFL++ warns, and the coverage numbers are noisier.
 The home page ([demo](https://configfuzzeval.vercel.app/)) lists everything in the experiment filestore,
 including experiments started from the command line.
 
-![The Experiments page](screenshots/experiments.png)
+![The Experiments page](images/web-app/experiments.png)
 
 - **Checks:** a row of host checks: Docker, `core_pattern`, the CPU governor and the cores in use. A check turns
   red when something needs attention.
@@ -77,14 +71,14 @@ including experiments started from the command line.
 ## New experiment
 
 **New experiment** ([demo](https://configfuzzeval.vercel.app/new)) is a form that writes an experiment file
-(see [Experiment files](../README.md#experiment-files)). The file is on the right, and you can also edit it
+(see [Experiment files](run-experiment-file.md)). The file is on the right, and you can also edit it
 directly.
 
-![The New experiment form](screenshots/new-experiment.png)
+![The New experiment form](images/web-app/new-experiment.png)
 
 1. **Name the experiment.** It becomes the folder name, so use letters, digits, `.`, `_` and `-`.
 2. **Choose the mode:** **evaluation** (a fixed time per trial) or **continuous** (fuzz until stopped, with
-   coverage measured in rounds; see [Continuous mode](../README.md#continuous-mode)). Choose any crash triage
+   coverage measured in rounds; see [Continuous mode](README.md#continuous-mode)). Choose any crash triage
    tools, and whether to run the SuperC presence-condition analysis.
 3. **Fill in one or more groups.** Each group runs every chosen fuzzer on every chosen benchmark, with every chosen
    compile-time and runtime strategy. **+ Add group** adds another group, with its own choices.
@@ -101,13 +95,13 @@ directly.
    the fuzzing hours, the shortest run time on your cores, the estimated total time with builds and coverage, the
    builds, and one row per run with its benchmark copies. A red box shows the dry run's errors.
 
-   ![A passed preview, with the plan](screenshots/new-experiment-preview.png)
+   ![A passed preview, with the plan](images/web-app/new-experiment-preview.png)
 6. **Click Queue experiment.** You can only queue after a preview passes, and after any change you have to preview
    again. The file is saved to `experiments/<name>.yaml`, as for an experiment queued from a terminal, and the log
    goes to `experiments/logs/<name>.log`. The browser then opens the experiment's page.
 
 Jobs (experiments and post-analyses) go into the same queue as experiments queued from a terminal and run **one
-at a time** (see [How experiments run](../README.md#how-experiments-run)). Jobs run as their own processes, so they
+at a time** (see [Job queue](README.md#job-queue)). Jobs run as their own processes, so they
 keep going if the web app is stopped or restarted, and the background worker starts queued jobs while the web app
 is down.
 
@@ -118,7 +112,7 @@ Each experiment has a page with a header and a row of tabs, for example
 
 ### Header
 
-![An experiment's header and Trials tab](screenshots/experiment-trials.png)
+![An experiment's header and Trials tab](images/web-app/experiment-trials.png)
 
 - **Progress:** the trials done, running and failed; the time elapsed; and, while fuzzing, an estimate of the time
   left from the trials finished so far.
@@ -151,23 +145,23 @@ its presence-condition table (**conditions**). The status is one of:
 The experiment's log, updating live with **follow** on. The menu also has the log of each post-analysis job. A long
 log opens at its last 60,000 characters.
 
-![The Log tab](screenshots/experiment-log.png)
+![The Log tab](images/web-app/experiment-log.png)
 
 ### Results
 
 The statistics report embedded in the page, with **Open the report in a new tab**, its CSV tables, and
 **Combined coverage: union & mean**.
 
-![The Results tab](screenshots/experiment-results.png)
+![The Results tab](images/web-app/experiment-results.png)
 
 **The statistics report** ranks the arms over all benchmarks (average ranks, normalized scores, first places, a
 Friedman test and a Nemenyi critical-difference diagram), and per benchmark gives box plots, pairwise
 Mann-Whitney tests (Holm-corrected) with Vargha-Delaney effect sizes, the "against the default" table, unique
 coverage, Jaccard similarity and UpSet intersections. It also has relative coverage, benchmark properties, found
-bugs, a statistical-power section and method notes. See [Statistics report](../README.md#statistics-report), and read
-[Limits of the analyses](../README.md#limits-of-the-analyses) before quoting a p-value.
+bugs, a statistical-power section and method notes. See [Statistics report](statistics-report.md), and read
+[Limits of the analyses](statistics-report.md#limits-of-the-analyses) before quoting a p-value.
 
-![The statistics report's overall ranking](screenshots/statistics-report.png)
+![The statistics report's overall ranking](images/web-app/statistics-report.png)
 
 For a first look: start with **Overall ranking**, then each benchmark's **Against the default** table, which has
 the most statistical power, then the box plots to see how much the trials vary.
@@ -179,24 +173,24 @@ the most statistical power, then the box plots to see how much the trials vary.
 - **Mean:** what a typical trial covers. It gives the mean ± standard deviation over the trials of the regions,
   functions, lines and branches covered (with the worst and best trial), a table per file, and `mean_files.csv`.
 
-![The combined coverage reports, one union and one mean report per arm and benchmark](screenshots/combined-coverage-index.png)
+![The combined coverage reports, one union and one mean report per arm and benchmark](images/web-app/combined-coverage-index.png)
 
-![A mean report: totals over the trials, then a table per file](screenshots/combined-coverage-mean.png)
+![A mean report: totals over the trials, then a table per file](images/web-app/combined-coverage-mean.png)
 
 Per source line, both show how many of the trials covered the line (green: all, yellow: some, red: none) and its
 mean (or, for the union, total) execution count. In the demo the files are synthetic, so no source text is shown;
 a real experiment's report shows the source next to each line.
 
-![A file's lines in the mean report, by how many trials covered them](screenshots/combined-coverage-mean-source.png)
+![A file's lines in the mean report, by how many trials covered them](images/web-app/combined-coverage-mean-source.png)
 
 ### Presence conditions
 
 The SuperC report ([demo](https://configfuzzeval.vercel.app/experiments/2/superc)), once the experiment's SuperC
 step or a SuperC post-analysis has run. SuperC gives every source line the `#if` condition under which it is
 compiled. A condition is **in the build** when the coverage build instrumented at least one of its lines, and
-**covered** when a trial executed one. See [SuperC presence-condition analysis](../README.md#superc-presence-condition-analysis).
+**covered** when a trial executed one. See [SuperC presence-condition analysis](superc.md).
 
-![The Presence conditions tab: SuperC's result and the arms](screenshots/superc-arms.png)
+![The Presence conditions tab: SuperC's result and the arms](images/web-app/superc-arms.png)
 
 For each benchmark build (choose one in **Benchmark build** when there are several compile-time strategies):
 
@@ -215,7 +209,7 @@ For each benchmark build (choose one in **Benchmark build** when there are sever
   `2/3`). **Sort** orders them by instrumented lines, lines no arm covered, lines one arm covered, or name, and the
   search box finds conditions such as `SUPPORT_JIT`. It loads 100 at a time; **Show more** loads the next 100.
 
-  ![The conditions table with the mean over the trials](screenshots/superc-conditions-mean.png)
+  ![The conditions table with the mean over the trials](images/web-app/superc-conditions-mean.png)
 - **Across compile-time strategies:** shown when the benchmark ran under two or more strategies. For one arm, or
   all fuzzers together, each strategy's row has the conditions its builds compiled and its trials covered, the
   conditions **only this strategy** covered, the conditions it **missed** that another strategy covered (and of
@@ -223,7 +217,7 @@ For each benchmark build (choose one in **Benchmark build** when there are sever
   build. Below it, every condition is listed with its covered lines under each strategy, or "not compiled",
   filtered by strategy: covered only under it, missed, not compiled, gained, lost, or covered under none.
 
-  ![The comparison across compile-time strategies](screenshots/superc-strategies.png)
+  ![The comparison across compile-time strategies](images/web-app/superc-strategies.png)
 - **Links:** SuperC's own `index.html`, `pc_summary.csv`, the build's `<benchmark>_pc_comparison.csv`, and the
   cross-strategy CSVs.
 
@@ -237,7 +231,7 @@ worst-to-best range shaded.
 Queues `post_analysis.py` on a finished experiment, as a job in the same queue
 ([demo](https://configfuzzeval.vercel.app/experiments/2/analyse)):
 
-![The Post-analysis tab and the experiment's jobs](screenshots/post-analysis.png)
+![The Post-analysis tab and the experiment's jobs](images/web-app/post-analysis.png)
 
 - **Statistics report:** the metric to rank by (branches, lines, regions or functions), the baseline fuzzer, and
   optionally another experiment to compare with, for the reproducibility section. The combined coverage reports are
@@ -245,7 +239,7 @@ Queues `post_analysis.py` on a finished experiment, as a job in the same queue
 - **Per-configuration coverage first:** runtime strategies only. Needed before the "union against best single
   configuration" table.
 - **SuperC presence conditions:** runs the SuperC analysis, also on an experiment that ran without it.
-- **Crash triage:** only when the experiment built a triage tool (see [Crash triage](../README.md#crash-triage)).
+- **Crash triage:** only when the experiment built a triage tool (see [Crash triage](crash-triage.md)).
 
 **Jobs for this experiment** lists the experiment's own job and every post-analysis, with its status, start time
 and exit code. Their logs are in the Log tab's menu.
@@ -255,7 +249,7 @@ and exit code. Their logs are in the Log tab's menu.
 The file the experiment ran with, with its record (when it was queued and started, its estimated end and the
 command that stops it).
 
-![The Experiment file tab](screenshots/experiment-file.png)
+![The Experiment file tab](images/web-app/experiment-file.png)
 
 ## Documentation page
 
@@ -264,7 +258,7 @@ fuzzer, a benchmark, a compile-time or runtime configuration generator, a crash 
 like SuperC. It covers the files each needs, what the framework mounts and sets for it, and what it must produce,
 and ends with the plugins currently in the repository.
 
-![The Documentation page](screenshots/documentation.png)
+![The Documentation page](images/web-app/documentation.png)
 
 ## Files
 
@@ -276,10 +270,16 @@ and ends with the plugins currently in the repository.
 - `webapp/instance/`: the job queue shared with the command line (`jobs.db` and its lock files) and dry-run scratch
   files. It is not tracked by git. Deleting it empties the queue and the job history; experiments, experiment files
   and reports are kept.
-- `webapp/screenshots/`: the images in this file, taken from the demo.
+- `docs/images/web-app/`: the images in this file, taken from the [demo](live-demo.md).
 - `experiments/<name>.yaml`: every experiment's file with its record, and `experiments/logs/`: every log (see
-  [How experiments run](../README.md#how-experiments-run)). The `experiments/` folder is not tracked by git.
+  [Job queue](README.md#job-queue)). The `experiments/` folder is not tracked by git.
 - `<experiment>/events.jsonl`: written by `run_experiment.py`. It records the phases, each trial's start and end
   with its core and status, and the end of the experiment. Experiments from before this file existed still show,
   with their progress counted from the coverage reports.
 - `run_experiment.py --dry-run --plan-json FILE`: writes the dry-run plan as JSON. The preview uses it.
+
+## See also
+
+- [Live demo](live-demo.md): try every page without installing anything.
+- [Job queue](README.md#job-queue): how the experiments and post-analyses the web app queues are run.
+- [Experiment file](run-experiment-file.md): the file the New experiment form writes.

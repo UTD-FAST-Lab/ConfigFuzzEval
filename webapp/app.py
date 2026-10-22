@@ -2,7 +2,7 @@
 
     python3 webapp/app.py [--config config.yaml] [--host 127.0.0.1] [--port 8800] [--token SECRET]
 
-It starts the same command lines as the README (common/run_experiment.py with an
+It starts the same command lines as the docs (common/run_experiment.py with an
 experiment file, common/post_analysis.py) and reads what they write, so the command
 line and the web app can be used side by side. Docker access is root-equivalent: keep
 the app on localhost (reach it through an SSH tunnel) or give it a --token.
@@ -104,7 +104,7 @@ _system_cache = {}
 
 
 def system_checks():
-    """Host checks from the README: Docker, core_pattern and the CPU governor, cores, disk."""
+    """Host checks from docs/README.md: Docker, core_pattern and the CPU governor, cores, disk."""
     if _system_cache.get("time", 0) > time.time() - 30:
         return _system_cache["checks"]
     checks = []
@@ -218,14 +218,7 @@ def new():
 
 @app.route("/docs")
 def docs():
-    cat = catalog_mod.load(PROJECT_ROOT)
-    # Benchmarks whose load_src.sh does not put the source where cfg-analysis/run_superc.sh reads it
-    superc_mismatch = []
-    for b in cat["benchmarks"]:
-        p = os.path.join(PROJECT_ROOT, "benchmarks", b, "load_src.sh")
-        if os.path.isfile(p) and "/benchmark/source" not in open(p).read():
-            superc_mismatch.append(b)
-    return render_template("docs.html", catalog=cat, superc_mismatch=superc_mismatch)
+    return render_template("docs.html", catalog=catalog_mod.load(PROJECT_ROOT))
 
 
 @app.route("/experiments/<name>")

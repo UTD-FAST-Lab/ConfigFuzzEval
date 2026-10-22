@@ -9,7 +9,7 @@ SQLite file (webapp/instance/jobs.db); a background worker (python3 common/jobs.
 started when a job is queued) starts the next job when the machine is free, and the
 web app ticks the same queue while it runs. Jobs never run next to another experiment,
 including one run with --foreground by hand, since they would share the cores and the
-benchmark copies (see README.md).
+benchmark copies (see docs/README.md#job-queue).
 
     python3 common/jobs.py list            # the queue
     python3 common/jobs.py stop NAME       # cancel a queued experiment, or stop a running one

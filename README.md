@@ -1,5 +1,8 @@
 # ConfigFuzzEval
 
+> **ICSE 2027 artifact.** This repository is the artifact for submission #36 to the ICSE 2027 Tool Demonstration and
+> Data Showcase track. The results of our experiments used for the paper are in [`icse-tool-track-data/superc/`](icse-tool-track-data/superc/).
+
 ![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/images/architecture.jpg)
 
 ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating configuration-aware and configuration-agnostic fuzzers, and (2) orchestrating fuzzing campaigns across sampled compile-time and runtime configurations. It provides statistical coverage analyses, crash triaging, and integration with SuperC for compile-time analysis. It is extensible through plugin interfaces for fuzzers, sampling strategies, triaging tools, compile-time analysis tools and target programs. Experiments run from a web application ([docs/web-app.md](docs/web-app.md)), or from CI/CD pipelines through the CLI or experiment files. The [live demo](docs/live-demo.md) at https://configfuzzeval.vercel.app/ is the web app with precomputed example data and no server behind it: it shows every page and report, but runs nothing.

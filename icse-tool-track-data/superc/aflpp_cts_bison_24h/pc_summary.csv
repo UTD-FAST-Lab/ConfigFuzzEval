@@ -1,0 +1,6 @@
+benchmark,compiletime,arm,trials,files,files_analysed,conditions,conditions_in_build,conditions_covered_union,conditions_covered_median_trial,conditional_lines_in_build,conditional_lines_covered_union,covered_lines_union,covered_lines_in_headers,covered_lines_without_condition
+bison_bison,manual,aflplusplus{cts:manual},3,108,108,472,109,43,43,1409,393,10039,866,0
+bison_bison,maximum,aflplusplus{cts:maximum},3,113,113,510,109,46,46,1524,447,10026,839,0
+bison_bison,minimum,aflplusplus{cts:minimum},3,108,108,472,109,43,43,1409,393,10182,863,0
+bison_bison,pairwise,aflplusplus{cts:pairwise},3,113,113,508,113,47,47,1725,447,10109,862,0
+bison_bison,randomsmart,aflplusplus{cts:randomsmart},3,113,113,510,113,47,47,1580,452,10132,862,0

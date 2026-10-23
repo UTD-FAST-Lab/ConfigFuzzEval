@@ -1,0 +1,107 @@
+presence_condition,instrumented_lines,covered_by,covered_only_by,covered_lines:vafuzz{cts:pairwise}
+!((WEBP_ENCODER_ABI_VERSION >= 256)),0,,,0
+!((WEBP_ENCODER_ABI_VERSION >= 521)),0,,,0
+!LIBDEFLATE_SUPPORT,39,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+!LIBDEFLATE_SUPPORT && !defined(LERC_READ_ONLY),31,,,0
+!defined(AC_APPLE_UNIVERSAL_BUILD) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__)),18,vafuzz{cts:pairwise},vafuzz{cts:pairwise},8
+!defined(CCITT_SUPPORT),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+!defined(CHUNKY_STRIP_READ_SUPPORT),2,,,0
+!defined(EXIT_FAILURE),0,,,0
+!defined(EXIT_SUCCESS),0,,,0
+!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12),3,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12)),16,vafuzz{cts:pairwise},vafuzz{cts:pairwise},8
+!defined(JBG_EN),2,,,0
+!defined(JPEG_LIB_MK1),9,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+!defined(LERC_AT_LEAST_VERSION),0,,,0
+!defined(LERC_AT_LEAST_VERSION) || (defined(LERC_AT_LEAST_VERSION) && !LERC_AT_LEAST_VERSION),0,,,0
+!defined(LERC_READ_ONLY),306,,,0
+!defined(LIBJPEG_ENCAP_EXTERNAL),49,,,0
+!defined(LOGLUV_SUPPORT),0,,,0
+!defined(LZMA_SUPPORT),0,,,0
+!defined(LZW_SUPPORT),0,,,0
+!defined(PACKBITS_SUPPORT),0,,,0
+!defined(PIXARLOG_SUPPORT),0,,,0
+!defined(TIFF_JPEG_MAX_MEMORY_TO_USE),3,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+!defined(ZSTD_SUPPORT),11,,,0
+!defined(ZSTD_SUPPORT) && !defined(LERC_READ_ONLY),3,,,0
+!defined(Z_NO_COMPRESSION) || (defined(Z_NO_COMPRESSION) && !defined(Z_DEFLATED)),0,,,0
+!defined(__cplusplus),0,,,0
+!defined(__cplusplus) && !defined(__clang__),0,,,0
+!defined(__cplusplus) && defined(__clang__),0,,,0
+(!defined(AC_APPLE_UNIVERSAL_BUILD) && defined(LZW_SUPPORT) && !defined(_M_X64)) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__) && defined(LZW_SUPPORT) && !defined(_M_X64)),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+(!defined(AC_APPLE_UNIVERSAL_BUILD) && defined(LZW_SUPPORT) && defined(_M_X64)) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__) && defined(LZW_SUPPORT) && defined(_M_X64)),0,,,0
+(!defined(AC_APPLE_UNIVERSAL_BUILD) && defined(LZW_SUPPORT)) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__) && defined(LZW_SUPPORT)),0,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),13,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfTriples)) || defined(DISABLE_CHECK_TIFFSWABMACROS),12,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),8,vafuzz{cts:pairwise},vafuzz{cts:pairwise},8
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && defined(JPEG_DUAL_MODE_8_12)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12)),0,,,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && !((BITS_IN_JSAMPLE == 12)) && !defined(JPEG_LIB_MK1_OR_12BIT)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1) && !defined(JPEG_LIB_MK1_OR_12BIT)),56,,,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && !((BITS_IN_JSAMPLE == 12)) && defined(JPEG_LIB_MK1_OR_12BIT)) || (!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && (BITS_IN_JSAMPLE == 12)) || (!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(JPEG_LIB_MK1)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1) && defined(JPEG_LIB_MK1_OR_12BIT)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && defined(JPEG_LIB_MK1)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12)),0,,,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && (BITS_IN_JSAMPLE == 12)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1)),0,,,0
+(!defined(LERC_AT_LEAST_VERSION) && !defined(LERC_READ_ONLY)) || (defined(LERC_AT_LEAST_VERSION) && !LERC_AT_LEAST_VERSION && !defined(LERC_READ_ONLY)),0,,,0
+(JPEG_LIB_VERSION >= 70),6,,,0
+(WEBP_DECODER_ABI_VERSION >= 2),35,,,0
+(WEBP_ENCODER_ABI_VERSION >= 256),85,,,0
+(WEBP_ENCODER_ABI_VERSION >= 256) && (WEBP_ENCODER_ABI_VERSION >= 521),3,,,0
+(WEBP_ENCODER_ABI_VERSION >= 521),3,,,0
+(defined(JPEG_LIB_VERSION_MAJOR) && !((JPEG_LIB_VERSION_MAJOR > 9)) && (JPEG_LIB_VERSION_MAJOR == 9) && (JPEG_LIB_VERSION_MINOR >= 4)) || (defined(JPEG_LIB_VERSION_MAJOR) && (JPEG_LIB_VERSION_MAJOR > 9)),0,,,0
+LIBDEFLATE_SUPPORT,186,vafuzz{cts:pairwise},vafuzz{cts:pairwise},103
+LIBDEFLATE_SUPPORT && !defined(LERC_READ_ONLY),30,,,0
+defined(AC_APPLE_UNIVERSAL_BUILD) && defined(__BIG_ENDIAN__),0,,,0
+defined(AC_APPLE_UNIVERSAL_BUILD) && defined(__BIG_ENDIAN__) && defined(LZW_SUPPORT),0,,,0
+defined(CCITT_SUPPORT),1433,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1035
+defined(CCITT_SUPPORT) && !defined(EOF_REACHED_COUNT_THRESHOLD),1,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+defined(CCITT_SUPPORT) && defined(FAX3_DEBUG),0,,,0
+defined(CHECK_JPEG_YCBCR_SUBSAMPLING),238,vafuzz{cts:pairwise},vafuzz{cts:pairwise},7
+defined(CHUNKY_STRIP_READ_SUPPORT),39,,,0
+defined(DEFER_STRILE_LOAD),3,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+defined(D_MAX_DATA_UNITS_IN_MCU),0,,,0
+defined(EXPECTED_JPEG_LIB_VERSION) && !defined(LIBJPEG_12_PATH),0,,,0
+defined(EXPECTED_JPEG_LIB_VERSION) && !defined(LIBJPEG_12_PATH) && (EXPECTED_JPEG_LIB_VERSION != JPEG_LIB_VERSION),0,,,0
+defined(HASH_DEBUG),0,,,0
+defined(HAVE_FCNTL_H),0,,,0
+defined(HAVE_IO_H),0,,,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12),0,,,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12),0,,,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12),0,,,0
+defined(HAVE_UNISTD_H),0,,,0
+defined(IPPJ_HUFF),0,,,0
+defined(JBG_EN),0,,,0
+defined(JPEG_LIB_MK1),0,,,0
+defined(LERC_AT_LEAST_VERSION) && LERC_AT_LEAST_VERSION,125,,,0
+defined(LERC_AT_LEAST_VERSION) && LERC_AT_LEAST_VERSION && !defined(LERC_READ_ONLY),71,,,0
+defined(LIBJPEG_ENCAP_EXTERNAL),0,,,0
+defined(LOGLUV_PUBLIC) && !LOGLUV_PUBLIC && defined(LOGLUV_SUPPORT),0,,,0
+defined(LOGLUV_PUBLIC) && !LOGLUV_PUBLIC && defined(LOGLUV_SUPPORT) && !defined(UVSCALE),0,,,0
+defined(LOGLUV_SUPPORT),1418,,,0
+defined(LOGLUV_SUPPORT) && !defined(M_LN2),0,,,0
+defined(LOGLUV_SUPPORT) && !defined(M_PI),0,,,0
+defined(LZMA_SUPPORT),372,,,0
+defined(LZMA_SUPPORT) && (LZMA_VERSION >= 50040000),0,,,0
+defined(LZW_SUPPORT),688,vafuzz{cts:pairwise},vafuzz{cts:pairwise},359
+defined(LZW_SUPPORT) && !defined(LZW_READ_ONLY),253,vafuzz{cts:pairwise},vafuzz{cts:pairwise},8
+defined(NDEBUG),0,,,0
+defined(O_BINARY),0,,,0
+defined(PACKBITS_SUPPORT),86,vafuzz{cts:pairwise},vafuzz{cts:pairwise},82
+defined(PACKBITS_SUPPORT) && !defined(PACKBITS_READ_ONLY),171,vafuzz{cts:pairwise},vafuzz{cts:pairwise},7
+defined(PIXARLOG_SUPPORT),1433,,,0
+defined(STRIPBYTECOUNTSORTED_UNUSED),0,,,0
+defined(STRIPCHOP_DEFAULT),4,vafuzz{cts:pairwise},vafuzz{cts:pairwise},4
+defined(TIFF_DO_NOT_USE_NON_EXT_ALLOC_FUNCTIONS),0,,,0
+defined(ZSTD_SUPPORT),319,,,0
+defined(ZSTD_SUPPORT) && !defined(LERC_READ_ONLY),22,,,0
+defined(_MSC_VER),0,,,0
+defined(_WIN32),0,,,0
+defined(_WIN32) && defined(O_BINARY),0,,,0
+defined(__cplusplus),0,,,0
+defined(notdef),0,,,0
+defined(notused),0,,,0
+defined(notused) && defined(HASH_DEBUG),0,,,0

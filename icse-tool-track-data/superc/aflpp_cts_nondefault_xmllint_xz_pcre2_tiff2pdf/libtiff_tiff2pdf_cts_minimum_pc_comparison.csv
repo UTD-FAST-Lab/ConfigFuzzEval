@@ -1,0 +1,64 @@
+presence_condition,instrumented_lines,covered_by,covered_only_by,covered_lines:aflplusplus{cts:minimum}
+!MDI_SUPPORT,6,aflplusplus{cts:minimum},aflplusplus{cts:minimum},6
+!defined(AC_APPLE_UNIVERSAL_BUILD) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__)),12,aflplusplus{cts:minimum},aflplusplus{cts:minimum},8
+!defined(CCITT_SUPPORT),0,,,0
+!defined(CCITT_SUPPORT) && defined(ZIP_SUPPORT),0,,,0
+!defined(CHUNKY_STRIP_READ_SUPPORT),2,,,0
+!defined(EXIT_FAILURE),0,,,0
+!defined(EXIT_SUCCESS),0,,,0
+!defined(JBIG_SUPPORT),0,,,0
+!defined(JPEG_SUPPORT),7,,,0
+!defined(LERC_SUPPORT),0,,,0
+!defined(LOGLUV_SUPPORT),0,,,0
+!defined(LZMA_SUPPORT),0,,,0
+!defined(LZW_SUPPORT),0,,,0
+!defined(NEXT_SUPPORT),0,,,0
+!defined(OJPEG_SUPPORT),0,,,0
+!defined(PACKBITS_SUPPORT),0,,,0
+!defined(PIXARLOG_SUPPORT),0,,,0
+!defined(THUNDER_SUPPORT),0,,,0
+!defined(WEBP_SUPPORT),0,,,0
+!defined(ZIP_SUPPORT),7,,,0
+!defined(ZSTD_SUPPORT),0,,,0
+!defined(__cplusplus),0,,,0
+!defined(__cplusplus) && !defined(__clang__),0,,,0
+!defined(__cplusplus) && defined(__clang__),0,,,0
+(!defined(CCITT_SUPPORT) && defined(ZIP_SUPPORT)) || defined(CCITT_SUPPORT),0,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),13,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfTriples)) || defined(DISABLE_CHECK_TIFFSWABMACROS),12,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,,,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),8,aflplusplus{cts:minimum},aflplusplus{cts:minimum},8
+(!defined(JPEG_SUPPORT) && defined(ZIP_SUPPORT)) || defined(JPEG_SUPPORT),0,,,0
+(!defined(OJPEG_SUPPORT) && defined(JPEG_SUPPORT)) || defined(OJPEG_SUPPORT),0,,,0
+MDI_SUPPORT,0,,,0
+defined(AC_APPLE_UNIVERSAL_BUILD) && defined(__BIG_ENDIAN__),0,,,0
+defined(CCITT_SUPPORT),0,,,0
+defined(CCITT_SUPPORT) && !defined(ZIP_SUPPORT),0,,,0
+defined(CCITT_SUPPORT) && defined(ZIP_SUPPORT),0,,,0
+defined(CHUNKY_STRIP_READ_SUPPORT),0,,,0
+defined(DEFAULT_EXTRASAMPLE_AS_ALPHA),0,,,0
+defined(DEFER_STRILE_LOAD),0,,,0
+defined(HASH_DEBUG),0,,,0
+defined(HAVE_FCNTL_H),0,,,0
+defined(HAVE_IO_H),0,,,0
+defined(HAVE_UNISTD_H),0,,,0
+defined(JPEG_SUPPORT),0,,,0
+defined(OJPEG_SUPPORT),0,,,0
+defined(O_BINARY),0,,,0
+defined(STRIPBYTECOUNTSORTED_UNUSED),0,,,0
+defined(STRIPCHOP_DEFAULT),0,,,0
+defined(TIFF_DO_NOT_USE_NON_EXT_ALLOC_FUNCTIONS),0,,,0
+defined(ZIP_SUPPORT),0,,,0
+defined(_MSC_VER),0,,,0
+defined(_WIN32),0,,,0
+defined(_WIN32) && defined(O_BINARY),0,,,0
+defined(__cplusplus),0,,,0
+defined(notused),0,,,0
+defined(notused) && defined(HASH_DEBUG),0,,,0

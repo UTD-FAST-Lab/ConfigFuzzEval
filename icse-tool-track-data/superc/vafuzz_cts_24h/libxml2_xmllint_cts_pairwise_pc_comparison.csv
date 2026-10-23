@@ -1,0 +1,172 @@
+presence_condition,instrumented_lines,covered_by,covered_only_by,covered_lines:vafuzz{cts:pairwise}
+!defined(DBL_DIG),0,,,0
+!defined(DBL_EPSILON),0,,,0
+!defined(ENABLE_IDC_NODE_TABLES_TEST),2,,,0
+!defined(ENABLE_NAMED_LOCALS),12,,,0
+!defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),34,vafuzz{cts:pairwise},vafuzz{cts:pairwise},28
+!defined(LIBXML_C14N_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_CATALOG_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_DEBUG_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_HTML_ENABLED),23,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_ISO8859X_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_MODULES_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_READER_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_SCHEMATRON_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_WINPATH_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+!defined(LIBXML_XINCLUDE_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_XPTR_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(LIBXML_ZLIB_ENABLED),7,vafuzz{cts:pairwise},vafuzz{cts:pairwise},5
+!defined(LIBXML_ZLIB_ENABLED) && defined(LIBXML_READER_ENABLED),8,vafuzz{cts:pairwise},vafuzz{cts:pairwise},5
+!defined(MAP_FAILED),0,,,0
+!defined(NAN) || (defined(NAN) && !defined(INFINITY)),0,,,0
+!defined(SIZE_MAX),0,,,0
+!defined(STDIN_FILENO),1,,,0
+!defined(STDOUT_FILENO),0,,,0
+!defined(SUN4),1,,,0
+!defined(S_ISDIR),0,,,0
+!defined(S_ISDIR) && !defined(_S_ISDIR) && defined(S_IFDIR),0,,,0
+!defined(S_ISDIR) && !defined(_S_ISDIR) && defined(S_IFDIR) && !defined(S_IFMT) && defined(_S_IFMT),0,,,0
+!defined(S_ISDIR) && !defined(_S_ISDIR) && defined(S_IFDIR) && defined(S_IFMT),0,,,0
+!defined(S_ISDIR) && defined(_S_ISDIR),0,,,0
+!defined(_AIX),2,,,0
+!defined(_WIN32),40,vafuzz{cts:pairwise},vafuzz{cts:pairwise},24
+!defined(_WIN32) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),1,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+!defined(_WIN32) && defined(LIBXML_CATALOG_ENABLED),1,,,0
+!defined(_WIN32) && defined(LIBXML_ZLIB_ENABLED),0,,,0
+!defined(_WIN32) || (defined(_WIN32) && defined(HAVE_POSIX_THREADS)),58,vafuzz{cts:pairwise},vafuzz{cts:pairwise},52
+!defined(isinf),0,,,0
+!defined(isnan),0,,,0
+!defined(va_copy),0,,,0
+!defined(va_copy) && !defined(__va_copy),0,,,0
+!defined(va_copy) && defined(__va_copy),0,,,0
+(!defined(S_ISDIR) && !defined(_S_ISDIR) && defined(S_IFDIR) && !defined(S_IFMT) && defined(_S_IFMT)) || (!defined(S_ISDIR) && !defined(_S_ISDIR) && defined(S_IFDIR) && defined(S_IFMT)) || (!defined(S_ISDIR) && defined(_S_ISDIR)) || defined(S_ISDIR),4,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+(!defined(_MSC_VER) && !defined(__BORLANDC__)) || (defined(_MSC_VER) && !defined(__BORLANDC__) && !((_MSC_VER == 1200))),2,,,0
+(!defined(_MSC_VER) && defined(__BORLANDC__)) || (defined(_MSC_VER) && !defined(__BORLANDC__) && (_MSC_VER == 1200)) || (defined(_MSC_VER) && defined(__BORLANDC__)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_TLS) && defined(USE_DLL_MAIN)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && defined(USE_TLS)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(USE_TLS) && defined(USE_DLL_MAIN)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && !defined(USE_TLS)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_WIN32_THREADS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (defined(_WIN32) && !defined(LIBXML_STATIC)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_DLL_MAIN)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_DLL_MAIN)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_DLL_MAIN)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && defined(USE_TLS)),7,vafuzz{cts:pairwise},vafuzz{cts:pairwise},7
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && !defined(USE_WAIT_DTOR)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && !defined(USE_TLS)),20,vafuzz{cts:pairwise},vafuzz{cts:pairwise},11
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(__APPLE__) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_POSIX_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_POSIX_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_POSIX_THREADS) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_POSIX_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_POSIX_THREADS) && defined(__APPLE__) && !defined(USE_TLS)),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(HAVE_WIN32_THREADS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (defined(_WIN32) && !defined(LIBXML_STATIC)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL)),0,,,0
+(!defined(_WIN32) && !defined(LIBXML_STATIC) && defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(USE_WAIT_DTOR)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (!defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(USE_WAIT_DTOR)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && defined(USE_WAIT_DTOR)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && defined(USE_WAIT_DTOR)),0,,,0
+(!defined(_WIN32) && defined(HAVE_WIN32_THREADS)) || defined(_WIN32),0,,,0
+(!defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL)),0,,,0
+(!defined(_WIN32) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_WIN32_THREADS) && defined(USE_DLL_MAIN)) || (!defined(_WIN32) && defined(LIBXML_STATIC_FOR_DLL) && defined(HAVE_WIN32_THREADS)) || (defined(_WIN32) && defined(LIBXML_STATIC_FOR_DLL)),0,,,0
+(defined(LIBXML_HTML_ENABLED) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)) || (defined(LIBXML_HTML_ENABLED) && defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION) && !defined(__APPLE__)),7,vafuzz{cts:pairwise},vafuzz{cts:pairwise},5
+(defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_POSIX_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_POSIX_THREADS) && defined(__APPLE__) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && !defined(__APPLE__) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && defined(__APPLE__) && !defined(USE_TLS)),0,,,0
+(defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_POSIX_THREADS) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && !defined(USE_TLS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && defined(USE_WAIT_DTOR) && !defined(USE_TLS)),0,,,0
+(defined(_WIN32) && !defined(LIBXML_STATIC) && !defined(HAVE_POSIX_THREADS) && defined(USE_WAIT_DTOR)) || (defined(_WIN32) && defined(LIBXML_STATIC) && !defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS)) || (defined(_WIN32) && defined(LIBXML_STATIC) && defined(LIBXML_STATIC_FOR_DLL) && !defined(HAVE_POSIX_THREADS) && defined(USE_WAIT_DTOR)),0,,,0
+defined(DEBUG_REGEXP),0,,,0
+defined(DV),0,,,0
+defined(EACCES),3,,,0
+defined(EADDRINUSE),3,,,0
+defined(EAFNOSUPPORT),3,,,0
+defined(EAGAIN),3,,,0
+defined(EALREADY),3,,,0
+defined(EBADF),3,,,0
+defined(EBADMSG),3,,,0
+defined(EBUSY),3,,,0
+defined(ECANCELED),3,,,0
+defined(ECHILD),3,,,0
+defined(ECONNREFUSED),3,,,0
+defined(EDEADLK),3,,,0
+defined(EDOM),3,,,0
+defined(EEXIST),3,,,0
+defined(EFAULT),3,,,0
+defined(EFBIG),3,,,0
+defined(EINPROGRESS),3,,,0
+defined(EINTR),3,,,0
+defined(EINVAL),3,,,0
+defined(EIO),3,,,0
+defined(EISCONN),3,,,0
+defined(EISDIR),3,,,0
+defined(EMFILE),3,,,0
+defined(EMLINK),3,,,0
+defined(EMSGSIZE),3,,,0
+defined(ENABLE_IDC_NODE_TABLES_TEST),0,,,0
+defined(ENABLE_NAMED_LOCALS),0,,,0
+defined(ENABLE_PARTICLE_RESTRICTION),0,,,0
+defined(ENAMETOOLONG),3,,,0
+defined(ENETUNREACH),3,,,0
+defined(ENFILE),3,,,0
+defined(ENODEV),3,,,0
+defined(ENOENT),3,,,0
+defined(ENOEXEC),3,,,0
+defined(ENOLCK),3,,,0
+defined(ENOMEM),3,,,0
+defined(ENOSPC),3,,,0
+defined(ENOSYS),3,,,0
+defined(ENOTDIR),3,,,0
+defined(ENOTEMPTY) && (ENOTEMPTY != EEXIST),3,,,0
+defined(ENOTSOCK),3,,,0
+defined(ENOTSUP),3,,,0
+defined(ENOTTY),3,,,0
+defined(ENXIO),3,,,0
+defined(EPERM),3,,,0
+defined(EPIPE),3,,,0
+defined(ERANGE),3,,,0
+defined(EROFS),3,,,0
+defined(ERROR),0,,,0
+defined(ESPIPE),3,,,0
+defined(ESRCH),3,,,0
+defined(ETIMEDOUT),3,,,0
+defined(EXDEV),3,,,0
+defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION) && defined(__GLIBC__),0,,,0
+defined(IS_DIGIT),0,,,0
+defined(LIBXML_C14N_ENABLED),1179,vafuzz{cts:pairwise},vafuzz{cts:pairwise},570
+defined(LIBXML_C14N_ENABLED) && defined(LIBXML_HTML_ENABLED),3,,,0
+defined(LIBXML_C14N_ENABLED) && defined(LIBXML_XINCLUDE_ENABLED),4,vafuzz{cts:pairwise},vafuzz{cts:pairwise},4
+defined(LIBXML_C14N_ENABLED) && defined(LIBXML_ZLIB_ENABLED),0,,,0
+defined(LIBXML_CATALOG_ENABLED),1975,vafuzz{cts:pairwise},vafuzz{cts:pairwise},397
+defined(LIBXML_CATALOG_ENABLED) && !defined(XML_XML_DEFAULT_CATALOG),1,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+defined(LIBXML_CATALOG_ENABLED) && defined(LIBXML2_WINPATH_ENABLED),0,,,0
+defined(LIBXML_CATALOG_ENABLED) && defined(LIBXML_SGML_CATALOG_ENABLED),649,vafuzz{cts:pairwise},vafuzz{cts:pairwise},15
+defined(LIBXML_CATALOG_ENABLED) && defined(LIBXML_SGML_CATALOG_ENABLED) && !defined(XML_SGML_DEFAULT_CATALOG),0,,,0
+defined(LIBXML_DEBUG_ENABLED),1908,vafuzz{cts:pairwise},vafuzz{cts:pairwise},411
+defined(LIBXML_DEBUG_ENABLED) && defined(XPATH_STREAMING),0,,,0
+defined(LIBXML_HTML_ENABLED),4429,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2381
+defined(LIBXML_HTML_ENABLED) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),6,vafuzz{cts:pairwise},vafuzz{cts:pairwise},6
+defined(LIBXML_HTML_ENABLED) && defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(LIBXML_HTML_ENABLED) && defined(LIBXML_READER_ENABLED),4,vafuzz{cts:pairwise},vafuzz{cts:pairwise},4
+defined(LIBXML_ISO8859X_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+defined(LIBXML_MODULES_ENABLED),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+defined(LIBXML_READER_ENABLED),3768,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1254
+defined(LIBXML_READER_ENABLED) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),1,vafuzz{cts:pairwise},vafuzz{cts:pairwise},1
+defined(LIBXML_READER_ENABLED) && !defined(va_copy),0,,,0
+defined(LIBXML_READER_ENABLED) && !defined(va_copy) && !defined(__va_copy),0,,,0
+defined(LIBXML_READER_ENABLED) && !defined(va_copy) && defined(__va_copy),0,,,0
+defined(LIBXML_READER_ENABLED) && defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(LIBXML_READER_ENABLED) && defined(LIBXML_SCHEMATRON_ENABLED),3,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+defined(LIBXML_READER_ENABLED) && defined(LIBXML_XINCLUDE_ENABLED),80,vafuzz{cts:pairwise},vafuzz{cts:pairwise},40
+defined(LIBXML_READER_ENABLED) && defined(XML_SCHEMA_READER_ENABLED),0,,,0
+defined(LIBXML_SCHEMATRON_ENABLED),1240,vafuzz{cts:pairwise},vafuzz{cts:pairwise},25
+defined(LIBXML_WINPATH_ENABLED),99,vafuzz{cts:pairwise},vafuzz{cts:pairwise},18
+defined(LIBXML_XINCLUDE_ENABLED),1231,vafuzz{cts:pairwise},vafuzz{cts:pairwise},126
+defined(LIBXML_XINCLUDE_ENABLED) && defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(LIBXML_XPTR_ENABLED),361,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+defined(LIBXML_XPTR_ENABLED) && defined(LIBXML_XINCLUDE_ENABLED),178,vafuzz{cts:pairwise},vafuzz{cts:pairwise},3
+defined(LIBXML_XPTR_ENABLED) && defined(LIBXML_XINCLUDE_ENABLED) && defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(LIBXML_ZLIB_ENABLED),0,,,0
+defined(LIBXML_ZLIB_ENABLED) && defined(LIBXML_READER_ENABLED),0,,,0
+defined(NAN) && defined(INFINITY),8,vafuzz{cts:pairwise},vafuzz{cts:pairwise},8
+defined(SOLARIS),0,,,0
+defined(SUN4),0,,,0
+defined(TEST_OUTPUT_BUFFER_WRITE_ESCAPE),0,,,0
+defined(WXS_ELEM_DECL_CONS_ENABLED),0,,,0
+defined(XML_SCHEMA_READER_ENABLED),0,,,0
+defined(XPATH_STREAMING),0,,,0
+defined(XP_DEFAULT_CACHE_ON),0,,,0
+defined(_AIX),0,,,0
+defined(_WIN32),0,,,0
+defined(_WIN32) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION),0,,,0
+defined(_WIN32) && !defined(HAVE_POSIX_THREADS),0,,,0
+defined(_WIN32) && defined(LIBXML_CATALOG_ENABLED),0,,,0
+defined(_WIN32) && defined(LIBXML_ZLIB_ENABLED),0,,,0
+defined(__APPLE__),0,,,0
+defined(__MVS__),0,,,0
+defined(isinf),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2
+defined(isnan),2,vafuzz{cts:pairwise},vafuzz{cts:pairwise},2

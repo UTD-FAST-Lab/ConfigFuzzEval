@@ -30,6 +30,7 @@ import events                          # noqa: E402
 import experiments as exps             # noqa: E402
 import live_view                       # noqa: E402
 import superc_view                     # noqa: E402
+import triage_view                     # noqa: E402
 from color_logger import get_logger    # noqa: E402
 import experiment_plan                 # noqa: E402
 from jobs import DB_PATH, Jobs, ensure_worker, external_processes, queue_experiment  # noqa: E402
@@ -313,6 +314,12 @@ def api_superc(name):
     experiment_path(name)
     data = superc_view.overview(config(), name)
     return jsonify(ok=data is not None, **(data or {}))
+
+
+@app.get("/api/experiments/<name>/triage")
+def api_triage(name):
+    """Every triager's results: bugs per arm and benchmark, each bug, each triaged benchmark copy."""
+    return jsonify(triage_view.summary(experiment_path(name)))
 
 
 @app.get("/api/experiments/<name>/superc/strategies")

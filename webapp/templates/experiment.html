@@ -48,6 +48,7 @@
   <button data-tab="log">Log</button>
   <button data-tab="results">Results</button>
   <button data-tab="superc">Presence conditions</button>
+  <button data-tab="triage">Crash triage</button>
   <button data-tab="overtime" id="tab-btn-overtime" hidden>Coverage over time</button>
   <button data-tab="analyse">Post-analysis</button>
   <button data-tab="file">Experiment file</button>
@@ -111,6 +112,10 @@
   {% if superc_report %}
   <p class="small muted" style="margin-top:12px">SuperC's presence-condition results are in the <a href="#superc" onclick="showTab('superc')">Presence conditions</a> tab.</p>
   {% endif %}
+</section>
+
+<section class="tab" id="tab-triage">
+  <div id="triage-body"><div class="card empty">Loading…</div></div>
 </section>
 
 <section class="tab" id="tab-overtime">
@@ -228,6 +233,7 @@
 </section>
 
 <script src="{{ url_for('static', filename='live.js') }}"></script>
+<script src="{{ url_for('static', filename='triage.js') }}"></script>
 <script>
 const NAME = {{ name | tojson }};
 const PHASES = ["building images", "building benchmarks", "fuzzing", "aggregating", "superc", "triage", "statistics"];
@@ -244,6 +250,7 @@ function showTab(t) {
   if (t === "log") loadLog(true);
   if (t === "superc") setTimeout(loadSuperc);   // after the whole script has run
   if (t === "overtime") setTimeout(loadTimeline);
+  if (t === "triage") loadTriageTab();
 }
 for (const b of document.querySelectorAll(".tabs button")) b.addEventListener("click", () => showTab(b.dataset.tab));
 if (location.hash) showTab(location.hash.slice(1)); else loadLive();

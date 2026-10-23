@@ -240,6 +240,24 @@ For each benchmark build (choose one in **Benchmark build** when there are sever
 - **Links:** SuperC's own `index.html`, `pc_summary.csv`, the build's `<benchmark>_pc_comparison.csv`, and the
   cross-strategy CSVs.
 
+### Crash triage
+
+Every triager's results in one place ([demo](https://configfuzzeval.vercel.app/experiments/2/triage)), read from
+`bug-triaging/` by `webapp/triage_view.py`, once the experiment's triage step or a triage post-analysis has run. Choose
+the triager (gdb-exploitable or afl-collect); the tab then shows:
+
+- **Totals:** distinct bugs, crashes replayed and how many crashed again, arms and triaged benchmark copies.
+- **Found bugs:** distinct bugs per benchmark and arm, with the union over the arms, counted as the
+  [statistics report](statistics-report.md)'s Found bugs counts them (an arm's trials pooled, the copies of a
+  compile-time strategy combined). Click a number to list those bugs.
+- **Bugs:** every bug with its classification, its crash state (gdb-exploitable: the signal and top 3 frames), the
+  arms that found it and with how many crashes, and the command line it was replayed with, with links to its saved
+  `crash_state`, `command` and `gdb` output.
+- **Every triaged benchmark copy:** crashes, crashes that crashed again, and bugs per arm and copy, with each trial's
+  triage log.
+
+See [Crash triage](crash-triage.md) for how crashes are replayed and counted.
+
 ### Coverage over time
 
 Continuous campaigns only: per benchmark and metric, each arm's median trial after every coverage round, with its

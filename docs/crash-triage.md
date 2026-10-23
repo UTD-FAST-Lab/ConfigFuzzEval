@@ -34,4 +34,6 @@ Triage runs as root in its container, to read the fuzzers' root-owned output (mo
 ## See also
 
 - [Statistics report](statistics-report.md): found bugs per arm, and why they are a secondary metric.
+- [Crash triage tab](web-app.md#crash-triage) of the web app: every bug, the arms that found it and its replay
+  command, in one place.
 - [Post-analysis tab](web-app.md#post-analysis) of the web app, which triages a finished experiment again.

@@ -5,7 +5,7 @@ This module provides functionality to load grammar configurations from the new
 JSON format and generate CLI arguments. It implements a "Maximum" strategy,
 attempting to enable all features unless explicitly constrained.
 
-Deterministic, like compiletime/minimum and the runtime mostenabled strategy: a
+Deterministic, like compiletime/mostdisabled and the runtime mostenabled strategy: a
 choice option takes its first non-False choice, an "or" rule its first branch, a
 "!=" rule the first other choice, and rules of equal priority apply in grammar order.
 """

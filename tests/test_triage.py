@@ -87,12 +87,12 @@ def test_found_bugs_counts_crash_states_per_arm():
     from statistical_analysis import found_bugs
     with tempfile.TemporaryDirectory() as exp:
         for name, info, rows in [
-            ("aflplusplus_rts_random_cts_default_xz_xz_0", {"fuzzer": "aflplusplus", "runtime_strategy": "random",
+            ("aflplusplus_rts_smartrandom_cts_default_xz_xz_0", {"fuzzer": "aflplusplus", "runtime_strategy": "smartrandom",
                                                              "benchmark": "cts_default_xz_xz_0"},
              [("a", "EXPLOITABLE", "x", "k1"), ("b", "EXPLOITABLE", "x", "k1"), ("c", "UNKNOWN", "x", "k2"),
               ("d", "NOT_REPRODUCED", "x", None)]),
-            ("zigzagfuzz_cts_maximum_xz_xz_0", {"fuzzer": "zigzagfuzz", "runtime_strategy": "default",
-                                                 "benchmark": "cts_maximum_xz_xz_0"},
+            ("zigzagfuzz_cts_mostenabled_xz_xz_0", {"fuzzer": "zigzagfuzz", "runtime_strategy": "default",
+                                                 "benchmark": "cts_mostenabled_xz_xz_0"},
              [("e", "EXPLOITABLE", "x", "k9")]),
         ]:
             pool = os.path.join(exp, "bug-triaging", "gdb-exploitable", "output", name)
@@ -105,8 +105,8 @@ def test_found_bugs_counts_crash_states_per_arm():
             db.executemany("INSERT INTO Data VALUES (?, ?, ?, ?, '')", rows)
             db.commit()
             db.close()
-        assert found_bugs(exp) == {"gdb-exploitable": {("aflplusplus[random]", "xz_xz"): {"k1", "k2"},
-                                                       ("zigzagfuzz{cts:maximum}", "xz_xz"): {"k9"}}}
+        assert found_bugs(exp) == {"gdb-exploitable": {("aflplusplus[smartrandom]", "xz_xz"): {"k1", "k2"},
+                                                       ("zigzagfuzz{cts:mostenabled}", "xz_xz"): {"k9"}}}
 
 
 def test_crash_state_skips_library_frames_and_keeps_three():

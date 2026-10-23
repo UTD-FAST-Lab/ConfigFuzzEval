@@ -1,4 +1,4 @@
-"""random (Rand): 50 distinct random valid configurations (VAFuzz, ICSE 2026,
+"""smartrandom (Rand): 50 distinct random valid configurations (VAFuzz, ICSE 2026,
 Section 4.1, which fixed the number at 50).
 """
 

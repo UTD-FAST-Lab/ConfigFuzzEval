@@ -366,7 +366,7 @@ Then run a short experiment and look at:
 - the fuzzer image's build: `<experiment>/fuzzers/<name>_build.log`;
 - a trial's fuzzing and coverage: `<experiment>/data/<trial>/<fuzzer>_<copy>_trial<k>.log`;
 - the coverage: `coverage/report.txt` should end with a `TOTAL` row with covered regions, lines and branches;
-- for a config-agnostic fuzzer, the same with `--runtime-strategy random`: `rt_run.jsonl` and `config_<i>/` in the
+- for a config-agnostic fuzzer, the same with `--runtime-strategy smartrandom`: `rt_run.jsonl` and `config_<i>/` in the
   trial's folder.
 
 The framework does not rebuild an image that exists: after changing your fuzzer, remove it with

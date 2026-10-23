@@ -29,7 +29,7 @@ runtime strategy runs, and the experiment is the union of its groups:
         max_total_time: 86400            # optional, default: max_total_time in --config
     benchmarks:                          # optional: strategies for a benchmark in every
       xz_xz:                             # group it is in, replacing the group's
-        compiletime: [default, maximum]
+        compiletime: [default, mostenabled]
 
 A benchmarks entry replaces the group's compiletime/runtime_strategy for that
 benchmark in every group that runs it; trials and max_total_time come only from the
@@ -61,6 +61,7 @@ import time
 import yaml
 
 from color_logger import get_logger
+from strategy_names import canonical, renamed
 
 logging = get_logger(__name__)
 
@@ -119,7 +120,7 @@ def load_experiment_file(path):
         unknown = sorted(set(entry) - STRATEGY_KEYS)
         if unknown:
             fail(f"{where}: unknown key(s) {unknown}; allowed: {sorted(STRATEGY_KEYS)}.")
-        data["benchmarks"][benchmark] = {key: _names(entry, key, where) for key in entry}
+        data["benchmarks"][benchmark] = {key: _strategy_names(entry, key, where) for key in entry}
     return data
 
 
@@ -178,6 +179,15 @@ def _names(mapping, key, where, default=None, allow_empty=False):
     return list(dict.fromkeys(value))
 
 
+def _strategy_names(mapping, key, where, default=None):
+    """_names for compiletime or runtime_strategy, with the strategies' earlier names replaced
+    (strategy_names.py), and a note for each one replaced."""
+    names = _names(mapping, key, where, default=default)
+    for old, new in renamed(key, names):
+        logging.info(f"{where}: {key} {old} is now called {new}.")
+    return canonical(key, names)
+
+
 def _positive_int(mapping, key, where, default):
     value = mapping.get(key, default)
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
@@ -214,8 +224,8 @@ def expand_groups(groups, defaults, overrides=None):
 
         fuzzers = _names(group, "fuzzers", where)
         benchmarks = _names(group, "benchmarks", where)
-        compiletime = _names(group, "compiletime", where, default=["default"])
-        runtime_strategies = _names(group, "runtime_strategy", where, default=["default"])
+        compiletime = _strategy_names(group, "compiletime", where, default=["default"])
+        runtime_strategies = _strategy_names(group, "runtime_strategy", where, default=["default"])
         trials = _positive_int(group, "trials", where, defaults["trials"])
         max_total_time = _positive_int(group, "max_total_time", where, defaults["max_total_time"])
 

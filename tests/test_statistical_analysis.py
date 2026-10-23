@@ -65,6 +65,6 @@ def test_parse_lcov_sets(tmp_path):
 
 
 def test_trial_identity_from_directory_name(tmp_path):
-    ident = sa.trial_identity("aflplusplus_rts_random_cts_default_pcre2_pcre2test_0_trial_3", str(tmp_path))
-    assert ident == {"fuzzer": "aflplusplus", "rts": "random", "cts": "default",
+    ident = sa.trial_identity("aflplusplus_rts_smartrandom_cts_default_pcre2_pcre2test_0_trial_3", str(tmp_path))
+    assert ident == {"fuzzer": "aflplusplus", "rts": "smartrandom", "cts": "default",
                      "benchmark": "pcre2_pcre2test", "copy": 0, "trial": 3}

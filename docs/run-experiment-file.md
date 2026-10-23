@@ -51,23 +51,23 @@ groups:
   # aflplusplus with two compile-time and two runtime strategies.
   - fuzzers: [aflplusplus]
     benchmarks: [xz_xz, pcre2_pcre2test]
-    compiletime: [default, minimum]        # optional, default [default]: folder names in compiletime/
+    compiletime: [default, mostdisabled]        # optional, default [default]: folder names in compiletime/
     runtime_strategy: [default, pairwise]  # optional, default [default]: folder names in runtime/
 
 # Optional: strategies of a benchmark in every group that runs it. A key given here
 # replaces that group key for this benchmark only; a key left out keeps the group's.
 benchmarks:
   pcre2_pcre2test:
-    compiletime: [default, maximum]
+    compiletime: [default, mostenabled]
 ```
 
 What this example runs (with `trials: 3` in `config.yaml`):
 
 | Group | Runs | Trials |
 |---|---|---|
-| vafuzz | 5 benchmarks with `default`, plus pcre2 with `default` and `maximum` (from the `benchmarks` section): 7 runs | 3 each, from `config.yaml` |
+| vafuzz | 5 benchmarks with `default`, plus pcre2 with `default` and `mostenabled` (from the `benchmarks` section): 7 runs | 3 each, from `config.yaml` |
 | zigzagfuzz | objdump and xmllint with `default`: 2 runs | 1 each, of 3600 s |
-| aflplusplus | xz: `default`, `minimum` x runtime `default`, `pairwise` = 4 runs; pcre2: `default`, `maximum` (the `benchmarks` section replaces the group's `minimum`) x 2 runtime = 4 runs | 3 each, from `config.yaml` |
+| aflplusplus | xz: `default`, `mostdisabled` x runtime `default`, `pairwise` = 4 runs; pcre2: `default`, `mostenabled` (the `benchmarks` section replaces the group's `mostdisabled`) x 2 runtime = 4 runs | 3 each, from `config.yaml` |
 
 `--dry-run` prints this list for any file (see [Checking a file](#checking-a-file)), so you can check a file before starting it.
 

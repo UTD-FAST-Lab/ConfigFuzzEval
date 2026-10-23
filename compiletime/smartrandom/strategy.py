@@ -224,7 +224,7 @@ def generate_random_config(grammar: Dict[str, Any], rng: random.Random) -> Dict[
 
 # --- Current grammar format -------------------------------------------------
 # Options have type bool/choice and "cli" is a prefix ("enable"/"with"); rules are in
-# a top-level "constraints" list. Flags are formatted like compiletime/maximum and
+# a top-level "constraints" list. Flags are formatted like compiletime/mostenabled and
 # constraints are interpreted like compiletime/pairwise.
 
 def is_prefix_cli(opt: Dict[str, Any]) -> bool:
@@ -274,7 +274,7 @@ def generate_n_valid_random_configs(grammar: Dict[str, Any], n: int = 10,
 
 
 def option_to_cli(opt: Dict[str, Any], val: Any) -> str:
-    if is_prefix_cli(opt):  # current grammar format, formatted like compiletime/maximum
+    if is_prefix_cli(opt):  # current grammar format, formatted like compiletime/mostenabled
         style, name = opt.get("cli", "enable"), opt["name"]
         if isinstance(val, bool):
             return f"--{style}-{name}" if val else f"--{'disable' if style == 'enable' else 'without'}-{name}"

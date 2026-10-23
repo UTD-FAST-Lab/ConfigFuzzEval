@@ -20,8 +20,8 @@ def test_catalog_matches_validation_rules():
     assert not any(b.startswith("cts_") for b in cat["benchmarks"])
     for kind in ("compiletime", "runtime"):           # only folders with a strategy.py are strategies
         assert cat[kind] and all(os.path.isfile(os.path.join(ROOT, kind, s, "strategy.py")) for s in cat[kind])
-    assert catalog.problems(cat, "aflplusplus", "pcre2_pcre2test", "random") == []
-    assert catalog.problems(cat, "zigzagfuzz", "pcre2_pcre2test", "random") == \
+    assert catalog.problems(cat, "aflplusplus", "pcre2_pcre2test", "smartrandom") == []
+    assert catalog.problems(cat, "zigzagfuzz", "pcre2_pcre2test", "smartrandom") == \
         ["zigzagfuzz does not support runtime strategies"]
 
 
@@ -99,19 +99,19 @@ def test_summary_and_trials_from_events(tmp_path):
     (exp / "data").mkdir(parents=True)
     import pickle
     with open(exp / "experiment_state.pkl", "wb") as f:
-        pickle.dump({"trial_tasks": [("aflplusplus", "random", "cts_default_xz_xz_0", 0, 1, None, 60),
+        pickle.dump({"trial_tasks": [("aflplusplus", "smartrandom", "cts_default_xz_xz_0", 0, 1, None, 60),
                                      ("aflplusplus", "default", "cts_default_xz_xz_0", 0, 1, None, 60)],
-                     "fuzzers": ["aflplusplus"], "benchmarks": ["xz_xz"], "runtime_strategies": ["default", "random"]}, f)
+                     "fuzzers": ["aflplusplus"], "benchmarks": ["xz_xz"], "runtime_strategies": ["default", "smartrandom"]}, f)
     events.emit(str(exp), "phase", phase="fuzzing")
-    events.emit(str(exp), "trial_start", run="aflplusplus_rts_random", benchmark="cts_default_xz_xz_0", trial=0, core=3)
-    events.emit(str(exp), "trial_end", run="aflplusplus_rts_random", benchmark="cts_default_xz_xz_0", trial=0,
+    events.emit(str(exp), "trial_start", run="aflplusplus_rts_smartrandom", benchmark="cts_default_xz_xz_0", trial=0, core=3)
+    events.emit(str(exp), "trial_end", run="aflplusplus_rts_smartrandom", benchmark="cts_default_xz_xz_0", trial=0,
                 core=3, status="success")
     cfg = {"experiment_filestore": str(store), "report_filestore": str(tmp_path / "reports")}
     s = experiments.summary(cfg, "e1", running_names={"e1"})
     assert (s["status"], s["phase"], s["done"], s["planned"]) == ("running", "fuzzing", 1, 2)
     t = {x["arm"]: x for x in experiments.trials(cfg, "e1", running=True)}
-    assert t["aflplusplus[random]"]["status"] == "success" and t["aflplusplus[random]"]["core"] == 3
-    assert t["aflplusplus[random]"]["bench"] == "xz_xz"
+    assert t["aflplusplus[smartrandom]"]["status"] == "success" and t["aflplusplus[smartrandom]"]["core"] == 3
+    assert t["aflplusplus[smartrandom]"]["bench"] == "xz_xz"
     assert t["aflplusplus"]["status"] == "queued"
     events.emit(str(exp), "finished")
     assert experiments.summary(cfg, "e1")["status"] == "finished"

@@ -42,13 +42,13 @@ def test_counts_bugs_as_the_report_and_lists_each_bug():
              [("trial_0/id:0", "aaaa"), ("trial_1/id:0", "aaaa"), ("trial_1/id:1", None)],
              {"aaaa": {"crash_state.txt": "SIGSEGV\nf\ng\nh\n", "command.txt": "/benchmark/xz -d -c /tmp/in\n"}})
         pool(exp, "gdb-exploitable", "aflplusplus", "default", "cts_pairwise_xz_xz_1", [("trial_0/id:0", "bbbb")])
-        pool(exp, "gdb-exploitable", "aflplusplus", "random", "cts_default_xz_xz_0", [("trial_0/id:0", "aaaa")])
-        pool(exp, "afl-collect", "aflplusplus", "random", "cts_default_xz_xz_0", [("trial_0:id:0", "m1.x"), ("trial_0:id:1", "m1.y")])
+        pool(exp, "gdb-exploitable", "aflplusplus", "smartrandom", "cts_default_xz_xz_0", [("trial_0/id:0", "aaaa")])
+        pool(exp, "afl-collect", "aflplusplus", "smartrandom", "cts_default_xz_xz_0", [("trial_0:id:0", "m1.x"), ("trial_0:id:1", "m1.y")])
         d = triage_view.summary(exp)
         assert d["ok"] and d["triagers"] == ["afl-collect", "gdb-exploitable"]
         g = d["counts"]["gdb-exploitable"]["xz_xz"]
-        assert g == {"aflplusplus{cts:pairwise}": 2, "aflplusplus[random]": 1, "union": 2}
-        assert d["counts"]["afl-collect"]["xz_xz"] == {"aflplusplus[random]": 1, "union": 1}   # major hash only
+        assert g == {"aflplusplus{cts:pairwise}": 2, "aflplusplus[smartrandom]": 1, "union": 2}
+        assert d["counts"]["afl-collect"]["xz_xz"] == {"aflplusplus[smartrandom]": 1, "union": 1}   # major hash only
         report = statistical_analysis.found_bugs(exp)
         for triager, per in report.items():
             for (arm, bench), bugs in per.items():
@@ -57,7 +57,7 @@ def test_counts_bugs_as_the_report_and_lists_each_bug():
         assert (first["crashes"], first["reproduced"], first["bugs"]) == (3, 2, 1)
         assert len(first["logs"]) == 2
         bug = next(b for b in d["bugs"] if b["triager"] == "gdb-exploitable" and b["key"] == "aaaa")
-        assert bug["arms"] == {"aflplusplus{cts:pairwise}": 2, "aflplusplus[random]": 1}
+        assert bug["arms"] == {"aflplusplus{cts:pairwise}": 2, "aflplusplus[smartrandom]": 1}
         assert bug["state"].startswith("SIGSEGV") and bug["command"].startswith("/benchmark/xz")
         assert bug["files"] == ["crash_state.txt", "command.txt"]
 

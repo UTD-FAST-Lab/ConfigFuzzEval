@@ -227,7 +227,7 @@ make CC=$CC CXX=$CXX
   <li><b>Each string is one benchmark copy</b>, <code>benchmarks/cts_&lt;name&gt;_&lt;benchmark&gt;_&lt;i&gt;</code>, built for every fuzzer and for coverage. <code>compiletime/default</code> returns <code>[""]</code>: one unchanged build.</li>
   <li><b>A trial fuzzes every copy</b>, with the trial's time split equally between them, so 20 configurations give each 1/20 of <code>max_total_time</code>. The statistics combine a trial's copies by the union of their covered lines and branches.</li>
   <li><b>Be deterministic for a given <code>random_seed</code></b> (from <code>config.yaml</code>): the dry run calls the function to count copies and must get the same number as the real run.</li>
-  <li><b>Respect the grammar's constraints.</b> <code>compiletime/minimum/strategy.py</code> has <code>holds()</code> and <code>enforce()</code> helpers for them.</li>
+  <li><b>Respect the grammar's constraints.</b> <code>compiletime/mostdisabled/strategy.py</code> has <code>holds()</code> and <code>enforce()</code> helpers for them.</li>
   <li>An exception is caught and gives <b>no configurations</b>, so no copies and no trials for that benchmark: check the log for <code>Failed retrieving configurations</code>.</li>
 </ul>
 </section>

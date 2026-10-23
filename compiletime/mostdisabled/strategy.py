@@ -50,7 +50,7 @@ def enforce(grammar: Dict[str, Any], config: Dict[str, Any], cond: Dict[str, Any
 def generate_minimum_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
     """Every bool option off and every choice option at its default (not passed),
     then the grammar's constraints applied, in grammar order, until they all hold.
-    Deterministic, like compiletime/maximum and the runtime mostdisabled strategy."""
+    Deterministic, like compiletime/mostenabled and the runtime mostdisabled strategy."""
     config = {opt["name"]: False if opt["type"] == "bool" else opt.get("default")
               for opt in grammar["options"]}
     names = set(config)
@@ -67,7 +67,7 @@ def generate_minimum_config(grammar: Dict[str, Any]) -> Dict[str, Any]:
         if not changed:
             break
     else:
-        print("Warning: the constraints could not all be satisfied for the minimum configuration")
+        print("Warning: the constraints could not all be satisfied for the most-disabled configuration")
     return config
 
 
@@ -104,7 +104,7 @@ def generate_cli_args(grammar: Dict[str, Any], config: Optional[Dict[str, Any]] 
 
     Args:
         grammar: Grammar configuration dictionary
-        config: Configuration dictionary. If None, generates the minimum config.
+        config: Configuration dictionary. If None, generates the most-disabled config.
 
     Returns:
         List of CLI argument strings

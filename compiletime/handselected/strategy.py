@@ -27,9 +27,9 @@ def check_flags(grammar_file, grammar, config):
         if not m:
             continue
         if m.group(2) in hardcoded:
-            print(f"Warning: manual configuration of {grammar['name']}: {flag} is already set by build.sh")
+            print(f"Warning: hand-selected configuration of {grammar['name']}: {flag} is already set by build.sh")
         elif m.group(2) not in known:
-            print(f"Warning: manual configuration of {grammar['name']}: {flag} is not an option of the grammar")
+            print(f"Warning: hand-selected configuration of {grammar['name']}: {flag} is not an option of the grammar")
 
 
 def request_configurations(grammar_file, random_seed=None):
@@ -42,7 +42,7 @@ def request_configurations(grammar_file, random_seed=None):
 
 
 def manual_configurations(grammar):
-    # Adding manual configuration
+    # Adding the hand-selected configuration
     benchmark_name = grammar['name']
     
     if benchmark_name == "libxml2_xmllint":
@@ -72,5 +72,5 @@ def manual_configurations(grammar):
         return [""]
     elif benchmark_name == "ffmpeg_ffmpeg":
         return [""]
-    # No manual configuration for this benchmark: build with build.sh's own flags only.
+    # No hand-selected configuration for this benchmark: build with build.sh's own flags only.
     return [""]

@@ -46,7 +46,7 @@ def make_state(tmp_path, duration=300, interval=60, coverage_cores=2):
     rt.write_text(json.dumps({"configs": [["-a"], ["-b"], ["-c"]]}))
     tasks = [("aflplusplus", "default", "cts_default_xz_xz_0", 0, 1, None, 3600),
              ("aflplusplus", "default", "cts_default_xz_xz_0", 1, 1, None, 3600),
-             ("aflplusplus", "random", "cts_default_xz_xz_0", 0, 1, str(rt), 3600)]
+             ("aflplusplus", "smartrandom", "cts_default_xz_xz_0", 0, 1, str(rt), 3600)]
     return {"experiment_path": str(exp), "project_root": ROOT, "cores_range": (10, 15), "trial_tasks": tasks,
             "continuous": {"interval": interval, "coverage_cores": coverage_cores, "duration": duration},
             "rt_supported_fuzzers": {"aflplusplus": {"corpus_dir": "default/queue"}},
@@ -68,7 +68,7 @@ def test_cpus_split_and_instances(tmp_path):
     c, _, _ = make_campaign(tmp_path)
     assert c.fuzz_cpus == [10, 11, 12, 13] and c.coverage_cpus == [14, 15]
     assert [i["cpu"] for i in c.instances] == [10, 11, 12]
-    assert [i["label"] for i in c.instances] == ["aflplusplus", "aflplusplus", "aflplusplus_rts_random"]
+    assert [i["label"] for i in c.instances] == ["aflplusplus", "aflplusplus", "aflplusplus_rts_smartrandom"]
 
 
 def test_rounds_rotation_and_final_round(tmp_path):
@@ -91,7 +91,7 @@ def test_rounds_rotation_and_final_round(tmp_path):
     rts = [a for a in fuzz if "fbpp-camp-2" in a]
     assert len(rts) == 5 and [a[a.index("-e") + 1] for a in rts][0] == "RUNTIME=0"
     assert [next(x for x in a if x.startswith("CONFIG_INDEX=")) for a in rts] == [f"CONFIG_INDEX={n}" for n in range(5)]
-    trial = tmp_path / "exp" / "camp" / "data" / "aflplusplus_rts_random_cts_default_xz_xz_0_trial_0"
+    trial = tmp_path / "exp" / "camp" / "data" / "aflplusplus_rts_smartrandom_cts_default_xz_xz_0_trial_0"
     used = json.loads((trial / "rt_configs.json").read_text())["configs"]
     assert used == [["-a"], ["-b"], ["-c"], ["-a"], ["-b"]]                 # configs[n % 3]
     log = [json.loads(l) for l in (trial / "rt_run.jsonl").read_text().splitlines()]

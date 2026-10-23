@@ -45,14 +45,14 @@ FUZZER_DESCRIPTIONS = {
 }
 RUNTIME_DESCRIPTIONS = {
     "default": "the benchmark's fixed command line",
-    "random": "50 random valid option configurations",
+    "smartrandom": "50 random valid option configurations",
     "pairwise": "a 2-way covering array of the options",
     "diversity": "50 configurations as different from each other as possible",
     "mostenabled": "one configuration with as many options on as possible",
     "mostdisabled": "one configuration with every option off",
 }
 # Compile-time strategies that build more than one copy of a benchmark.
-MANY_COPIES = {"pairwise", "randomsmart"}
+MANY_COPIES = {"pairwise", "smartrandom"}
 
 
 class Cancelled(Exception):

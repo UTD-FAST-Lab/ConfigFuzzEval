@@ -72,7 +72,7 @@ class AskTest(StoresTest):
             "same1",                                      # name
             True,                                         # same benchmarks
             ["aflplusplus", "zigzagfuzz"],                # fuzzers
-            ["default", "random"],                        # runtime strategies (asked for aflplusplus)
+            ["default", "smartrandom"],                        # runtime strategies (asked for aflplusplus)
             ["binutils_objdump", "libxml2_xmllint"],      # benchmarks
             None,                                         # compile-time: default ticked
             "4",                                          # cores
@@ -83,7 +83,7 @@ class AskTest(StoresTest):
         experiment = ia.ask_experiment(ui, self.config)
         self.assertEqual(ui.answers, [])
         self.assertEqual([(g["fuzzers"], g["runtime_strategy"]) for g in experiment["groups"]],
-                         [(["aflplusplus"], ["default", "random"]), (["zigzagfuzz"], ["default"])])
+                         [(["aflplusplus"], ["default", "smartrandom"]), (["zigzagfuzz"], ["default"])])
         for group in experiment["groups"]:
             self.assertEqual(group["benchmarks"], ["binutils_objdump", "libxml2_xmllint"])
             self.assertEqual((group["compiletime"], group["trials"], group["max_total_time"]), (["default"], 2, 900))
@@ -98,7 +98,7 @@ class AskTest(StoresTest):
         ui = ScriptedUI([
             "diff1", False,
             ["carpetfuzz", "vafuzz"],                         # config-aware: no runtime question
-            ["binutils_objdump"], ["default", "maximum"],     # carpetfuzz
+            ["binutils_objdump"], ["default", "mostenabled"],     # carpetfuzz
             ["libxml2_xmllint"], None,                        # vafuzz
             None,                                             # cores from config
             False,                                            # not the same trials and time
@@ -109,7 +109,7 @@ class AskTest(StoresTest):
         self.assertEqual(ui.answers, [])
         carpet, vafuzz = experiment["groups"]
         self.assertEqual((carpet["fuzzers"], carpet["benchmarks"], carpet["compiletime"], carpet["trials"],
-                          carpet["max_total_time"]), (["carpetfuzz"], ["binutils_objdump"], ["default", "maximum"], 1, 3600))
+                          carpet["max_total_time"]), (["carpetfuzz"], ["binutils_objdump"], ["default", "mostenabled"], 1, 3600))
         self.assertEqual((vafuzz["fuzzers"], vafuzz["benchmarks"], vafuzz["trials"], vafuzz["max_total_time"]),
                          (["vafuzz"], ["libxml2_xmllint"], 5, 86400))
         self.assertEqual((experiment["no_superc"], experiment["bug_triaging"]), (True, []))
@@ -139,13 +139,13 @@ class FileTest(StoresTest):
         experiment = {"experiment_name": "e", "cores_to_use": 2, "no_superc": True, "bug_triaging": [],
                       "not_applied": {"superc": True},
                       "groups": [{"fuzzers": ["aflplusplus"], "benchmarks": ["xz_xz"], "compiletime": ["default"],
-                                  "runtime_strategy": ["random"], "trials": 2, "max_total_time": 900}]}
+                                  "runtime_strategy": ["smartrandom"], "trials": 2, "max_total_time": 900}]}
         path = os.path.join(self.tmp.name, "experiments", "e.yaml")
         ia.write_experiment(experiment, path)
         loaded = load_experiment_file(path)
         self.assertEqual(loaded["cores_to_use"], 2)
         runs = expand_groups(loaded["groups"], self.config)
-        self.assertEqual([(r["fuzzer"], r["runtime_strategy"], r["trials"]) for r in runs], [("aflplusplus", "random", 2)])
+        self.assertEqual([(r["fuzzer"], r["runtime_strategy"], r["trials"]) for r in runs], [("aflplusplus", "smartrandom", 2)])
 
 
 class MainTest(StoresTest):

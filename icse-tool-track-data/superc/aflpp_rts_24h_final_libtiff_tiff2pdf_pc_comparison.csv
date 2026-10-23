@@ -1,0 +1,83 @@
+presence_condition,instrumented_lines,covered_by,covered_only_by,covered_lines:aflplusplus,covered_lines:aflplusplus[diversity],covered_lines:aflplusplus[mostdisabled],covered_lines:aflplusplus[mostenabled],covered_lines:aflplusplus[pairwise],covered_lines:aflplusplus[random]
+!((WEBP_ENCODER_ABI_VERSION >= 256)),0,,,0,0,0,0,0,0
+!((WEBP_ENCODER_ABI_VERSION >= 521)),0,,,0,0,0,0,0,0
+!defined(AC_APPLE_UNIVERSAL_BUILD) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__)),18,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,8,8,8,8,8,8
+!defined(CHUNKY_STRIP_READ_SUPPORT),2,,,0,0,0,0,0,0
+!defined(EOF_REACHED_COUNT_THRESHOLD),1,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,1,1,1,1,1,1
+!defined(EXIT_FAILURE),0,,,0,0,0,0,0,0
+!defined(EXIT_SUCCESS),0,,,0,0,0,0,0,0
+!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12),3,aflplusplus[diversity];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,0,3,0,3,3,3
+!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12)),16,aflplusplus[diversity];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,0,8,0,8,8,8
+!defined(JBG_EN),2,,,0,0,0,0,0,0
+!defined(JPEG_LIB_MK1),9,aflplusplus[diversity];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,0,2,0,2,2,2
+!defined(LERC_AT_LEAST_VERSION),0,,,0,0,0,0,0,0
+!defined(LERC_AT_LEAST_VERSION) || (defined(LERC_AT_LEAST_VERSION) && !LERC_AT_LEAST_VERSION),0,,,0,0,0,0,0,0
+!defined(LERC_READ_ONLY),358,,,0,0,0,0,0,0
+!defined(LIBJPEG_ENCAP_EXTERNAL),49,,,0,0,0,0,0,0
+!defined(LZW_READ_ONLY),253,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,8,8,8,8,8,8
+!defined(M_LN2),0,,,0,0,0,0,0,0
+!defined(M_PI),0,,,0,0,0,0,0,0
+!defined(PACKBITS_READ_ONLY),171,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,7,7,7,7,7,7
+!defined(TIFF_JPEG_MAX_MEMORY_TO_USE),3,aflplusplus[diversity];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,0,3,0,3,3,3
+!defined(Z_NO_COMPRESSION) || (defined(Z_NO_COMPRESSION) && !defined(Z_DEFLATED)),0,,,0,0,0,0,0,0
+!defined(__cplusplus),0,,,0,0,0,0,0,0
+!defined(__cplusplus) && !defined(__clang__),0,,,0,0,0,0,0,0
+!defined(__cplusplus) && defined(__clang__),0,,,0,0,0,0,0,0
+(!defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(_M_X64)) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__) && !defined(_M_X64)),2,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,2,2,2,2,2,2
+(!defined(AC_APPLE_UNIVERSAL_BUILD) && defined(_M_X64)) || (defined(AC_APPLE_UNIVERSAL_BUILD) && !defined(__BIG_ENDIAN__) && defined(_M_X64)),0,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),16,aflplusplus[mostdisabled],aflplusplus[mostdisabled],0,0,16,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),22,aflplusplus[mostdisabled],aflplusplus[mostdisabled],0,0,22,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),13,aflplusplus[mostdisabled],aflplusplus[mostdisabled],0,0,13,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabArrayOfTriples)) || defined(DISABLE_CHECK_TIFFSWABMACROS),12,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabDouble)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabFloat)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,,,0,0,0,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong)) || defined(DISABLE_CHECK_TIFFSWABMACROS),11,aflplusplus;aflplusplus[mostdisabled],,11,0,11,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabLong8)) || defined(DISABLE_CHECK_TIFFSWABMACROS),17,aflplusplus;aflplusplus[mostdisabled],,17,0,17,0,0,0
+(!defined(DISABLE_CHECK_TIFFSWABMACROS) && !defined(TIFFSwabShort)) || defined(DISABLE_CHECK_TIFFSWABMACROS),8,aflplusplus;aflplusplus[diversity];aflplusplus[mostdisabled];aflplusplus[mostenabled];aflplusplus[pairwise];aflplusplus[random],,8,8,8,8,8,8
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && defined(JPEG_DUAL_MODE_8_12)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12)),0,,,0,0,0,0,0,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && !((BITS_IN_JSAMPLE == 12)) && !defined(JPEG_LIB_MK1_OR_12BIT)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1) && !defined(JPEG_LIB_MK1_OR_12BIT)),56,,,0,0,0,0,0,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && !((BITS_IN_JSAMPLE == 12)) && defined(JPEG_LIB_MK1_OR_12BIT)) || (!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && (BITS_IN_JSAMPLE == 12)) || (!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(JPEG_LIB_MK1)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1) && defined(JPEG_LIB_MK1_OR_12BIT)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12) && defined(JPEG_LIB_MK1)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12)),0,,,0,0,0,0,0,0
+(!defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(JPEG_LIB_MK1) && (BITS_IN_JSAMPLE == 12)) || (defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12) && !defined(JPEG_LIB_MK1)),0,,,0,0,0,0,0,0
+(!defined(LERC_AT_LEAST_VERSION) && !defined(LERC_READ_ONLY)) || (defined(LERC_AT_LEAST_VERSION) && !LERC_AT_LEAST_VERSION && !defined(LERC_READ_ONLY)),0,,,0,0,0,0,0,0
+(JPEG_LIB_VERSION >= 70),6,,,0,0,0,0,0,0
+(LZMA_VERSION >= 50040000),0,,,0,0,0,0,0,0
+(WEBP_DECODER_ABI_VERSION >= 2),35,,,0,0,0,0,0,0
+(WEBP_ENCODER_ABI_VERSION >= 256),85,,,0,0,0,0,0,0
+(WEBP_ENCODER_ABI_VERSION >= 256) && (WEBP_ENCODER_ABI_VERSION >= 521),3,,,0,0,0,0,0,0
+(WEBP_ENCODER_ABI_VERSION >= 521),3,,,0,0,0,0,0,0
+(defined(JPEG_LIB_VERSION_MAJOR) && !((JPEG_LIB_VERSION_MAJOR > 9)) && (JPEG_LIB_VERSION_MAJOR == 9) && (JPEG_LIB_VERSION_MINOR >= 4)) || (defined(JPEG_LIB_VERSION_MAJOR) && (JPEG_LIB_VERSION_MAJOR > 9)),0,,,0,0,0,0,0,0
+defined(AC_APPLE_UNIVERSAL_BUILD) && defined(__BIG_ENDIAN__),0,,,0,0,0,0,0,0
+defined(CHUNKY_STRIP_READ_SUPPORT),0,,,0,0,0,0,0,0
+defined(DEFER_STRILE_LOAD),0,,,0,0,0,0,0,0
+defined(D_MAX_DATA_UNITS_IN_MCU),0,,,0,0,0,0,0,0
+defined(EXPECTED_JPEG_LIB_VERSION) && !defined(LIBJPEG_12_PATH),0,,,0,0,0,0,0,0
+defined(EXPECTED_JPEG_LIB_VERSION) && !defined(LIBJPEG_12_PATH) && (EXPECTED_JPEG_LIB_VERSION != JPEG_LIB_VERSION),0,,,0,0,0,0,0,0
+defined(FAX3_DEBUG),0,,,0,0,0,0,0,0
+defined(HASH_DEBUG),0,,,0,0,0,0,0,0
+defined(HAVE_FCNTL_H),0,,,0,0,0,0,0,0
+defined(HAVE_IO_H),0,,,0,0,0,0,0,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12),0,,,0,0,0,0,0,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && !defined(FROM_TIF_JPEG_12),0,,,0,0,0,0,0,0
+defined(HAVE_JPEGTURBO_DUAL_MODE_8_12) && defined(FROM_TIF_JPEG_12),0,,,0,0,0,0,0,0
+defined(HAVE_UNISTD_H),0,,,0,0,0,0,0,0
+defined(IPPJ_HUFF),0,,,0,0,0,0,0,0
+defined(JBG_EN),0,,,0,0,0,0,0,0
+defined(JPEG_LIB_MK1),0,,,0,0,0,0,0,0
+defined(LERC_AT_LEAST_VERSION) && LERC_AT_LEAST_VERSION,125,,,0,0,0,0,0,0
+defined(LERC_AT_LEAST_VERSION) && LERC_AT_LEAST_VERSION && !defined(LERC_READ_ONLY),71,,,0,0,0,0,0,0
+defined(LIBJPEG_ENCAP_EXTERNAL),0,,,0,0,0,0,0,0
+defined(LOGLUV_PUBLIC) && !LOGLUV_PUBLIC,0,,,0,0,0,0,0,0
+defined(LOGLUV_PUBLIC) && !LOGLUV_PUBLIC && !defined(UVSCALE),0,,,0,0,0,0,0,0
+defined(NDEBUG),0,,,0,0,0,0,0,0
+defined(O_BINARY),0,,,0,0,0,0,0,0
+defined(STRIPBYTECOUNTSORTED_UNUSED),0,,,0,0,0,0,0,0
+defined(TIFF_DO_NOT_USE_NON_EXT_ALLOC_FUNCTIONS),0,,,0,0,0,0,0,0
+defined(_MSC_VER),0,,,0,0,0,0,0,0
+defined(_WIN32),0,,,0,0,0,0,0,0
+defined(_WIN32) && defined(O_BINARY),0,,,0,0,0,0,0,0
+defined(__cplusplus),0,,,0,0,0,0,0,0
+defined(notdef),0,,,0,0,0,0,0,0
+defined(notused),0,,,0,0,0,0,0,0
+defined(notused) && defined(HASH_DEBUG),0,,,0,0,0,0,0,0

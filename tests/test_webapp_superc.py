@@ -112,7 +112,7 @@ def _s(**conds):
 CROSS_BUILDS = {
     ("xz_xz", "default"): {"A": _s(defined_JIT=(3, 1), defined_UNICODE=(2, 0)),
                            "B": _s(defined_JIT=(3, 0), defined_UNICODE=(2, 2))},
-    ("xz_xz", "maximum"): {"A": _s(defined_JIT=(3, 1), defined_UNICODE=(2, 0), defined_DEBUG=(2, 2)),
+    ("xz_xz", "mostenabled"): {"A": _s(defined_JIT=(3, 1), defined_UNICODE=(2, 0), defined_DEBUG=(2, 2)),
                            "B": _s(defined_JIT=(3, 0), defined_UNICODE=(2, 0), defined_DEBUG=(2, 0))},
     ("pcre2_pcre2test", "default"): {"A": _s(defined_JIT=(1, 1))},          # one strategy: not compared
 }
@@ -120,20 +120,20 @@ CROSS_BUILDS = {
 
 def test_cross_strategy_counts():
     cross = superc.cross_strategy(CROSS_BUILDS)
-    assert list(cross) == ["xz_xz"] and cross["xz_xz"]["strategies"] == ["default", "maximum"]
+    assert list(cross) == ["xz_xz"] and cross["xz_xz"]["strategies"] == ["default", "mostenabled"]
     rows = {(r["arm"], r["compiletime"]): r for r in cross["xz_xz"]["rows"]}
     keys = ("conditions_in_build", "conditions_covered", "only_this_strategy", "missed", "missed_not_in_build",
             "gained_over_default", "lost_against_default")
     get = lambda arm, cts: tuple(rows[(arm, cts)][k] for k in keys)
-    # A reaches DEBUG only under maximum, whose builds compile it and the default build does not
+    # A reaches DEBUG only under mostenabled, whose builds compile it and the default build does not
     assert get("A", "default") == (2, 1, 0, 1, 1, None, None)
-    assert get("A", "maximum") == (3, 2, 1, 0, 0, 1, 0)
-    # B covered UNICODE under default and loses it under maximum, which does compile it
+    assert get("A", "mostenabled") == (3, 2, 1, 0, 0, 1, 0)
+    # B covered UNICODE under default and loses it under mostenabled, which does compile it
     assert get("B", "default") == (2, 1, 1, 0, 0, None, None)
-    assert get("B", "maximum") == (3, 0, 0, 1, 0, 0, 1)
+    assert get("B", "mostenabled") == (3, 0, 0, 1, 0, 0, 1)
     assert get(superc.ALL_ARMS, "default") == (2, 2, 1, 1, 1, None, None)
-    assert get(superc.ALL_ARMS, "maximum") == (3, 2, 1, 1, 0, 1, 1)
-    assert cross["xz_xz"]["conditions"]["A"]["defined DEBUG"] == {"default": None, "maximum": (2, 2)}
+    assert get(superc.ALL_ARMS, "mostenabled") == (3, 2, 1, 1, 0, 1, 1)
+    assert cross["xz_xz"]["conditions"]["A"]["defined DEBUG"] == {"default": None, "mostenabled": (2, 2)}
 
 
 def test_cross_strategy_files(tmp_path):
@@ -144,8 +144,8 @@ def test_cross_strategy_files(tmp_path):
     assert len(rows) == 6 and rows[0]["gained_over_default"] == ""
     per = list(csv.DictReader(open(tmp_path / "xz_xz_strategy_comparison.csv")))
     debug = next(r for r in per if r["arm"] == "A" and r["presence_condition"] == "defined DEBUG")
-    assert debug["covered_lines:default"] == "-" and debug["covered_lines:maximum"] == "2"
-    assert debug["covered_only_under"] == "maximum"
+    assert debug["covered_lines:default"] == "-" and debug["covered_lines:mostenabled"] == "2"
+    assert debug["covered_only_under"] == "mostenabled"
 
 
 def test_cross_strategy_routes(tmp_path, monkeypatch):
@@ -161,20 +161,20 @@ def test_cross_strategy_routes(tmp_path, monkeypatch):
     client = webapp.app.test_client()
     r = client.get("/api/experiments/e1/superc/strategies").get_json()
     b = r["benchmarks"]["xz_xz"]
-    assert r["ok"] and b["strategies"] == ["default", "maximum"] and b["arms"] == ["A", "B", "all fuzzers"]
-    row = next(x for x in b["rows"] if x["arm"] == "A" and x["compiletime"] == "maximum")
+    assert r["ok"] and b["strategies"] == ["default", "mostenabled"] and b["arms"] == ["A", "B", "all fuzzers"]
+    row = next(x for x in b["rows"] if x["arm"] == "A" and x["compiletime"] == "mostenabled")
     assert (row["only_this_strategy"], row["gained_over_default"]) == (1, 1)
     assert next(x for x in b["rows"] if x["compiletime"] == "default")["gained_over_default"] is None
     names = lambda **q: [x["condition"] for x in client.get(
         "/api/experiments/e1/superc/strategies/xz_xz/conditions", query_string=q).get_json()["rows"]]
-    assert names(arm="A", show="only", strategy="maximum") == ["defined DEBUG"]
+    assert names(arm="A", show="only", strategy="mostenabled") == ["defined DEBUG"]
     assert names(arm="A", show="not_built", strategy="default") == ["defined DEBUG"]
-    assert names(arm="B", show="lost", strategy="maximum") == ["defined UNICODE"]
-    assert names(arm="B", show="missed", strategy="maximum") == ["defined UNICODE"]
+    assert names(arm="B", show="lost", strategy="mostenabled") == ["defined UNICODE"]
+    assert names(arm="B", show="missed", strategy="mostenabled") == ["defined UNICODE"]
     assert sorted(names(arm="all fuzzers", show="uncovered")) == []
     cell = client.get("/api/experiments/e1/superc/strategies/xz_xz/conditions",
                       query_string={"arm": "A", "q": "DEBUG"}).get_json()["rows"][0]["per"]
-    assert cell == {"default": None, "maximum": [2, 2]}
+    assert cell == {"default": None, "mostenabled": [2, 2]}
     assert client.get("/api/experiments/e1/superc/strategies/..%2Fx/conditions").status_code == 404
     assert client.get("/api/experiments/e1/superc/strategies/nope/conditions").status_code == 404
     assert client.get("/api/experiments/other/superc/strategies").get_json()["ok"] is False

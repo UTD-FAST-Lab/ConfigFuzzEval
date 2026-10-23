@@ -105,12 +105,3 @@ def apply_ct_strategy(strategy, project_root, benchmarks, random_seed=None):
 
         mapping[(strategy, benchmark)] = new_benchmarks
     return (mapping, tot_cts)
-
-
-# DEBUG
-if __name__ == "__main__":
-    strategy = "randomnaive"
-    experiment_path = "/tmp/experiment-data/test3"
-    project_root = "/home/tahmeed/PhD/Projects/FuzzBenchPlusPlus"
-    benchmarks = ["libxml2_xmllint"]
-    apply_ct_strategy(strategy, project_root, benchmarks)

@@ -24,10 +24,20 @@ the two kinds of configuration strategy) are explained in the [main README](../R
 ### Python packages and tools
 
 ```bash
+git clone https://github.com/UTD-FAST-Lab/ConfigFuzzEval.git
+cd ConfigFuzzEval
 python3 -m pip install -r requirements.txt
 ```
 
-`requirements.txt` lists every Python package the host side imports (the Docker images install their own). Docker and LLVM 18 (`llvm-profdata`, `llvm-cov`) are needed on the host too.
+`requirements.txt` lists every Python package the host side imports (the Docker images install their own). The host
+also needs:
+
+- **Docker with BuildKit**, that is, the buildx plugin (`docker buildx version` prints a version). The benchmark
+  images take the saved sources in `benchmarks/sources/` as a build context (`--build-context`), which only BuildKit
+  supports; without it, every benchmark build fails with `unknown flag: --build-context`. Install the
+  `docker-buildx-plugin` package, or, without root, put the
+  [buildx release binary](https://github.com/docker/buildx/releases) at `~/.docker/cli-plugins/docker-buildx`.
+- **LLVM 18** (`llvm-profdata`, `llvm-cov`).
 
 ### The configuration file
 
@@ -79,7 +89,7 @@ build_parallelism: 16
 # Memory per trial, in MB.
 experiment_memory: 4096
 
-# Random seed for the randomsmart and pairwise compile-time strategies and the runtime strategies.
+# Random seed for the smartrandom and pairwise compile-time strategies and the runtime strategies.
 # Use null for no seed.
 random_seed: 42
 
@@ -88,7 +98,7 @@ serialize_multi_conf: false
 EOF
 ```
 
-`config.yaml` is not tracked by git. The written file has absolute paths (for example `/home/you/FuzzBenchPlusPlus/results/experiment-data`); to keep results somewhere else, such as a bigger disk, change the two filestore lines to absolute paths there.
+`config.yaml` is not tracked by git. The written file has absolute paths (for example `/home/you/ConfigFuzzEval/results/experiment-data`); to keep results somewhere else, such as a bigger disk, change the two filestore lines to absolute paths there.
 
 ### Host settings
 
@@ -164,7 +174,7 @@ continuous:
 groups:
   - fuzzers: [aflplusplus]
     benchmarks: [pcre2_pcre2test]
-    runtime_strategy: [default, random]
+    runtime_strategy: [default, smartrandom]
     trials: 3             # trials are parallel instances; groups cannot set max_total_time
 ```
 
@@ -208,7 +218,7 @@ How a run works:
 
 1. Before anything is built, `common/ct_strategy_applicator.py` runs `compiletime/<strategy>/strategy.py` for each
    benchmark that uses it. The strategy reads the benchmark's `ct_grammar.json` and returns a list of option strings,
-   one per configuration (for example `--disable-debug --enable-encoders=lzma1,lzma2`). `randomsmart` and `pairwise`
+   one per configuration (for example `--disable-debug --enable-encoders=lzma1,lzma2`). `smartrandom` and `pairwise`
    use `random_seed` from `config.yaml`, so runs are reproducible; the other strategies are deterministic.
 2. For each configuration, the benchmark folder is copied to `benchmarks/cts_<strategy>_<benchmark>_<i>`, and the
    options replace the `{{CT_CONFIGURATION}}` placeholder on the `./configure` line of the copy's `build.sh`. Each
@@ -223,7 +233,7 @@ The grammar, `benchmarks/<name>/ct_grammar.json`, lists the benchmark's `./confi
   for `--enable-<name>`/`--disable-<name>`, or `with` for `--with-<name>`/`--without-<name>`. A choice is passed as
   `--<cli>-<name>=<value>`.
 - `constraints`: rules between options, such as `{"opt": "relaxng", "val": true, "then": [{"opt": "schemas", "val": true}]}`
-  (RelaxNG needs schemas). Every strategy except `manual` only returns configurations that satisfy them.
+  (RelaxNG needs schemas). Every strategy except `handselected` only returns configurations that satisfy them.
 - `removed`: options the strategies never touch, each with its `reason`, for example because `build.sh` already sets
   them.
 
@@ -245,7 +255,8 @@ How a run works:
    reproducible, and all supported fuzzers get the same configurations.
 2. The trial container gets that file and `MULTI_CONFIG=1`, and runs
    `runtime/multi_config_run.sh`: the configurations are fuzzed one after another, each for an
-   equal share of the trial's time (at least `min_config_time` seconds), each starting from the
+   equal share of the trial's time (at least `min_config_time` seconds, 60 by default; under a
+   compile-time strategy, the share of the trial's time for its copy), each starting from the
    previous configuration's corpus. The fuzzer's own `run.sh` is called once per configuration.
 3. `runtime/multi_config_coverage.sh` replays each input under the configuration that found it,
    using the fuzzer's own `coverage.py`, and merges everything into one report per trial.
@@ -258,6 +269,35 @@ The grammar, `benchmarks/<name>/rt_grammar.json`, lists the program's command-li
 - `depend` and `conflict`: options that need, or exclude, other options. `maxcombs` and `strmax` limit the
   combinations and string values a strategy generates.
 - `exit_options`: options the strategies never use: with them the target exits without processing its input (help, version, listings, or a schema/DTD file that does not exist), so every configuration containing one would fuzz nothing.
+
+### Configurations per strategy
+
+How many configurations each strategy makes, with `random_seed: 42` (`config.yaml`'s default):
+
+- **Compile time:** `default`, `handselected`, `mostenabled` and `mostdisabled` make 1 build each, and `smartrandom`
+  makes 10, on every benchmark. `pairwise` depends on the grammar (below).
+- **Runtime:** `mostenabled` and `mostdisabled` make 1 configuration each, and `smartrandom` and `diversity` make 50,
+  on every benchmark. `pairwise` depends on the grammar (below; for trial 0, as each trial's seed differs slightly).
+
+| Benchmark | Pairwise (compile time) | Pairwise (runtime) |
+|---|---|---|
+| binutils_nm-new | 16 | 216 |
+| binutils_objdump | 16 | 1,013 |
+| bison_bison | 20 | 240 |
+| expat_xmlwf | 11 | 139 |
+| ffmpeg_ffmpeg | 12 | 351 |
+| file_file | 9 | 211 |
+| libpng_pngimage | 10 | 13 |
+| libtiff_tiff2pdf | 30 | 186 |
+| libxml2_xmllint | 22 | 138 |
+| pcre2_pcre2test | 45 | 245 |
+| x264_x264 | 14 | 647 |
+| xz_xz | 19 | 114 |
+
+A trial fuzzes at most `max_total_time / min_config_time` of a runtime strategy's configurations (1,440 in 24 hours
+with the default 60 seconds), so with 24-hour trials every configuration above runs; with 50 configurations, each
+gets about 29 minutes. Under a compile-time strategy with N builds, the same applies to each build's
+`max_total_time / N` seconds.
 
 ### Result names
 

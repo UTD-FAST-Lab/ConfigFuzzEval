@@ -1,14 +1,18 @@
 # ConfigFuzzEval
 
+> **ICSE 2027 artifact.** This repository is the artifact for submission #36 to the ICSE 2027 Tool Demonstration and
+> Data Showcase track. The results of our experiments used for the paper are in [`icse-tool-track-data/superc/`](icse-tool-track-data/superc/).
+
 ![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/images/architecture.jpg)
 
-ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating configuration-aware and configuration-agnostic fuzzers, and (2) orchestrating fuzzing campaigns across sampled compile-time and runtime configurations. It provides statistical coverage analyses, crash triaging, and integration with SuperC for compile-time analysis. It is extensible through plugin interfaces for fuzzers, sampling strategies, triaging tools, compile-time analysis tools and target programs. Experiments run from a web application ([docs/web-app.md](docs/web-app.md), [live demo](docs/live-demo.md) at https://configfuzzeval.vercel.app/), or from CI/CD pipelines through the CLI or experiment files.
+ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating configuration-aware and configuration-agnostic fuzzers, and (2) orchestrating fuzzing campaigns across sampled compile-time and runtime configurations. It provides statistical coverage analyses, crash triaging, and integration with SuperC for compile-time analysis. It is extensible through plugin interfaces for fuzzers, sampling strategies, triaging tools, compile-time analysis tools and target programs. Experiments run from a web application ([docs/web-app.md](docs/web-app.md)), or from CI/CD pipelines through the CLI or experiment files. The [live demo](docs/live-demo.md) at https://configfuzzeval.vercel.app/ is the web app with precomputed example data and no server behind it: it shows every page and report, but runs nothing.
 
 ## Quick start
 
-On a Linux machine with Docker and LLVM 18, from the root of the project:
+On a Linux machine with Docker (with the buildx plugin) and LLVM 18:
 
 ```bash
+git clone https://github.com/UTD-FAST-Lab/ConfigFuzzEval.git && cd ConfigFuzzEval
 python3 -m pip install -r requirements.txt   # the Python packages
 # create config.yaml, as shown in docs/README.md#installation
 sudo ./run_as_sudo.sh                        # core_pattern and CPU governor, for stable numbers
@@ -16,7 +20,7 @@ python3 common/run_experiment.py             # asks what to run, then queues it
 ```
 
 The full steps are in [Installation](docs/README.md#installation). To try the web app without installing anything,
-open the [live demo](docs/live-demo.md).
+open the [live demo](docs/live-demo.md) (precomputed example data).
 
 ## Concepts
 
@@ -30,7 +34,7 @@ open the [live demo](docs/live-demo.md).
   significant.
 - An **arm** is what the reports compare: a fuzzer under one strategy, written `fuzzer[runtime strategy]`, with
   `{cts:compile-time strategy}` added for a non-default compile-time strategy. For example `aflplusplus[pairwise]`
-  or `vafuzz{cts:maximum}`.
+  or `vafuzz{cts:mostenabled}`.
 
 The experiments run one at a time in the [job queue](docs/README.md#job-queue). At the end, each experiment writes
 the [statistics report](docs/statistics-report.md) and the [coverage reports](docs/coverage-reports.md), and the
@@ -55,16 +59,20 @@ Many programs can be built in many ways: `./configure` options turn features on 
 is compiled in (`#if` blocks). A **compile-time strategy** samples these build configurations from the benchmark's
 `ct_grammar.json`, which lists its options and the constraints between them. Each configuration is built as its own
 copy of the benchmark, and a trial's fuzzing time is split over the copies, so every strategy gets the same total
-time. Compile-time strategies apply to every fuzzer.
+time. Compile-time strategies apply to every fuzzer. Each fuzzer's image is built once; each copy is then built once
+per fuzzer that runs on it, plus one coverage build that every fuzzer is measured on.
 
-| Strategy | Configurations, built from the benchmark's `ct_grammar.json` |
-|---|---|
-| `default` | 1: the benchmark's own build, with no extra options |
-| `manual` | the hand-written configuration of each benchmark (in `compiletime/manual/strategy.py`) |
-| `maximum` | 1 configuration with as many options on as the grammar's constraints allow |
-| `minimum` | 1 configuration with every option off, and every choice at its default |
-| `pairwise` | a 2-way covering array: every valid pair of option values appears together at least once |
-| `randomsmart` | 10 random configurations that satisfy the grammar's constraints |
+| Strategy | Name | Configurations, built from the benchmark's `ct_grammar.json` |
+|---|---|---|
+| Default | `default` | 1: the benchmark's own build, with no extra options |
+| Hand-selected | `handselected` | the hand-written configuration of each benchmark (in `compiletime/handselected/strategy.py`) |
+| Most-enabled | `mostenabled` | 1 configuration with as many options on as the grammar's constraints allow |
+| Most-disabled | `mostdisabled` | 1 configuration with every option off, and every choice at its default |
+| Pairwise | `pairwise` | a 2-way covering array: every valid pair of option values appears together at least once (9 to 45 builds per benchmark) |
+| Smart random | `smartrandom` | 10 random configurations that satisfy the grammar's constraints |
+
+The **name** is what experiment files, the command line and the web app use; it is the strategy's folder in
+`compiletime/`. The names used before (`manual`, `maximum`, `minimum`, `randomsmart`) are still accepted.
 
 How the copies are made and named, the grammar format, and adding a strategy:
 [Compile-time strategies in depth](docs/README.md#compile-time-strategies-in-depth).
@@ -73,20 +81,25 @@ How the copies are made and named, the grammar format, and adding a strategy:
 
 Programs also take command-line options that change what code their input reaches. A **runtime strategy** samples
 these run-time configurations from the benchmark's `rt_grammar.json`, instead of the single command in its
-`run_target.sh`. A trial fuzzes the configurations one after another, each for an equal share of its time and each
-starting from the previous one's corpus, on the benchmark's normal build, so it only adds trials, not builds.
+`run_target.sh`. A trial fuzzes the configurations one after another, in random order, each for an equal share of
+its time (at least `min_config_time`, 60 seconds by default) and each starting from the previous one's corpus. They
+run on the trial's own build, the copy of its compile-time strategy, so runtime strategies add no builds. Combined
+with a compile-time strategy, a trial's time is split over the copies first, and each copy's share over the
+runtime configurations.
 Runtime strategies apply to the config-agnostic [fuzzers](#fuzzers), listed in `runtime/supported_fuzzers.json`; asking
 for one with any other fuzzer stops the experiment with an error before anything is built.
 
-| Strategy | Configurations, built from the benchmark's `rt_grammar.json` |
-|---|---|
-| `default` | none: the normal run with `run_target.sh` |
-| `pairwise` | a 2-way covering array: every pair of option values appears together at least once |
-| `random` | 50 random valid configurations |
-| `diversity` | 50 valid configurations chosen to be as different as possible (Hamming distance) |
-| `mostenabled` | 1 configuration with as many options on as the grammar's constraints allow |
-| `mostdisabled` | 1 configuration with every option off |
+| Strategy | Name | Configurations, built from the benchmark's `rt_grammar.json` |
+|---|---|---|
+| Default | `default` | none: the normal run with `run_target.sh` |
+| Most-enabled | `mostenabled` | 1 configuration with as many options on as the grammar's constraints allow |
+| Most-disabled | `mostdisabled` | 1 configuration with every option off |
+| Pairwise | `pairwise` | a 2-way covering array: every pair of option values appears together at least once (13 to about 1,000 per benchmark) |
+| Smart random | `smartrandom` | 50 random configurations that satisfy the grammar's rules |
+| Diversity-based | `diversity` | 50 valid configurations chosen to be as different as possible (Hamming distance) |
 
+The name `random` is still accepted for `smartrandom`. The number of configurations of every strategy on every
+benchmark is in [Configurations per strategy](docs/README.md#configurations-per-strategy).
 How the configurations are generated, fuzzed and replayed, the grammar format, and adding a strategy:
 [Runtime strategies in depth](docs/README.md#runtime-strategies-in-depth).
 
@@ -99,6 +112,11 @@ How the configurations are generated, fuzzed and replayed, the grammar format, a
 | **Web app** | [The web app](docs/web-app.md): starting it, and every page and tab · [Live demo](docs/live-demo.md): https://configfuzzeval.vercel.app/ |
 | **Contributing** | [Contributing](docs/CONTRIBUTING.md): adding a benchmark or a fuzzer |
 | **Results and analyses** | [Statistics report](docs/statistics-report.md) · [Coverage reports](docs/coverage-reports.md) · [SuperC](docs/superc.md) · [Crash triage](docs/crash-triage.md) |
+
+## License
+
+ConfigFuzzEval is released under the [MIT License](LICENSE). The fuzzers, benchmarks and tools it downloads and builds
+keep their own licenses.
 
 ## Contributing
 

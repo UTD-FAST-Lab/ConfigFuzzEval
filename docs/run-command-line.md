@@ -28,8 +28,8 @@ Flags:
 - `--experiment-name`: name of this run. Results are stored under `<experiment_filestore>/EXP_NAME`. Use a new name for every run; the run stops if a folder with that name already exists. Required, unless an experiment file gives `experiment_name` (the flag wins if both are given).
 - `--fuzzers`: list of fuzzers to run. Each name must match a folder name in `fuzzers/` (aflplusplus, carpetfuzz, configfuzz, libafl, prophetfuzz, vafuzz, zigzagfuzz). Required unless `--experiment` is given.
 - `--benchmarks`: list of benchmarks to run. Each name must match a folder name in `benchmarks/` (for example `libxml2_xmllint`). Required unless `--experiment` is given.
-- `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, manual, maximum, minimum, pairwise, randomsmart; see [Compile-time strategies](../README.md#compile-time-strategies)). Optional; if left out, only `default` is used.
-- `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, pairwise, random, mostenabled, mostdisabled, diversity). Optional; if left out, only `default` is used. See [Runtime strategies](../README.md#runtime-strategies).
+- `--compiletime`: list of compile-time configuration strategies. Each name must match a folder name in `compiletime/` (default, handselected, mostenabled, mostdisabled, pairwise, smartrandom; see [Compile-time strategies](../README.md#compile-time-strategies)). Optional; if left out, only `default` is used.
+- `--runtime-strategy`: list of run-time configuration strategies. Each name must match a folder name in `runtime/` (default, mostenabled, mostdisabled, pairwise, smartrandom, diversity). Optional; if left out, only `default` is used. See [Runtime strategies](../README.md#runtime-strategies). The earlier names `manual`, `maximum`, `minimum`, `randomsmart` (compile time) and `random` (runtime) are still accepted and mean the same strategies.
 - `--bug-triaging`: list of crash triage tools to run after fuzzing. Each name must match a folder name in `bug-triaging/` (gdb-exploitable, afl-collect; see [Crash triage](crash-triage.md)). Optional; if left out, no triage is run.
 - `--no-superc`: optional. Turns off the SuperC presence-condition analysis that otherwise runs at the end of the experiment (see [SuperC](superc.md)).
 - `--experiment FILE` (or `--groups FILE`): optional. Reads what to run from an experiment file instead of `--fuzzers`, `--benchmarks`, `--compiletime` and `--runtime-strategy` (giving any of those with it is an error). See [Experiment file](run-experiment-file.md).
@@ -46,10 +46,23 @@ python3 common/run_experiment.py \
   --experiment-name EXP_NAME \
   --fuzzers aflplusplus carpetfuzz configfuzz libafl prophetfuzz vafuzz zigzagfuzz \
   --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_pngimage libtiff_tiff2pdf libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
-  --compiletime default manual maximum minimum pairwise randomsmart \
-  --runtime-strategy default pairwise random mostenabled mostdisabled diversity \
+  --compiletime default handselected mostenabled mostdisabled pairwise smartrandom \
   --bug-triaging gdb-exploitable
 ```
+
+The runtime strategies apply only to the config-agnostic fuzzers, so they go in a command of their own (or a group of
+an [experiment file](run-experiment-file.md)), for example every runtime strategy for AFL++ and LibAFL:
+
+```bash
+python3 common/run_experiment.py \
+  --config config.yaml \
+  --experiment-name EXP_NAME \
+  --fuzzers aflplusplus libafl \
+  --benchmarks xz_xz pcre2_pcre2test \
+  --runtime-strategy default mostenabled mostdisabled pairwise smartrandom diversity
+```
+
+Asking for a runtime strategy with a config-aware fuzzer stops the experiment with an error, before anything is built.
 
 ## See also
 

@@ -1,0 +1,3 @@
+benchmark,compiletime,arm,trials,files,files_analysed,conditions,conditions_in_build,conditions_covered_union,conditions_covered_median_trial,conditional_lines_in_build,conditional_lines_covered_union,covered_lines_union,covered_lines_in_headers,covered_lines_without_condition
+binutils_objdump,default,aflplusplus[mostenabled],3,132,132,435,108,8,8,2601,65,9610,1133,0
+pcre2_pcre2test,default,aflplusplus[mostenabled],3,30,30,216,46,32,32,6578,1206,14162,2735,0

@@ -1,0 +1,5 @@
+benchmark,compiletime,arm,trials,files,files_analysed,conditions,conditions_in_build,conditions_covered_union,conditions_covered_median_trial,conditional_lines_in_build,conditional_lines_covered_union,covered_lines_union,covered_lines_in_headers,covered_lines_without_condition
+bison_bison,default,zigzagfuzz,3,108,108,469,109,59,59,1409,673,16583,1887,0
+libtiff_tiff2pdf,default,zigzagfuzz,3,41,41,160,68,31,31,14465,4388,16178,611,0
+pcre2_pcre2test,default,zigzagfuzz,3,30,30,216,59,45,43,6578,1896,19101,3730,0
+xz_xz,default,zigzagfuzz,3,76,76,60,20,18,18,498,310,8413,744,0

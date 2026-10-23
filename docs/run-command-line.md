@@ -47,9 +47,22 @@ python3 common/run_experiment.py \
   --fuzzers aflplusplus carpetfuzz configfuzz libafl prophetfuzz vafuzz zigzagfuzz \
   --benchmarks binutils_nm-new binutils_objdump bison_bison expat_xmlwf ffmpeg_ffmpeg file_file libpng_pngimage libtiff_tiff2pdf libxml2_xmllint pcre2_pcre2test x264_x264 xz_xz \
   --compiletime default handselected mostenabled mostdisabled pairwise smartrandom \
-  --runtime-strategy default mostenabled mostdisabled pairwise smartrandom diversity \
   --bug-triaging gdb-exploitable
 ```
+
+The runtime strategies apply only to the config-agnostic fuzzers, so they go in a command of their own (or a group of
+an [experiment file](run-experiment-file.md)), for example every runtime strategy for AFL++ and LibAFL:
+
+```bash
+python3 common/run_experiment.py \
+  --config config.yaml \
+  --experiment-name EXP_NAME \
+  --fuzzers aflplusplus libafl \
+  --benchmarks xz_xz pcre2_pcre2test \
+  --runtime-strategy default mostenabled mostdisabled pairwise smartrandom diversity
+```
+
+Asking for a runtime strategy with a config-aware fuzzer stops the experiment with an error, before anything is built.
 
 ## See also
 

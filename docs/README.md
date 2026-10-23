@@ -24,10 +24,20 @@ the two kinds of configuration strategy) are explained in the [main README](../R
 ### Python packages and tools
 
 ```bash
+git clone https://github.com/UTD-FAST-Lab/ConfigFuzzEval.git
+cd ConfigFuzzEval
 python3 -m pip install -r requirements.txt
 ```
 
-`requirements.txt` lists every Python package the host side imports (the Docker images install their own). Docker and LLVM 18 (`llvm-profdata`, `llvm-cov`) are needed on the host too.
+`requirements.txt` lists every Python package the host side imports (the Docker images install their own). The host
+also needs:
+
+- **Docker with BuildKit**, that is, the buildx plugin (`docker buildx version` prints a version). The benchmark
+  images take the saved sources in `benchmarks/sources/` as a build context (`--build-context`), which only BuildKit
+  supports; without it, every benchmark build fails with `unknown flag: --build-context`. Install the
+  `docker-buildx-plugin` package, or, without root, put the
+  [buildx release binary](https://github.com/docker/buildx/releases) at `~/.docker/cli-plugins/docker-buildx`.
+- **LLVM 18** (`llvm-profdata`, `llvm-cov`).
 
 ### The configuration file
 
@@ -88,7 +98,7 @@ serialize_multi_conf: false
 EOF
 ```
 
-`config.yaml` is not tracked by git. The written file has absolute paths (for example `/home/you/FuzzBenchPlusPlus/results/experiment-data`); to keep results somewhere else, such as a bigger disk, change the two filestore lines to absolute paths there.
+`config.yaml` is not tracked by git. The written file has absolute paths (for example `/home/you/ConfigFuzzEval/results/experiment-data`); to keep results somewhere else, such as a bigger disk, change the two filestore lines to absolute paths there.
 
 ### Host settings
 

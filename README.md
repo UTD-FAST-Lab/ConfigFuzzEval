@@ -6,9 +6,10 @@ ConfigFuzzEval is a fuzzing infrastructure for two use cases: (1) evaluating con
 
 ## Quick start
 
-On a Linux machine with Docker and LLVM 18, from the root of the project:
+On a Linux machine with Docker (with the buildx plugin) and LLVM 18:
 
 ```bash
+git clone https://github.com/UTD-FAST-Lab/ConfigFuzzEval.git && cd ConfigFuzzEval
 python3 -m pip install -r requirements.txt   # the Python packages
 # create config.yaml, as shown in docs/README.md#installation
 sudo ./run_as_sudo.sh                        # core_pattern and CPU governor, for stable numbers

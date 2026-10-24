@@ -1,7 +1,7 @@
 # ConfigFuzzEval
 
 > **ICSE 2027 artifact.** This repository is the artifact for submission #36 to the ICSE 2027 Tool Demonstration and
-> Data Showcase track. The results of our experiments used for the paper are in [`icse-tool-track-data/superc/`](icse-tool-track-data/superc/).
+> Data Showcase track. The results of our experiments used for the paper are in [`/icse-tool-track-data/superc/`](icse-tool-track-data/).
 
 ![ConfigFuzzEval architecture: users select targets, choose compile-time and runtime sampling strategies and fuzzers, run and monitor the trials in Docker containers, then inspect the coverage, compile-time option analysis, bug triage and the final report](docs/images/architecture.jpg)
 
